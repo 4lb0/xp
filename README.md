@@ -34,6 +34,7 @@ Para empezar de cero, borrá `_db.sqlite3` y volvé a levantar el servidor.
 | `/` | Portada, pitch del juego y preparación de la mesa. |
 | `/juego` | La partida: contadores, cartas activas, mano, herramientas, dados y bitácora. |
 | `/reglas` | Manual de bolsillo completo. |
+| `/como-jugar` | Guía visual para entender el juego en pocos minutos. |
 | `/cartas` | Las 84 cartas del mazo, leídas desde Markdown. |
 
 El estado de la partida se guarda en SQLite y se ata a la sesión del navegador. Se puede recargar o cerrar la pestaña sin perder nada.
@@ -92,6 +93,7 @@ xp/
 ├── index.wren              Portada
 ├── juego.wren              Tablero y todas las acciones (POST/redirect/GET)
 ├── reglas.wren             Manual
+├── como-jugar.wren         Guía visual
 ├── cartas.wren             Visor del mazo completo
 ├── _migration.wren         Tablas SQLite (se aplican al arrancar)
 ├── _app/

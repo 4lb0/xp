@@ -21,7 +21,7 @@ return Layout.render(<main>
         </p>
         <div class="hero-actions">
           <a class="btn btn-primary" href="/juego">Iniciar expedición</a>
-          <a class="btn btn-ghost" href="/reglas">Leer las reglas</a>
+          <a class="btn btn-ghost" href="/como-jugar">Cómo jugar</a>
         </div>
       </div>
       <aside class="console" aria-label="Estado inicial de la expedición">

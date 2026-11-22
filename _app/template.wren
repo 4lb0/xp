@@ -29,6 +29,7 @@ class Layout {
             <ul class="nav-links">
               <li><a href="/" class="{{ Request.uri == "/" ? "active" : "" }}">Inicio</a></li>
               <li><a href="/juego" class="{{ Request.uri.startsWith("/juego") ? "active" : "" }}">Expedición</a></li>
+              <li><a href="/como-jugar" class="{{ Request.uri == "/como-jugar" ? "active" : "" }}">Cómo jugar</a></li>
               <li><a href="/reglas" class="{{ Request.uri == "/reglas" ? "active" : "" }}">Reglas</a></li>
               <li><a href="/cartas" class="{{ Request.uri == "/cartas" ? "active" : "" }}">Cartas</a></li>
             </ul>

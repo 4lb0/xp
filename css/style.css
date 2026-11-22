@@ -954,3 +954,161 @@ tbody tr:hover { background: rgba(127, 230, 242, 0.04); }
 }
 
 .mini-card[data-family="apoyo"] { --family: #a78bfa; }
+
+/* ---------- Cómo jugar (guía visual) ---------- */
+
+.howto { padding-top: 0.6rem; }
+.howto-hero {
+  display: grid;
+  grid-template-columns: 1.25fr 0.75fr;
+  gap: 1.6rem;
+  align-items: center;
+  margin: 1.2rem 0 1.6rem;
+}
+.howto-hero h2 { margin: 0.2rem 0 0.6rem; max-width: 22ch; }
+.howto-hero p { color: var(--muted); }
+.howto-hero p strong { color: var(--paper); }
+.howto-gauges { display: grid; gap: 0.7rem; }
+.howto-gauges .gauge small {
+  display: block;
+  margin-top: 0.45rem;
+  color: var(--muted);
+  font-size: 0.72rem;
+  line-height: 1.35;
+}
+
+.table-map {
+  display: grid;
+  grid-template-columns: 1.1fr 1.1fr 0.8fr;
+  gap: 1rem;
+}
+.map-zone {
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: rgba(9, 32, 51, 0.55);
+  padding: 1rem;
+}
+.map-zone > p:last-child { margin-bottom: 0; }
+.fake-row { display: flex; gap: 0.6rem; flex-wrap: wrap; margin: 0.7rem 0; }
+.fake-card {
+  flex: 1 1 120px;
+  min-width: 0;
+  display: grid;
+  gap: 0.15rem;
+  padding: 0.7rem;
+  border-radius: 12px;
+  border: 1px solid rgba(127, 230, 242, 0.12);
+  border-top: 3px solid var(--family, var(--teal));
+  background: rgba(4, 14, 25, 0.55);
+}
+.fake-card.coral { --family: var(--coral); }
+.fake-card.green { --family: var(--green); }
+.fake-card.gold { --family: var(--gold); }
+.fake-card.purple { --family: #a78bfa; }
+.fake-card.cyan { --family: var(--cyan); }
+.fake-emoji { font-size: 1.9rem; line-height: 1.1; }
+.fake-card strong { font-size: 0.86rem; line-height: 1.25; }
+.fake-card small { color: var(--muted); font-size: 0.72rem; }
+.fake-card .chip { width: max-content; margin-top: 0.2rem; font-size: 0.66rem; }
+.counter-chips { display: flex; gap: 0.45rem; flex-wrap: wrap; margin: 0.8rem 0; }
+
+.cycle {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.8rem;
+}
+.cycle li {
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  background: rgba(4, 14, 25, 0.45);
+  padding: 0.9rem;
+}
+.cycle-num {
+  display: grid;
+  place-items: center;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 50%;
+  background: var(--gold);
+  color: var(--abyss);
+  font-family: var(--font-display);
+  font-weight: 800;
+  margin-bottom: 0.55rem;
+}
+.cycle strong { display: block; margin-bottom: 0.25rem; }
+.cycle p { margin: 0; color: var(--muted); font-size: 0.82rem; }
+
+.dice-guide {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+}
+.dice-card {
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  background: rgba(4, 14, 25, 0.45);
+  padding: 0.9rem;
+  text-align: center;
+}
+.dice-card .dice-row { margin: 0.55rem 0; gap: 0.5rem; }
+.dice-card p { margin: 0.25rem 0 0; color: var(--muted); font-size: 0.82rem; }
+.dice-plus { align-self: center; color: var(--gold); font-weight: 800; }
+
+.howto-card { min-height: 100%; }
+.howto-card .card-text { margin-top: 0.45rem; }
+
+.howto-alert {
+  border-color: rgba(239, 106, 91, 0.45);
+  background:
+    radial-gradient(circle at 10% 0%, rgba(239, 106, 91, 0.12), transparent 55%),
+    rgba(9, 32, 51, 0.55);
+  margin-block: 1.2rem;
+}
+.howto-alert h2 { margin: 0.2rem 0 0.5rem; }
+.howto-alert p { margin-bottom: 0; }
+
+.mode-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+}
+.mode-card {
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: rgba(9, 32, 51, 0.55);
+  padding: 1rem;
+}
+.mode-card h3 {
+  margin: 0.2rem 0 0.5rem;
+  font-family: var(--font-display);
+  font-size: 1.35rem;
+}
+.mode-card p { margin: 0; color: var(--muted); font-size: 0.85rem; }
+.mode-card-easy {
+  border-color: rgba(79, 191, 139, 0.45);
+  background:
+    radial-gradient(circle at 50% 0%, rgba(79, 191, 139, 0.12), transparent 65%),
+    rgba(9, 32, 51, 0.55);
+}
+
+.outcome { border-top: 4px solid var(--line); }
+.outcome-win { border-top-color: var(--green); }
+.outcome-lose { border-top-color: var(--coral); }
+.outcome h2 { margin: 0.2rem 0 0.5rem; }
+.outcome p { margin-bottom: 0; color: var(--muted); }
+
+.howto-cta { text-align: center; margin-top: 1.4rem; }
+.howto-cta h2 { margin: 0.2rem 0 0.4rem; }
+.howto-cta .hero-actions { justify-content: center; }
+
+@media (max-width: 900px) {
+  .howto-hero, .table-map, .mode-grid, .split { grid-template-columns: 1fr; }
+  .cycle, .dice-guide { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 560px) {
+  .howto-gauges, .cycle, .dice-guide { grid-template-columns: 1fr; }
+  .fake-row { flex-direction: column; }
+}

@@ -6,7 +6,10 @@ return Layout.render(<main>
       <p class="eyebrow">Manual de bolsillo</p>
       <h1>Reglas de XP</h1>
     </div>
-    <p class="pill">Solo o en cooperativo · 10 a 20 minutos</p>
+    <div class="board-meta">
+      <p class="pill">Solo o en cooperativo · 10 a 20 minutos</p>
+      <a class="btn btn-ghost btn-small" href="/como-jugar">Guía visual</a>
+    </div>
   </header>
 
   <section>
