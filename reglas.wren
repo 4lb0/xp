@@ -13,7 +13,7 @@ return Layout.render(<main>
     <div class="split">
       <div>
         <h2>La idea</h2>
-        <p>Son un equipo de expedición, no jugadores rivales. El submarino baja hacia una fosa sin cartografiar en busca de seis Pistas sobre el Megalodón. Nadie gana solo y nadie pierde solo.</p>
+        <p>Son un equipo de expedición, no jugadores rivales. El submarino baja hacia una fosa sin cartografiar en busca de seis Pistas que confirmen que el Megalodón existe. Para el resto del mundo es una leyenda, como el monstruo del lago Ness. Nadie gana solo y nadie pierde solo.</p>
         <ul>
           <li><strong>Ganan</strong> si reúnen 6 Pistas.</li>
           <li><strong>Pierden</strong> si la Energía llega a 0 (se quedan sin aire) o el Escudo llega a 0 (el casco cede).</li>
@@ -45,14 +45,14 @@ return Layout.render(<main>
 
   <section>
     <div class="section-head">
-      <h2>El turno, paso a paso</h2>
-      <p>El equipo juega un turno por vez, sea una sola persona o varias.</p>
+      <h2>El ciclo, paso a paso</h2>
+      <p>El equipo juega un ciclo por vez, sea una sola persona o varias.</p>
     </div>
     <ol class="steps">
-      <li><span class="num">1</span><span><strong>Robá 2 cartas de Equipo</strong>Robás 2 por turno y jugás con las cartas que tengas. Al final del turno te quedan 3: el resto se descarta al azar.</span></li>
+      <li><span class="num">1</span><span><strong>Robá 2 cartas de Equipo</strong>Robás 2 por ciclo y jugás con las cartas que tengas. Al final del ciclo te quedan 3: el resto se descarta al azar.</span></li>
       <li><span class="num">2</span><span><strong>Jugá 1 carta (opcional)</strong>Herramienta: queda en la mesa toda la partida. Una sola en mesa; la nueva reemplaza a la anterior. Maniobra: se resuelve y va al descarte.</span></li>
       <li><span class="num">3</span><span><strong>Resolvé un Misterio</strong>Elegí una carta activa, lean la situación, debatan y elijan una de sus opciones. Después viene la prueba de dados.</span></li>
-      <li><span class="num">4</span><span><strong>Reponé la mesa y pasá el turno</strong>La carta resuelta va al descarte, se revela una nueva y pasan al siguiente turno. Al final, las cartas que sobren de 3 se descartan al azar.</span></li>
+      <li><span class="num">4</span><span><strong>Reponé la mesa y pasá el ciclo</strong>La carta resuelta va al descarte, se revela una nueva y pasan al siguiente ciclo. Al final, las cartas que sobren de 3 se descartan al azar.</span></li>
     </ol>
   </section>
 
@@ -102,12 +102,12 @@ return Layout.render(<main>
       </div>
       <div>
         <div class="section-head"><h2>Maniobras</h2></div>
-        <p class="muted">Se usan una vez y van al descarte.</p>
+        <p class="muted">Se juegan antes de tirar, una vez, y van al descarte.</p>
         <table>
           <thead><tr><th>Carta</th><th>Efecto</th></tr></thead>
           <tbody>
-            <tr><td>Giro Brusco</td><td>Después de tirar: cambiá un dado de Cara a Seca, o al revés.</td></tr>
-            <tr><td>Focos Abisales</td><td>Después de tirar: relanzá un dado de Cara o Seca.</td></tr>
+            <tr><td>Giro Brusco</td><td>Antes de tirar: invertí el dado de Cara o Seca (Cara ↔ Seca).</td></tr>
+            <tr><td>Focos Abisales</td><td>Antes de tirar: si la prueba de Cara o Seca falla, relanzá el dado una vez.</td></tr>
             <tr><td>Blindaje de Titanio</td><td>Antes de resolver: reducí 1 el daño al Escudo.</td></tr>
             <tr><td>Arpón Rastreador</td><td>Gastá 2 de Energía y tirá un dado. Si sale Cara, +1 Pista.</td></tr>
             <tr><td>Turbo de Emergencia</td><td>Antes de tirar: sumá 2 al total de la prueba.</td></tr>
@@ -127,13 +127,13 @@ return Layout.render(<main>
   <section class="panel">
     <h2>Cartas de apoyo</h2>
     <p>Dos cartas del equipo: <strong>Kit de emergencia</strong> (<span class="chip chip-energia">⚡ +1</span> o <span class="chip chip-escudo">🛡️ +1</span>) y <strong>Carga de emergencia</strong> (<span class="chip chip-energia">⚡ +2</span> o <span class="chip chip-escudo">🛡️ +2</span>).</p>
-    <p>En <strong>Experto</strong> se mezclan en el mazo. En <strong>Casual</strong>, el Kit se busca y queda en el área de ayuda. En <strong>Muy fácil</strong>, las dos quedan en el área. Las cartas del área se usan una vez, en cualquier momento y sin gastar la carta del turno.</p>
+    <p>En <strong>Experto</strong> se mezclan en el mazo. En <strong>Casual</strong>, el Kit se busca y queda en el área de ayuda. En <strong>Muy fácil</strong>, las dos quedan en el área. Las cartas del área se usan una vez, en cualquier momento y sin gastar la carta del ciclo.</p>
   </section>
 
   <section class="panel">
     <h2>El reloj: consumo de Energía</h2>
-    <p><strong>Consumo:</strong> al terminar cada turno, el submarino pierde <strong>1 Energía</strong>, hayan ganado o no una Pista. La Energía es el reloj de la partida y no se recupera con las cartas de Misterio.</p>
-    <p><strong>Recarga:</strong> solo con Equipo. La Batería de Respaldo devuelve 2 de Energía y hay 6 en el mazo. El Generador Auxiliar recarga 1 al empezar cada misterio si están en 4 o menos. El Generador de Escudo hace lo mismo con el casco. Ahorro de Oxígeno saltea el consumo de un turno.</p>
+    <p><strong>Consumo:</strong> al terminar cada ciclo, el submarino pierde <strong>1 Energía</strong>, hayan ganado o no una Pista. La Energía es el reloj de la partida y no se recupera con las cartas de Misterio.</p>
+    <p><strong>Recarga:</strong> solo con Equipo. La Batería de Respaldo devuelve 2 de Energía y hay 6 en el mazo. El Generador Auxiliar recarga 1 al empezar cada misterio si están en 4 o menos. El Generador de Escudo hace lo mismo con el casco. Ahorro de Oxígeno saltea el consumo de un ciclo.</p>
     <p><strong>Reparación:</strong> una vez por misterio, antes de elegir, pueden gastar 1 Energía para recuperar 2 Escudo. Reparar compra tiempo, pero acerca el final del aire.</p>
     <p><strong>Emboscadas:</strong> algunas cartas de Peligro cuestan <strong>1 Energía</strong>, <strong>1 Escudo</strong> o <strong>1 Pista</strong> apenas entran a la mesa, y tienen una sola opción. Las cartas de Misterio nunca te sacan Energía: la Energía la baja el reloj y la recupera el Equipo.</p>
   </section>

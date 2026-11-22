@@ -41,7 +41,7 @@ El pulso llega cada nueve segundos. Ustedes lo escuchan dos veces más antes de 
 - Lo que está debajo del bloque es la narrativa: Markdown normal (párrafos, **negritas**, listas). Se muestra en la carta y en la mesa.
 - `familia` es `exploracion`, `peligro` o `dilema`. Define el color de la carta.
 - `emoji` es el arte provisorio de la carta: se muestra grande en la mesa y en el visor. Cuando exista la ilustración definitiva, este campo desaparece y se reemplaza por la imagen.
-- `entrada` es opcional: el costo que se paga cuando la carta se revela en la mesa. Ejemplos: `energia-1`, `escudo-1`, `pistas-1`. Las cartas con `entrada` son **emboscadas** y llevan una sola opción. La app aplica el costo al repartir la mesa, al reponerla al final del turno y al cambiarla con Señuelo Luminoso.
+- `entrada` es opcional: el costo que se paga cuando la carta se revela en la mesa. Ejemplos: `energia-1`, `escudo-1`, `pistas-1`. Las cartas con `entrada` son **emboscadas** y llevan una sola opción. La app aplica el costo al repartir la mesa, al reponerla al final del ciclo y al cambiarla con Señuelo Luminoso.
 - Casi todas las cartas tienen **dos opciones**, `[A]` y `[B]`. Las emboscadas tienen **una sola opción**, `[A]`.
 - Las letras son solo marcadores internos para separar los bloques: la app no las muestra. En la mesa se ven botones con la acción, sin numeración.
 - Cada opción necesita las cuatro claves: `texto`, `prueba`, `exito`, `fallo`.
@@ -92,7 +92,7 @@ efecto: peek
 Debajo, el texto de la carta (Markdown normal):
 
 ```markdown
-Una vez por turno, mirá la carta de arriba del Mazo del Juego antes de elegir.
+Una vez por ciclo, mirá la carta de arriba del Mazo del Juego antes de elegir.
 ```
 
 - `emoji`: arte provisorio, igual que en las cartas de Misterio.
@@ -110,9 +110,9 @@ Una vez por turno, mirá la carta de arriba del Mazo del Juego antes de elegir.
 | `efecto` | Qué hace |
 |---|---|
 | `peek` | Muestra la próxima carta del mazo mientras la Herramienta esté en la mesa. |
-| `reroll_parity` | Habilita el botón “Focos Abisales: relanzar” en pruebas de Cara o Seca (1 vez por turno). |
-| `energy_start` | Al empezar el turno, si la Energía está en 1 o 2, sube 1. |
-| `reduce_damage` | Reduce 1 el daño al Escudo (1 vez por turno). |
+| `reroll_parity` | Antes de tirar en una prueba de Cara o Seca: si falla, relanza el dado una vez (1 vez por ciclo). |
+| `energy_start` | Al empezar el ciclo, si la Energía está en 4 o menos, sube 1. |
+| `reduce_damage` | Antes de tirar: reduce 1 el daño al Escudo (1 vez por ciclo). |
 | `extra_clue_six` | Si ganan Pistas y un dado muestra 6, suma 1 Pista extra. |
 | `harpoon` | Habilita el botón del Arpón: 2 Energía, tira 1 dado, con Cara gana 1 Pista y se descarta. |
 | `plus_one_sum` | Suma 1 al total de las pruebas de 2 dados. |
@@ -123,8 +123,8 @@ Una vez por turno, mirá la carta de arriba del Mazo del Juego antes de elegir.
 | `plus_two` | Suma +2 al total, después de tirar. |
 | `flip_parity` | Después de tirar: invierte el dado de una prueba de Cara o Seca. |
 | `reroll_all` | Vuelve a tirar todos los dados. |
-| `cancel_shield_loss` | Cancela una pérdida de Escudo en el turno. |
-| `no_energy_cost` | Evita el gasto de Energía en el turno. |
+| `cancel_shield_loss` | Cancela una pérdida de Escudo en el ciclo. |
+| `no_energy_cost` | Evita el gasto de Energía en el ciclo. |
 
 Agregar un efecto nuevo requiere tocar `_app/game.wren` o `juego.wren`: el bloque markdown define los datos, no la lógica.
 

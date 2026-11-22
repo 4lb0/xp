@@ -42,6 +42,13 @@ class Card {
   isManeuver { _type == "maniobra" }
   isSupport { _type == "apoyo" }
 
+  // Las cartas que se resuelven en el momento se pueden jugar desde la mano.
+  // Las demás (Turbo, Giro, Focos, Suerte, Blindaje...) se preparan en la
+  // pantalla de la prueba, siempre antes de tirar.
+  playNow {
+    return isTool || isSupport || ["heal_shield", "heal_energy", "clue_for_energy", "harpoon", "discard_active"].contains(_effect)
+  }
+
   static get(id) {
     if (id == null || id.count < 3) return null
     var kind = id[0] == "m" ? "misterio" : "equipo"

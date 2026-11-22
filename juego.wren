@@ -41,7 +41,7 @@ if (Request.isPost) {
     if (row == null) {
       aviso = "Esa carta ya no está en tu mano."
     } else if (g.jugadas > 0) {
-      aviso = "Ya jugaron una carta este turno."
+      aviso = "Ya jugaron una carta este ciclo."
     } else {
       var c = Card.get(row["cardId"])
       if (c == null) {
@@ -122,7 +122,7 @@ if (Request.isPost) {
     if (g.fase != "listo") {
       aviso = "Ya hay una prueba en curso."
     } else if (g.resueltas > 0) {
-      aviso = "Ya resolvieron un misterio este turno."
+      aviso = "Ya resolvieron un misterio este ciclo."
     } else {
       var row = `SELECT * FROM game_cards WHERE id = ? AND gameId = ? AND zone = 'mesa'`.first(rowId, g.id)
       if (row == null) {
@@ -174,33 +174,31 @@ if (Request.isPost) {
     } else if (g.fase != "prueba") {
       aviso = "Esa Maniobra se usa cuando hay una prueba de dados."
     } else if (g.jugadas > 0) {
-      aviso = "Ya jugaron una carta este turno."
+      aviso = "Ya jugaron una carta este ciclo."
     } else if (c.effect == "flip_parity" && !parity) {
       aviso = "Giro Brusco solo sirve en pruebas de Cara o Seca."
-    } else if (c.effect == "flip_parity" && !g.tirado) {
-      aviso = "Giro Brusco se juega después de tirar: cambia un dado que ya vieron."
+    } else if (c.effect == "flip_parity" && g.tirado) {
+      aviso = "Giro Brusco se prepara antes de tirar."
     } else if (c.effect == "reroll_parity" && !parity) {
       aviso = "Focos Abisales solo sirven en pruebas de Cara o Seca."
-    } else if (c.effect == "reroll_parity" && !g.tirado) {
-      aviso = "Focos Abisales se usan después de tirar."
+    } else if (c.effect == "reroll_parity" && g.tirado) {
+      aviso = "Focos Abisales se preparan antes de tirar."
     } else if (c.effect == "reduce_damage" && g.tirado) {
       aviso = "Blindaje de Titanio se prepara antes de tirar."
-    } else if (g.tirado && c.effect != "flip_parity" && c.effect != "reroll_parity") {
-      aviso = "Esa Maniobra se juega antes de tirar: se compromete a ciegas."
+    } else if (g.tirado) {
+      aviso = "Todas las Maniobras se juegan antes de tirar: se comprometen a ciegas."
     } else if (c.effect == "plus_two") {
       `UPDATE games SET bonus = bonus + 2, jugadas = 1 WHERE id = ?`.query(g.id)
       Game.move(rowId, "descarte")
       Game.log(g.id, "Turbo de Emergencia: +2 al total.")
     } else if (c.effect == "flip_parity") {
-      var nuevo = 7 - g.dado1
-      `UPDATE games SET dado1 = ?, jugadas = 1 WHERE id = ?`.query(nuevo, g.id)
+      `UPDATE games SET giro = 1, jugadas = 1 WHERE id = ?`.query(g.id)
       Game.move(rowId, "descarte")
-      Game.log(g.id, "Giro Brusco: el dado pasa de Cara a Seca (o al revés).")
+      Game.log(g.id, "Giro Brusco preparado: el dado se va a invertir.")
     } else if (c.effect == "reroll_parity") {
-      var d = Game.roll(1)[0]
-      `UPDATE games SET dado1 = ?, jugadas = 1 WHERE id = ?`.query(d, g.id)
+      `UPDATE games SET focosM = 1, jugadas = 1 WHERE id = ?`.query(g.id)
       Game.move(rowId, "descarte")
-      Game.log(g.id, "Focos Abisales: relanzan el dado y sale " + d.toString + ".")
+      Game.log(g.id, "Focos Abisales preparados: si falla, relanzan el dado.")
     } else if (c.effect == "reduce_damage") {
       `UPDATE games SET blindajeM = 1, jugadas = 1 WHERE id = ?`.query(g.id)
       Game.move(rowId, "descarte")
@@ -238,6 +236,10 @@ if (Request.isPost) {
         d2 = opt["dados"] == 2 ? dice[1] : 0
         ok = Game.evalTest(opt["tipoPrueba"], opt["objetivo"], d1, d2, g.bonus, Game.hasEffect(tools, "plus_one_sum"))
         Game.log(g.id, "Suerte del Principiante: nueva tirada " + d1.toString + (opt["dados"] == 2 ? " y " + d2.toString : "") + ".")
+      } else if (!ok && g.focosM) {
+        d1 = Game.roll(1)[0]
+        ok = Game.evalTest(opt["tipoPrueba"], opt["objetivo"], d1, d2, g.bonus, Game.hasEffect(tools, "plus_one_sum"))
+        Game.log(g.id, "Focos Abisales: nueva tirada " + d1.toString + ".")
       }
       var eff = Game.parseEffects(ok ? opt["exito"] : opt["fallo"])
       var res = Game.apply(g.id, g, eff, ok, tools)
@@ -246,7 +248,7 @@ if (Request.isPost) {
       var texto = (ok ? "Prueba superada" : "Prueba fallida") + ": " + c.name + " — " + opt["texto"] + "."
       if (!res["notas"].isEmpty) texto = texto + " " + res["notas"].join(". ") + "."
       var nextFase = "resuelto"
-      `UPDATE games SET fase = ?, resultado = ?, resueltas = 1, ultimo = ?, dado1 = ?, dado2 = ?, tirado = 0, bonus = 0, giro = 0, suerte = 0 WHERE id = ?`.query([nextFase, ok ? "ganada" : "perdida", texto, d1, d2, g.id])
+      `UPDATE games SET fase = ?, resultado = ?, resueltas = 1, ultimo = ?, dado1 = ?, dado2 = ?, tirado = 0, bonus = 0, giro = 0, suerte = 0, focosM = 0 WHERE id = ?`.query([nextFase, ok ? "ganada" : "perdida", texto, d1, d2, g.id])
       Game.log(g.id, texto)
       if (res["status"] == "victoria") Game.log(g.id, "¡Seis Pistas! El misterio queda resuelto.")
       if (res["status"] == "derrota") Game.log(g.id, "La expedición se pierde en la oscuridad.")
@@ -341,7 +343,7 @@ if (Request.isPost) {
           if (resEntrada["status"] != "activa") return Response.redirect("/juego")
         }
       }
-      `UPDATE games SET jugador = 1, turno = turno + 1, fase = 'listo', pruebaCarta = NULL, pruebaOpcion = NULL, dado1 = 0, dado2 = 0, tirado = 0, bonus = 0, cebo = 0, ahorro = 0, blindajeUsado = 0, blindajeM = 0, focosUsado = 0, jugadas = 0, resueltas = 0, resultado = NULL, giro = 0, suerte = 0, empujado = 0, pistasTurno = 0, reparado = 0 WHERE id = ?`.query(g.id)
+      `UPDATE games SET jugador = 1, turno = turno + 1, fase = 'listo', pruebaCarta = NULL, pruebaOpcion = NULL, dado1 = 0, dado2 = 0, tirado = 0, bonus = 0, cebo = 0, ahorro = 0, blindajeUsado = 0, blindajeM = 0, focosUsado = 0, focosM = 0, jugadas = 0, resueltas = 0, resultado = NULL, giro = 0, suerte = 0, empujado = 0, pistasTurno = 0, reparado = 0 WHERE id = ?`.query(g.id)
       var g3 = Game.find(g.id)
       if (g3 != null && Game.hasTool(g.id, "energy_start") && g3.energia <= 4) {
         `UPDATE games SET energia = energia + 1 WHERE id = ?`.query(g.id)
@@ -353,7 +355,7 @@ if (Request.isPost) {
         Game.log(g.id, "Generador de Escudo: +1 Escudo al empezar.")
       }
       Game.draw(g.id, "equipo", "mano", 2)
-      Game.log(g.id, "Turno " + (g.turno + 1).toString + ".")
+      Game.log(g.id, "Ciclo " + (g.turno + 1).toString + ".")
     }
   }
 
@@ -380,7 +382,7 @@ if (g == null) {
       <p class="eyebrow">Preparación</p>
       <h1>Prepará la expedición</h1>
       <p class="lead">Se puede jugar solo o en equipo. La mesa es una: el equipo XP contra el juego.</p>
-      <p class="hint">Siempre 3 cartas de Misterio en la mesa y 2 de robo por turno. No importa cuántos jueguen.</p>
+      <p class="hint">Siempre 3 cartas de Misterio en la mesa y 2 de robo por ciclo. No importa cuántos jueguen.</p>
       <form method="post" class="panel start-form">
         <input type="hidden" name="accion" value="nueva" />
         <label for="modo"><strong>Modo</strong></label>
@@ -438,15 +440,13 @@ var handCount = hand.count
 var puedeElegir = g.status == "activa" && g.fase == "listo" && g.resueltas == 0
 var puedeJugar = g.status == "activa" && g.jugadas == 0 && g.fase == "listo"
 var puedeReparar = g.status == "activa" && g.fase == "listo" && !g.reparado && g.energia >= 2
-var maniobrasPrueba = hand.where { |h| ["plus_two", "reroll_all", "cancel_shield_loss", "no_energy_cost", "reduce_damage"].contains(h["card"].effect) }.toList
-var girosPrueba = hand.where { |h| h["card"].effect == "flip_parity" }.toList
-var rerollsPrueba = hand.where { |h| h["card"].effect == "reroll_parity" }.toList
+var maniobrasPrueba = hand.where { |h| ["plus_two", "reroll_all", "cancel_shield_loss", "no_energy_cost", "reduce_damage", "flip_parity", "reroll_parity"].contains(h["card"].effect) }.toList
 
 var finalTitulo = "La expedición continúa"
 var finalTexto = ""
 if (g.status == "victoria") {
-  finalTitulo = "Misterio resuelto"
-  finalTexto = "Seis Pistas. El Megalodón se aleja hacia la fosa y el equipo sube con la respuesta. La expedición vuelve a casa."
+  finalTitulo = "Lo encontraron"
+  finalTexto = "Seis Pistas. La última sombra se hunde en la fosa y, por un instante, el Megalodón está ahí. El mundo seguirá creyendo que es un mito, como el monstruo del lago Ness. Ustedes ya saben la verdad."
 } else if (g.status == "derrota" && g.energia <= 0) {
   finalTitulo = "Sin aire"
   finalTexto = "La Energía llegó a cero. El submarino se queda quieto en la oscuridad y la expedición termina ahí."
@@ -466,7 +466,7 @@ return Layout.render(<main class="game">
     </div>
     <div class="board-meta">
       <span class="pill">{{ g.modo == "facil" ? "Muy fácil" : (g.modo == "casual" ? "Modo casual" : "Modo experto") }}</span>
-      <span class="pill">Turno {{ g.turno }}</span>
+      <span class="pill">Ciclo {{ g.turno }}</span>
       <span class="pill">Mazo {{ mazo }}</span>
       <span class="pill">Descarte {{ descarte }}</span>
     </div>
@@ -550,12 +550,13 @@ return Layout.render(<main class="game">
     {{ g.bonus > 0 && <p class="hint">Bonificación acumulada: +{{ g.bonus }} al total.</p> }}
     {{ g.giro && <p class="hint">Giro Brusco preparado: el dado se va a invertir.</p> }}
     {{ g.suerte && <p class="hint">Suerte del Principiante preparada: si falla, se tira de nuevo.</p> }}
+    {{ g.focosM && <p class="hint">Focos Abisales preparados: si falla, relanzan el dado.</p> }}
     {{ g.cebo && <p class="hint">Lanzar Cebo: el próximo daño al Escudo se cancela.</p> }}
-    {{ g.ahorro && <p class="hint">Ahorro de Oxígeno: este turno no gastan Energía.</p> }}
+    {{ g.ahorro && <p class="hint">Ahorro de Oxígeno: este ciclo no gastan Energía.</p> }}
 
     {{ !g.tirado && <section class="roll-controls">
       {{ g.jugadas == 0 && maniobrasPrueba.count > 0 && <section class="maneuvers">
-        <p class="hint">Turbo, Suerte, Cebo y Ahorro se juegan <strong>antes</strong> de tirar. Giro Brusco va después: cambia un dado que ya vieron.</p>
+        <p class="hint">Todas las Maniobras se juegan <strong>antes</strong> de tirar. Giro invierte el dado; Focos lo relanza si la prueba falla.</p>
         <div class="action-row">
           {{ maniobrasPrueba.map{|h| <form method="post" class="inline-form">
             <input type="hidden" name="accion" value="maniobra" />
@@ -564,7 +565,7 @@ return Layout.render(<main class="game">
           </form>} }}
         </div>
       </section> }}
-      {{ g.jugadas > 0 && <p class="hint">Ya jugaron su carta de este turno. Tiren cuando quieran.</p> }}
+      {{ g.jugadas > 0 && <p class="hint">Ya jugaron su carta de este ciclo. Tiren cuando quieran.</p> }}
       <form method="post" class="roll-form">
         <input type="hidden" name="accion" value="tirar" />
         <button class="btn btn-primary">Tirar en la app</button>
@@ -600,23 +601,12 @@ return Layout.render(<main class="game">
         {{ previewChips.map{|c| <span class="chip {{ c["cls"] }}" title="{{ c["title"] }}">{{ c["icon"] }} {{ c["text"] }}</span>} }}
       </p>
       {{ g.suerte && !previewOk && <p class="hint">Suerte del Principiante: al resolver, se relanza una vez.</p> }}
+      {{ g.focosM && !previewOk && <p class="hint">Focos Abisales: al resolver, se relanza el dado.</p> }}
       <p class="hint">El efecto se aplica en esta tirada, al resolver. No se calcula al cerrar el misterio.</p>
     </section> }}
 
     {{ g.tirado && <section class="test-actions">
       <p class="muted">Tirada registrada. Ya no pueden jugar Maniobras: resuelvan.</p>
-      <div class="action-row">
-        {{ g.jugadas == 0 && girosPrueba.map{|h| <form method="post" class="inline-form">
-          <input type="hidden" name="accion" value="maniobra" />
-          <input type="hidden" name="rowId" value="{{ h["rowId"] }}" />
-          <button class="btn btn-ghost btn-small">Giro Brusco: invertir el dado</button>
-        </form>} }}
-        {{ g.jugadas == 0 && rerollsPrueba.map{|h| <form method="post" class="inline-form">
-          <input type="hidden" name="accion" value="maniobra" />
-          <input type="hidden" name="rowId" value="{{ h["rowId"] }}" />
-          <button class="btn btn-ghost btn-small">Focos Abisales: relanzar</button>
-        </form>} }}
-      </div>
       <div class="action-row">
         <form method="post" class="inline-form">
           <input type="hidden" name="accion" value="resolver" />
@@ -630,10 +620,10 @@ return Layout.render(<main class="game">
     <p class="eyebrow">Resultado</p>
     <h2>{{ g.resultado == "ganada" ? "Prueba superada" : "Prueba fallida" }}</h2>
     <p class="muted">{{ g.ultimo }}</p>
-    <p>Revisen los contadores. Al terminar el turno, las cartas que sobren de 3 se descartan al azar.</p>
+    <p>Revisen los contadores. Al terminar el ciclo, las cartas que sobren de 3 se descartan al azar.</p>
     <form method="post">
       <input type="hidden" name="accion" value="terminar" />
-      <button class="btn btn-primary">Terminar turno y reponer la mesa</button>
+      <button class="btn btn-primary">Terminar ciclo y reponer la mesa</button>
     </form>
   </section> }}
 
@@ -672,7 +662,7 @@ return Layout.render(<main class="game">
         </ul>
       </article>} }}
     </div>
-    {{ mesa.isEmpty && <p class="muted">No quedan cartas activas. Repongan la mesa al terminar el turno.</p> }}
+    {{ mesa.isEmpty && <p class="muted">No quedan cartas activas. Repongan la mesa al terminar el ciclo.</p> }}
   </section> }}
 
   {{ g.status == "activa" && <section class="split">
@@ -708,16 +698,16 @@ return Layout.render(<main class="game">
           <h3>{{ h["card"].name }}</h3>
           <section class="card-text">{{ h["card"].body }}</section>
           <div class="action-row">
-            <form method="post" class="inline-form">
+            {{ h["card"].playNow ? <form method="post" class="inline-form">
               <input type="hidden" name="accion" value="jugar" />
               <input type="hidden" name="rowId" value="{{ h["rowId"] }}" />
               <button class="btn btn-primary btn-small" {{ puedeJugar ? "" : "disabled" }}>Jugar</button>
-            </form>
+            </form> : <p class="hint card-hint">Elegí un Misterio y usala antes de tirar.</p> }}
           </div>
         </article>} }}
       </div>
-      {{ hand.isEmpty && <p class="muted">Sin cartas en mano. Al terminar el turno roban 2.</p> }}
-      <p class="hint">{{ g.jugadas == 0 ? "Todavía pueden jugar 1 carta este turno." : "Ya jugaron su carta de este turno." }} Al final del turno, las que sobren de 3 se descartan al azar.</p>
+      {{ hand.isEmpty && <p class="muted">Sin cartas en mano. Al terminar el ciclo roban 2.</p> }}
+      <p class="hint">{{ g.jugadas == 0 ? "Todavía pueden jugar 1 carta este ciclo." : "Ya jugaron su carta de este ciclo." }} Al final del ciclo, las que sobren de 3 se descartan al azar.</p>
     </div>
 
     <aside>
@@ -739,13 +729,19 @@ return Layout.render(<main class="game">
         <p>La próxima carta del mazo es <strong>{{ top.name }}</strong>.</p>
       </section> }}
 
-      <section class="panel">
+      <div class="section-head aside-subhead">
+        <h2>Acciones base</h2>
+        <p>No son cartas</p>
+      </div>
+
+      <section class="panel base-action">
         <p class="eyebrow">Reparación de casco</p>
-        <p><span class="chip chip-energia chip-loss">⚡ −1</span> <span class="chip chip-escudo">🛡️ +2</span> Una vez por turno.</p>
+        <p><span class="chip chip-energia chip-loss">⚡ −1</span> <span class="chip chip-escudo">🛡️ +2</span> Una vez por ciclo.</p>
         <form method="post">
           <input type="hidden" name="accion" value="reparar" />
           <button class="btn btn-ghost btn-small" {{ puedeReparar ? "" : "disabled" }}>Reparar casco</button>
         </form>
+        <p class="hint">Siempre disponible: no ocupa el lugar de la Herramienta activa.</p>
         {{ g.reparado && <p class="hint">Ya repararon en este misterio; el casco aguanta un poco más.</p> }}
       </section>
 
@@ -763,7 +759,7 @@ return Layout.render(<main class="game">
 
       <section class="panel">
         <p class="eyebrow">Regla rápida</p>
-        <p>Cada turno: roban 2, juegan 1 carta como máximo y resuelven 1 misterio. Al final se descartan al azar hasta 3 y el submarino consume 1 Energía.</p>
+        <p>Cada ciclo: roban 2, juegan 1 carta como máximo y resuelven 1 misterio. Al final se descartan al azar hasta 3 y el submarino consume 1 Energía.</p>
         <a href="/reglas" class="btn btn-ghost btn-small">Ver reglas completas</a>
       </section>
     </aside>

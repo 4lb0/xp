@@ -8,12 +8,12 @@ return Layout.render(<main>
         <h1>XP <span>En busca del Megalodón</span></h1>
         <p class="lead">
           Son un solo equipo. Bajan en un submarino hacia una fosa que nadie cartografió.
-          Cada carta es una decisión, cada tirada puede acercarlos al descubrimiento
-          o apagar las luces para siempre.
+          Para el mundo, el Megalodón es un mito, como el monstruo del lago Ness.
+          Ustedes van a comprobar si existe.
         </p>
         <p class="lead">
-          <strong>La misión:</strong> reunir 6 Pistas antes de quedarse sin Energía o sin Escudo.
-          Nadie gana solo. Nadie pierde solo.
+          <strong>La misión:</strong> reunir 6 Pistas que confirmen al Megalodón antes de quedarse
+          sin Energía o sin Escudo. Nadie gana solo. Nadie pierde solo.
         </p>
         <div class="hero-actions">
           <a class="btn btn-primary" href="/juego">Iniciar expedición</a>
@@ -47,12 +47,12 @@ return Layout.render(<main>
   <section>
     <div class="section-head">
       <h2>Cómo se juega</h2>
-      <p>Cuatro pasos por turno. Sin tablero.</p>
+      <p>Cuatro pasos por ciclo. Sin tablero.</p>
     </div>
     <ol class="steps">
       <li>
         <span class="num">1</span>
-        <span><strong>Robá 2 cartas de Equipo</strong>Al final del turno te quedan 3 cartas: el resto se descarta al azar.</span>
+        <span><strong>Robá 2 cartas de Equipo</strong>Al final del ciclo te quedan 3 cartas: el resto se descarta al azar.</span>
       </li>
       <li>
         <span class="num">2</span>
@@ -75,7 +75,7 @@ return Layout.render(<main>
         <div class="section-head">
           <h2>Prepará la mesa</h2>
         </div>
-        <p class="muted">Se puede jugar solo o en equipo: la mesa es una. Siempre hay 3 cartas de Misterio y se roban 2 de Equipo por turno.</p>
+        <p class="muted">Se puede jugar solo o en equipo: la mesa es una. Siempre hay 3 cartas de Misterio y se roban 2 de Equipo por ciclo.</p>
         <form method="get" action="/juego" class="panel">
           <label for="modo"><strong>Modo</strong></label>
           <p style="margin: 0.4rem 0 0.9rem">

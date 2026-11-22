@@ -27,6 +27,7 @@ class Game {
   pistasTurno { _row["pistasTurno"].toNum }
   reparado { _row["reparado"].toNum == 1 }
   blindajeM { _row["blindajeM"].toNum == 1 }
+  focosM { _row["focosM"].toNum == 1 }
   apoyoCarta { _row["apoyoCarta"] == null ? null : _row["apoyoCarta"].toNum }
   apoyoOrigen { _row["apoyoOrigen"] }
   fasePrevia { _row["fasePrevia"] }
