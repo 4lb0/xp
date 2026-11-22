@@ -1,11 +1,13 @@
 class Layout {
-  static render(content) { Layout.render(content, "XP · Equipo eXPedición") }
+  static render(content) { Layout.render(content, "XP · Equipo eXPedición", false) }
 
   static die(value) { Layout.die(value, "") }
 
   static die(value, extra) { <span class="die {{ extra }}" data-value="{{ value }}" aria-hidden="true"><span class="p p1"></span><span class="p p2"></span><span class="p p3"></span><span class="p p4"></span><span class="p p5"></span><span class="p p6"></span><span class="p p7"></span><span class="p p8"></span><span class="p p9"></span></span> }
 
-  static render(content, title) { <!doctype html>
+  static render(content, title) { Layout.render(content, title, false) }
+
+  static render(content, title, hideHeader) { <!doctype html>
     <html lang="es">
       <head>
         <meta charset="utf-8" />
@@ -17,7 +19,7 @@ class Layout {
       </head>
       <body>
         <a class="skip-link" href="#contenido">Saltar al contenido</a>
-        <header class="site-header">
+        {{ !hideHeader && <header class="site-header">
           <nav class="nav wrap" aria-label="Principal">
             <a class="brand" href="/" aria-label="XP, inicio">
               <span class="brand-mark" aria-hidden="true">XP</span>
@@ -34,7 +36,7 @@ class Layout {
               <li><a href="/cartas" class="{{ Request.uri == "/cartas" ? "active" : "" }}">Cartas</a></li>
             </ul>
           </nav>
-        </header>
+        </header> }}
 
         <div class="wrap" id="contenido">
           {{ content }}

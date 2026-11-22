@@ -303,9 +303,6 @@ if (Request.isPost) {
       }
       Game.move(row["id"], "descarte")
     }
-  } else if (accion == "dado") {
-    var d = Game.roll(1)[0]
-    return Response.redirect("/juego?dado=" + d.toString)
   } else if (accion == "cancelar") {
     if (g.tirado) {
       aviso = "Ya tiraron: no pueden volver atrás. Resuelvan la prueba."
@@ -383,7 +380,6 @@ if (g == null && (Request.get("jugadores") != null || Request.get("modo") != nul
 // ---------- Datos para la vista ----------
 
 var aviso = Util.urlDecode(Request.get("aviso", ""))
-var dadoLibre = Request.get("dado")
 var modoGuardado = session.get("modo")
 var modoInicial = (modoGuardado == "experto" || modoGuardado == "casual" || modoGuardado == "facil") ? modoGuardado : "casual"
 
@@ -413,6 +409,7 @@ var mesa = Game.cardsIn(g.id, "mesa")
 var emboscadasIniciales = mesa.where { |m| m["card"].entry != "" }.toList
 var hand = Game.cardsIn(g.id, "mano")
 var tools = Game.cardsIn(g.id, "herramientas")
+var activeTool = tools.isEmpty ? null : tools.first["card"]
 var ayuda = Game.cardsIn(g.id, "ayuda")
 var logs = Game.lastLogs(g.id, 8)
 var mazo = Game.count(g.id, "misterio")
@@ -449,6 +446,11 @@ if (g.tirado && pendingOpt != null) {
 }
 
 var handCount = hand.count
+var focoHref = "#cartas-activas"
+if (g.fase == "emboscada") focoHref = "#emboscada"
+if (g.fase == "apoyo") focoHref = "#apoyo"
+if (g.fase == "prueba") focoHref = "#prueba"
+if (g.fase == "resuelto") focoHref = "#resultado"
 var puedeElegir = g.status == "activa" && g.fase == "listo" && g.resueltas == 0
 var puedeJugar = g.status == "activa" && g.jugadas == 0 && g.fase == "listo"
 var maniobrasPrueba = hand.where { |h| ["plus_two", "reroll_all", "cancel_shield_loss", "no_energy_cost", "reduce_damage", "flip_parity", "reroll_parity"].contains(h["card"].effect) }.toList
@@ -469,6 +471,31 @@ if (g.status == "victoria") {
 // ---------- Vista ----------
 
 return Layout.render(<main class="game">
+  {{ g.status == "activa" && <input type="checkbox" id="game-menu" class="game-menu-check" /> }}
+  {{ g.status == "activa" && <aside class="game-rail" aria-label="Menú de la expedición">
+    <label for="game-menu" class="game-rail-menu" aria-label="Abrir o cerrar el menú de la expedición">
+      <span class="rail-menu-icon" aria-hidden="true">☰</span>
+      <span class="rail-menu-text">Menú</span>
+      <span class="rail-mobile-state">⚡{{ g.energia }} · 🛡️{{ g.escudo }} · 🔍{{ g.pistas }}</span>
+    </label>
+    <div class="game-rail-body">
+      <div class="rail-state">
+        <span class="rail-stat rail-energia" title="Energía {{ g.energia }} de 6"><b>{{ g.energia }}</b><small>⚡</small></span>
+        <span class="rail-stat rail-escudo" title="Escudo {{ g.escudo }} de 6"><b>{{ g.escudo }}</b><small>🛡️</small></span>
+        <span class="rail-stat rail-pistas" title="Pistas {{ g.pistas }} de 6"><b>{{ g.pistas }}</b><small>🔍</small></span>
+      </div>
+      <p class="rail-meta">Ciclo {{ g.turno }} · Mazo {{ mazo }} · Descarte {{ descarte }}</p>
+      <nav class="rail-nav">
+        <a href="{{ focoHref }}"><span aria-hidden="true">🃏</span> Cartas activas <b>{{ mesa.count }}</b></a>
+        <a href="#mano"><span aria-hidden="true">🖐️</span> Mano <b>{{ handCount }}</b></a>
+        <a href="#herramientas" class="{{ activeTool == null ? "is-empty" : "" }}" data-tool="{{ activeTool == null ? "Sin Herramienta activa" : activeTool.name }}" title="{{ activeTool == null ? "Sin Herramienta activa" : activeTool.name }}" aria-label="Herramienta: {{ activeTool == null ? "ninguna activa" : activeTool.name }}">
+          <span aria-hidden="true">🔧</span> Herramienta
+          <span class="rail-dot {{ activeTool == null ? "" : "on" }}" aria-hidden="true"></span>
+        </a>
+        <a href="#ayuda" class="{{ ayuda.isEmpty ? "is-empty" : "" }}"><span aria-hidden="true">🎒</span> Ayuda <b>{{ ayuda.count }}</b></a>
+      </nav>
+    </div>
+  </aside> }}
 
   <header class="board-head">
     <div>
@@ -507,7 +534,7 @@ return Layout.render(<main class="game">
     </article>
   </section>
 
-  {{ g.status == "activa" && g.fase == "emboscada" && <section class="panel ambush-choice">
+  {{ g.status == "activa" && g.fase == "emboscada" && <section class="panel ambush-choice" id="emboscada">
     <p class="eyebrow">Emboscada inicial</p>
     <h2>Elijan qué golpe recibe el equipo</h2>
     <p class="muted">Las tres cartas iniciales están boca arriba. Solo una emboscada se aplica al empezar: elijan cuál sufrir.</p>
@@ -529,7 +556,7 @@ return Layout.render(<main class="game">
     </div>
   </section> }}
 
-  {{ g.status == "activa" && g.fase == "apoyo" && supportCard != null && <section class="test-panel support-choice">
+  {{ g.status == "activa" && g.fase == "apoyo" && supportCard != null && <section class="test-panel support-choice" id="apoyo">
     <p class="eyebrow">Maniobra de apoyo</p>
     <span class="card-emoji test-emoji" aria-hidden="true">{{ supportCard.emoji }}</span>
     <h2>{{ supportCard.name }}</h2>
@@ -561,7 +588,7 @@ return Layout.render(<main class="game">
     </form>
   </section> }}
 
-  {{ g.status == "activa" && g.fase == "prueba" && pendingCard != null && <section class="test-panel">
+  {{ g.status == "activa" && g.fase == "prueba" && pendingCard != null && <section class="test-panel" id="prueba">
     <p class="eyebrow">Prueba de dados</p>
     <span class="card-emoji test-emoji" aria-hidden="true">{{ pendingCard.emoji }}</span>
     <h2>{{ pendingCard.name }}</h2>
@@ -649,7 +676,7 @@ return Layout.render(<main class="game">
     </section> }}
   </section> }}
 
-  {{ g.status == "activa" && g.fase == "resuelto" && <section class="panel result-panel">
+  {{ g.status == "activa" && g.fase == "resuelto" && <section class="panel result-panel" id="resultado">
     <p class="eyebrow">Resultado</p>
     <h2>{{ g.resultado == "ganada" ? "Prueba superada" : "Prueba fallida" }}</h2>
     <p class="muted">{{ g.ultimo }}</p>
@@ -660,7 +687,7 @@ return Layout.render(<main class="game">
     </form>
   </section> }}
 
-  {{ g.status == "activa" && g.fase == "listo" && <section>
+  {{ g.status == "activa" && g.fase == "listo" && <section id="cartas-activas">
     <div class="section-head">
       <h2>Cartas activas en la mesa</h2>
       <p>Elijan una carta y resuelvan su opción. Las emboscadas tienen una sola.</p>
@@ -699,8 +726,8 @@ return Layout.render(<main class="game">
   </section> }}
 
   {{ g.status == "activa" && <section class="split">
-    <div>
-      {{ !ayuda.isEmpty && <section class="help-zone">
+    <div id="mano">
+      {{ !ayuda.isEmpty && <section class="help-zone" id="ayuda">
         <div class="section-head">
           <h2>Ayuda del equipo</h2>
           <p>Maniobras de apoyo · una vez</p>
@@ -749,7 +776,7 @@ return Layout.render(<main class="game">
       <p class="hint">{{ g.jugadas == 0 ? "Todavía pueden jugar 1 carta este ciclo." : "Ya jugaron su carta de este ciclo." }} Al final del ciclo, las que sobren de 3 se descartan al azar.</p>
     </div>
 
-    <aside>
+    <aside id="herramientas">
       <div class="section-head">
         <h2>Herramienta activa</h2>
         <p>{{ tools.count }} / 1 · una por equipo</p>
@@ -784,28 +811,6 @@ return Layout.render(<main class="game">
         </ul>
       </section> }}
 
-      <div class="section-head aside-subhead">
-        <h2>Acciones base</h2>
-        <p>No son cartas</p>
-      </div>
-
-      <section class="panel">
-        <p class="eyebrow">Dado libre</p>
-        <p class="muted">Para una tirada suelta, sin carta de por medio.</p>
-        <div class="dice-row" style="justify-content: flex-start">
-          {{ Layout.die(dadoLibre == null ? 0 : Num.fromString(dadoLibre), "die-large") }}
-          <form method="post" class="inline-form">
-            <input type="hidden" name="accion" value="dado" />
-            <button class="btn btn-ghost btn-small">Tirar un D6</button>
-          </form>
-        </div>
-      </section>
-
-      <section class="panel">
-        <p class="eyebrow">Regla rápida</p>
-        <p>Cada ciclo: roban 2, juegan 1 carta como máximo y resuelven 1 misterio. Al final se descartan al azar hasta 3 y el submarino consume 1 Energía.</p>
-        <a href="/reglas" class="btn btn-ghost btn-small">Ver reglas completas</a>
-      </section>
     </aside>
   </section> }}
 
@@ -822,4 +827,4 @@ return Layout.render(<main class="game">
       <button class="btn btn-ghost btn-small">Abandonar y empezar de nuevo</button>
     </form> }}
   </section>
-</main>)
+</main>, "XP · Equipo eXPedición", g.status == "activa")
