@@ -11,3 +11,5 @@ Db.migrate("xp-suerte", "ALTER TABLE games ADD COLUMN suerte INTEGER NOT NULL DE
 Db.migrate("xp-empujado", "ALTER TABLE games ADD COLUMN empujado INTEGER NOT NULL DEFAULT 0")
 
 Db.migrate("xp-pistas-turno", "ALTER TABLE games ADD COLUMN pistasTurno INTEGER NOT NULL DEFAULT 0")
+
+Db.migrate("xp-saltar", "ALTER TABLE games ADD COLUMN saltar INTEGER NOT NULL DEFAULT 0")

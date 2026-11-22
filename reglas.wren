@@ -49,10 +49,10 @@ return Layout.render(<main>
       <p>Juegan en sentido horario.</p>
     </div>
     <ol class="steps">
-      <li><span class="num">1</span><span><strong>Robá 2 cartas de Equipo</strong>Límite de mano: 3 cartas. Si te pasás, descartá hasta quedar en 3 antes de seguir.</span></li>
+      <li><span class="num">1</span><span><strong>Robá 2 cartas de Equipo</strong>El límite de mano es 3, pero se ajusta al final del turno: no descartás al robar.</span></li>
       <li><span class="num">2</span><span><strong>Jugá 1 carta (opcional)</strong>Herramienta: queda en la mesa toda la partida. Máximo 4 en mesa; la quinta reemplaza a una. Maniobra: se resuelve y va al descarte.</span></li>
       <li><span class="num">3</span><span><strong>Resolvé un Misterio</strong>Elegí una carta activa, lean la situación, debatan y elijan una de sus opciones. Después viene la prueba de dados.</span></li>
-      <li><span class="num">4</span><span><strong>Reponé la mesa y pasá el turno</strong>La carta resuelta va al descarte, se revela una nueva y juega la persona de la izquierda.</span></li>
+      <li><span class="num">4</span><span><strong>Reponé la mesa y pasá el turno</strong>La carta resuelta va al descarte, se revela una nueva, descartás hasta quedar con 3 cartas y juega la persona de la izquierda.</span></li>
     </ol>
   </section>
 
@@ -102,7 +102,7 @@ return Layout.render(<main>
         <table>
           <thead><tr><th>Carta</th><th>Efecto</th></tr></thead>
           <tbody>
-            <tr><td>Giro Brusco</td><td>Antes de tirar: el dado de Cara o Seca se invierte.</td></tr>
+            <tr><td>Giro Brusco</td><td>Después de tirar: cambiá un dado de Cara a Seca, o al revés.</td></tr>
             <tr><td>Turbo de Emergencia</td><td>Antes de tirar: sumá 2 al total de la prueba.</td></tr>
             <tr><td>Suerte del Principiante</td><td>Antes de tirar: si la prueba falla, se vuelve a tirar una vez.</td></tr>
             <tr><td>Soldadura Submarina</td><td>Recuperá 1 de Escudo.</td></tr>
@@ -119,10 +119,10 @@ return Layout.render(<main>
 
   <section class="panel">
     <h2>El reloj: consumo y empujón</h2>
-    <p><strong>Consumo:</strong> al terminar cada turno, el submarino pierde <strong>1 Energía</strong>, hayan ganado o no una Pista. La Energía es el reloj de la partida: no se puede quedar quieto.</p>
-    <p><strong>Recarga:</strong> la Batería de Respaldo devuelve 2 de Energía y hay 4 en el mazo. El Generador Auxiliar recarga 1 al empezar el turno si están en 3 o menos. Ahorro de Oxígeno saltea todo gasto de Energía durante un turno, incluido el consumo.</p>
+    <p><strong>Consumo:</strong> al terminar cada turno, el submarino pierde <strong>1 Energía</strong>, hayan ganado o no una Pista. La Energía es el reloj de la partida y no se recupera con las cartas de Misterio.</p>
+    <p><strong>Recarga:</strong> solo con Equipo. La Batería de Respaldo devuelve 2 de Energía y hay 4 en el mazo. El Generador Auxiliar recarga 1 al empezar el turno si están en 3 o menos. Ahorro de Oxígeno saltea el consumo de un turno.</p>
     <p><strong>Empujón:</strong> cuando una prueba sale bien, el equipo elige entre asegurar la Pista o arriesgar una tirada aparte de 2 dados (8+). Si sale, +1 Pista; si falla, −2 Escudo. Nadie está obligado a empujar.</p>
-    <p><strong>Emboscadas:</strong> algunas cartas de Peligro cuestan 1 Energía o 1 Escudo apenas entran a la mesa, y tienen una sola opción. No se elige cómo enfrentarlas: se resuelve la prueba y se sigue.</p>
+    <p><strong>Emboscadas:</strong> algunas cartas de Peligro cuestan <strong>1 Escudo</strong> o <strong>1 Pista</strong> apenas entran a la mesa, y tienen una sola opción. Otras, cada tanto, hacen <strong>perder un turno</strong> entero. Las cartas de Misterio nunca te sacan Energía: la Energía la baja el reloj y la recupera el Equipo.</p>
   </section>
 
   <section class="panel">

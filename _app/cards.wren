@@ -150,6 +150,7 @@ class Card {
       if (key == "pistas") name = "Pistas"
       if (key == "energia") name = "Energía"
       if (key == "escudo") name = "Escudo"
+      if (key == "turno") name = "Turno"
       parts.add(name + " " + sign + val)
     }
     return parts.isEmpty ? "sin efecto" : parts.join(" · ")

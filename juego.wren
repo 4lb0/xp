@@ -101,8 +101,6 @@ if (Request.isPost) {
   } else if (accion == "elegir") {
     if (g.fase != "listo") {
       aviso = "Ya hay una prueba en curso."
-    } else if (Game.count(g.id, "mano") > 3) {
-      aviso = "Primero descarten hasta quedarse con 3 cartas."
     } else if (g.resueltas > 0) {
       aviso = "Ya resolvieron un misterio este turno."
     } else {
@@ -161,18 +159,21 @@ if (Request.isPost) {
       aviso = "Ya jugaron una carta este turno."
     } else if (g.fase != "prueba") {
       aviso = "Esa Maniobra se usa antes de resolver el misterio."
-    } else if (g.tirado) {
-      aviso = "Las Maniobras se juegan antes de tirar: se comprometen a ciegas."
     } else if (c.effect == "flip_parity" && !parity) {
       aviso = "Giro Brusco solo sirve en pruebas de Cara o Seca."
+    } else if (c.effect == "flip_parity" && !g.tirado) {
+      aviso = "Giro Brusco se juega después de tirar: cambia un dado que ya vieron."
+    } else if (g.tirado && c.effect != "flip_parity") {
+      aviso = "Esa Maniobra se juega antes de tirar: se compromete a ciegas."
     } else if (c.effect == "plus_two") {
       `UPDATE games SET bonus = bonus + 2, jugadas = 1 WHERE id = ?`.query(g.id)
       Game.move(rowId, "descarte")
       Game.log(g.id, "Turbo de Emergencia: +2 al total.")
     } else if (c.effect == "flip_parity") {
-      `UPDATE games SET giro = 1, jugadas = 1 WHERE id = ?`.query(g.id)
+      var nuevo = 7 - g.dado1
+      `UPDATE games SET dado1 = ?, jugadas = 1 WHERE id = ?`.query(nuevo, g.id)
       Game.move(rowId, "descarte")
-      Game.log(g.id, "Giro Brusco preparado: el dado se va a invertir.")
+      Game.log(g.id, "Giro Brusco: el dado pasa de Cara a Seca (o al revés).")
     } else if (c.effect == "reroll_all") {
       `UPDATE games SET suerte = 1, jugadas = 1 WHERE id = ?`.query(g.id)
       Game.move(rowId, "descarte")
@@ -286,6 +287,8 @@ if (Request.isPost) {
   } else if (accion == "terminar") {
     if (g.fase != "resuelto") {
       aviso = "Primero resuelvan un misterio."
+    } else if (Game.count(g.id, "mano") > 3) {
+      aviso = "Antes de pasar el turno, descartá hasta quedarte con 3 cartas."
     } else {
       var g2 = Game.find(g.id)
       if (g2.ahorro) {
@@ -311,7 +314,12 @@ if (Request.isPost) {
         }
       }
       var next = g.jugador >= g.players ? 1 : g.jugador + 1
-      `UPDATE games SET jugador = ?, turno = turno + 1, fase = 'listo', pruebaCarta = NULL, pruebaOpcion = NULL, dado1 = 0, dado2 = 0, tirado = 0, bonus = 0, cebo = 0, ahorro = 0, blindajeUsado = 0, focosUsado = 0, jugadas = 0, resueltas = 0, resultado = NULL, giro = 0, suerte = 0, empujado = 0, pistasTurno = 0 WHERE id = ?`.query(next, g.id)
+      var gSkip = Game.find(g.id)
+      if (gSkip.saltar) {
+        next = next >= gSkip.players ? 1 : next + 1
+        Game.log(g.id, "El equipo pierde un turno reparando la emboscada. Juega el jugador " + next.toString + ".")
+      }
+      `UPDATE games SET jugador = ?, turno = turno + 1, fase = 'listo', pruebaCarta = NULL, pruebaOpcion = NULL, dado1 = 0, dado2 = 0, tirado = 0, bonus = 0, cebo = 0, ahorro = 0, blindajeUsado = 0, focosUsado = 0, jugadas = 0, resueltas = 0, resultado = NULL, giro = 0, suerte = 0, empujado = 0, pistasTurno = 0, saltar = 0 WHERE id = ?`.query(next, g.id)
       var g3 = Game.find(g.id)
       if (g3 != null && Game.hasTool(g.id, "energy_start") && g3.energia <= 3) {
         `UPDATE games SET energia = energia + 1 WHERE id = ?`.query(g.id)
@@ -375,10 +383,10 @@ var pendingCard = g.pruebaCarta == null ? null : Card.get(g.pruebaCarta)
 var pendingOpt = pendingCard == null ? null : pendingCard.option(g.pruebaOpcion)
 
 var handCount = hand.count
-var overHand = handCount > 3
-var puedeElegir = g.status == "activa" && g.fase == "listo" && g.resueltas == 0 && !overHand
+var puedeElegir = g.status == "activa" && g.fase == "listo" && g.resueltas == 0
 var puedeJugar = g.status == "activa" && g.jugadas == 0 && g.fase == "listo"
-var maniobrasPrueba = hand.where { |h| ["plus_two", "flip_parity", "reroll_all", "cancel_shield_loss", "no_energy_cost"].contains(h["card"].effect) }.toList
+var maniobrasPrueba = hand.where { |h| ["plus_two", "reroll_all", "cancel_shield_loss", "no_energy_cost"].contains(h["card"].effect) }.toList
+var girosPrueba = hand.where { |h| h["card"].effect == "flip_parity" }.toList
 
 var finalTitulo = "La expedición continúa"
 var finalTexto = ""
@@ -447,11 +455,6 @@ return Layout.render(<main class="game">
     </form>
   </section> }}
 
-  {{ g.status == "activa" && overHand && <section class="panel warn">
-    <h2>La mano está llena</h2>
-    <p>{{ handCount }} cartas en mano. Descarten hasta quedarse con 3 para seguir.</p>
-  </section> }}
-
   {{ g.status == "activa" && g.fase == "prueba" && pendingCard != null && <section class="test-panel">
     <p class="eyebrow">Prueba de dados</p>
     <span class="card-emoji test-emoji" aria-hidden="true">{{ pendingCard.emoji }}</span>
@@ -473,7 +476,7 @@ return Layout.render(<main class="game">
 
     {{ !g.tirado && <section class="roll-controls">
       {{ g.jugadas == 0 && maniobrasPrueba.count > 0 && <section class="maneuvers">
-        <p class="hint">Las Maniobras se juegan <strong>antes</strong> de tirar: se comprometen a ciegas.</p>
+        <p class="hint">Turbo, Suerte, Cebo y Ahorro se juegan <strong>antes</strong> de tirar. Giro Brusco va después: cambia un dado que ya vieron.</p>
         <div class="action-row">
           {{ maniobrasPrueba.map{|h| <form method="post" class="inline-form">
             <input type="hidden" name="accion" value="maniobra" />
@@ -507,6 +510,11 @@ return Layout.render(<main class="game">
     {{ g.tirado && <section class="test-actions">
       <p class="muted">Tirada registrada. Ya no pueden jugar Maniobras: resuelvan.</p>
       <div class="action-row">
+        {{ g.jugadas == 0 && girosPrueba.map{|h| <form method="post" class="inline-form">
+          <input type="hidden" name="accion" value="maniobra" />
+          <input type="hidden" name="rowId" value="{{ h["rowId"] }}" />
+          <button class="btn btn-ghost btn-small">Giro Brusco: invertir el dado</button>
+        </form>} }}
         {{ Game.hasTool(g.id, "reroll_parity") && !g.focosUsado && (pendingOpt["tipoPrueba"] == "cara" || pendingOpt["tipoPrueba"] == "seca") && <form method="post" class="inline-form">
           <input type="hidden" name="accion" value="focos" />
           <button class="btn btn-ghost btn-small">Focos Abisales: relanzar</button>
@@ -570,11 +578,12 @@ return Layout.render(<main class="game">
     <p class="eyebrow">Resultado</p>
     <h2>{{ g.resultado == "ganada" ? "Prueba superada" : "Prueba fallida" }}</h2>
     <p class="muted">{{ g.ultimo }}</p>
-    <p>Revisen los contadores. Cuando estén listos, pasen el dispositivo al jugador de la izquierda.</p>
-    <form method="post">
+    <p>Revisen los contadores. Antes de pasar el dispositivo, descarten hasta quedar con 3 cartas.</p>
+    {{ handCount > 3 && <p class="hint">Tienen {{ handCount }} cartas. Descartá abajo las que sobren.</p> }}
+    {{ handCount <= 3 && <form method="post">
       <input type="hidden" name="accion" value="terminar" />
       <button class="btn btn-primary">Terminar turno y reponer la mesa</button>
-    </form>
+    </form> }}
   </section> }}
 
   {{ g.status == "activa" && g.fase == "listo" && <section>
@@ -612,7 +621,7 @@ return Layout.render(<main class="game">
     <div>
       <div class="section-head">
         <h2>Mano del equipo</h2>
-        <p>{{ handCount }} / 3</p>
+        <p>{{ handCount }} cartas · descartás al final</p>
       </div>
       <div class="hand">
         {{ hand.map{|h| <article class="card" data-family="{{ h["card"].isTool ? "herramienta" : "maniobra" }}">
@@ -635,7 +644,7 @@ return Layout.render(<main class="game">
         </article>} }}
       </div>
       {{ hand.isEmpty && <p class="muted">Sin cartas en mano. Al terminar el turno roban 2.</p> }}
-      <p class="hint">{{ g.jugadas == 0 ? "Todavía pueden jugar 1 carta este turno." : "Ya jugaron su carta de este turno." }}</p>
+      <p class="hint">{{ g.jugadas == 0 ? "Todavía pueden jugar 1 carta este turno." : "Ya jugaron su carta de este turno." }} Al final del turno tienen que quedar con 3.</p>
     </div>
 
     <aside>
@@ -674,7 +683,7 @@ return Layout.render(<main class="game">
 
       <section class="panel">
         <p class="eyebrow">Regla rápida</p>
-        <p>Cada turno: roban 2, juegan 1 carta como máximo y resuelven 1 misterio. Al terminar, el submarino consume 1 Energía, ganen o no una Pista.</p>
+        <p>Cada turno: roban 2, juegan 1 carta como máximo y resuelven 1 misterio. Al final descartan hasta 3 y el submarino consume 1 Energía.</p>
         <a href="/reglas" class="btn btn-ghost btn-small">Ver reglas completas</a>
       </section>
     </aside>

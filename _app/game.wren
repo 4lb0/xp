@@ -24,6 +24,7 @@ class Game {
   suerte { _row["suerte"].toNum == 1 }
   empujado { _row["empujado"].toNum == 1 }
   pistasTurno { _row["pistasTurno"].toNum }
+  saltar { _row["saltar"].toNum == 1 }
   blindajeUsado { _row["blindajeUsado"].toNum == 1 }
   focosUsado { _row["focosUsado"].toNum == 1 }
   jugadas { _row["jugadas"].toNum }
@@ -144,7 +145,7 @@ class Game {
   static clamp(n, lo, hi) { n < lo ? lo : (n > hi ? hi : n) }
 
   static parseEffects(text) {
-    var eff = {"pistas": 0, "energia": 0, "escudo": 0}
+    var eff = {"pistas": 0, "energia": 0, "escudo": 0, "turno": 0}
     if (text == null || text.trim == "") return eff
     for (piece in text.split(",")) {
       var t = piece.trim
@@ -174,9 +175,10 @@ class Game {
 
   // Aplica un resultado ya evaluado. Devuelve el texto para el registro.
   static apply(id, g, eff, ok, tools) {
-    var dEn = eff["energia"]
-    var dEs = eff["escudo"]
-    var dPi = eff["pistas"]
+    var dEn = eff["energia"] == null ? 0 : eff["energia"]
+    var dEs = eff["escudo"] == null ? 0 : eff["escudo"]
+    var dPi = eff["pistas"] == null ? 0 : eff["pistas"]
+    var dTu = eff["turno"] == null ? 0 : eff["turno"]
     var notas = []
     var ceboUsado = false
     var blindajeAplicado = false
@@ -199,6 +201,7 @@ class Game {
       dPi = dPi + 1
       notas.add("Brazo Robótico sumó 1 Pista extra")
     }
+    var saltar = (dTu < 0 || g.saltar) ? 1 : 0
     var en = Game.clamp(g.energia + dEn, 0, 6)
     var es = Game.clamp(g.escudo + dEs, 0, 6)
     var pi = Game.clamp(g.pistas + dPi, 0, 6)
@@ -208,7 +211,7 @@ class Game {
     } else if (en <= 0 || es <= 0) {
       status = "derrota"
     }
-    `UPDATE games SET energia = ?, escudo = ?, pistas = ?, status = ?, cebo = ?, blindajeUsado = ?, pistasTurno = pistasTurno + ? WHERE id = ?`.query([en, es, pi, status, ceboUsado ? 0 : (g.cebo ? 1 : 0), blindajeAplicado ? 1 : (g.blindajeUsado ? 1 : 0), dPi > 0 ? dPi : 0, id])
-    return {"energia": en, "escudo": es, "pistas": pi, "status": status, "notas": notas}
+    `UPDATE games SET energia = ?, escudo = ?, pistas = ?, status = ?, cebo = ?, blindajeUsado = ?, pistasTurno = pistasTurno + ?, saltar = ? WHERE id = ?`.query([en, es, pi, status, ceboUsado ? 0 : (g.cebo ? 1 : 0), blindajeAplicado ? 1 : (g.blindajeUsado ? 1 : 0), dPi > 0 ? dPi : 0, saltar, id])
+    return {"energia": en, "escudo": es, "pistas": pi, "status": status, "saltar": saltar, "notas": notas}
   }
 }

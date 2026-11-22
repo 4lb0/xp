@@ -41,7 +41,7 @@ El pulso llega cada nueve segundos. Ustedes lo escuchan dos veces más antes de 
 - Lo que está debajo del bloque es la narrativa: Markdown normal (párrafos, **negritas**, listas). Se muestra en la carta y en la mesa.
 - `familia` es `exploracion`, `peligro` o `dilema`. Define el color de la carta.
 - `emoji` es el arte provisorio de la carta: se muestra grande en la mesa y en el visor. Cuando exista la ilustración definitiva, este campo desaparece y se reemplaza por la imagen.
-- `entrada` es opcional: el costo que se paga cuando la carta se revela en la mesa. Ejemplos: `escudo-1`, `energia-1`, `escudo-2`. Las cartas con `entrada` son **emboscadas** y llevan una sola opción. La app aplica el costo al repartir la mesa, al reponerla al final del turno y al cambiarla con Señuelo Luminoso.
+- `entrada` es opcional: el costo que se paga cuando la carta se revela en la mesa. Ejemplos: `escudo-1`, `pistas-1`, `turno-1`. Las cartas con `entrada` son **emboscadas** y llevan una sola opción. `turno-1` hace que el equipo pierda el turno siguiente. La app aplica el costo al repartir la mesa, al reponerla al final del turno y al cambiarla con Señuelo Luminoso.
 - Casi todas las cartas tienen **dos opciones**, `[A]` y `[B]`. Las emboscadas tienen **una sola opción**, `[A]`.
 - Las letras son solo marcadores internos para separar los bloques: la app no las muestra. En la mesa se ven botones con la acción, sin numeración.
 - Cada opción necesita las cuatro claves: `texto`, `prueba`, `exito`, `fallo`.
@@ -76,7 +76,7 @@ fallo: energia-2, escudo-1
 | `escudo+1` / `escudo+2` | Recupera Escudo (máximo 6). |
 | `escudo-1` / `escudo-2` | Daña el Escudo. A 0, derrota. |
 
-Nunca se pierden Pistas. Si una carta no debe tener efecto en un resultado, escribí `nada` o dejá el campo vacío (la app lo interpreta como sin efecto).
+Las Pistas se pueden perder (`pistas-1`), pero es raro y fuerte: usalo solo en fallos o entradas muy malas. En las cartas de Misterio, la Energía no se toca: los golpes van al Escudo o a las Pistas. Si una carta no debe tener efecto, escribí `nada` o dejá el campo vacío.
 
 ## Anatomía de una carta de Equipo
 
@@ -116,7 +116,7 @@ Una vez por turno, mirá la carta de arriba del Mazo del Juego antes de elegir.
 | `clue_for_energy` | Maniobra instantánea: −1 Energía, +1 Pista. |
 | `discard_active` | Maniobra instantánea: cambia una carta activa por otra. |
 | `plus_two` | Suma +2 al total, después de tirar. |
-| `flip_parity` | Invierte el dado de una prueba de Cara o Seca. |
+| `flip_parity` | Después de tirar: invierte el dado de una prueba de Cara o Seca. |
 | `reroll_all` | Vuelve a tirar todos los dados. |
 | `cancel_shield_loss` | Cancela una pérdida de Escudo en el turno. |
 | `no_energy_cost` | Evita el gasto de Energía en el turno. |

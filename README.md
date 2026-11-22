@@ -41,7 +41,7 @@ El estado de la partida se guarda en SQLite y se ata a la sesión del navegador.
 
 1. Elegís cuántos jugadores son y arranca la expedición.
 2. La app reparte 3 cartas de Equipo y revela 2, 3 o 4 cartas de Misterio según el número de jugadores.
-3. En cada turno: roban 2 cartas de Equipo (límite 3 en mano), pueden jugar 1 carta, eligen una carta de Misterio y una de sus opciones.
+3. En cada turno: roban 2 cartas de Equipo, pueden jugar 1 carta, eligen una carta de Misterio y una de sus opciones. El descarte hasta 3 se hace al final, antes de pasar el turno.
 4. La prueba de dados se puede resolver de dos formas:
    - **Tirar en la app**: el servidor genera los D6.
    - **Ya tiré en la mesa**: elegís en pantalla lo que salió en cada dado físico.
@@ -121,8 +121,8 @@ El mazo se mezcla con `ORDER BY RANDOM()` de SQLite. Las tiradas digitales tambi
 - **Una o dos opciones por carta, sin A/B/C.** Se muestran como acciones; las letras quedan solo como separadores internos del Markdown. Las emboscadas muestran una sola.
 - **Maniobras a ciegas.** Se juegan antes de tirar. Ver el dado y después decidir convertía cada prueba en una decisión sin riesgo.
 - **Consumo fijo y empujón.** −1 Energía por turno y la opción de arriesgar una Pista extra: el juego se juega contra el reloj, no contra la suerte de una sola tirada.
-- **Emboscadas.** Algunas cartas de Peligro (7 de las 40) cuestan 1 Energía o 1 Escudo al entrar a la mesa y tienen una sola opción. Golpean la economía del equipo justo cuando repone la mesa.
-- **Recuperar Energía es más fácil que recuperar Escudo.** Batería +2 (×4) contra Soldadura +1 (×2): la decisión de turno es recargar o aguantar el casco.
+- **Emboscadas.** Algunas cartas de Peligro (7 de las 40) cuestan 1 Escudo o 1 Pista al entrar a la mesa, o hacen perder un turno. Tienen una sola opción. Golpean al equipo justo cuando repone la mesa.
+- **La Energía es solo el reloj.** Las cartas de Misterio pegan al Escudo o a las Pistas; la Energía baja 1 por turno y se recupera únicamente con Batería (+2, ×4) y Generador Auxiliar. Soldadura cura 1 de Escudo (×2).
 
 ## Sobre la marca
 

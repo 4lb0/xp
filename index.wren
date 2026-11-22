@@ -78,7 +78,7 @@ return Layout.render(<main>
     <ol class="steps">
       <li>
         <span class="num">1</span>
-        <span><strong>Robá 2 cartas de Equipo</strong>Tenés un máximo de 3 en mano. Si te sobra, elegí qué descartar.</span>
+        <span><strong>Robá 2 cartas de Equipo</strong>Jugás el turno con lo que tengas. El límite de 3 se ajusta al final, cuando descartás.</span>
       </li>
       <li>
         <span class="num">2</span>
@@ -90,7 +90,7 @@ return Layout.render(<main>
       </li>
       <li>
         <span class="num">4</span>
-        <span><strong>Reponé la mesa</strong>Descarten la carta resuelta y revelen una nueva. Ahora juega la persona de la izquierda.</span>
+        <span><strong>Reponé la mesa</strong>Descarten la carta resuelta, revelen una nueva y descarten hasta quedar con 3. Ahora juega la persona de la izquierda.</span>
       </li>
     </ol>
   </section>
