@@ -6,19 +6,19 @@ return Layout.render(<main>
       <p class="eyebrow">Manual de bolsillo</p>
       <h1>Reglas de XP</h1>
     </div>
-    <p class="pill">Solo o en equipo · 10 a 20 minutos</p>
+    <p class="pill">Solo o en cooperativo · 10 a 20 minutos</p>
   </header>
 
   <section>
     <div class="split">
       <div>
         <h2>La idea</h2>
-        <p>Son un equipo de expedición, no jugadores rivales. El submarino baja hacia una fosa sin cartografiar en busca de seis Pistas que confirmen que el Megalodón existe. Para el resto del mundo es una leyenda, como el monstruo del lago Ness. Nadie gana solo y nadie pierde solo.</p>
+        <p>Podés jugar solo o en cooperativo con amigos. El submarino baja hacia una fosa sin cartografiar en busca de seis Pistas que confirmen que el Megalodón existe. Para el resto del mundo es una leyenda, como el monstruo del lago Ness.</p>
         <ul>
           <li><strong>Ganan</strong> si reúnen 6 Pistas.</li>
           <li><strong>Pierden</strong> si la Energía llega a 0 (se quedan sin aire) o el Escudo llega a 0 (el casco cede).</li>
         </ul>
-        <p class="hint">En la app, el equipo comparte una sola mano y decide entre todos. Se puede jugar solo o en equipo: la mesa es la misma.</p>
+        <p class="hint">En la app, la mano es una sola y las decisiones se comparten. Podés jugar solo o en cooperativo con amigos: la mesa es la misma.</p>
       </div>
       <div class="console">
         <h2>Los tres contadores</h2>
@@ -46,7 +46,7 @@ return Layout.render(<main>
   <section>
     <div class="section-head">
       <h2>El ciclo, paso a paso</h2>
-      <p>El equipo juega un ciclo por vez, sea una sola persona o varias.</p>
+      <p>Se juega un ciclo por vez, solo o en cooperativo.</p>
     </div>
     <ol class="steps">
       <li><span class="num">1</span><span><strong>Robá 2 cartas de Equipo</strong>Robás 2 por ciclo y jugás con las cartas que tengas. Al final del ciclo te quedan 3: el resto se descarta al azar.</span></li>
@@ -81,15 +81,14 @@ return Layout.render(<main>
         <tr><td><strong>Sin 1 ni 6</strong></td><td>Ninguno de los dos dados muestra 1 ni 6.</td><td>2 y 5 sirven; 1 y 3 no.</td></tr>
       </tbody>
     </table>
-    <p class="hint">Las Maniobras pueden cambiar un dado, sumar al total o repetir la tirada. Se usan después de tirar y antes de resolver.</p>
+    <p class="hint">Las Maniobras se juegan antes de tirar: pueden cambiar un dado, sumar al total o repetir la tirada si falla.</p>
   </section>
 
   <section>
     <div class="split">
       <div>
         <div class="section-head"><h2>Herramientas</h2></div>
-        <p class="muted">Solo una activa por equipo: si juegan otra, la anterior va al descarte.</p>
-        <p class="muted">Quedan boca arriba frente al equipo. Una sola.</p>
+        <p class="muted">Solo una activa: si juegan otra, la anterior va al descarte.</p>
         <table>
           <thead><tr><th>Carta</th><th>Efecto</th></tr></thead>
           <tbody>
@@ -142,7 +141,7 @@ return Layout.render(<main>
     <h2>Dados de la app y dados de la mesa</h2>
     <p>La app puede tirar los dados por ustedes: es cómodo cuando no hay lugar en la mesa. Pero el juego está pensado para tirar dados de verdad.</p>
     <p>Por eso, en cada prueba pueden elegir <strong>“Ya tiré en la mesa”</strong> e ingresar lo que salió en cada dado. La app aplica el resultado igual, con las mismas reglas y los mismos efectos.</p>
-    <p class="muted">Trampa permitida: nadie va a revisar el dado. Es un juego cooperativo, la única persona a la que le pueden hacer trampa es al equipo.</p>
+    <p class="muted">Trampa permitida: nadie va a revisar el dado. No es un juego competitivo: la única persona a la que le pueden hacer trampa es al equipo.</p>
   </section>
 
   <section>
@@ -159,10 +158,4 @@ return Layout.render(<main>
     </table>
   </section>
 
-  <section class="panel">
-    <p class="eyebrow">Para quien diseña</p>
-    <h2>Las cartas son archivos markdown</h2>
-    <p>El mazo completo vive en <code>cartas/</code>, un archivo por carta, con un bloque de mecánicas y la narrativa en markdown. Se pueden editar a mano y la app los lee en cada partida nueva.</p>
-    <a class="btn btn-ghost btn-small" href="/cartas">Ver el mazo completo</a>
-  </section>
 </main>)

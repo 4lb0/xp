@@ -11,7 +11,7 @@ class Layout {
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <title>{{ title }}</title>
-        <meta name="description" content="XP: En busca del Megalodón. Juego de mesa cooperativo de aventura y misterio para toda la familia." />
+        <meta name="description" content="XP: En busca del Megalodón. Juego de mesa de aventura y misterio para toda la familia. Solo o en cooperativo." />
         <meta name="theme-color" content="#061423" />
         <link rel="stylesheet" href="/css/style.css" />
       </head>

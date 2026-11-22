@@ -4,16 +4,16 @@ return Layout.render(<main>
   <section class="hero">
     <div class="hero-grid">
       <div>
-        <p class="eyebrow">Juego cooperativo de aventura y misterio</p>
+        <p class="eyebrow">Juego de aventura y misterio</p>
         <h1>XP <span>En busca del Megalodón</span></h1>
         <p class="lead">
-          Son un solo equipo. Bajan en un submarino hacia una fosa que nadie cartografió.
-          Para el mundo, el Megalodón es un mito, como el monstruo del lago Ness.
+          Podés jugar solo o en cooperativo con amigos. El submarino baja hacia una fosa que nadie
+          cartografió. Para el mundo, el Megalodón es un mito, como el monstruo del lago Ness.
           Ustedes van a comprobar si existe.
         </p>
         <p class="lead">
           <strong>La misión:</strong> reunir 6 Pistas que confirmen al Megalodón antes de quedarse
-          sin Energía o sin Escudo. Nadie gana solo. Nadie pierde solo.
+          sin Energía o sin Escudo. La mesa es una sola: las decisiones se comparten.
         </p>
         <div class="hero-actions">
           <a class="btn btn-primary" href="/juego">Iniciar expedición</a>
@@ -75,7 +75,7 @@ return Layout.render(<main>
         <div class="section-head">
           <h2>Prepará la mesa</h2>
         </div>
-        <p class="muted">Se puede jugar solo o en equipo: la mesa es una. Siempre hay 3 cartas de Misterio y se roban 2 de Equipo por ciclo.</p>
+        <p class="muted">Podés jugar solo o en cooperativo con amigos: la mesa es una. Siempre hay 3 cartas de Misterio y se roban 2 de Equipo por ciclo.</p>
         <form method="get" action="/juego" class="panel">
           <label for="modo"><strong>Modo</strong></label>
           <p style="margin: 0.4rem 0 0.9rem">
@@ -111,7 +111,7 @@ return Layout.render(<main>
   <section class="panel" style="text-align:center">
     <p class="eyebrow">Modo restaurante</p>
     <h2>Se explica en una ronda y se juega en una mesa chica</h2>
-    <p class="muted">10 a 20 minutos. Solo o en equipo. Desde los 5 años, con las cartas a la vista.</p>
+    <p class="muted">10 a 20 minutos. Solo o en cooperativo. Desde los 5 años, con las cartas a la vista.</p>
     <a class="btn btn-primary" href="/juego">Probar la expedición</a>
   </section>
 </main>)

@@ -116,13 +116,13 @@ Una vez por ciclo, mirá la carta de arriba del Mazo del Juego antes de elegir.
 | `extra_clue_six` | Si ganan Pistas y un dado muestra 6, suma 1 Pista extra. |
 | `harpoon` | Habilita el botón del Arpón: 2 Energía, tira 1 dado, con Cara gana 1 Pista y se descarta. |
 | `plus_one_sum` | Suma 1 al total de las pruebas de 2 dados. |
-| `heal_shield` | Maniobra instantánea: +2 Escudo. |
+| `heal_shield` | Maniobra instantánea: +1 Escudo. |
 | `heal_energy` | Maniobra instantánea: +2 Energía. |
 | `clue_for_energy` | Maniobra instantánea: −1 Energía, +1 Pista. |
 | `discard_active` | Maniobra instantánea: cambia una carta activa por otra. |
-| `plus_two` | Suma +2 al total, después de tirar. |
-| `flip_parity` | Después de tirar: invierte el dado de una prueba de Cara o Seca. |
-| `reroll_all` | Vuelve a tirar todos los dados. |
+| `plus_two` | Antes de tirar: suma +2 al total. |
+| `flip_parity` | Antes de tirar: invierte el dado de una prueba de Cara o Seca. |
+| `reroll_all` | Antes de tirar: si falla, vuelve a tirar todos los dados. |
 | `cancel_shield_loss` | Cancela una pérdida de Escudo en el ciclo. |
 | `no_energy_cost` | Evita el gasto de Energía en el ciclo. |
 

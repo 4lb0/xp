@@ -1,8 +1,8 @@
 # XP: En busca del Megalodón — prototipo web
 
-Versión jugable en el navegador del juego de mesa cooperativo **XP (Equipo eXPedición)**, Edición 1. Sirve para probar el mazo, los contadores y las pruebas de dados antes de imprimir cartas.
+Versión jugable en el navegador del juego de mesa de aventura y misterio **XP (Equipo eXPedición)**, Edición 1. Pensado para jugar solo, o en cooperativo con amigos. Sirve para probar el mazo, los contadores y las pruebas de dados antes de imprimir cartas.
 
-- Se puede jugar solo o en equipo: un solo dispositivo, una mesa, el equipo XP contra el juego.
+- Se puede jugar solo o en cooperativo con amigos: un solo dispositivo, una mesa, el equipo XP contra el juego.
 - La expedición busca la prueba de que el Megalodón existe: para el mundo es un mito, como el monstruo del lago Ness.
 - Partidas de 10 a 20 minutos.
 - 40 cartas de Misterio (una o dos opciones cada una) + 44 cartas de Equipo (incluye 2 de apoyo), todas editables como archivos Markdown.
@@ -34,13 +34,13 @@ Para empezar de cero, borrá `_db.sqlite3` y volvé a levantar el servidor.
 | `/` | Portada, pitch del juego y preparación de la mesa. |
 | `/juego` | La partida: contadores, cartas activas, mano, herramientas, dados y bitácora. |
 | `/reglas` | Manual de bolsillo completo. |
-| `/cartas` | Las 80 cartas del mazo, leídas desde Markdown. |
+| `/cartas` | Las 84 cartas del mazo, leídas desde Markdown. |
 
 El estado de la partida se guarda en SQLite y se ata a la sesión del navegador. Se puede recargar o cerrar la pestaña sin perder nada.
 
 ## Cómo se juega en la app
 
-1. Elegís el modo (Experto 5/5, Normal 5/5 + 1 apoyo o Asistido 6/6 + 2 apoyos) y arranca la expedición. No hay que elegir cantidad de jugadores: se juega solo o en equipo.
+1. Elegís el modo (Experto 5/5, Normal 5/5 + 1 apoyo o Asistido 6/6 + 2 apoyos) y arranca la expedición. No hay que elegir cantidad de jugadores: se juega solo o en cooperativo con amigos.
 2. La app reparte 3 cartas de Equipo y revela **siempre 3 cartas de Misterio**, sin importar cuántos jueguen. La cantidad de jugadores no cambia nada: las decisiones son del equipo.
 3. En cada ciclo: roban 2 cartas de Equipo, pueden jugar 1 carta, eligen una carta de Misterio y una de sus opciones. Al final del ciclo te quedan 3 cartas: el resto se descarta al azar, sin elección.
 4. La prueba de dados se puede resolver de dos formas:
@@ -68,7 +68,7 @@ emoji: 📡
 texto: Encender el sonar
 prueba: cara
 exito: pistas+1
-fallo: energia-1
+fallo: escudo-1
 ```
 
 El pulso llega cada nueve segundos...
@@ -79,6 +79,10 @@ La guía completa de formato, pruebas, efectos y reglas de estilo está en [`car
 El motor (`_app/cards.wren`) lee el bloque desde el HTML que devuelve `Markdown.file`, arma las opciones, calcula la etiqueta de la prueba y los efectos, y renderiza la narrativa como HTML seguro. **No hay caché**: cada partida nueva lee los archivos tal como están en disco.
 
 Se pueden agregar cartas hasta `m60` y `e30` sin tocar código. La app saltea los archivos que no existen.
+
+## Para quien diseña
+
+El mazo completo vive en `cartas/`, un archivo por carta, con un bloque de mecánicas y la narrativa en Markdown. Se pueden editar a mano y la app los lee en cada partida nueva. La guía de formato está en [`cartas/LEEME.md`](cartas/LEEME.md) y el visor completo en la ruta `/cartas` de la app.
 
 ## Estructura
 
@@ -96,7 +100,7 @@ xp/
 ├── cartas/
 │   ├── LEEME.md            Cómo editar cartas
 │   ├── misterio/01..40.md  40 cartas de Misterio
-│   └── equipo/01..16.md    16 cartas de Equipo (40 copias)
+│   └── equipo/01..19.md    19 cartas de Equipo (44 copias)
 ├── css/style.css           Identidad visual del prototipo
 ├── BRANDING.md             Manual de marca de la franquicia XP
 └── _db.sqlite3             Base de datos (se crea sola)
@@ -114,8 +118,8 @@ El mazo se mezcla con `ORDER BY RANDOM()` de SQLite. Las tiradas digitales tambi
 
 ## Decisiones de este prototipo
 
-- **Solo o en equipo.** El equipo comparte la mano y decide junto. También se puede jugar una sola persona. Al final del ciclo quedan 3 cartas; el resto se descarta al azar.
-- **La cantidad de jugadores no cambia la mesa.** Siempre 3 cartas de Misterio, siempre 2 de robo, siempre 6 Pistas. Se puede jugar solo o en equipo.
+- **Solo o en cooperativo.** Podés jugar una sola persona o compartir la mano y las decisiones con amigos. Al final del ciclo quedan 3 cartas; el resto se descarta al azar.
+- **La cantidad de jugadores no cambia la mesa.** Siempre 3 cartas de Misterio, siempre 2 de robo, siempre 6 Pistas. Se puede jugar solo o en cooperativo con amigos.
 - **Tres modos.** Experto (5 y 5), Normal (5 y 5 + 1 carta de apoyo) y Asistido (6 y 6 + 2 cartas de apoyo).
 - **Cartas de apoyo.** Kit de emergencia (+1 Energía o +1 Escudo) y Carga de emergencia (+2 Energía o +2 Escudo). En Experto se mezclan en el mazo; en Normal el Kit va al área de ayuda; en Asistido van las dos. Las cartas del área se usan una vez, en cualquier momento, sin gastar la carta del ciclo.
 - **Una sola Herramienta activa por equipo.** Si juegan otra, la anterior va al descarte.
@@ -136,7 +140,7 @@ El mazo se mezcla con `ORDER BY RANDOM()` de SQLite. Las tiradas digitales tambi
 
 ## Próximos pasos
 
-- Modo cooperativo con roles opcionales, si el grupo lo pide.
+- Roles opcionales para jugar en cooperativo, si el grupo lo pide.
 - Ilustraciones definitivas (una por carta) con el prompt maestro de `BRANDING.md`.
 - Modo “solo dados”: tirar D6 sin partida, para probar cartas impresas.
 - Balance del mazo: el motor ya registra cada tirada, así que se puede medir la tasa de éxito por prueba.

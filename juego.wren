@@ -388,7 +388,7 @@ if (g == null) {
     <section class="hero-start">
       <p class="eyebrow">Preparación</p>
       <h1>Prepará la expedición</h1>
-      <p class="lead">Se puede jugar solo o en equipo. La mesa es una: el equipo XP contra el juego.</p>
+      <p class="lead">Podés jugar solo o en cooperativo con amigos. La mesa es una: el equipo XP contra el juego.</p>
       <p class="hint">Siempre 3 cartas de Misterio en la mesa y 2 de robo por ciclo. No importa cuántos jueguen.</p>
       <form method="post" class="panel start-form">
         <input type="hidden" name="accion" value="nueva" />
