@@ -1480,3 +1480,7 @@ section[id] { scroll-margin-top: 5.5rem; }
 @media (min-width: 821px) {
   .game-split { grid-template-columns: minmax(0, 1fr) 250px; gap: 1rem; }
 }
+
+@media (max-width: 820px) {
+  .game .card-grid { grid-template-columns: 1fr; }
+}
