@@ -231,12 +231,12 @@ if (Request.isPost) {
       var tools = Game.ids(g.id, "herramientas")
       var d1 = g.dado1
       var d2 = g.dado2
-      var ok = Game.evalTest(opt["tipoPrueba"], opt["objetivo"], d1, d2, g.bonus, tools.contains("plus_one_sum"))
+      var ok = Game.evalTest(opt["tipoPrueba"], opt["objetivo"], d1, d2, g.bonus, Game.hasEffect(tools, "plus_one_sum"))
       if (!ok && g.suerte) {
         var dice = Game.roll(opt["dados"])
         d1 = dice[0]
         d2 = opt["dados"] == 2 ? dice[1] : 0
-        ok = Game.evalTest(opt["tipoPrueba"], opt["objetivo"], d1, d2, g.bonus, tools.contains("plus_one_sum"))
+        ok = Game.evalTest(opt["tipoPrueba"], opt["objetivo"], d1, d2, g.bonus, Game.hasEffect(tools, "plus_one_sum"))
         Game.log(g.id, "Suerte del Principiante: nueva tirada " + d1.toString + (opt["dados"] == 2 ? " y " + d2.toString : "") + ".")
       }
       var eff = Game.parseEffects(ok ? opt["exito"] : opt["fallo"])
@@ -423,11 +423,11 @@ var previewAhorro = false
 var previewChips = []
 if (g.tirado && pendingOpt != null) {
   var tIds = Game.ids(g.id, "herramientas")
-  previewEstab = tIds.contains("plus_one_sum") && pendingOpt["dados"] == 2
-  previewOk = Game.evalTest(pendingOpt["tipoPrueba"], pendingOpt["objetivo"], g.dado1, g.dado2, g.bonus, tIds.contains("plus_one_sum"))
+  previewEstab = Game.hasEffect(tIds, "plus_one_sum") && pendingOpt["dados"] == 2
+  previewOk = Game.evalTest(pendingOpt["tipoPrueba"], pendingOpt["objetivo"], g.dado1, g.dado2, g.bonus, Game.hasEffect(tIds, "plus_one_sum"))
   var succ = Game.parseEffects(pendingOpt["exito"])
   var fail = Game.parseEffects(pendingOpt["fallo"])
-  previewBrazo = previewOk && succ["pistas"] > 0 && tIds.contains("extra_clue_six") && (g.dado1 == 6 || g.dado2 == 6)
+  previewBrazo = previewOk && succ["pistas"] > 0 && Game.hasEffect(tIds, "extra_clue_six") && (g.dado1 == 6 || g.dado2 == 6)
   previewBlindaje = !previewOk && fail["escudo"] < 0 && g.blindajeM
   previewCebo = !previewOk && fail["escudo"] < 0 && g.cebo
   previewAhorro = !previewOk && fail["energia"] < 0 && g.ahorro

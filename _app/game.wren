@@ -122,6 +122,16 @@ class Game {
     return Game.rows(id, zone).map { |r| r["cardId"] }
   }
 
+  // Las herramientas se guardan como cardId (e01, e07...). Sus efectos
+  // (plus_one_sum, extra_clue_six...) hay que resolverlos contra la carta.
+  static hasEffect(cardIds, effect) {
+    for (cid in cardIds) {
+      var c = Card.get(cid)
+      if (c != null && c.effect == effect) return true
+    }
+    return false
+  }
+
   static cardsIn(id, zone) {
     var out = []
     for (r in Game.rows(id, zone)) {
@@ -203,13 +213,13 @@ class Game {
       ceboUsado = true
       notas.add("Lanzar Cebo evitó el daño al Escudo")
     }
-    var blindaje = (tools.contains("reduce_damage") || g.blindajeM) && !g.blindajeUsado
+    var blindaje = (Game.hasEffect(tools, "reduce_damage") || g.blindajeM) && !g.blindajeUsado
     if (dEs < 0 && blindaje) {
       dEs = dEs + 1
       blindajeAplicado = true
       notas.add("Blindaje de Titanio absorbió 1 de daño")
     }
-    if (ok && dPi > 0 && tools.contains("extra_clue_six") && (g.dado1 == 6 || g.dado2 == 6)) {
+    if (ok && dPi > 0 && Game.hasEffect(tools, "extra_clue_six") && (g.dado1 == 6 || g.dado2 == 6)) {
       dPi = dPi + 1
       notas.add("Brazo Robótico sumó 1 Pista extra")
     }
