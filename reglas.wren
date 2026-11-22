@@ -39,7 +39,7 @@ return Layout.render(<main>
     <ol class="steps">
       <li><span class="num">1</span><span><strong>Arranquen con 3 cartas de Equipo</strong>La mano es compartida. Con niños de 5 años conviene leer las opciones en voz alta.</span></li>
       <li><span class="num">2</span><span><strong>Revelen siempre 3 cartas de Misterio</strong>Sin importar cuántos jueguen. La mesa no cambia: cambia a quién le toca tirar.</span></li>
-      <li><span class="num">3</span><span><strong>Pongan los contadores</strong>Experto: 5 y 5. Casual: 5 y 5 + 1 carta de apoyo en el área. Fácil: 6 y 6 + 2 cartas de apoyo. Pistas 0 en todos.</span></li>
+      <li><span class="num">3</span><span><strong>Pongan los contadores</strong>Experto: 5 y 5. Casual: 5 y 5 + 1 carta de apoyo en el área. Muy fácil: 6 y 6 + 2 cartas de apoyo. Pistas 0 en todos.</span></li>
     </ol>
   </section>
 
@@ -58,7 +58,7 @@ return Layout.render(<main>
 
   <section class="panel legend">
     <p class="eyebrow">Fichas de efectos</p>
-    <p><span class="chip chip-energia">⚡ +1</span> Energía · <span class="chip chip-escudo">🛡️ +2</span> Escudo · <span class="chip chip-pista">🔍 +1</span> Pistas · <span class="chip chip-turno">⏳ −1</span> Turno</p>
+    <p><span class="chip chip-energia">⚡ +1</span> Energía · <span class="chip chip-escudo">🛡️ +2</span> Escudo · <span class="chip chip-pista">🔍 +1</span> Pistas</p>
     <p class="hint">El ícono dice qué recurso cambia y el número, cuánto. La ficha con borde rojo es una pérdida.</p>
   </section>
 
@@ -126,7 +126,7 @@ return Layout.render(<main>
   <section class="panel">
     <h2>Cartas de apoyo</h2>
     <p>Dos cartas del equipo: <strong>Kit de emergencia</strong> (<span class="chip chip-energia">⚡ +1</span> o <span class="chip chip-escudo">🛡️ +1</span>) y <strong>Carga de emergencia</strong> (<span class="chip chip-energia">⚡ +2</span> o <span class="chip chip-escudo">🛡️ +2</span>).</p>
-    <p>En <strong>Experto</strong> se mezclan en el mazo. En <strong>Casual</strong>, el Kit se busca y queda en el área de ayuda. En <strong>Fácil</strong>, las dos quedan en el área. Las cartas del área se usan una vez, en cualquier momento y sin gastar la carta del turno.</p>
+    <p>En <strong>Experto</strong> se mezclan en el mazo. En <strong>Casual</strong>, el Kit se busca y queda en el área de ayuda. En <strong>Muy fácil</strong>, las dos quedan en el área. Las cartas del área se usan una vez, en cualquier momento y sin gastar la carta del turno.</p>
   </section>
 
   <section class="panel">
@@ -134,7 +134,7 @@ return Layout.render(<main>
     <p><strong>Consumo:</strong> al terminar cada turno, el submarino pierde <strong>1 Energía</strong>, hayan ganado o no una Pista. La Energía es el reloj de la partida y no se recupera con las cartas de Misterio.</p>
     <p><strong>Recarga:</strong> solo con Equipo. La Batería de Respaldo devuelve 2 de Energía y hay 6 en el mazo. El Generador Auxiliar recarga 1 al empezar el turno si están en 4 o menos. Ahorro de Oxígeno saltea el consumo de un turno.</p>
     <p><strong>Reparación:</strong> una vez por turno, antes de elegir un misterio, pueden gastar 1 Energía para recuperar 2 Escudo. Reparar compra tiempo, pero acerca el final del aire.</p>
-    <p><strong>Emboscadas:</strong> algunas cartas de Peligro cuestan <strong>1 Escudo</strong> o <strong>1 Pista</strong> apenas entran a la mesa, y tienen una sola opción. Otras, cada tanto, hacen <strong>perder un turno</strong> entero. Las cartas de Misterio nunca te sacan Energía: la Energía la baja el reloj y la recupera el Equipo.</p>
+    <p><strong>Emboscadas:</strong> algunas cartas de Peligro cuestan <strong>1 Energía</strong>, <strong>1 Escudo</strong> o <strong>1 Pista</strong> apenas entran a la mesa, y tienen una sola opción. Las cartas de Misterio nunca te sacan Energía: la Energía la baja el reloj y la recupera el Equipo.</p>
   </section>
 
   <section class="panel">

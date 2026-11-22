@@ -41,7 +41,7 @@ El pulso llega cada nueve segundos. Ustedes lo escuchan dos veces más antes de 
 - Lo que está debajo del bloque es la narrativa: Markdown normal (párrafos, **negritas**, listas). Se muestra en la carta y en la mesa.
 - `familia` es `exploracion`, `peligro` o `dilema`. Define el color de la carta.
 - `emoji` es el arte provisorio de la carta: se muestra grande en la mesa y en el visor. Cuando exista la ilustración definitiva, este campo desaparece y se reemplaza por la imagen.
-- `entrada` es opcional: el costo que se paga cuando la carta se revela en la mesa. Ejemplos: `escudo-1`, `pistas-1`, `turno-1`. Las cartas con `entrada` son **emboscadas** y llevan una sola opción. `turno-1` hace que el equipo pierda el turno siguiente. La app aplica el costo al repartir la mesa, al reponerla al final del turno y al cambiarla con Señuelo Luminoso.
+- `entrada` es opcional: el costo que se paga cuando la carta se revela en la mesa. Ejemplos: `energia-1`, `escudo-1`, `pistas-1`. Las cartas con `entrada` son **emboscadas** y llevan una sola opción. La app aplica el costo al repartir la mesa, al reponerla al final del turno y al cambiarla con Señuelo Luminoso.
 - Casi todas las cartas tienen **dos opciones**, `[A]` y `[B]`. Las emboscadas tienen **una sola opción**, `[A]`.
 - Las letras son solo marcadores internos para separar los bloques: la app no las muestra. En la mesa se ven botones con la acción, sin numeración.
 - Cada opción necesita las cuatro claves: `texto`, `prueba`, `exito`, `fallo`.

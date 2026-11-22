@@ -827,6 +827,8 @@ tbody tr:hover { background: rgba(127, 230, 242, 0.04); }
 
 .entry-badge {
   display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
   align-self: flex-start;
   margin: 0;
   padding: 0.25rem 0.6rem;

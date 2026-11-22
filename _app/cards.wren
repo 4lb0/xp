@@ -12,6 +12,7 @@ class Card {
     _emoji = meta["emoji"] || "🫧"
     _entry = meta["entrada"] || ""
     _entryLabel = meta["entradaLabel"] || ""
+    _entryChips = meta["entradaChips"] || []
     _body = body
     _options = options
   }
@@ -26,6 +27,7 @@ class Card {
   emoji { _emoji }
   entry { _entry }
   entryLabel { _entryLabel }
+  entryChips { _entryChips }
   body { _body }
   options { _options }
 
@@ -78,6 +80,7 @@ class Card {
     }
     meta["id"] = id
     meta["entradaLabel"] = meta["entrada"] == null ? "" : Card.effectsLabel(meta["entrada"])
+    meta["entradaChips"] = Card.chips(meta["entrada"] || "")
     for (o in opts) Card.decorate(o)
     return Card.new(meta, body, opts)
   }

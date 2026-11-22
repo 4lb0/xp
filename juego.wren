@@ -391,7 +391,7 @@ if (g == null) {
         <select id="modo" name="modo">
           <option value="experto" selected>Experto — 5 y 5, sin apoyos</option>
           <option value="casual">Casual — 5 y 5 + 1 carta de apoyo</option>
-          <option value="facil">Fácil — 6 y 6 + 2 cartas de apoyo</option>
+          <option value="facil">Muy fácil — 6 y 6 + 2 cartas de apoyo</option>
         </select>
         <button class="btn btn-primary">Iniciar expedición</button>
       </form>
@@ -448,7 +448,7 @@ return Layout.render(<main class="game">
       <h1>La fosa del Megalodón</h1>
     </div>
     <div class="board-meta">
-      <span class="pill">{{ g.modo == "facil" ? "Modo fácil" : (g.modo == "casual" ? "Modo casual" : "Modo experto") }}</span>
+      <span class="pill">{{ g.modo == "facil" ? "Muy fácil" : (g.modo == "casual" ? "Modo casual" : "Modo experto") }}</span>
       <span class="pill">Turno {{ g.turno }}</span>
       <span class="pill">Mazo {{ mazo }}</span>
       <span class="pill">Descarte {{ descarte }}</span>
@@ -612,7 +612,9 @@ return Layout.render(<main class="game">
         <span class="card-art"><span class="card-emoji" aria-hidden="true">{{ item["card"].emoji }}</span></span>
         <span class="card-family">{{ item["card"].family == "exploracion" ? "Exploración" : (item["card"].family == "peligro" ? "Peligro" : "Dilema") }}{{ item["card"].entry != "" ? " · Emboscada" : "" }}</span>
         <h3>{{ item["card"].name }}</h3>
-        {{ item["card"].entry != "" && <p class="entry-badge">Al entrar: {{ item["card"].entryLabel }}</p> }}
+        {{ item["card"].entry != "" && <p class="entry-badge">Al entrar
+          {{ item["card"].entryChips.map{|c| <span class="chip {{ c["cls"] }}" title="{{ c["title"] }}" aria-label="{{ c["title"] }}">{{ c["icon"] }} {{ c["text"] }}</span>} }}
+        </p> }}
         <section class="card-text">{{ item["card"].body }}</section>
         <ul class="card-options">
           {{ item["card"].options.map{|o| <li class="option-row">

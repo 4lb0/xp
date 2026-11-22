@@ -67,7 +67,9 @@ return Layout.render(<main>
         <span class="card-art"><span class="card-emoji" aria-hidden="true">{{ c.emoji }}</span></span>
         <span class="card-family">Peligro{{ c.entry != "" ? " · Emboscada" : "" }}</span>
         <h3>{{ c.name }}</h3>
-        {{ c.entry != "" && <p class="entry-badge">Al entrar: {{ c.entryLabel }}</p> }}
+        {{ c.entry != "" && <p class="entry-badge">Al entrar
+          {{ c.entryChips.map{|c| <span class="chip {{ c["cls"] }}" title="{{ c["title"] }}" aria-label="{{ c["title"] }}">{{ c["icon"] }} {{ c["text"] }}</span>} }}
+        </p> }}
         <section class="card-text">{{ c.body }}</section>
         <ul>
           {{ c.options.map{|o| <li>{{ o["texto"] }} — <span class="test-badge test-{{ o["tipoPrueba"] }}">{{ o["pruebaLabel"] }}</span><br/><span class="option-effects">
