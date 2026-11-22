@@ -12,7 +12,17 @@ return Layout.render(<main>
     </div>
   </header>
 
-  <section>
+  <nav class="toc" aria-label="Secciones de las reglas">
+    <a class="pill" href="#idea">La idea</a>
+    <a class="pill" href="#preparacion">Preparación</a>
+    <a class="pill" href="#ciclo">El ciclo</a>
+    <a class="pill" href="#pruebas">Pruebas</a>
+    <a class="pill" href="#equipo">Cartas</a>
+    <a class="pill" href="#reloj">Energía</a>
+    <a class="pill" href="#final">Final</a>
+  </nav>
+
+  <section id="idea">
     <div class="split">
       <div>
         <h2>La idea</h2>
@@ -36,7 +46,7 @@ return Layout.render(<main>
     </div>
   </section>
 
-  <section>
+  <section id="preparacion">
     <div class="section-head">
       <h2>Preparación</h2>
     </div>
@@ -47,7 +57,7 @@ return Layout.render(<main>
     </ol>
   </section>
 
-  <section>
+  <section id="ciclo">
     <div class="section-head">
       <h2>El ciclo, paso a paso</h2>
       <p>Se juega un ciclo por vez, solo o en cooperativo.</p>
@@ -66,7 +76,7 @@ return Layout.render(<main>
     <p class="hint">El ícono dice qué recurso cambia y el número, cuánto. La ficha con borde rojo es una pérdida.</p>
   </section>
 
-  <section>
+  <section id="pruebas">
     <div class="section-head">
       <h2>Pruebas de dados</h2>
       <p>Todas las cartas de Misterio se resuelven con un D6 o dos.</p>
@@ -88,7 +98,7 @@ return Layout.render(<main>
     <p class="hint">Las Maniobras se juegan antes de tirar: pueden cambiar un dado, sumar al total o repetir la tirada si falla.</p>
   </section>
 
-  <section>
+  <section id="equipo">
     <div class="split">
       <div>
         <div class="section-head"><h2>Herramientas</h2></div>
@@ -128,27 +138,27 @@ return Layout.render(<main>
     </div>
   </section>
 
-  <section class="panel">
+  <section class="panel" id="apoyo">
     <h2>Maniobras de apoyo</h2>
     <p>Dos Maniobras del equipo: <strong>Kit de emergencia</strong> (<span class="chip chip-energia">⚡ +1</span> o <span class="chip chip-escudo">🛡️ +1</span>) y <strong>Carga de emergencia</strong> (<span class="chip chip-energia">⚡ +2</span> o <span class="chip chip-escudo">🛡️ +2</span>).</p>
     <p>En <strong>Experto</strong> se mezclan en el mazo. En <strong>Normal</strong>, el Kit se busca y queda en el área de ayuda. En <strong>Asistido</strong>, las dos quedan en el área. Se usan una vez, van al descarte como cualquier Maniobra y, si están en el área de ayuda, no gastan la carta del ciclo.</p>
   </section>
 
-  <section class="panel">
+  <section class="panel" id="reloj">
     <h2>El reloj: consumo de Energía</h2>
     <p><strong>Consumo:</strong> al terminar cada ciclo, el submarino pierde <strong>1 Energía</strong>, hayan ganado o no una Pista. La Energía es el reloj de la partida y no se recupera con las cartas de Misterio.</p>
     <p><strong>Recarga:</strong> solo con Equipo. La Batería de Respaldo devuelve 2 de Energía y hay 6 en el mazo. El Generador Auxiliar recarga 1 al empezar cada misterio si están en 4 o menos. El Generador de Escudo hace lo mismo con el casco. Ahorro de Oxígeno saltea el consumo de un ciclo.</p>
     <p><strong>Emboscadas:</strong> diez cartas de Misterio cuestan <strong>1 Energía</strong>, <strong>1 Escudo</strong> o <strong>1 Pista</strong> apenas entran a la mesa, y tienen una sola opción. Al empezar la partida, si hay más de una entre las 3 cartas iniciales, el equipo elige cuál sufrir: solo una emboscada inicial se aplica. Las cartas de Misterio nunca te sacan Energía: la Energía la baja el reloj y la recupera el Equipo.</p>
   </section>
 
-  <section class="panel">
+  <section class="panel" id="dados">
     <h2>Dados de la app y dados de la mesa</h2>
     <p>La app puede tirar los dados por ustedes: es cómodo cuando no hay lugar en la mesa. Pero el juego está pensado para tirar dados de verdad.</p>
     <p>Por eso, en cada prueba pueden elegir <strong>“Ya tiré en la mesa”</strong> e ingresar lo que salió en cada dado. La app aplica el resultado igual, con las mismas reglas y los mismos efectos.</p>
     <p class="muted">Trampa permitida: nadie va a revisar el dado. No es un juego competitivo: la única persona a la que le pueden hacer trampa es al equipo.</p>
   </section>
 
-  <section>
+  <section id="final">
     <div class="section-head">
       <h2>Final de la partida</h2>
     </div>

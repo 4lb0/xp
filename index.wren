@@ -96,7 +96,7 @@ return Layout.render(<main>
         <div class="section-head">
           <h2>Lo que hay en la caja</h2>
         </div>
-        <table>
+        <table class="table-stack">
           <caption>Componentes del prototipo</caption>
           <thead>
             <tr><th>Componente</th><th>Cantidad</th></tr>
