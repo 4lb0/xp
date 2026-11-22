@@ -36,10 +36,27 @@ if (Request.isPost) {
   var rowId = Request.post("rowId", "")
   var optLabel = Request.post("opt", "")
 
-  if (accion == "jugar") {
+  if (accion == "elegir_emboscada") {
+    if (g.fase != "emboscada") {
+      aviso = "Ya eligieron la emboscada inicial."
+    } else {
+      var row = `SELECT * FROM game_cards WHERE id = ? AND gameId = ? AND zone = 'mesa'`.first(rowId, g.id)
+      var c = row == null ? null : Card.get(row["cardId"])
+      if (c == null || c.entry == "") {
+        aviso = "Esa carta no es una emboscada."
+      } else {
+        var res = Game.apply(g.id, g, Game.parseEffects(c.entry), true, [])
+        Game.log(g.id, "Emboscada inicial: " + c.name + " — " + c.entryLabel + ".")
+        `UPDATE games SET fase = 'listo' WHERE id = ?`.query(g.id)
+        if (res["status"] != "activa") return Response.redirect("/juego")
+      }
+    }
+  } else if (accion == "jugar") {
     var row = `SELECT * FROM game_cards WHERE id = ? AND gameId = ? AND zone = 'mano'`.first(rowId, g.id)
     if (row == null) {
       aviso = "Esa carta ya no está en tu mano."
+    } else if (g.fase != "listo") {
+      aviso = "Esa carta se juega antes de elegir un Misterio."
     } else if (g.jugadas > 0) {
       aviso = "Ya jugaron una carta este ciclo."
     } else {
@@ -255,6 +272,8 @@ if (Request.isPost) {
   } else if (accion == "usar_ayuda") {
     if (g.fase == "apoyo") {
       aviso = "Primero elegí el recurso del apoyo pendiente."
+    } else if (g.fase == "emboscada") {
+      aviso = "Primero elijan la emboscada inicial."
     } else {
       var row = `SELECT id, cardId FROM game_cards WHERE id = ? AND gameId = ? AND zone = 'ayuda'`.first(rowId, g.id)
       if (row == null) {
@@ -387,6 +406,7 @@ if (g == null) {
 }
 
 var mesa = Game.cardsIn(g.id, "mesa")
+var emboscadasIniciales = mesa.where { |m| m["card"].entry != "" }.toList
 var hand = Game.cardsIn(g.id, "mano")
 var tools = Game.cardsIn(g.id, "herramientas")
 var ayuda = Game.cardsIn(g.id, "ayuda")
@@ -482,6 +502,28 @@ return Layout.render(<main class="game">
       </span>
     </article>
   </section>
+
+  {{ g.status == "activa" && g.fase == "emboscada" && <section class="panel ambush-choice">
+    <p class="eyebrow">Emboscada inicial</p>
+    <h2>Elijan qué golpe recibe el equipo</h2>
+    <p class="muted">Las tres cartas iniciales están boca arriba. Solo una emboscada se aplica al empezar: elijan cuál sufrir.</p>
+    <div class="card-grid">
+      {{ emboscadasIniciales.map{|item| <article class="card" data-family="{{ item["card"].family }}">
+        <span class="card-art"><span class="card-emoji" aria-hidden="true">{{ item["card"].emoji }}</span></span>
+        <span class="card-family">Emboscada inicial</span>
+        <h3>{{ item["card"].name }}</h3>
+        <p class="entry-badge">Al entrar
+          {{ item["card"].entryChips.map{|c| <span class="chip {{ c["cls"] }}" title="{{ c["title"] }}" aria-label="{{ c["title"] }}">{{ c["icon"] }} {{ c["text"] }}</span>} }}
+        </p>
+        <section class="card-text">{{ item["card"].body }}</section>
+        <form method="post" class="option-form">
+          <input type="hidden" name="accion" value="elegir_emboscada" />
+          <input type="hidden" name="rowId" value="{{ item["rowId"] }}" />
+          <button class="btn btn-primary btn-small">Sufrir esta emboscada</button>
+        </form>
+      </article>} }}
+    </div>
+  </section> }}
 
   {{ g.status == "activa" && g.fase == "apoyo" && supportCard != null && <section class="test-panel support-choice">
     <p class="eyebrow">Apoyo del equipo</p>

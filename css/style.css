@@ -909,3 +909,11 @@ tbody tr:hover { background: rgba(127, 230, 242, 0.04); }
   font-size: 0.78rem;
   line-height: 1.35;
 }
+
+.ambush-choice {
+  border-color: rgba(255, 111, 97, 0.45);
+  background:
+    radial-gradient(circle at 50% 0%, rgba(255, 111, 97, 0.12), transparent 60%),
+    rgba(9, 32, 51, 0.7);
+}
+.ambush-choice .card { border-color: rgba(255, 111, 97, 0.3); }

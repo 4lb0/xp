@@ -71,15 +71,21 @@ class Game {
     Game.draw(id, "misterio", "mesa", 3)
     Game.draw(id, "equipo", "mano", 3)
     `UPDATE games SET ultimo = ? WHERE id = ?`.query("La expedición empieza. El submarino se hunde en la fosa.", id)
-    Game.log(id, "Comienza la expedición con " + players.toString + " jugadores, modo " + modo + ".")
+    var modoLabel = modo == "facil" ? "Asistido" : (modo == "casual" ? "Normal" : "Experto")
+    Game.log(id, "Comienza la expedición en modo " + modoLabel + ".")
     var g0 = Game.find(id)
+    var emboscadas = []
     for (r in Game.rows(id, "mesa")) {
       var c = Card.get(r["cardId"])
-      if (c != null && c.entry != "") {
-        Game.apply(id, g0, Game.parseEffects(c.entry), true, [])
-        Game.log(id, "Emboscada al entrar: " + c.name + " — " + c.entryLabel + ".")
-        g0 = Game.find(id)
-      }
+      if (c != null && c.entry != "") emboscadas.add(c)
+    }
+    if (emboscadas.count == 1) {
+      var c = emboscadas[0]
+      Game.apply(id, g0, Game.parseEffects(c.entry), true, [])
+      Game.log(id, "Emboscada al entrar: " + c.name + " — " + c.entryLabel + ".")
+    } else if (emboscadas.count > 1) {
+      `UPDATE games SET fase = 'emboscada' WHERE id = ?`.query(id)
+      Game.log(id, "Tres cartas en la mesa: elijan qué emboscada inicial sufrir.")
     }
     return id
   }
