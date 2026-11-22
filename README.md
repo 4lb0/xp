@@ -43,7 +43,7 @@ El estado de la partida se guarda en SQLite y se ata a la sesión del navegador.
 
 1. Elegís el modo (Experto 5/5, Normal 5/5 + 1 apoyo o Asistido 6/6 + 2 apoyos) y arranca la expedición. No hay que elegir cantidad de jugadores: se juega solo o en cooperativo con amigos.
 2. La app reparte 3 cartas de Equipo y revela **siempre 3 cartas de Misterio**, sin importar cuántos jueguen. La cantidad de jugadores no cambia nada: las decisiones son del equipo.
-3. En cada ciclo: roban 2 cartas de Equipo, pueden jugar 1 carta, eligen una carta de Misterio y una de sus opciones. Al final del ciclo te quedan 3 cartas: el resto se descarta al azar, sin elección.
+3. En cada ciclo arrancan con 3 cartas de Equipo, pueden jugar 1, eligen una carta de Misterio y una de sus opciones. Al cerrar el ciclo, el juego descarta al azar hasta dejar 1 y roba 2: siempre empiezan el ciclo siguiente con 3.
 4. La prueba de dados se puede resolver de dos formas:
    - **Tirar en la app**: el servidor genera los D6.
    - **Ya tiré en la mesa**: elegís en pantalla lo que salió en cada dado físico.
@@ -120,7 +120,7 @@ El mazo se mezcla con `ORDER BY RANDOM()` de SQLite. Las tiradas digitales tambi
 
 ## Decisiones de este prototipo
 
-- **Solo o en cooperativo.** Podés jugar una sola persona o compartir la mano y las decisiones con amigos. Al final del ciclo quedan 3 cartas; el resto se descarta al azar.
+- **Solo o en cooperativo.** Podés jugar una sola persona o compartir la mano y las decisiones con amigos. Al cerrar el ciclo el juego descarta al azar hasta dejar 1 y roba 2: la mano siempre arranca con 3.
 - **La cantidad de jugadores no cambia la mesa.** Siempre 3 cartas de Misterio, siempre 2 de robo, siempre 6 Pistas. Se puede jugar solo o en cooperativo con amigos.
 - **Tres modos.** Experto (5 y 5), Normal (5 y 5 + 1 carta de apoyo) y Asistido (6 y 6 + 2 cartas de apoyo).
 - **Maniobras de apoyo.** Kit de emergencia (+1 Energía o +1 Escudo) y Carga de emergencia (+2 Energía o +2 Escudo) son Maniobras: se usan una vez y van al descarte. En Experto se mezclan en el mazo; en Normal el Kit va al área de ayuda; en Asistido van las dos. Las del área se usan sin gastar la carta del ciclo.

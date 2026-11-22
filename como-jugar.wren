@@ -245,7 +245,7 @@ return Layout.render(<main class="quick">
         <svg class="quick-icon" aria-hidden="true"><use href="#ico-deck"/></svg>
         <div>
           <strong>Cerrá el ciclo</strong>
-          <p>Descartá al azar hasta 3, robá 2 y pagá ⚡ 1.</p>
+          <p>Descartá al azar hasta 1, robá 2 y pagá ⚡ 1.</p>
         </div>
       </li>
     </ol>
@@ -254,7 +254,7 @@ return Layout.render(<main class="quick">
       <p>
         Tenés 3 cartas. Jugás <strong>Soldadura</strong> (🛡️ +1, va al descarte).
         Elegís <strong>El nido</strong>. Tirás <strong>Cara</strong>: éxito, ⚡ +2.
-        La carta va al descarte, entra la próxima, descartás al azar hasta 3,
+        La carta va al descarte, entra la próxima, descartás al azar hasta 1,
         robás 2 y el submarino paga <strong>⚡ 1</strong>.
       </p>
     </div>
@@ -301,7 +301,7 @@ return Layout.render(<main class="quick">
     <div class="quick-rules">
       <span><strong>1</strong> carta por ciclo</span>
       <span><strong>1</strong> Herramienta activa</span>
-      <span><strong>3</strong> antes de robar</span>
+      <span><strong>3</strong> al empezar</span>
       <span><strong>Emboscada:</strong> −1 ⚡, 🛡️ o Pista al entrar</span>
       <span><strong>Modos:</strong> Experto 5/5 · Normal 5/5 + 1 · Asistido 6/6 + 2</span>
     </div>

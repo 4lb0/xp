@@ -63,10 +63,10 @@ return Layout.render(<main>
       <p>Se juega un ciclo por vez, solo o en cooperativo.</p>
     </div>
     <ol class="steps">
-      <li><span class="num">1</span><span><strong>Robá 2 cartas de Equipo</strong>Robás 2 por ciclo y jugás con las cartas que tengas. Al final del ciclo te quedan 3: el resto se descarta al azar.</span></li>
+      <li><span class="num">1</span><span><strong>Arrancá con 3 cartas de Equipo</strong>La mano es compartida. Al cerrar cada ciclo el juego descarta al azar hasta dejar 1 y roba 2: el próximo ciclo empieza con 3.</span></li>
       <li><span class="num">2</span><span><strong>Jugá 1 carta (opcional)</strong>Herramienta: queda en la mesa toda la partida. Una sola en mesa; la nueva reemplaza a la anterior. Maniobra: se resuelve y va al descarte.</span></li>
       <li><span class="num">3</span><span><strong>Resolvé un Misterio</strong>Elegí una carta activa, lean la situación, debatan y elijan una de sus opciones. Después viene la prueba de dados.</span></li>
-      <li><span class="num">4</span><span><strong>Reponé la mesa y pasá el ciclo</strong>La carta resuelta va al descarte, se revela una nueva y pasan al siguiente ciclo. Al final, las cartas que sobren de 3 se descartan al azar.</span></li>
+      <li><span class="num">4</span><span><strong>Reponé la mesa y pasá el ciclo</strong>La carta resuelta va al descarte y se revela una nueva. Al cerrar el ciclo, el juego descarta al azar hasta dejar 1 carta y roba 2.</span></li>
     </ol>
   </section>
 

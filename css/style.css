@@ -1314,13 +1314,6 @@ section[id] { scroll-margin-top: 5.5rem; }
 
 /* ---------- Menú flotante de la expedición ---------- */
 
-.game-menu-check {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  opacity: 0;
-  pointer-events: none;
-}
 .game-rail {
   position: fixed;
   z-index: 40;
@@ -1342,7 +1335,6 @@ section[id] { scroll-margin-top: 5.5rem; }
   border-radius: 10px;
   border: 1px solid rgba(127, 230, 242, 0.12);
   background: rgba(127, 230, 242, 0.06);
-  cursor: pointer;
 }
 .rail-menu-icon { color: var(--gold); font-size: 1rem; line-height: 1; }
 .rail-menu-text {
@@ -1351,13 +1343,6 @@ section[id] { scroll-margin-top: 5.5rem; }
   font-weight: 800;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-}
-.rail-mobile-state {
-  display: none;
-  margin-left: auto;
-  color: var(--paper);
-  font-size: 0.72rem;
-  font-weight: 700;
 }
 .game-rail-body { margin-top: 0.55rem; }
 .rail-state { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.3rem; }
@@ -1416,38 +1401,52 @@ section[id] { scroll-margin-top: 5.5rem; }
   .game { padding-right: 205px; }
 }
 @media (max-width: 999px) {
-  .game { padding-bottom: 5.2rem; }
+  .game { padding-right: 78px; padding-bottom: 1rem; }
   .game-rail {
-    top: auto;
-    bottom: 0.8rem;
-    right: 0.8rem;
-    width: min(270px, calc(100vw - 1.6rem));
-    padding: 0;
-    border: 0;
-    background: transparent;
-    box-shadow: none;
-    backdrop-filter: none;
+    top: 0.5rem;
+    right: 0.5rem;
+    width: 64px;
+    padding: 0.35rem;
+    border-radius: 16px;
   }
   .game-rail-menu {
-    padding: 0.65rem 0.85rem;
-    border: 1px solid var(--line);
-    border-radius: 999px;
-    background: rgba(9, 32, 51, 0.97);
-    box-shadow: var(--shadow);
+    justify-content: center;
+    padding: 0.25rem;
+    border: 0;
+    background: transparent;
   }
-  .rail-mobile-state { display: block; }
-  .game-rail-body {
-    display: none;
-    max-height: 70vh;
-    margin: 0 0 0.5rem;
-    padding: 0.7rem;
-    overflow: auto;
-    border: 1px solid var(--line);
-    border-radius: var(--radius);
-    background: rgba(9, 32, 51, 0.98);
-    box-shadow: var(--shadow);
+  .rail-menu-text { display: none; }
+  .game-rail-body { margin-top: 0.25rem; }
+  .rail-state { grid-template-columns: 1fr; gap: 0.25rem; }
+  .rail-stat { padding: 0.3rem 0.1rem; }
+  .rail-stat b { font-size: 0.9rem; }
+  .rail-stat small { font-size: 0.55rem; }
+  .rail-meta { display: none; }
+  .rail-nav { gap: 0.1rem; }
+  .rail-nav a {
+    position: relative;
+    justify-content: center;
+    padding: 0.5rem 0.2rem;
+    font-size: 1.05rem;
   }
-  .game-menu-check:checked ~ .game-rail .game-rail-body { display: block; }
+  .rail-label { display: none; }
+  .rail-nav a b {
+    position: absolute;
+    top: 0.15rem;
+    right: 0.15rem;
+    margin: 0;
+    padding: 0.02rem 0.22rem;
+    font-size: 0.55rem;
+  }
+  .rail-dot {
+    position: absolute;
+    right: 0.3rem;
+    bottom: 0.35rem;
+    margin: 0;
+    width: 0.45rem;
+    height: 0.45rem;
+  }
+  .rail-nav a[data-tool]:hover::after { display: none; }
 }
 
 .rail-nav a[data-tool] { position: relative; }
@@ -1467,4 +1466,17 @@ section[id] { scroll-margin-top: 5.5rem; }
   font-size: 0.72rem;
   line-height: 1.3;
   box-shadow: var(--shadow);
+}
+
+.hand-main {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.8rem;
+}
+@media (max-width: 820px) {
+  .hand-main { grid-template-columns: 1fr; }
+}
+
+@media (min-width: 821px) {
+  .game-split { grid-template-columns: minmax(0, 1fr) 250px; gap: 1rem; }
 }

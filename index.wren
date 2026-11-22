@@ -56,7 +56,7 @@ return Layout.render(<main>
     <ol class="steps">
       <li>
         <span class="num">1</span>
-        <span><strong>Robá 2 cartas de Equipo</strong>Al final del ciclo te quedan 3 cartas: el resto se descarta al azar.</span>
+        <span><strong>Arrancá con 3 cartas de Equipo</strong>Al cerrar el ciclo el juego descarta al azar hasta dejar 1 y roba 2: siempre empezás con 3.</span>
       </li>
       <li>
         <span class="num">2</span>
@@ -68,7 +68,7 @@ return Layout.render(<main>
       </li>
       <li>
         <span class="num">4</span>
-        <span><strong>Reponé la mesa</strong>Descarten la carta resuelta, revelen una nueva y pase el dispositivo. Al final se descartan al azar hasta 3.</span>
+        <span><strong>Reponé la mesa</strong>Descarten la carta resuelta, revelen una nueva y pase el dispositivo. Al cerrar el ciclo, descarten hasta 1 y roben 2.</span>
       </li>
     </ol>
   </section>

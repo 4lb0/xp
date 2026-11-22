@@ -314,7 +314,7 @@ if (Request.isPost) {
     if (g.fase != "resuelto") {
       aviso = "Primero resuelvan un misterio."
     } else {
-      var sobra = Game.count(g.id, "mano") - 3
+      var sobra = Game.count(g.id, "mano") - 1
       if (sobra > 0) {
         var mano = `SELECT id, cardId FROM game_cards WHERE gameId = ? AND zone = 'mano' ORDER BY RANDOM()`.fetch(g.id)
         for (i in 0...sobra) {
@@ -471,13 +471,11 @@ if (g.status == "victoria") {
 // ---------- Vista ----------
 
 return Layout.render(<main class="game">
-  {{ g.status == "activa" && <input type="checkbox" id="game-menu" class="game-menu-check" /> }}
   {{ g.status == "activa" && <aside class="game-rail" aria-label="Menú de la expedición">
-    <label for="game-menu" class="game-rail-menu" aria-label="Abrir o cerrar el menú de la expedición">
+    <div class="game-rail-menu">
       <span class="rail-menu-icon" aria-hidden="true">☰</span>
       <span class="rail-menu-text">Menú</span>
-      <span class="rail-mobile-state">⚡{{ g.energia }} · 🛡️{{ g.escudo }} · 🔍{{ g.pistas }}</span>
-    </label>
+    </div>
     <div class="game-rail-body">
       <div class="rail-state">
         <span class="rail-stat rail-energia" title="Energía {{ g.energia }} de 6"><b>{{ g.energia }}</b><small>⚡</small></span>
@@ -486,13 +484,15 @@ return Layout.render(<main class="game">
       </div>
       <p class="rail-meta">Ciclo {{ g.turno }} · Mazo {{ mazo }} · Descarte {{ descarte }}</p>
       <nav class="rail-nav">
-        <a href="{{ focoHref }}"><span aria-hidden="true">🃏</span> Cartas activas <b>{{ mesa.count }}</b></a>
-        <a href="#mano"><span aria-hidden="true">🖐️</span> Mano <b>{{ handCount }}</b></a>
+        <a href="{{ focoHref }}" aria-label="Ir a la acción actual"><span aria-hidden="true">🃏</span> <span class="rail-label">Cartas activas</span> <b>{{ mesa.count }}</b></a>
+        <a href="#mano" aria-label="Ver la mano"><span aria-hidden="true">🖐️</span> <span class="rail-label">Mano</span> <b>{{ handCount }}</b></a>
         <a href="#herramientas" class="{{ activeTool == null ? "is-empty" : "" }}" data-tool="{{ activeTool == null ? "Sin Herramienta activa" : activeTool.name }}" title="{{ activeTool == null ? "Sin Herramienta activa" : activeTool.name }}" aria-label="Herramienta: {{ activeTool == null ? "ninguna activa" : activeTool.name }}">
-          <span aria-hidden="true">🔧</span> Herramienta
+          <span aria-hidden="true">🔧</span> <span class="rail-label">Herramienta</span>
           <span class="rail-dot {{ activeTool == null ? "" : "on" }}" aria-hidden="true"></span>
         </a>
-        <a href="#ayuda" class="{{ ayuda.isEmpty ? "is-empty" : "" }}"><span aria-hidden="true">🎒</span> Ayuda <b>{{ ayuda.count }}</b></a>
+        <a href="#ayuda" class="{{ ayuda.isEmpty ? "is-empty" : "" }}" aria-label="Ayuda del equipo"><span aria-hidden="true">🎒</span> <span class="rail-label">Ayuda</span> <b>{{ ayuda.count }}</b></a>
+        <a href="/reglas" title="Reglas completas" aria-label="Reglas completas"><span aria-hidden="true">📖</span> <span class="rail-label">Reglas</span></a>
+        <a href="/" title="Inicio" aria-label="Inicio"><span aria-hidden="true">🏠</span> <span class="rail-label">Inicio</span></a>
       </nav>
     </div>
   </aside> }}
@@ -725,7 +725,7 @@ return Layout.render(<main class="game">
     {{ mesa.isEmpty && <p class="muted">No quedan cartas activas. Repongan la mesa al terminar el ciclo.</p> }}
   </section> }}
 
-  {{ g.status == "activa" && <section class="split">
+  {{ g.status == "activa" && <section class="split game-split">
     <div id="mano">
       {{ !ayuda.isEmpty && <section class="help-zone" id="ayuda">
         <div class="section-head">
@@ -749,9 +749,9 @@ return Layout.render(<main class="game">
 
       <div class="section-head">
         <h2>Mano del equipo</h2>
-        <p>{{ handCount }} cartas · al final quedan 3</p>
+        <p>{{ handCount }} cartas · siempre 3 al empezar</p>
       </div>
-      <div class="hand">
+      <div class="hand hand-main">
         {{ hand.map{|h| <article class="card" data-family="{{ h["card"].isSupport ? "apoyo" : (h["card"].isTool ? "herramienta" : "maniobra") }}">
           <span class="card-art"><span class="card-emoji" aria-hidden="true">{{ h["card"].emoji }}</span></span>
           <span class="card-family">{{ h["card"].isSupport ? "Maniobra de apoyo" : (h["card"].isTool ? "Herramienta" : "Maniobra") }} · <span class="card-id">{{ h["card"].id }}</span></span>
@@ -772,8 +772,8 @@ return Layout.render(<main class="game">
           </div>
         </article>} }}
       </div>
-      {{ hand.isEmpty && <p class="muted">Sin cartas en mano. Al terminar el ciclo roban 2.</p> }}
-      <p class="hint">{{ g.jugadas == 0 ? "Todavía pueden jugar 1 carta este ciclo." : "Ya jugaron su carta de este ciclo." }} Al final del ciclo, las que sobren de 3 se descartan al azar.</p>
+      {{ hand.isEmpty && <p class="muted">Sin cartas en mano. Al cerrar el ciclo se roban 2.</p> }}
+      <p class="hint">{{ g.jugadas == 0 ? "Todavía pueden jugar 1 carta este ciclo." : "Ya jugaron su carta de este ciclo." }} Al cerrar el ciclo, el juego descarta al azar hasta dejar 1 y roba 2.</p>
     </div>
 
     <aside id="herramientas">
