@@ -10,6 +10,12 @@ Versión jugable en el navegador del juego de mesa de aventura y misterio **XP (
 - Tirada digital desde la app **o** carga manual de lo que salió en los dados de la mesa.
 - Hecho con [Bialet](https://bialet.dev): Wren, SQLite y HTML server-rendered, sin frameworks ni build step.
 
+## Caché de CSS
+
+Cloudflare cachea `/css/style.css` durante 4 horas. Al cambiar el CSS, subí
+`Layout.assetVersion` en `_app/template.wren` para que el HTML pida una URL
+nueva (`/css/style.css?v=…`).
+
 ## Arrancar
 
 ```bash

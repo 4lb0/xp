@@ -1,4 +1,7 @@
 class Layout {
+  // Subir al cambiar css/style.css para romper la caché de Cloudflare.
+  static assetVersion { "2026-11-22-1" }
+
   static render(content) { Layout.render(content, "XP · Equipo eXPedición", false) }
 
   static die(value) { Layout.die(value, "") }
@@ -15,7 +18,7 @@ class Layout {
         <title>{{ title }}</title>
         <meta name="description" content="XP: En busca del Megalodón. Juego de mesa de aventura y misterio para toda la familia. Solo o en cooperativo." />
         <meta name="theme-color" content="#061423" />
-        <link rel="stylesheet" href="/css/style.css" />
+        <link rel="stylesheet" href="/css/style.css?v={{ Layout.assetVersion }}" />
       </head>
       <body>
         <a class="skip-link" href="#contenido">Saltar al contenido</a>
