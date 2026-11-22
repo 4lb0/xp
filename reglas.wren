@@ -50,7 +50,7 @@ return Layout.render(<main>
     </div>
     <ol class="steps">
       <li><span class="num">1</span><span><strong>Robá 2 cartas de Equipo</strong>Robás 2 por turno y jugás con las cartas que tengas. Al final del turno te quedan 3: el resto se descarta al azar.</span></li>
-      <li><span class="num">2</span><span><strong>Jugá 1 carta (opcional)</strong>Herramienta: queda en la mesa toda la partida. Máximo 4 en mesa; la quinta reemplaza a una. Maniobra: se resuelve y va al descarte.</span></li>
+      <li><span class="num">2</span><span><strong>Jugá 1 carta (opcional)</strong>Herramienta: queda en la mesa toda la partida. Una sola en mesa; la nueva reemplaza a la anterior. Maniobra: se resuelve y va al descarte.</span></li>
       <li><span class="num">3</span><span><strong>Resolvé un Misterio</strong>Elegí una carta activa, lean la situación, debatan y elijan una de sus opciones. Después viene la prueba de dados.</span></li>
       <li><span class="num">4</span><span><strong>Reponé la mesa y pasá el turno</strong>La carta resuelta va al descarte, se revela una nueva y pasan al siguiente turno. Al final, las cartas que sobren de 3 se descartan al azar.</span></li>
     </ol>
@@ -88,7 +88,7 @@ return Layout.render(<main>
     <div class="split">
       <div>
         <div class="section-head"><h2>Herramientas</h2></div>
-        <p class="muted">Quedan boca arriba frente al equipo. Máximo 4.</p>
+        <p class="muted">Quedan boca arriba frente al equipo. Una sola.</p>
         <table>
           <thead><tr><th>Carta</th><th>Efecto</th></tr></thead>
           <tbody>
@@ -112,7 +112,7 @@ return Layout.render(<main>
             <tr><td>Arpón Rastreador</td><td>Gastá 2 de Energía y tirá un dado. Si sale Cara, +1 Pista.</td></tr>
             <tr><td>Turbo de Emergencia</td><td>Antes de tirar: sumá 2 al total de la prueba.</td></tr>
             <tr><td>Suerte del Principiante</td><td>Antes de tirar: si la prueba falla, se vuelve a tirar una vez.</td></tr>
-            <tr><td>Soldadura Submarina</td><td>Recuperá 3 de Escudo. Hay 4 en el mazo.</td></tr>
+            <tr><td>Soldadura Submarina</td><td>Recuperá 1 de Escudo. Hay 4 en el mazo.</td></tr>
             <tr><td>Batería de Respaldo</td><td>Recuperá 2 de Energía. Hay 6 en el mazo.</td></tr>
             <tr><td>Análisis Rápido</td><td>Gastá 1 de Energía y ganá 1 Pista directa.</td></tr>
             <tr><td>Señuelo Luminoso</td><td>Cambiá una carta activa por otra sin resolverla.</td></tr>

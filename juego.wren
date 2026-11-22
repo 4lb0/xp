@@ -50,10 +50,10 @@ if (Request.isPost) {
         `UPDATE games SET fase = 'apoyo', apoyoCarta = ?, apoyoOrigen = 'mano', fasePrevia = 'listo', jugadas = 1 WHERE id = ?`.query(rowId, g.id)
         Game.log(g.id, "Preparan el apoyo: " + c.name + ".")
       } else if (c.isTool) {
-        if (Game.count(g.id, "herramientas") >= 4) {
+        if (Game.count(g.id, "herramientas") >= 1) {
           var oldest = Game.rows(g.id, "herramientas").first
           if (oldest != null) Game.move(oldest["id"], "descarte")
-          Game.log(g.id, "Se retira una Herramienta para hacer lugar.")
+          Game.log(g.id, "Se retira la Herramienta activa para hacer lugar.")
         }
         Game.move(rowId, "herramientas")
         `UPDATE games SET jugadas = 1 WHERE id = ?`.query(g.id)
@@ -62,7 +62,7 @@ if (Request.isPost) {
         Game.apply(g.id, g, {"pistas": 0, "energia": 0, "escudo": 1}, true, [])
         Game.move(rowId, "descarte")
         `UPDATE games SET jugadas = 1 WHERE id = ?`.query(g.id)
-        Game.log(g.id, "Soldadura Submarina: +3 Escudo.")
+        Game.log(g.id, "Soldadura Submarina: +1 Escudo.")
       } else if (c.effect == "heal_energy") {
         Game.apply(g.id, g, {"pistas": 0, "energia": 2, "escudo": 0}, true, [])
         Game.move(rowId, "descarte")
@@ -414,6 +414,26 @@ if (g.apoyoCarta != null) {
   if (srow != null) supportCard = Card.get(srow["cardId"])
 }
 
+var previewOk = false
+var previewEstab = false
+var previewBrazo = false
+var previewBlindaje = false
+var previewCebo = false
+var previewAhorro = false
+var previewChips = []
+if (g.tirado && pendingOpt != null) {
+  var tIds = Game.ids(g.id, "herramientas")
+  previewEstab = tIds.contains("plus_one_sum") && pendingOpt["dados"] == 2
+  previewOk = Game.evalTest(pendingOpt["tipoPrueba"], pendingOpt["objetivo"], g.dado1, g.dado2, g.bonus, tIds.contains("plus_one_sum"))
+  var succ = Game.parseEffects(pendingOpt["exito"])
+  var fail = Game.parseEffects(pendingOpt["fallo"])
+  previewBrazo = previewOk && succ["pistas"] > 0 && tIds.contains("extra_clue_six") && (g.dado1 == 6 || g.dado2 == 6)
+  previewBlindaje = !previewOk && fail["escudo"] < 0 && g.blindajeM
+  previewCebo = !previewOk && fail["escudo"] < 0 && g.cebo
+  previewAhorro = !previewOk && fail["energia"] < 0 && g.ahorro
+  previewChips = previewOk ? pendingOpt["exitoChips"] : pendingOpt["falloChips"]
+}
+
 var handCount = hand.count
 var puedeElegir = g.status == "activa" && g.fase == "listo" && g.resueltas == 0
 var puedeJugar = g.status == "activa" && g.jugadas == 0 && g.fase == "listo"
@@ -566,6 +586,23 @@ return Layout.render(<main class="game">
       <p class="hint">CARA = par (2, 4, 6). SECA = impar (1, 3, 5).</p>
     </section> }}
 
+    {{ g.tirado && pendingOpt != null && <section class="panel test-preview">
+      <p class="eyebrow">Resultado de esta tirada</p>
+      <p>Con estos dados: <strong>{{ previewOk ? "superada" : "fallida" }}</strong>.</p>
+      {{ g.bonus > 0 && <p class="hint">Turbo: +{{ g.bonus }} al total.</p> }}
+      {{ previewEstab && <p class="hint">Estabilizadores: +1 al total.</p> }}
+      {{ previewBrazo && <p class="hint">Brazo Robótico: +1 Pista extra por el 6.</p> }}
+      {{ previewBlindaje && <p class="hint">Blindaje de Titanio: el daño al Escudo se reduce 1.</p> }}
+      {{ previewCebo && <p class="hint">Lanzar Cebo: el daño al Escudo se cancela.</p> }}
+      {{ previewAhorro && <p class="hint">Ahorro de Oxígeno: no se gasta Energía.</p> }}
+      <p class="option-chips">
+        <span class="chip-label">Se aplica</span>
+        {{ previewChips.map{|c| <span class="chip {{ c["cls"] }}" title="{{ c["title"] }}">{{ c["icon"] }} {{ c["text"] }}</span>} }}
+      </p>
+      {{ g.suerte && !previewOk && <p class="hint">Suerte del Principiante: al resolver, se relanza una vez.</p> }}
+      <p class="hint">El efecto se aplica en esta tirada, al resolver. No se calcula al cerrar el misterio.</p>
+    </section> }}
+
     {{ g.tirado && <section class="test-actions">
       <p class="muted">Tirada registrada. Ya no pueden jugar Maniobras: resuelvan.</p>
       <div class="action-row">
@@ -686,7 +723,7 @@ return Layout.render(<main class="game">
     <aside>
       <div class="section-head">
         <h2>Herramientas activas</h2>
-        <p>{{ tools.count }} / 4</p>
+        <p>{{ tools.count }} / 1</p>
       </div>
       {{ tools.map{|t| <article class="card card-tool" data-family="herramienta">
         <span class="card-art"><span class="card-emoji" aria-hidden="true">{{ t["card"].emoji }}</span></span>
