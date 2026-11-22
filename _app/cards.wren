@@ -140,7 +140,7 @@ class Card {
       kind = "seca"
     } else if (p == "dobles") {
       kind = "dobles"
-    } else if (p == "sin 1") {
+    } else if (p.startsWith("sin 1")) {
       kind = "sin1"
     } else if (p.contains("2 dados")) {
       kind = "suma"
