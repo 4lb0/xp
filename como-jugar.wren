@@ -68,7 +68,7 @@ return Layout.render(<main class="howto">
             <small>Exploración</small>
           </div>
         </div>
-        <p class="muted">3 cartas de Misterio siempre. El tope del mazo también está revelado.</p>
+        <p class="muted">3 cartas de Misterio siempre. El Sonar puede revelar la próxima carta del mazo con todo su contenido.</p>
       </article>
 
       <article class="map-zone">
@@ -131,7 +131,7 @@ return Layout.render(<main class="howto">
         <span class="cycle-num">4</span>
         <div>
           <strong>Reponé y pagá 1 Energía</strong>
-          <p>La carta resuelta va al descarte, entra la del tope y el submarino consume 1 Energía.</p>
+          <p>La carta resuelta va al descarte, entra la próxima del mazo y el submarino consume 1 Energía.</p>
         </div>
       </li>
     </ol>

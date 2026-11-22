@@ -417,9 +417,7 @@ var ayuda = Game.cardsIn(g.id, "ayuda")
 var logs = Game.lastLogs(g.id, 8)
 var mazo = Game.count(g.id, "misterio")
 var descarte = Game.count(g.id, "descarte")
-var topMisterio = Game.topCard(g.id, "misterio")
-var topEquipo = Game.topCard(g.id, "equipo")
-var segundaCarta = Game.hasTool(g.id, "peek") ? Game.nthCard(g.id, "misterio", 2) : null
+var peekCard = Game.hasTool(g.id, "peek") ? Game.topCard(g.id) : null
 
 var pendingCard = g.pruebaCarta == null ? null : Card.get(g.pruebaCarta)
 var pendingOpt = pendingCard == null ? null : pendingCard.option(g.pruebaOpcion)
@@ -528,43 +526,6 @@ return Layout.render(<main class="game">
           <button class="btn btn-primary btn-small">Sufrir esta emboscada</button>
         </form>
       </article>} }}
-    </div>
-  </section> }}
-
-  {{ g.status == "activa" && <section class="top-reveal">
-    <div class="section-head">
-      <h2>Tope de los mazos</h2>
-      <p>La próxima carta de cada mazo está boca arriba.</p>
-    </div>
-    <div class="top-reveal-grid">
-      <article class="mini-card" data-family="{{ topMisterio == null ? "exploracion" : topMisterio.family }}">
-        <span class="card-family">Mazo del Juego · tope {{ topMisterio != null ? "· " + topMisterio.id : "" }}</span>
-        {{ topMisterio == null && <h3>Mazo vacío</h3> }}
-        {{ topMisterio != null && <h3><span aria-hidden="true">{{ topMisterio.emoji }}</span> {{ topMisterio.name }}</h3> }}
-        {{ topMisterio != null && topMisterio.entry != "" && <p class="entry-badge">Al entrar
-          {{ topMisterio.entryChips.map{|c| <span class="chip {{ c["cls"] }}" title="{{ c["title"] }}">{{ c["icon"] }} {{ c["text"] }}</span>} }}
-        </p> }}
-        {{ topMisterio != null && <section class="card-text">{{ topMisterio.body }}</section> }}
-        {{ topMisterio != null && <ul class="mini-options">
-          {{ topMisterio.options.map{|o| <li>
-            <strong>{{ o["texto"] }}</strong>
-            <span class="test-badge test-{{ o["tipoPrueba"] }}">{{ o["pruebaLabel"] }}</span>
-            <span class="option-effects">
-              <span class="chip-label">Éxito</span>
-              {{ o["exitoChips"].map{|c| <span class="chip {{ c["cls"] }}" title="{{ c["title"] }}">{{ c["icon"] }} {{ c["text"] }}</span>} }}
-              <span class="chip-label">Fallo</span>
-              {{ o["falloChips"].map{|c| <span class="chip {{ c["cls"] }}" title="{{ c["title"] }}">{{ c["icon"] }} {{ c["text"] }}</span>} }}
-            </span>
-          </li>} }}
-        </ul> }}
-      </article>
-      <article class="mini-card" data-family="{{ topEquipo == null ? "maniobra" : (topEquipo.isSupport ? "apoyo" : (topEquipo.isTool ? "herramienta" : "maniobra")) }}">
-        <span class="card-family">Mazo del Equipo · tope {{ topEquipo != null ? "· " + topEquipo.id : "" }}</span>
-        {{ topEquipo == null && <h3>Mazo vacío</h3> }}
-        {{ topEquipo != null && <h3><span aria-hidden="true">{{ topEquipo.emoji }}</span> {{ topEquipo.name }}</h3> }}
-        {{ topEquipo != null && <p class="muted">{{ topEquipo.isSupport ? "Maniobra de apoyo" : (topEquipo.isTool ? "Herramienta" : "Maniobra") }}</p> }}
-        {{ topEquipo != null && <section class="card-text">{{ topEquipo.body }}</section> }}
-      </article>
     </div>
   </section> }}
 
@@ -802,12 +763,15 @@ return Layout.render(<main class="game">
       </article>} }}
       {{ tools.isEmpty && <p class="muted">Todavía no jugaron ninguna Herramienta.</p> }}
 
-      {{ segundaCarta != null && <section class="panel peek">
-        <p class="eyebrow">Sonar de Alta Frecuencia · segunda carta</p>
-        <h3><span aria-hidden="true">{{ segundaCarta.emoji }}</span> {{ segundaCarta.name }}</h3>
-        <section class="card-text">{{ segundaCarta.body }}</section>
+      {{ peekCard != null && <section class="panel peek">
+        <p class="eyebrow">Sonar de Alta Frecuencia · próxima carta</p>
+        <h3><span aria-hidden="true">{{ peekCard.emoji }}</span> {{ peekCard.name }}</h3>
+        {{ peekCard.entry != "" && <p class="entry-badge">Al entrar
+          {{ peekCard.entryChips.map{|c| <span class="chip {{ c["cls"] }}" title="{{ c["title"] }}">{{ c["icon"] }} {{ c["text"] }}</span>} }}
+        </p> }}
+        <section class="card-text">{{ peekCard.body }}</section>
         <ul class="mini-options">
-          {{ segundaCarta.options.map{|o| <li>
+          {{ peekCard.options.map{|o| <li>
             <strong>{{ o["texto"] }}</strong>
             <span class="test-badge test-{{ o["tipoPrueba"] }}">{{ o["pruebaLabel"] }}</span>
             <span class="option-effects">

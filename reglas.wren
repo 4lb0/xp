@@ -22,7 +22,6 @@ return Layout.render(<main>
           <li><strong>Pierden</strong> si la Energía llega a 0 (se quedan sin aire) o el Escudo llega a 0 (el casco cede).</li>
         </ul>
         <p class="hint">En la app, la mano es una sola y las decisiones se comparten. Podés jugar solo o en cooperativo con amigos: la mesa es la misma.</p>
-        <p class="hint">Se juega con el <strong>tope revelado</strong>: la próxima carta del Mazo del Juego y la del Mazo del Equipo están a la vista, con su contenido.</p>
         <p class="hint">Las cartas de Dilema no dan ni quitan Pistas: solo mueven Energía y Escudo.</p>
       </div>
       <div class="console">
@@ -97,7 +96,7 @@ return Layout.render(<main>
         <table>
           <thead><tr><th>Carta</th><th>Efecto</th></tr></thead>
           <tbody>
-            <tr><td>Sonar de Alta Frecuencia</td><td>Una vez por misterio, mirá la segunda carta del Mazo del Juego.</td></tr>
+            <tr><td>Sonar de Alta Frecuencia</td><td>Una vez por misterio, mirá la carta de arriba del Mazo del Juego con todo su contenido.</td></tr>
                         <tr><td>Generador Auxiliar</td><td>Si la Energía está en 4 o menos al empezar cada misterio, sube 1.</td></tr>
             <tr><td>Generador de Escudo</td><td>Si el Escudo está en 4 o menos al empezar cada misterio, sube 1.</td></tr>
                         <tr><td>Brazo Robótico</td><td>Si ganás Pistas y algún dado muestra 6, ganás 1 Pista más.</td></tr>

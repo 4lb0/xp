@@ -925,14 +925,6 @@ tbody tr:hover { background: rgba(127, 230, 242, 0.04); }
   opacity: 0.55;
 }
 
-.top-reveal { margin: 1.1rem 0 1.4rem; }
-.top-reveal-grid {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 1rem;
-}
-.top-reveal .mini-card { display: flex; flex-direction: column; gap: 0.25rem; }
-.top-reveal .mini-card h3 { font-size: 1.15rem; }
 .mini-options {
   list-style: none;
   margin: 0.55rem 0 0;
@@ -949,10 +941,6 @@ tbody tr:hover { background: rgba(127, 230, 242, 0.04); }
 }
 .mini-options li strong { display: block; margin-bottom: 0.15rem; }
 .mini-options .option-effects { display: block; margin-top: 0.25rem; }
-@media (max-width: 760px) {
-  .top-reveal-grid { grid-template-columns: 1fr; }
-}
-
 .mini-card[data-family="apoyo"] { --family: #a78bfa; }
 
 /* ---------- Cómo jugar (guía visual) ---------- */

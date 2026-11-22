@@ -47,10 +47,9 @@ El estado de la partida se guarda en SQLite y se ata a la sesión del navegador.
 4. La prueba de dados se puede resolver de dos formas:
    - **Tirar en la app**: el servidor genera los D6.
    - **Ya tiré en la mesa**: elegís en pantalla lo que salió en cada dado físico.
-5. El **tope de los mazos está revelado**: la próxima carta del Mazo del Juego y la del Mazo de Equipo se ven con su contenido. Con el Sonar activo además se ve la segunda carta del Mazo del Juego.
-6. Todas las Maniobras se juegan **antes** de tirar (Turbo, Giro, Focos, Suerte, Cebo, Ahorro, Blindaje): se comprometen a ciegas. Giro invierte el dado y Focos lo relanza si la prueba falla.
-7. Al resolver, la app aplica los efectos de la opción y controla victoria/derrota. La prueba da exactamente lo que dice la carta: no hay tirada extra.
-8. Al terminar el ciclo el submarino consume **1 Energía**, siempre. La Energía es el reloj: cada ciclo hay que decidir entre buscar Pistas o recargar.
+5. Todas las Maniobras se juegan **antes** de tirar (Turbo, Giro, Focos, Suerte, Cebo, Ahorro, Blindaje): se comprometen a ciegas. Giro invierte el dado y Focos lo relanza si la prueba falla.
+6. Al resolver, la app aplica los efectos de la opción y controla victoria/derrota. La prueba da exactamente lo que dice la carta: no hay tirada extra.
+7. Al terminar el ciclo el submarino consume **1 Energía**, siempre. La Energía es el reloj: cada ciclo hay que decidir entre buscar Pistas o recargar.
 
 Los contadores son los tres dados del juego: **Energía** (6 → 0, derrota), **Escudo** (6 → 0, derrota) y **Pistas** (0 → 6, victoria).
 
