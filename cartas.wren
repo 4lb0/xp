@@ -18,7 +18,6 @@ var peligro = misterio.where { |c| c.family == "peligro" }.toList
 var dilema = misterio.where { |c| c.family == "dilema" }.toList
 var herramientas = equipo.where { |c| c.type == "herramienta" }.toList
 var maniobras = equipo.where { |c| c.type == "maniobra" }.toList
-var apoyos = equipo.where { |c| c.type == "apoyo" }.toList
 
 return Layout.render(<main>
   <header class="board-head">
@@ -35,7 +34,6 @@ return Layout.render(<main>
     <a class="pill" href="#dilema">Dilema ({{ dilema.count }})</a>
     <a class="pill" href="#herramientas">Herramientas ({{ herramientas.count }})</a>
     <a class="pill" href="#maniobras">Maniobras ({{ maniobras.count }})</a>
-    <a class="pill" href="#apoyos">Apoyos ({{ apoyos.count }})</a>
   </nav>
 
   <p class="hint">Cada carta es un archivo markdown en <code>cartas/</code>. El emoji es el arte provisorio hasta que llegue la ilustración. Editá el texto, los dados o los efectos y la próxima partida ya usa la versión nueva. <a href="/editar-cartas">Cómo editar una carta</a>.</p>
@@ -104,7 +102,7 @@ return Layout.render(<main>
   </section>
 
   <section class="deck-section" id="herramientas">
-    <div class="section-head"><h2>Herramientas</h2><p>Permanentes. Máximo 4 en la mesa.</p></div>
+    <div class="section-head"><h2>Herramientas</h2><p>Permanentes. Una sola activa por equipo.</p></div>
     <div class="deck-grid">
       {{ herramientas.map{|c| <article class="mini-card" data-family="herramienta">
         <span class="card-art"><span class="card-emoji" aria-hidden="true">{{ c.emoji }}</span></span>
@@ -115,24 +113,12 @@ return Layout.render(<main>
     </div>
   </section>
 
-  <section class="deck-section" id="apoyos">
-    <div class="section-head"><h2>Apoyos</h2><p>Una vez: +Energía o +Escudo, a elección.</p></div>
-    <div class="deck-grid">
-      {{ apoyos.map{|c| <article class="mini-card" data-family="apoyo">
-        <span class="card-art"><span class="card-emoji" aria-hidden="true">{{ c.emoji }}</span></span>
-        <span class="card-family">Apoyo · x{{ c.copies }} · <span class="card-id">{{ c.id }}</span></span>
-        <h3>{{ c.name }}</h3>
-        <section class="card-text">{{ c.body }}</section>
-      </article>} }}
-    </div>
-  </section>
-
   <section class="deck-section" id="maniobras">
-    <div class="section-head"><h2>Maniobras</h2><p>Se usan una vez y van al descarte.</p></div>
+    <div class="section-head"><h2>Maniobras</h2><p>Se usan una vez y van al descarte. Incluye 2 Maniobras de apoyo.</p></div>
     <div class="deck-grid">
       {{ maniobras.map{|c| <article class="mini-card" data-family="maniobra">
         <span class="card-art"><span class="card-emoji" aria-hidden="true">{{ c.emoji }}</span></span>
-        <span class="card-family">Maniobra · x{{ c.copies }} · <span class="card-id">{{ c.id }}</span></span>
+        <span class="card-family">{{ c.isSupport ? "Maniobra de apoyo" : "Maniobra" }} · x{{ c.copies }} · <span class="card-id">{{ c.id }}</span></span>
         <h3>{{ c.name }}</h3>
         <section class="card-text">{{ c.body }}</section>
       </article>} }}

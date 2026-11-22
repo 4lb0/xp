@@ -5,7 +5,7 @@ Cada carta es un archivo Markdown. No hay base de datos de cartas ni paso de com
 ```
 cartas/
   misterio/   01.md … 40.md   (Mazo del Juego)
-  equipo/     01.md … 16.md   (Mazo de los Jugadores)
+  equipo/     01.md … 19.md   (Mazo de los Jugadores)
 ```
 
 El número del archivo es el identificador de la carta: `cartas/misterio/07.md` es la carta `m07`. Se pueden agregar cartas nuevas hasta `60.md` (misterio) y `30.md` (equipo) sin tocar código: el motor recorre esos números y saltea los que no existen.
@@ -99,11 +99,11 @@ Una vez por ciclo, mirá la carta de arriba del Mazo del Juego antes de elegir.
 - `tipo`: `herramienta` (queda en la mesa) o `maniobra` (se descarta).
 - `copias`: cuántas veces entra esta carta en el mazo. La suma de todas las `copias` tiene que dar 44.
 - `efecto`: el identificador que usa el motor.
-- `valor` (solo cartas de apoyo): cuánto cura la elección (+1 o +2).
+- `valor` (solo Maniobras de apoyo): cuánto cura la elección (+1 o +2).
 
-### Cartas de apoyo
+### Maniobras de apoyo
 
-`tipo: apoyo` con `valor: 1` o `2`. Al usarlas, el jugador elige **+valor Energía o +valor Escudo**. En Experto se mezclan en el mazo; en Normal una va al área de ayuda; en Asistido las dos. Las del área se usan una vez, en cualquier momento.
+`tipo: maniobra` + `subtipo: apoyo` con `valor: 1` o `2`. Al usarlas, el jugador elige **+valor Energía o +valor Escudo**. Actúan como cualquier Maniobra: se usan una vez y van al descarte. En Experto se mezclan en el mazo; en Normal una va al área de ayuda; en Asistido las dos. Las del área no gastan la carta del ciclo.
 
 ### Efectos que el motor ya implementa
 

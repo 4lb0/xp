@@ -66,7 +66,7 @@ if (Request.isPost) {
         aviso = "No pudimos leer esa carta."
       } else if (c.isSupport) {
         `UPDATE games SET fase = 'apoyo', apoyoCarta = ?, apoyoOrigen = 'mano', fasePrevia = 'listo', jugadas = 1 WHERE id = ?`.query(rowId, g.id)
-        Game.log(g.id, "Preparan el apoyo: " + c.name + ".")
+        Game.log(g.id, "Preparan la maniobra de apoyo: " + c.name + ".")
       } else if (c.isTool) {
         // Solo una Herramienta activa por equipo: la nueva pisa la anterior.
         var anteriores = Game.rows(g.id, "herramientas")
@@ -272,17 +272,17 @@ if (Request.isPost) {
     }
   } else if (accion == "usar_ayuda") {
     if (g.fase == "apoyo") {
-      aviso = "Primero elegí el recurso del apoyo pendiente."
+      aviso = "Primero elegí el recurso de la maniobra de apoyo pendiente."
     } else if (g.fase == "emboscada") {
       aviso = "Primero elijan la emboscada inicial."
     } else {
       var row = `SELECT id, cardId FROM game_cards WHERE id = ? AND gameId = ? AND zone = 'ayuda'`.first(rowId, g.id)
       if (row == null) {
-        aviso = "Ese apoyo ya no está en el área."
+        aviso = "Esa maniobra de apoyo ya no está en el área."
       } else {
         var c = Card.get(row["cardId"])
         `UPDATE games SET fase = 'apoyo', apoyoCarta = ?, apoyoOrigen = 'ayuda', fasePrevia = ? WHERE id = ?`.query(row["id"], g.fase, g.id)
-        Game.log(g.id, "Usan el apoyo: " + c.name + ".")
+        Game.log(g.id, "Usan la maniobra de apoyo: " + c.name + ".")
       }
     }
   } else if (accion == "elegir_apoyo") {
@@ -290,16 +290,16 @@ if (Request.isPost) {
     var row = g.apoyoCarta == null ? null : `SELECT id, cardId FROM game_cards WHERE id = ? AND gameId = ?`.first(g.apoyoCarta, g.id)
     var c = row == null ? null : Card.get(row["cardId"])
     if (c == null) {
-      aviso = "No hay un apoyo pendiente."
+      aviso = "No hay una maniobra de apoyo pendiente."
     } else {
       var v = c.value
       var volver = g.fasePrevia == null ? "listo" : g.fasePrevia
       if (recurso == "escudo") {
         `UPDATE games SET escudo = MIN(6, escudo + ?), fase = ?, apoyoCarta = NULL, apoyoOrigen = NULL, fasePrevia = NULL WHERE id = ?`.query(v, volver, g.id)
-        Game.log(g.id, "Apoyo " + c.name + ": +" + v.toString + " Escudo.")
+        Game.log(g.id, "Maniobra de apoyo " + c.name + ": +" + v.toString + " Escudo.")
       } else {
         `UPDATE games SET energia = MIN(6, energia + ?), fase = ?, apoyoCarta = NULL, apoyoOrigen = NULL, fasePrevia = NULL WHERE id = ?`.query(v, volver, g.id)
-        Game.log(g.id, "Apoyo " + c.name + ": +" + v.toString + " Energía.")
+        Game.log(g.id, "Maniobra de apoyo " + c.name + ": +" + v.toString + " Energía.")
       }
       Game.move(row["id"], "descarte")
     }
@@ -530,7 +530,7 @@ return Layout.render(<main class="game">
   </section> }}
 
   {{ g.status == "activa" && g.fase == "apoyo" && supportCard != null && <section class="test-panel support-choice">
-    <p class="eyebrow">Apoyo del equipo</p>
+    <p class="eyebrow">Maniobra de apoyo</p>
     <span class="card-emoji test-emoji" aria-hidden="true">{{ supportCard.emoji }}</span>
     <h2>{{ supportCard.name }}</h2>
     <p>Elegí el recurso. La carta se gasta.</p>
@@ -703,18 +703,18 @@ return Layout.render(<main class="game">
       {{ !ayuda.isEmpty && <section class="help-zone">
         <div class="section-head">
           <h2>Ayuda del equipo</h2>
-          <p>Una vez, en cualquier momento</p>
+          <p>Maniobras de apoyo · una vez</p>
         </div>
         <div class="hand">
           {{ ayuda.map{|a| <article class="card card-support" data-family="apoyo">
             <span class="card-art"><span class="card-emoji" aria-hidden="true">{{ a["card"].emoji }}</span></span>
-            <span class="card-family">Apoyo · una vez · <span class="card-id">{{ a["card"].id }}</span></span>
+            <span class="card-family">Maniobra de apoyo · una vez · <span class="card-id">{{ a["card"].id }}</span></span>
             <h3>{{ a["card"].name }}</h3>
             <p>Elegí <span class="chip chip-energia">⚡ +{{ a["card"].value }}</span> o <span class="chip chip-escudo">🛡️ +{{ a["card"].value }}</span>.</p>
             <form method="post">
               <input type="hidden" name="accion" value="usar_ayuda" />
               <input type="hidden" name="rowId" value="{{ a["rowId"] }}" />
-              <button class="btn btn-ghost btn-small" {{ g.fase == "apoyo" ? "disabled" : "" }}>Usar apoyo</button>
+              <button class="btn btn-ghost btn-small" {{ g.fase == "apoyo" ? "disabled" : "" }}>Usar maniobra</button>
             </form>
           </article>} }}
         </div>
@@ -727,7 +727,7 @@ return Layout.render(<main class="game">
       <div class="hand">
         {{ hand.map{|h| <article class="card" data-family="{{ h["card"].isSupport ? "apoyo" : (h["card"].isTool ? "herramienta" : "maniobra") }}">
           <span class="card-art"><span class="card-emoji" aria-hidden="true">{{ h["card"].emoji }}</span></span>
-          <span class="card-family">{{ h["card"].isSupport ? "Apoyo" : (h["card"].isTool ? "Herramienta" : "Maniobra") }} · <span class="card-id">{{ h["card"].id }}</span></span>
+          <span class="card-family">{{ h["card"].isSupport ? "Maniobra de apoyo" : (h["card"].isTool ? "Herramienta" : "Maniobra") }} · <span class="card-id">{{ h["card"].id }}</span></span>
           <h3>{{ h["card"].name }}</h3>
           <section class="card-text">{{ h["card"].body }}</section>
           <div class="action-row">

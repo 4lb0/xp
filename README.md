@@ -5,7 +5,7 @@ Versión jugable en el navegador del juego de mesa de aventura y misterio **XP (
 - Se puede jugar solo o en cooperativo con amigos: un solo dispositivo, una mesa, el equipo XP contra el juego.
 - La expedición busca la prueba de que el Megalodón existe: para el mundo es un mito, como el monstruo del lago Ness.
 - Partidas de 10 a 20 minutos.
-- 40 cartas de Misterio (una o dos opciones cada una) + 44 cartas de Equipo (incluye 2 de apoyo), todas editables como archivos Markdown.
+- 40 cartas de Misterio (una o dos opciones cada una) + 44 cartas de Equipo (10 Herramientas + 34 Maniobras, 2 de ellas de apoyo), todas editables como archivos Markdown.
 - Arte provisorio: un emoji grande por carta, hasta que lleguen las ilustraciones.
 - Tirada digital desde la app **o** carga manual de lo que salió en los dados de la mesa.
 - Hecho con [Bialet](https://bialet.dev): Wren, SQLite y HTML server-rendered, sin frameworks ni build step.
@@ -121,7 +121,7 @@ El mazo se mezcla con `ORDER BY RANDOM()` de SQLite. Las tiradas digitales tambi
 - **Solo o en cooperativo.** Podés jugar una sola persona o compartir la mano y las decisiones con amigos. Al final del ciclo quedan 3 cartas; el resto se descarta al azar.
 - **La cantidad de jugadores no cambia la mesa.** Siempre 3 cartas de Misterio, siempre 2 de robo, siempre 6 Pistas. Se puede jugar solo o en cooperativo con amigos.
 - **Tres modos.** Experto (5 y 5), Normal (5 y 5 + 1 carta de apoyo) y Asistido (6 y 6 + 2 cartas de apoyo).
-- **Cartas de apoyo.** Kit de emergencia (+1 Energía o +1 Escudo) y Carga de emergencia (+2 Energía o +2 Escudo). En Experto se mezclan en el mazo; en Normal el Kit va al área de ayuda; en Asistido van las dos. Las cartas del área se usan una vez, en cualquier momento, sin gastar la carta del ciclo.
+- **Maniobras de apoyo.** Kit de emergencia (+1 Energía o +1 Escudo) y Carga de emergencia (+2 Energía o +2 Escudo) son Maniobras: se usan una vez y van al descarte. En Experto se mezclan en el mazo; en Normal el Kit va al área de ayuda; en Asistido van las dos. Las del área se usan sin gastar la carta del ciclo.
 - **Una sola Herramienta activa por equipo.** Si juegan otra, la anterior va al descarte.
 - **Un misterio por ciclo, una carta jugada por ciclo.** La app lo hace cumplir; si intentás saltearlo, te avisa.
 - **Dados físicos primero.** La app no obliga a tirar: el ingreso manual es de primera clase, no un modo oculto.

@@ -6,6 +6,7 @@ class Card {
     _name = meta["nombre"] || "Carta sin nombre"
     _family = meta["familia"] || meta["tipo"] || "exploracion"
     _type = meta["tipo"] || ""
+    _subtype = meta["subtipo"] || ""
     _copies = Num.fromString(meta["copias"] || "1")
     _value = Num.fromString(meta["valor"] || "1")
     _effect = meta["efecto"] || ""
@@ -21,6 +22,7 @@ class Card {
   name { _name }
   family { _family }
   type { _type }
+  subtype { _subtype }
   copies { _copies }
   value { _value }
   effect { _effect }
@@ -40,7 +42,7 @@ class Card {
 
   isTool { _type == "herramienta" }
   isManeuver { _type == "maniobra" }
-  isSupport { _type == "apoyo" }
+  isSupport { _type == "apoyo" || _subtype == "apoyo" }
 
   // Las cartas que se resuelven en el momento se pueden jugar desde la mano.
   // Las demás (Turbo, Giro, Focos, Suerte, Blindaje...) se preparan en la

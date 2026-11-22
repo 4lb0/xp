@@ -40,7 +40,7 @@ return Layout.render(<main>
     <ol class="steps">
       <li><span class="num">1</span><span><strong>Arranquen con 3 cartas de Equipo</strong>La mano es compartida. Con niños de 5 años conviene leer las opciones en voz alta.</span></li>
       <li><span class="num">2</span><span><strong>Revelen siempre 3 cartas de Misterio</strong>Sin importar cuántos jueguen. La mesa no cambia: cambia a quién le toca tirar.</span></li>
-      <li><span class="num">3</span><span><strong>Pongan los contadores</strong>Experto: 5 y 5. Normal: 5 y 5 + 1 carta de apoyo en el área. Asistido: 6 y 6 + 2 cartas de apoyo. Pistas 0 en todos.</span></li>
+      <li><span class="num">3</span><span><strong>Pongan los contadores</strong>Experto: 5 y 5. Normal: 5 y 5 + 1 Maniobra de apoyo en el área. Asistido: 6 y 6 + 2 Maniobras de apoyo. Pistas 0 en todos.</span></li>
     </ol>
   </section>
 
@@ -126,9 +126,9 @@ return Layout.render(<main>
   </section>
 
   <section class="panel">
-    <h2>Cartas de apoyo</h2>
-    <p>Dos cartas del equipo: <strong>Kit de emergencia</strong> (<span class="chip chip-energia">⚡ +1</span> o <span class="chip chip-escudo">🛡️ +1</span>) y <strong>Carga de emergencia</strong> (<span class="chip chip-energia">⚡ +2</span> o <span class="chip chip-escudo">🛡️ +2</span>).</p>
-    <p>En <strong>Experto</strong> se mezclan en el mazo. En <strong>Normal</strong>, el Kit se busca y queda en el área de ayuda. En <strong>Asistido</strong>, las dos quedan en el área. Las cartas del área se usan una vez, en cualquier momento y sin gastar la carta del ciclo.</p>
+    <h2>Maniobras de apoyo</h2>
+    <p>Dos Maniobras del equipo: <strong>Kit de emergencia</strong> (<span class="chip chip-energia">⚡ +1</span> o <span class="chip chip-escudo">🛡️ +1</span>) y <strong>Carga de emergencia</strong> (<span class="chip chip-energia">⚡ +2</span> o <span class="chip chip-escudo">🛡️ +2</span>).</p>
+    <p>En <strong>Experto</strong> se mezclan en el mazo. En <strong>Normal</strong>, el Kit se busca y queda en el área de ayuda. En <strong>Asistido</strong>, las dos quedan en el área. Se usan una vez, van al descarte como cualquier Maniobra y, si están en el área de ayuda, no gastan la carta del ciclo.</p>
   </section>
 
   <section class="panel">
