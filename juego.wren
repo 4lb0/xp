@@ -15,7 +15,8 @@ if (Request.isPost) {
     var n = Num.fromString(Request.post("jugadores", "3"))
     if (n < 2) n = 2
     if (n > 6) n = 6
-    var id = Game.create(n)
+    var modo = Request.post("modo", "normal") == "facil" ? "facil" : "normal"
+    var id = Game.create(n, modo)
     session.set("gameId", id.toString)
     return Response.redirect("/juego")
   }
@@ -60,7 +61,7 @@ if (Request.isPost) {
         Game.apply(g.id, g, {"pistas": 0, "energia": 0, "escudo": 1}, true, [])
         Game.move(rowId, "descarte")
         `UPDATE games SET jugadas = 1 WHERE id = ?`.query(g.id)
-        Game.log(g.id, "Soldadura Submarina: +2 Escudo.")
+        Game.log(g.id, "Soldadura Submarina: +3 Escudo.")
       } else if (c.effect == "heal_energy") {
         Game.apply(g.id, g, {"pistas": 0, "energia": 2, "escudo": 0}, true, [])
         Game.move(rowId, "descarte")
@@ -212,8 +213,8 @@ if (Request.isPost) {
       var tools = Game.ids(g.id, "herramientas")
       var total = g.dado1 + g.dado2 + (tools.contains("plus_one_sum") ? 1 : 0)
       var okp = total >= 8
-      var res = Game.apply(g.id, g, okp ? {"pistas": 1, "energia": 0, "escudo": 0} : {"pistas": 0, "energia": 0, "escudo": -2}, okp, tools)
-      var texto = okp ? "Empujón logrado: +1 Pista." : "El empujón falla: −2 Escudo."
+      var res = Game.apply(g.id, g, okp ? {"pistas": 1, "energia": 0, "escudo": 0} : {"pistas": 0, "energia": 0, "escudo": -1}, okp, tools)
+      var texto = okp ? "Empujón logrado: +1 Pista." : "El empujón falla: −1 Escudo."
       `UPDATE games SET fase = 'resuelto', empujado = 1, ultimo = ?, tirado = 0, dado1 = 0, dado2 = 0, bonus = 0, giro = 0, suerte = 0 WHERE id = ?`.query(texto, g.id)
       Game.log(g.id, texto)
     } else {
@@ -239,6 +240,17 @@ if (Request.isPost) {
       Game.log(g.id, texto)
       if (res["status"] == "victoria") Game.log(g.id, "¡Seis Pistas! El misterio queda resuelto.")
       if (res["status"] == "derrota") Game.log(g.id, "La expedición se pierde en la oscuridad.")
+    }
+  } else if (accion == "reparar") {
+    if (g.fase != "listo") {
+      aviso = "Reparen antes de elegir un misterio."
+    } else if (g.reparado) {
+      aviso = "Ya repararon el casco este turno."
+    } else if (g.energia < 2) {
+      aviso = "Necesitan al menos 2 de Energía para reparar."
+    } else {
+      `UPDATE games SET energia = energia - 1, escudo = MIN(6, escudo + 2), reparado = 1 WHERE id = ?`.query(g.id)
+      Game.log(g.id, "Reparación de casco: −1 Energía, +2 Escudo.")
     }
   } else if (accion == "asegurar") {
     if (g.fase != "empujon") {
@@ -319,7 +331,7 @@ if (Request.isPost) {
         next = next >= gSkip.players ? 1 : next + 1
         Game.log(g.id, "El equipo pierde un turno reparando la emboscada. Juega el jugador " + next.toString + ".")
       }
-      `UPDATE games SET jugador = ?, turno = turno + 1, fase = 'listo', pruebaCarta = NULL, pruebaOpcion = NULL, dado1 = 0, dado2 = 0, tirado = 0, bonus = 0, cebo = 0, ahorro = 0, blindajeUsado = 0, focosUsado = 0, jugadas = 0, resueltas = 0, resultado = NULL, giro = 0, suerte = 0, empujado = 0, pistasTurno = 0, saltar = 0 WHERE id = ?`.query(next, g.id)
+      `UPDATE games SET jugador = ?, turno = turno + 1, fase = 'listo', pruebaCarta = NULL, pruebaOpcion = NULL, dado1 = 0, dado2 = 0, tirado = 0, bonus = 0, cebo = 0, ahorro = 0, blindajeUsado = 0, focosUsado = 0, jugadas = 0, resueltas = 0, resultado = NULL, giro = 0, suerte = 0, empujado = 0, pistasTurno = 0, saltar = 0, reparado = 0 WHERE id = ?`.query(next, g.id)
       var g3 = Game.find(g.id)
       if (g3 != null && Game.hasTool(g.id, "energy_start") && g3.energia <= 3) {
         `UPDATE games SET energia = energia + 1 WHERE id = ?`.query(g.id)
@@ -338,7 +350,8 @@ if (g == null && Request.get("jugadores") != null) {
   var n = Num.fromString(Request.get("jugadores", "3"))
   if (n < 2) n = 2
   if (n > 6) n = 6
-  var id = Game.create(n)
+  var modo = Request.get("modo", "normal") == "facil" ? "facil" : "normal"
+  var id = Game.create(n, modo)
   session.set("gameId", id.toString)
   return Response.redirect("/juego")
 }
@@ -354,15 +367,21 @@ if (g == null) {
       <p class="eyebrow">Preparación</p>
       <h1>¿Cuántos bajan al agua?</h1>
       <p class="lead">De 2 a 6 jugadores. La mesa decide entre todos: nadie tiene un rol secreto.</p>
+      <p class="hint">Siempre 3 cartas de Misterio en la mesa y 2 de robo por turno, sin importar cuántos jueguen.</p>
       <form method="post" class="panel start-form">
         <input type="hidden" name="accion" value="nueva" />
         <label for="players"><strong>Jugadores</strong></label>
         <select id="players" name="jugadores">
-          <option value="2">2 jugadores — 2 cartas activas</option>
-          <option value="3" selected>3 jugadores — 3 cartas activas</option>
-          <option value="4">4 jugadores — 3 cartas activas</option>
-          <option value="5">5 jugadores — 4 cartas activas</option>
-          <option value="6">6 jugadores — 4 cartas activas</option>
+          <option value="2">2 jugadores</option>
+          <option value="3" selected>3 jugadores</option>
+          <option value="4">4 jugadores</option>
+          <option value="5">5 jugadores</option>
+          <option value="6">6 jugadores</option>
+        </select>
+        <label for="modo"><strong>Modo</strong></label>
+        <select id="modo" name="modo">
+          <option value="normal" selected>Normal — 5 Energía y 5 Escudo</option>
+          <option value="facil">Fácil — 6 y 6, para los más chicos</option>
         </select>
         <button class="btn btn-primary">Iniciar expedición</button>
       </form>
@@ -385,6 +404,7 @@ var pendingOpt = pendingCard == null ? null : pendingCard.option(g.pruebaOpcion)
 var handCount = hand.count
 var puedeElegir = g.status == "activa" && g.fase == "listo" && g.resueltas == 0
 var puedeJugar = g.status == "activa" && g.jugadas == 0 && g.fase == "listo"
+var puedeReparar = g.status == "activa" && g.fase == "listo" && !g.reparado && g.energia >= 2
 var maniobrasPrueba = hand.where { |h| ["plus_two", "reroll_all", "cancel_shield_loss", "no_energy_cost"].contains(h["card"].effect) }.toList
 var girosPrueba = hand.where { |h| h["card"].effect == "flip_parity" }.toList
 
@@ -411,6 +431,7 @@ return Layout.render(<main class="game">
       <h1>La fosa del Megalodón</h1>
     </div>
     <div class="board-meta">
+      <span class="pill">{{ g.modo == "facil" ? "Modo fácil" : "Modo normal" }}</span>
       <span class="pill">Turno {{ g.turno }}</span>
       <span class="pill">Jugador {{ g.jugador }} de {{ g.players }}</span>
       <span class="pill">Mazo {{ mazo }}</span>
@@ -534,7 +555,7 @@ return Layout.render(<main class="game">
     <span class="card-emoji test-emoji" aria-hidden="true">{{ pendingCard.emoji }}</span>
     <h2>¿Profundizan?</h2>
     <p class="muted">{{ g.ultimo }}</p>
-    <p><strong>Empujón:</strong> dos dados, 8+ para ganar 1 Pista extra. Si falla, pierden 2 de Escudo.</p>
+    <p><strong>Empujón:</strong> dos dados, 8+ para ganar 1 Pista extra. Si falla, pierden 1 de Escudo.</p>
     <p class="hint">Es una tirada aparte: no gasta carta ni Maniobra. Pueden asegurar la Pista y terminar el turno.</p>
 
     <div class="dice-row roller-stage">
@@ -668,6 +689,16 @@ return Layout.render(<main class="game">
         <p class="eyebrow">Sonar de Alta Frecuencia</p>
         <p>La próxima carta del mazo es <strong>{{ top.name }}</strong>.</p>
       </section> }}
+
+      <section class="panel">
+        <p class="eyebrow">Reparación de casco</p>
+        <p class="muted">Una vez por turno: 1 Energía → 2 Escudo.</p>
+        <form method="post">
+          <input type="hidden" name="accion" value="reparar" />
+          <button class="btn btn-ghost btn-small" {{ puedeReparar ? "" : "disabled" }}>Reparar casco</button>
+        </form>
+        {{ g.reparado && <p class="hint">Ya repararon este turno; el casco aguanta un poco más.</p> }}
+      </section>
 
       <section class="panel">
         <p class="eyebrow">Dado libre</p>

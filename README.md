@@ -39,19 +39,19 @@ El estado de la partida se guarda en SQLite y se ata a la sesión del navegador.
 
 ## Cómo se juega en la app
 
-1. Elegís cuántos jugadores son y arranca la expedición.
-2. La app reparte 3 cartas de Equipo y revela 2, 3 o 4 cartas de Misterio según el número de jugadores.
+1. Elegís cuántos jugadores son y el modo (normal 5/5 o fácil 6/6) y arranca la expedición.
+2. La app reparte 3 cartas de Equipo y revela **siempre 3 cartas de Misterio**, sin importar cuántos jueguen. La cantidad de jugadores solo cambia el orden de las tiradas: las decisiones son del equipo.
 3. En cada turno: roban 2 cartas de Equipo, pueden jugar 1 carta, eligen una carta de Misterio y una de sus opciones. El descarte hasta 3 se hace al final, antes de pasar el turno.
 4. La prueba de dados se puede resolver de dos formas:
    - **Tirar en la app**: el servidor genera los D6.
    - **Ya tiré en la mesa**: elegís en pantalla lo que salió en cada dado físico.
 5. Las Maniobras se juegan **antes** de tirar (Turbo, Giro, Suerte, Cebo, Ahorro): se comprometen a ciegas. Los Focos Abisales son la excepción de Herramienta, porque relanzan un dado ya tirado.
-6. Al resolver, la app aplica los efectos y controla victoria/derrota. Si la prueba salió bien, el equipo elige entre **asegurar la Pista** o **empujar**: una tirada aparte de 2 dados (8+) por +1 Pista, con −2 Escudo si falla.
-7. Al terminar el turno el submarino consume **1 Energía**, siempre. La Energía es el reloj: cada turno hay que decidir entre buscar Pistas o recargar.
+6. Al resolver, la app aplica los efectos y controla victoria/derrota. Si la prueba salió bien, el equipo elige entre **asegurar la Pista** o **empujar**: una tirada aparte de 2 dados (8+) por +1 Pista, con −1 Escudo si falla.
+7. Al terminar el turno el submarino consume **1 Energía**, siempre. La Energía es el reloj: cada turno hay que decidir entre buscar Pistas, recargar o **reparar el casco** (1 Energía → 2 Escudo, una vez por turno).
 
 Los contadores son los tres dados del juego: **Energía** (6 → 0, derrota), **Escudo** (6 → 0, derrota) y **Pistas** (0 → 6, victoria).
 
-**El reloj:** cada turno cuesta 1 Energía. Las Baterías de Respaldo (+2, cuatro en el mazo), el Generador Auxiliar y Ahorro de Oxígeno son la forma de sostenerlo. Si el equipo se queda quieto, pierde; si solo recarga, el misterio no avanza.
+**El reloj:** cada turno cuesta 1 Energía. Las Baterías de Respaldo (+2, seis en el mazo), el Generador Auxiliar y Ahorro de Oxígeno son la forma de sostenerlo. Si el equipo se queda quieto, pierde; si solo recarga, el misterio no avanza.
 
 ## Las cartas son Markdown
 
@@ -114,6 +114,8 @@ El mazo se mezcla con `ORDER BY RANDOM()` de SQLite. Las tiradas digitales tambi
 ## Decisiones de este prototipo
 
 - **Mano compartida.** El GDD reparte cartas por jugador. Acá el equipo comparte una mano de 3 para que un solo dispositivo alcance y para que los más chicos participen sin gestionar su propio mazo. El turno rota igual entre jugadores.
+- **La cantidad de jugadores no cambia la mesa.** Siempre 3 cartas de Misterio, siempre 2 de robo, siempre 6 Pistas. Solo cambia a quién le toca tirar.
+- **Dos modos.** Normal (5 y 5) y fácil (6 y 6) para los más chicos.
 - **Un misterio por turno, una carta jugada por turno.** La app lo hace cumplir; si intentás saltearlo, te avisa.
 - **Dados físicos primero.** La app no obliga a tirar: el ingreso manual es de primera clase, no un modo oculto.
 - **La mesa se repone al terminar el turno**, no al resolver, para que el resultado quede visible mientras se discute.
@@ -122,7 +124,7 @@ El mazo se mezcla con `ORDER BY RANDOM()` de SQLite. Las tiradas digitales tambi
 - **Maniobras a ciegas.** Se juegan antes de tirar. Ver el dado y después decidir convertía cada prueba en una decisión sin riesgo.
 - **Consumo fijo y empujón.** −1 Energía por turno y la opción de arriesgar una Pista extra: el juego se juega contra el reloj, no contra la suerte de una sola tirada.
 - **Emboscadas.** Algunas cartas de Peligro (7 de las 40) cuestan 1 Escudo o 1 Pista al entrar a la mesa, o hacen perder un turno. Tienen una sola opción. Golpean al equipo justo cuando repone la mesa.
-- **La Energía es solo el reloj.** Las cartas de Misterio pegan al Escudo o a las Pistas; la Energía baja 1 por turno y se recupera únicamente con Batería (+2, ×4) y Generador Auxiliar. Soldadura cura 1 de Escudo (×2).
+- **La Energía es solo el reloj.** Las cartas de Misterio pegan al Escudo o a las Pistas; la Energía baja 1 por turno y se recupera únicamente con Batería (+2, ×6) y Generador Auxiliar. Soldadura cura 3 de Escudo (×4).
 
 ## Sobre la marca
 

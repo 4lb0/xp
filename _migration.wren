@@ -13,3 +13,7 @@ Db.migrate("xp-empujado", "ALTER TABLE games ADD COLUMN empujado INTEGER NOT NUL
 Db.migrate("xp-pistas-turno", "ALTER TABLE games ADD COLUMN pistasTurno INTEGER NOT NULL DEFAULT 0")
 
 Db.migrate("xp-saltar", "ALTER TABLE games ADD COLUMN saltar INTEGER NOT NULL DEFAULT 0")
+
+Db.migrate("xp-modo", "ALTER TABLE games ADD COLUMN modo TEXT NOT NULL DEFAULT 'normal'")
+
+Db.migrate("xp-reparado", "ALTER TABLE games ADD COLUMN reparado INTEGER NOT NULL DEFAULT 0")

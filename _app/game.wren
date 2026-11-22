@@ -5,6 +5,7 @@ class Game {
 
   id { _row["id"].toNum }
   players { _row["players"].toNum }
+  modo { _row["modo"] || "normal" }
   energia { _row["energia"].toNum }
   escudo { _row["escudo"].toNum }
   pistas { _row["pistas"].toNum }
@@ -25,6 +26,7 @@ class Game {
   empujado { _row["empujado"].toNum == 1 }
   pistasTurno { _row["pistasTurno"].toNum }
   saltar { _row["saltar"].toNum == 1 }
+  reparado { _row["reparado"].toNum == 1 }
   blindajeUsado { _row["blindajeUsado"].toNum == 1 }
   focosUsado { _row["focosUsado"].toNum == 1 }
   jugadas { _row["jugadas"].toNum }
@@ -38,8 +40,10 @@ class Game {
     return row == null ? null : row.to(Game)
   }
 
-  static create(players) {
-    `INSERT INTO games (players) VALUES (?)`.query(players)
+  static create(players, modo) {
+    var en = modo == "facil" ? 6 : 5
+    var es = modo == "facil" ? 6 : 5
+    `INSERT INTO games (players, energia, escudo, modo) VALUES (?, ?, ?, ?)`.query([players, en, es, modo])
     var id = `SELECT MAX(id) AS id FROM games`.first["id"].toNum
     for (i in 1..60) {
       var m = Card.get("m" + Util.lpad(i.toString, 2, "0"))
@@ -54,11 +58,10 @@ class Game {
       }
     }
     `UPDATE game_cards SET ord = RANDOM() WHERE gameId = ?`.query(id)
-    var mesa = players <= 2 ? 2 : (players <= 4 ? 3 : 4)
-    Game.draw(id, "misterio", "mesa", mesa)
+    Game.draw(id, "misterio", "mesa", 3)
     Game.draw(id, "equipo", "mano", 3)
     `UPDATE games SET ultimo = ? WHERE id = ?`.query("La expedición empieza. El submarino se hunde en la fosa.", id)
-    Game.log(id, "Comienza la expedición con " + players.toString + " jugadores.")
+    Game.log(id, "Comienza la expedición con " + players.toString + " jugadores, modo " + modo + ".")
     var g0 = Game.find(id)
     for (r in Game.rows(id, "mesa")) {
       var c = Card.get(r["cardId"])

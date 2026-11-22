@@ -18,7 +18,7 @@ return Layout.render(<main>
           <li><strong>Ganan</strong> si reúnen 6 Pistas.</li>
           <li><strong>Pierden</strong> si la Energía llega a 0 (se quedan sin aire) o el Escudo llega a 0 (el casco cede).</li>
         </ul>
-        <p class="hint">En la app, el equipo comparte una sola mano y decide entre todos. Es el modo mesa compartida: el dispositivo se pasa de jugador en jugador.</p>
+        <p class="hint">En la app, el equipo comparte una sola mano y decide entre todos. La cantidad de jugadores no cambia la dificultad: todos debaten la misma mesa y el dispositivo rota.</p>
       </div>
       <div class="console">
         <h2>Los tres contadores</h2>
@@ -38,8 +38,8 @@ return Layout.render(<main>
     </div>
     <ol class="steps">
       <li><span class="num">1</span><span><strong>Repartan una carta de Equipo a cada jugador</strong>Con niños de 5 años conviene jugar con las cartas visibles y leer las opciones en voz alta.</span></li>
-      <li><span class="num">2</span><span><strong>Revelen las cartas de Misterio</strong>2 jugadores: 2 cartas. 3 o 4: 3 cartas. 5 o 6: 4 cartas.</span></li>
-      <li><span class="num">3</span><span><strong>Pongan los contadores</strong>Energía 6, Escudo 6, Pistas 0. La app lo hace sola y guarda la partida.</span></li>
+      <li><span class="num">2</span><span><strong>Revelen siempre 3 cartas de Misterio</strong>Sin importar cuántos jueguen. La mesa no cambia: cambia a quién le toca tirar.</span></li>
+      <li><span class="num">3</span><span><strong>Pongan los contadores</strong>Modo normal: Energía 5 y Escudo 5. Modo fácil, para los más chicos: 6 y 6. Pistas 0 en ambos.</span></li>
     </ol>
   </section>
 
@@ -88,7 +88,7 @@ return Layout.render(<main>
           <tbody>
             <tr><td>Sonar de Alta Frecuencia</td><td>Una vez por turno, mirá la carta de arriba del Mazo del Juego.</td></tr>
             <tr><td>Focos Abisales</td><td>Relanzá un dado en pruebas de Cara o Seca.</td></tr>
-            <tr><td>Generador Auxiliar</td><td>Si la Energía está en 3 o menos al empezar el turno, sube 1.</td></tr>
+            <tr><td>Generador Auxiliar</td><td>Si la Energía está en 4 o menos al empezar el turno, sube 1.</td></tr>
             <tr><td>Blindaje de Titanio</td><td>Una vez por turno, reducí 1 el daño al Escudo.</td></tr>
             <tr><td>Brazo Robótico</td><td>Si ganás Pistas y algún dado muestra 6, ganás 1 Pista más.</td></tr>
             <tr><td>Arpón Rastreador</td><td>Gastá 2 de Energía y tirá un dado. Si sale Cara, +1 Pista y se descarta.</td></tr>
@@ -105,8 +105,8 @@ return Layout.render(<main>
             <tr><td>Giro Brusco</td><td>Después de tirar: cambiá un dado de Cara a Seca, o al revés.</td></tr>
             <tr><td>Turbo de Emergencia</td><td>Antes de tirar: sumá 2 al total de la prueba.</td></tr>
             <tr><td>Suerte del Principiante</td><td>Antes de tirar: si la prueba falla, se vuelve a tirar una vez.</td></tr>
-            <tr><td>Soldadura Submarina</td><td>Recuperá 1 de Escudo.</td></tr>
-            <tr><td>Batería de Respaldo</td><td>Recuperá 2 de Energía. Hay 4 en el mazo.</td></tr>
+            <tr><td>Soldadura Submarina</td><td>Recuperá 3 de Escudo. Hay 4 en el mazo.</td></tr>
+            <tr><td>Batería de Respaldo</td><td>Recuperá 2 de Energía. Hay 6 en el mazo.</td></tr>
             <tr><td>Análisis Rápido</td><td>Gastá 1 de Energía y ganá 1 Pista directa.</td></tr>
             <tr><td>Señuelo Luminoso</td><td>Cambiá una carta activa por otra sin resolverla.</td></tr>
             <tr><td>Lanzar Cebo</td><td>Cancelá una pérdida de Escudo en este turno.</td></tr>
@@ -120,8 +120,9 @@ return Layout.render(<main>
   <section class="panel">
     <h2>El reloj: consumo y empujón</h2>
     <p><strong>Consumo:</strong> al terminar cada turno, el submarino pierde <strong>1 Energía</strong>, hayan ganado o no una Pista. La Energía es el reloj de la partida y no se recupera con las cartas de Misterio.</p>
-    <p><strong>Recarga:</strong> solo con Equipo. La Batería de Respaldo devuelve 2 de Energía y hay 4 en el mazo. El Generador Auxiliar recarga 1 al empezar el turno si están en 3 o menos. Ahorro de Oxígeno saltea el consumo de un turno.</p>
+    <p><strong>Recarga:</strong> solo con Equipo. La Batería de Respaldo devuelve 2 de Energía y hay 6 en el mazo. El Generador Auxiliar recarga 1 al empezar el turno si están en 4 o menos. Ahorro de Oxígeno saltea el consumo de un turno.</p>
     <p><strong>Empujón:</strong> cuando una prueba sale bien, el equipo elige entre asegurar la Pista o arriesgar una tirada aparte de 2 dados (8+). Si sale, +1 Pista; si falla, −2 Escudo. Nadie está obligado a empujar.</p>
+    <p><strong>Reparación:</strong> una vez por turno, antes de elegir un misterio, pueden gastar 1 Energía para recuperar 2 Escudo. Reparar compra tiempo, pero acerca el final del aire.</p>
     <p><strong>Emboscadas:</strong> algunas cartas de Peligro cuestan <strong>1 Escudo</strong> o <strong>1 Pista</strong> apenas entran a la mesa, y tienen una sola opción. Otras, cada tanto, hacen <strong>perder un turno</strong> entero. Las cartas de Misterio nunca te sacan Energía: la Energía la baja el reloj y la recupera el Equipo.</p>
   </section>
 

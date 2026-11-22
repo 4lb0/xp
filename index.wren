@@ -18,7 +18,7 @@ return Layout.render(<main>
           Nadie gana solo. Nadie pierde solo.
         </p>
         <div class="hero-actions">
-          <a class="btn btn-primary" href="/juego?jugadores={{ jugadores }}">Iniciar expedición</a>
+          <a class="btn btn-primary" href="/juego">Iniciar expedición</a>
           <a class="btn btn-ghost" href="/reglas">Leer las reglas</a>
         </div>
       </div>
@@ -101,16 +101,22 @@ return Layout.render(<main>
         <div class="section-head">
           <h2>Prepará la mesa</h2>
         </div>
-        <p class="muted">Cuántos van a jugar define cuántas cartas de Misterio quedan activas.</p>
+        <p class="muted">Siempre hay 3 cartas de Misterio en la mesa y se roban 2 de Equipo por turno. La cantidad de jugadores solo cambia a quién le toca tirar: las decisiones son del equipo.</p>
         <form method="get" action="/juego" class="panel">
           <label for="jugadores"><strong>Jugadores en la mesa</strong></label>
           <p style="margin: 0.4rem 0 0.9rem">
             <select id="jugadores" name="jugadores" style="font: inherit; padding: 0.5rem 0.7rem; border-radius: 8px; background: #0b2a44; color: inherit; border: 1px solid rgba(127,230,242,.3)">
-              <option value="2">2 jugadores — 2 cartas activas</option>
-              <option value="3" selected>3 jugadores — 3 cartas activas</option>
-              <option value="4">4 jugadores — 3 cartas activas</option>
-              <option value="5">5 jugadores — 4 cartas activas</option>
-              <option value="6">6 jugadores — 4 cartas activas</option>
+              <option value="2">2 jugadores</option>
+              <option value="3" selected>3 jugadores</option>
+              <option value="4">4 jugadores</option>
+              <option value="5">5 jugadores</option>
+              <option value="6">6 jugadores</option>
+            </select>
+          </p>
+          <p style="margin: 0.4rem 0 0">
+            <select name="modo" style="font: inherit; padding: 0.5rem 0.7rem; border-radius: 8px; background: #0b2a44; color: inherit; border: 1px solid rgba(127,230,242,.3)">
+              <option value="normal" selected>Normal — 5 y 5</option>
+              <option value="facil">Fácil — 6 y 6 (chicos)</option>
             </select>
           </p>
           <button class="btn btn-primary">Empezar</button>
@@ -140,6 +146,6 @@ return Layout.render(<main>
     <p class="eyebrow">Modo restaurante</p>
     <h2>Se explica en una ronda y se juega en una mesa chica</h2>
     <p class="muted">10 a 20 minutos. De 2 a 6 jugadores. Desde los 5 años, con las cartas a la vista.</p>
-    <a class="btn btn-primary" href="/juego?jugadores={{ jugadores }}">Probar la expedición</a>
+    <a class="btn btn-primary" href="/juego">Probar la expedición</a>
   </section>
 </main>)
