@@ -734,6 +734,7 @@ return Layout.render(<main class="game">
         </div>
         <div class="hand">
           {{ ayuda.map{|a| <article class="card card-support" data-family="apoyo">
+            <span class="card-ribbon">Apoyo</span>
             <span class="card-art"><span class="card-emoji" aria-hidden="true">{{ a["card"].emoji }}</span></span>
             <span class="card-family">Maniobra de apoyo · una vez · <span class="card-id">{{ a["card"].id }}</span></span>
             <h3>{{ a["card"].name }}</h3>
@@ -753,6 +754,7 @@ return Layout.render(<main class="game">
       </div>
       <div class="hand hand-main">
         {{ hand.map{|h| <article class="card" data-family="{{ h["card"].isSupport ? "apoyo" : (h["card"].isTool ? "herramienta" : "maniobra") }}">
+          {{ h["card"].isSupport && <span class="card-ribbon">Apoyo</span> }}
           <span class="card-art"><span class="card-emoji" aria-hidden="true">{{ h["card"].emoji }}</span></span>
           <span class="card-family">{{ h["card"].isSupport ? "Maniobra de apoyo" : (h["card"].isTool ? "Herramienta" : "Maniobra") }} · <span class="card-id">{{ h["card"].id }}</span></span>
           <h3>{{ h["card"].name }}</h3>

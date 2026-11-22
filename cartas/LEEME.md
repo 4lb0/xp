@@ -103,7 +103,7 @@ Una vez por ciclo, mirá la carta de arriba del Mazo del Juego antes de elegir.
 
 ### Maniobras de apoyo
 
-`tipo: maniobra` + `subtipo: apoyo` con `valor: 1` o `2`. Al usarlas, el jugador elige **+valor Energía o +valor Escudo**. Actúan como cualquier Maniobra: se usan una vez y van al descarte. En Experto se mezclan en el mazo; en Normal una va al área de ayuda; en Asistido las dos. Las del área no gastan la carta del ciclo.
+`tipo: maniobra` + `subtipo: apoyo` con `valor: 1` o `2`. Al usarlas, el jugador elige **+valor Energía o +valor Escudo**. Actúan como cualquier Maniobra: se usan una vez y van al descarte. En la app se destacan en rosa con la etiqueta **Apoyo** para encontrarlas rápido. En Experto se mezclan en el mazo; en Normal una va al área de ayuda; en Asistido las dos. Las del área no gastan la carta del ciclo.
 
 ### Efectos que el motor ya implementa
 

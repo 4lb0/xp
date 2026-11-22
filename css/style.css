@@ -14,6 +14,8 @@
   --gold-soft: #f7d98a;
   --coral: #ef6a5b;
   --green: #4fbf8b;
+  --support: #f472b6;
+  --support-soft: #ffd0e8;
   --paper: #eaf6f8;
   --muted: #9db8c7;
   --line: rgba(127, 230, 242, 0.18);
@@ -743,6 +745,7 @@ tbody tr:hover { background: rgba(127, 230, 242, 0.04); }
 .deck-section { margin-top: 2.2rem; }
 .deck-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1rem; }
 .mini-card {
+  position: relative;
   border: 1px solid var(--line);
   border-radius: var(--radius-sm);
   background: var(--card);
@@ -881,16 +884,28 @@ tbody tr:hover { background: rgba(127, 230, 242, 0.04); }
 .option-chips { margin: 0.45rem 0; }
 .legend p { margin-bottom: 0.4rem; }
 
-.card[data-family="apoyo"] { --family: #a78bfa; }
-.card-support { border-color: rgba(167, 139, 250, 0.45); }
-.help-zone { margin-bottom: 1rem; }
-.support-choice {
-  border-color: rgba(167, 139, 250, 0.55);
+.card[data-family="apoyo"] { --family: var(--support); border-color: rgba(244, 114, 182, 0.32); }
+.card-support {
+  border-color: rgba(244, 114, 182, 0.45);
   background:
-    radial-gradient(circle at 50% 0%, rgba(167, 139, 250, 0.16), transparent 60%),
+    linear-gradient(180deg, rgba(244, 114, 182, 0.08), transparent 45%),
+    var(--card);
+}
+.help-zone {
+  margin-bottom: 1rem;
+  padding: 0.8rem;
+  border: 1px solid rgba(244, 114, 182, 0.28);
+  border-radius: var(--radius);
+  background: rgba(244, 114, 182, 0.05);
+}
+.help-zone .section-head h2 { color: var(--support-soft); }
+.support-choice {
+  border-color: rgba(244, 114, 182, 0.55);
+  background:
+    radial-gradient(circle at 50% 0%, rgba(244, 114, 182, 0.16), transparent 60%),
     rgba(9, 32, 51, 0.7);
 }
-.support-choice h2 { color: #c9b8ff; }
+.support-choice h2 { color: var(--support-soft); }
 
 .test-preview {
   border-color: rgba(127, 230, 242, 0.45);
@@ -949,7 +964,34 @@ tbody tr:hover { background: rgba(127, 230, 242, 0.04); }
 }
 .mini-options li strong { display: block; margin-bottom: 0.15rem; }
 .mini-options .option-effects { display: block; margin-top: 0.25rem; }
-.mini-card[data-family="apoyo"] { --family: #a78bfa; }
+.mini-card[data-family="apoyo"] { --family: var(--support); border-color: rgba(244, 114, 182, 0.32); }
+
+.card-ribbon {
+  position: absolute;
+  top: 0.7rem;
+  right: 0.7rem;
+  z-index: 2;
+  padding: 0.16rem 0.5rem;
+  border-radius: 999px;
+  background: var(--support);
+  color: #3a0a24;
+  font-size: 0.62rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
+}
+.pill-support {
+  border-color: rgba(244, 114, 182, 0.5);
+  color: var(--support-soft);
+}
+.support-panel {
+  border-color: rgba(244, 114, 182, 0.4);
+  background:
+    radial-gradient(circle at 10% 0%, rgba(244, 114, 182, 0.12), transparent 55%),
+    rgba(9, 32, 51, 0.55);
+}
+.support-panel h2 { color: var(--support-soft); }
 
 /* ---------- Cómo jugar (guía visual) ---------- */
 

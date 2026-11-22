@@ -138,7 +138,7 @@ return Layout.render(<main>
     </div>
   </section>
 
-  <section class="panel" id="apoyo">
+  <section class="panel support-panel" id="apoyo">
     <h2>Maniobras de apoyo</h2>
     <p>Dos Maniobras del equipo: <strong>Kit de emergencia</strong> (<span class="chip chip-energia">⚡ +1</span> o <span class="chip chip-escudo">🛡️ +1</span>) y <strong>Carga de emergencia</strong> (<span class="chip chip-energia">⚡ +2</span> o <span class="chip chip-escudo">🛡️ +2</span>).</p>
     <p>En <strong>Experto</strong> se mezclan en el mazo. En <strong>Normal</strong>, el Kit se busca y queda en el área de ayuda. En <strong>Asistido</strong>, las dos quedan en el área. Se usan una vez, van al descarte como cualquier Maniobra y, si están en el área de ayuda, no gastan la carta del ciclo.</p>
