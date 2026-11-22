@@ -361,6 +361,7 @@ def reference_cards() -> list[dict]:
     return [
         {
             "id": "R1",
+            "kind": "referencia",
             "name": "ENERGÍA",
             "eyebrow": "EL RELOJ",
             "range": "6 A 0",
@@ -369,6 +370,7 @@ def reference_cards() -> list[dict]:
         },
         {
             "id": "R2",
+            "kind": "referencia",
             "name": "PISTAS",
             "eyebrow": "LA MISIÓN",
             "range": "0 A 6",
@@ -377,6 +379,7 @@ def reference_cards() -> list[dict]:
         },
         {
             "id": "R3",
+            "kind": "referencia",
             "name": "ESCUDO",
             "eyebrow": "EL CASCO",
             "range": "6 A 0",
@@ -477,8 +480,14 @@ def build() -> None:
             equipo.append(card)
 
     cards = misterio + equipo
+    refs = reference_cards()
     per_page = COLS * ROWS
-    pages = (len(cards) + per_page - 1) // per_page
+    chunks = [cards[i : i + per_page] for i in range(0, len(cards), per_page)]
+    # Las referencias van al final de la última hoja, si hay lugar.
+    for ref in refs:
+        if not chunks or len(chunks[-1]) >= per_page:
+            chunks.append([])
+        chunks[-1].append(ref)
     OUT.parent.mkdir(parents=True, exist_ok=True)
 
     c = canvas.Canvas(str(OUT), pagesize=A4)
@@ -487,26 +496,20 @@ def build() -> None:
     c.setSubject("Proxies para imprimir en blanco y negro")
     c.setCreator("tools/make_proxies.py")
 
-    for page in range(pages):
-        chunk = cards[page * per_page : (page + 1) * per_page]
+    for chunk in chunks:
         for i, card in enumerate(chunk):
             row, col = divmod(i, COLS)
             x = MARGIN_X + col * CARD_W
             y = A4[1] - MARGIN_Y - CARD_H - row * CARD_H
-            draw_card(c, card, x, y)
+            if card.get("kind") == "referencia":
+                draw_reference_card(c, card, x, y)
+            else:
+                draw_card(c, card, x, y)
         draw_cut_lines(c, chunk)
         c.showPage()
 
-    refs = reference_cards()
-    for i, card in enumerate(refs):
-        x = MARGIN_X + i * CARD_W
-        y = A4[1] - MARGIN_Y - CARD_H
-        draw_reference_card(c, card, x, y)
-    draw_cut_lines(c, refs)
-    c.showPage()
-
     c.save()
-    print(f"{len(cards)} cartas + {len(refs)} referencias · {pages + 1} páginas · {OUT}")
+    print(f"{len(cards)} cartas + {len(refs)} referencias · {len(chunks)} páginas · {OUT}")
 
 
 if __name__ == "__main__":
