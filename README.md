@@ -118,7 +118,7 @@ El mazo se mezcla con `ORDER BY RANDOM()` de SQLite. Las tiradas digitales tambi
 - **Dados físicos primero.** La app no obliga a tirar: el ingreso manual es de primera clase, no un modo oculto.
 - **La mesa se repone al terminar el turno**, no al resolver, para que el resultado quede visible mientras se discute.
 - **Nada de JavaScript.** Todo es HTML, CSS y formularios. El único movimiento es el `prefers-reduced-motion`.
-- **Una o dos opciones por carta, sin A/B/C.** Se muestran como dos acciones; las letras quedan solo como separadores internos del Markdown.
+- **Una o dos opciones por carta, sin A/B/C.** Se muestran como acciones; las letras quedan solo como separadores internos del Markdown. Las emboscadas muestran una sola.
 - **Maniobras a ciegas.** Se juegan antes de tirar. Ver el dado y después decidir convertía cada prueba en una decisión sin riesgo.
 - **Consumo fijo y empujón.** −1 Energía por turno y la opción de arriesgar una Pista extra: el juego se juega contra el reloj, no contra la suerte de una sola tirada.
 - **Emboscadas.** Algunas cartas de Peligro (7 de las 40) cuestan 1 Energía o 1 Escudo al entrar a la mesa y tienen una sola opción. Golpean la economía del equipo justo cuando repone la mesa.
