@@ -15,6 +15,7 @@ Versión jugable en el navegador del juego de mesa de aventura y misterio **XP (
 `pdf/xp-proxies-bw.pdf` contiene las **84 cartas** (40 de Misterio + 44 de Equipo,
 incluidas las copias) en blanco y negro, a **60 × 86 mm** —unos milímetros menos
 que una carta TCG estándar—, con **9 cartas por hoja A4** y líneas de corte.
+Al final agrega **3 cartas de referencia** con dibujos: Energía, Pistas y Escudo.
 Imprimilo al **100% / tamaño real**, sin “ajustar a la página”.
 
 Para regenerarlo:

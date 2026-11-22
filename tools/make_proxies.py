@@ -3,7 +3,8 @@
 
 Lee las cartas Markdown de cartas/misterio y cartas/equipo, repite las copias
 del mazo de Equipo y arma hojas A4 con 9 cartas de 60 x 86 mm (unos mm menos
-que una carta TCG estándar de 63 x 88 mm), con líneas de corte.
+que una carta TCG estándar de 63 x 88 mm), con líneas de corte. Al final agrega
+3 cartas de referencia (Energía, Pistas y Escudo) con dibujos.
 
 Uso:
     python3 tools/make_proxies.py
@@ -191,6 +192,7 @@ def draw_card(c: canvas.Canvas, card: dict, x: float, y: float) -> None:
 
     inset = 2.6 * mm
     header_h = 6.0 * mm
+    is_support = (card.get("subtipo") or "").lower() == "apoyo" or (card.get("tipo") or "").lower() == "apoyo"
     if kind == "misterio":
         # Misterio: cabecera arriba, pie de marca abajo.
         header_y = y + CARD_H - inset - header_h
@@ -201,6 +203,16 @@ def draw_card(c: canvas.Canvas, card: dict, x: float, y: float) -> None:
         header_y = y + inset
         content_top = y + CARD_H - inset - 1.8 * mm
         footer_y = y + inset + header_h + 1.8 * mm
+
+    if is_support:
+        # Borde negro superior: las Maniobras de apoyo se encuentran de inmediato.
+        support_bar = 2.8 * mm
+        c.setFillGray(0)
+        c.rect(x, y + CARD_H - support_bar, CARD_W, support_bar, stroke=0, fill=1)
+        c.setFillGray(1)
+        c.setFont("Helvetica-Bold", 4.4)
+        c.drawCentredString(x + CARD_W / 2, y + CARD_H - 1.9 * mm, "APOYO")
+        content_top = y + CARD_H - support_bar - 1.2 * mm
 
     # Cabecera gris con id y mazo.
     c.setFillGray(0.90 if kind == "misterio" else 0.84)
@@ -345,6 +357,116 @@ def draw_cut_lines(c: canvas.Canvas, cards: list[dict]) -> None:
     c.restoreState()
 
 
+def reference_cards() -> list[dict]:
+    return [
+        {
+            "id": "R1",
+            "name": "ENERGÍA",
+            "eyebrow": "EL RELOJ",
+            "range": "6 A 0",
+            "text": "Se gasta 1 por ciclo. Si llega a 0, la expedición termina.",
+            "icon": "energia",
+        },
+        {
+            "id": "R2",
+            "name": "PISTAS",
+            "eyebrow": "LA MISIÓN",
+            "range": "0 A 6",
+            "text": "Reuní 6 Pistas para encontrar al Megalodón.",
+            "icon": "pistas",
+        },
+        {
+            "id": "R3",
+            "name": "ESCUDO",
+            "eyebrow": "EL CASCO",
+            "range": "6 A 0",
+            "text": "Si llega a 0, el casco cede y la expedición termina.",
+            "icon": "escudo",
+        },
+    ]
+
+
+def draw_resource_icon(c: canvas.Canvas, icon: str, cx: float, cy: float, size: float) -> None:
+    c.saveState()
+    c.translate(cx - size / 2, cy - size / 2)
+    c.scale(size / 100.0, size / 100.0)
+    c.setStrokeGray(0)
+    c.setFillGray(0)
+    c.setLineWidth(7)
+    c.setLineCap(1)
+    c.setLineJoin(1)
+    if icon == "energia":
+        p = c.beginPath()
+        p.moveTo(58, 4)
+        p.lineTo(22, 54)
+        p.lineTo(45, 54)
+        p.lineTo(38, 96)
+        p.lineTo(78, 42)
+        p.lineTo(52, 42)
+        p.close()
+        c.drawPath(p, fill=1, stroke=0)
+    elif icon == "pistas":
+        c.setFillGray(1)
+        c.circle(42, 58, 27, stroke=1, fill=1)
+        c.setFillGray(1)
+        c.setLineWidth(9)
+        c.line(62, 38, 91, 9)
+    else:
+        p = c.beginPath()
+        p.moveTo(50, 4)
+        p.lineTo(90, 18)
+        p.lineTo(90, 48)
+        p.curveTo(90, 74, 72, 89, 50, 96)
+        p.curveTo(28, 89, 10, 74, 10, 48)
+        p.lineTo(10, 18)
+        p.close()
+        c.drawPath(p, fill=0, stroke=1)
+    c.restoreState()
+
+
+def draw_reference_card(c: canvas.Canvas, card: dict, x: float, y: float) -> None:
+    inset = 2.6 * mm
+    header_h = 6.0 * mm
+    header_y = y + CARD_H - inset - header_h
+    c.saveState()
+
+    # Cabecera gris con la etiqueta de referencia.
+    c.setFillGray(0.90)
+    c.rect(x + inset, header_y, CARD_W - 2 * inset, header_h, stroke=0, fill=1)
+    c.setFillGray(0)
+    c.setFont("Helvetica-Bold", 5.0)
+    c.drawString(x + inset + 1.5 * mm, header_y + 1.8 * mm, "REFERENCIA")
+    c.setFont("Helvetica", 4.8)
+    c.drawRightString(x + CARD_W - inset - 1.5 * mm, header_y + 1.8 * mm, card.get("id", ""))
+
+    # Dibujo grande.
+    draw_resource_icon(c, card.get("icon", "energia"), x + CARD_W / 2, y + 54 * mm, 29 * mm)
+
+    # Nombre, subtítulo y regla.
+    c.setFillGray(0)
+    c.setFont("Helvetica-Bold", 14)
+    c.drawCentredString(x + CARD_W / 2, y + 31 * mm, card.get("name", ""))
+    c.setFillGray(0.30)
+    c.setFont("Helvetica-Bold", 5.6)
+    c.drawCentredString(x + CARD_W / 2, y + 25.5 * mm, card.get("eyebrow", ""))
+    c.setFillGray(0)
+    c.setFont("Helvetica-Bold", 9.0)
+    c.drawCentredString(x + CARD_W / 2, y + 18.5 * mm, card.get("range", ""))
+
+    text_style = ParagraphStyle(
+        "ref_text", fontName="Helvetica", fontSize=6.4, leading=8.0,
+        textColor=(0.15, 0.15, 0.15), alignment=1, spaceAfter=0
+    )
+    p = Paragraph(clean(card.get("text", "")), text_style)
+    _, th = p.wrap(CARD_W - 2 * inset - 6 * mm, 18 * mm)
+    p.drawOn(c, x + inset + 3 * mm, y + 15 * mm - th)
+
+    c.setFillGray(0.35)
+    c.setFont("Helvetica", 4.3)
+    c.drawCentredString(x + CARD_W / 2, y + 3.8 * mm, "XP: En busca del Megalodón")
+    c.restoreState()
+
+
 def build() -> None:
     misterio = [parse_card(p) for p in sorted((ROOT / "cartas" / "misterio").glob("*.md"))]
     equipo_unique = [parse_card(p) for p in sorted((ROOT / "cartas" / "equipo").glob("*.md"))]
@@ -375,8 +497,16 @@ def build() -> None:
         draw_cut_lines(c, chunk)
         c.showPage()
 
+    refs = reference_cards()
+    for i, card in enumerate(refs):
+        x = MARGIN_X + i * CARD_W
+        y = A4[1] - MARGIN_Y - CARD_H
+        draw_reference_card(c, card, x, y)
+    draw_cut_lines(c, refs)
+    c.showPage()
+
     c.save()
-    print(f"{len(cards)} cartas · {pages} páginas · {OUT}")
+    print(f"{len(cards)} cartas + {len(refs)} referencias · {pages + 1} páginas · {OUT}")
 
 
 if __name__ == "__main__":

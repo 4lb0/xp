@@ -1,7 +1,7 @@
 class Layout {
   // Subir al cambiar css/style.css para romper la caché de Cloudflare.
   static assetVersion { "2026-11-22-2" }
-  static printVersion { "2026-11-22-1" }
+  static printVersion { "2026-11-22-2" }
 
   static render(content) { Layout.render(content, "XP · Equipo eXPedición", false) }
 
