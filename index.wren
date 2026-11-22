@@ -46,30 +46,6 @@ return Layout.render(<main>
 
   <section>
     <div class="section-head">
-      <h2>Tres ideas, un juego</h2>
-      <p>Para jugar en una mesa chica, en un restaurante, en diez minutos.</p>
-    </div>
-    <div class="card-grid">
-      <article class="card" data-family="exploracion">
-        <span class="card-family">Cooperativo</span>
-        <h3>El equipo es uno</h3>
-        <p>No hay roles secretos ni traidores. Se debate, se elige entre todos y se tira una sola vez. La derrota también es compartida.</p>
-      </article>
-      <article class="card" data-family="peligro">
-        <span class="card-family">Misterio</span>
-        <h3>El Megalodón casi no se ve</h3>
-        <p>Una sombra enorme, un ojo, una estela. El peligro se intuye antes de aparecer: eso es lo que da miedo bonito, no sustos.</p>
-      </article>
-      <article class="card" data-family="herramienta">
-        <span class="card-family">Azar y estrategia</span>
-        <h3>La mitad se decide con dados</h3>
-        <p>Cara o Seca, suma de dos dados, dobles, evitar el 1. Las Herramientas y Maniobras existen para torcer la suerte a tiempo.</p>
-      </article>
-    </div>
-  </section>
-
-  <section>
-    <div class="section-head">
       <h2>Cómo se juega</h2>
       <p>Cuatro pasos por turno. Sin tablero.</p>
     </div>
