@@ -57,7 +57,7 @@ if (Request.isPost) {
         `UPDATE games SET jugadas = 1 WHERE id = ?`.query(g.id)
         Game.log(g.id, "Herramienta en juego: " + c.name + ".")
       } else if (c.effect == "heal_shield") {
-        Game.apply(g.id, g, {"pistas": 0, "energia": 0, "escudo": 2}, true, [])
+        Game.apply(g.id, g, {"pistas": 0, "energia": 0, "escudo": 1}, true, [])
         Game.move(rowId, "descarte")
         `UPDATE games SET jugadas = 1 WHERE id = ?`.query(g.id)
         Game.log(g.id, "Soldadura Submarina: +2 Escudo.")
@@ -75,7 +75,15 @@ if (Request.isPost) {
         var activas = Game.rows(g.id, "mesa")
         if (!activas.isEmpty) {
           Game.move(activas[0]["id"], "descarte")
-          Game.draw(g.id, "misterio", "mesa", 1)
+          var nueva = Game.draw(g.id, "misterio", "mesa", 1)
+          if (nueva != null) {
+            var nc = Card.get(nueva)
+            if (nc != null && nc.entry != "") {
+              var gs = Game.find(g.id)
+              Game.apply(g.id, gs, Game.parseEffects(nc.entry), true, Game.ids(g.id, "herramientas"))
+              Game.log(g.id, "Emboscada al entrar: " + nc.name + " — " + nc.entryLabel + ".")
+            }
+          }
         }
         Game.move(rowId, "descarte")
         `UPDATE games SET jugadas = 1 WHERE id = ?`.query(g.id)
@@ -113,23 +121,32 @@ if (Request.isPost) {
     if (opt == null) {
       aviso = "No hay una prueba preparada."
     } else {
-      var dice = Game.roll(opt["dados"])
-      var d2 = opt["dados"] == 2 ? dice[1] : 0
-      `UPDATE games SET dado1 = ?, dado2 = ?, tirado = 1 WHERE id = ?`.query(dice[0], d2, g.id)
-      Game.log(g.id, "Tiran en la app: " + dice[0].toString + (opt["dados"] == 2 ? " y " + dice[1].toString : "") + ".")
+      var push = g.fase == "empujon"
+      var dados = push ? 2 : opt["dados"]
+      var dice = Game.roll(dados)
+      var d1 = dice[0]
+      var d2 = dados == 2 ? dice[1] : 0
+      var parity = !push && (opt["tipoPrueba"] == "cara" || opt["tipoPrueba"] == "seca")
+      if (parity && g.giro) d1 = 7 - d1
+      `UPDATE games SET dado1 = ?, dado2 = ?, tirado = 1, giro = 0 WHERE id = ?`.query(d1, d2, g.id)
+      Game.log(g.id, (push ? "Empujón: " : "Tiran en la app: ") + d1.toString + (dados == 2 ? " y " + d2.toString : "") + ".")
     }
   } else if (accion == "mesa") {
     var d1 = Num.fromString(Request.post("d1", "0"))
     var d2 = Num.fromString(Request.post("d2", "0"))
     var c = Card.get(g.pruebaCarta)
     var opt = c == null ? null : c.option(g.pruebaOpcion)
+    var push = g.fase == "empujon"
+    var dados = push ? 2 : (opt == null ? 0 : opt["dados"])
     if (opt == null) {
       aviso = "No hay una prueba preparada."
-    } else if (d1 < 1 || d1 > 6 || (opt["dados"] == 2 && (d2 < 1 || d2 > 6))) {
+    } else if (d1 < 1 || d1 > 6 || (dados == 2 && (d2 < 1 || d2 > 6))) {
       aviso = "Elegí valores de 1 a 6 para cada dado."
     } else {
-      `UPDATE games SET dado1 = ?, dado2 = ?, tirado = 1 WHERE id = ?`.query(d1, opt["dados"] == 2 ? d2 : 0, g.id)
-      Game.log(g.id, "Dados de la mesa: " + d1.toString + (opt["dados"] == 2 ? " y " + d2.toString : "") + ".")
+      var parity = !push && (opt["tipoPrueba"] == "cara" || opt["tipoPrueba"] == "seca")
+      if (parity && g.giro) d1 = 7 - d1
+      `UPDATE games SET dado1 = ?, dado2 = ?, tirado = 1, giro = 0 WHERE id = ?`.query(d1, dados == 2 ? d2 : 0, g.id)
+      Game.log(g.id, (push ? "Empujón en la mesa: " : "Dados de la mesa: ") + d1.toString + (dados == 2 ? " y " + d2.toString : "") + ".")
     }
   } else if (accion == "maniobra") {
     var row = `SELECT * FROM game_cards WHERE id = ? AND gameId = ? AND zone = 'mano'`.first(rowId, g.id)
@@ -142,8 +159,10 @@ if (Request.isPost) {
       aviso = "Esa Maniobra se usa cuando hay una prueba de dados."
     } else if (g.jugadas > 0) {
       aviso = "Ya jugaron una carta este turno."
-    } else if (!g.tirado && (c.effect == "plus_two" || c.effect == "flip_parity" || c.effect == "reroll_all")) {
-      aviso = "Primero tiren los dados."
+    } else if (g.fase != "prueba") {
+      aviso = "Esa Maniobra se usa antes de resolver el misterio."
+    } else if (g.tirado) {
+      aviso = "Las Maniobras se juegan antes de tirar: se comprometen a ciegas."
     } else if (c.effect == "flip_parity" && !parity) {
       aviso = "Giro Brusco solo sirve en pruebas de Cara o Seca."
     } else if (c.effect == "plus_two") {
@@ -151,15 +170,13 @@ if (Request.isPost) {
       Game.move(rowId, "descarte")
       Game.log(g.id, "Turbo de Emergencia: +2 al total.")
     } else if (c.effect == "flip_parity") {
-      var nuevo = 7 - g.dado1
-      `UPDATE games SET dado1 = ?, jugadas = 1 WHERE id = ?`.query(nuevo, g.id)
+      `UPDATE games SET giro = 1, jugadas = 1 WHERE id = ?`.query(g.id)
       Game.move(rowId, "descarte")
-      Game.log(g.id, "Giro Brusco: el dado pasa de Cara a Seca (o al revés).")
+      Game.log(g.id, "Giro Brusco preparado: el dado se va a invertir.")
     } else if (c.effect == "reroll_all") {
-      var dice = Game.roll(opt["dados"])
-      `UPDATE games SET dado1 = ?, dado2 = ?, jugadas = 1 WHERE id = ?`.query(dice[0], opt["dados"] == 2 ? dice[1] : 0, g.id)
+      `UPDATE games SET suerte = 1, jugadas = 1 WHERE id = ?`.query(g.id)
       Game.move(rowId, "descarte")
-      Game.log(g.id, "Suerte del Principiante: vuelven a tirar los dados.")
+      Game.log(g.id, "Suerte del Principiante preparada: si falla, se tira de nuevo.")
     } else if (c.effect == "cancel_shield_loss") {
       `UPDATE games SET cebo = 1, jugadas = 1 WHERE id = ?`.query(g.id)
       Game.move(rowId, "descarte")
@@ -174,7 +191,7 @@ if (Request.isPost) {
   } else if (accion == "focos") {
     var opt = g.pruebaCarta == null ? null : (Card.get(g.pruebaCarta) == null ? null : Card.get(g.pruebaCarta).option(g.pruebaOpcion))
     var parity = opt != null && (opt["tipoPrueba"] == "cara" || opt["tipoPrueba"] == "seca")
-    if (!g.tirado || !parity) {
+    if (g.fase != "prueba" || !g.tirado || !parity) {
       aviso = "Los Focos Abisales solo relanzan un dado de Cara o Seca."
     } else if (!Game.hasTool(g.id, "reroll_parity") || g.focosUsado) {
       aviso = "Los Focos Abisales ya se usaron este turno."
@@ -190,26 +207,57 @@ if (Request.isPost) {
       aviso = "No hay una prueba para resolver."
     } else if (!g.tirado) {
       aviso = "Primero tienen que tirar los dados."
+    } else if (g.fase == "empujon") {
+      var tools = Game.ids(g.id, "herramientas")
+      var total = g.dado1 + g.dado2 + (tools.contains("plus_one_sum") ? 1 : 0)
+      var okp = total >= 8
+      var res = Game.apply(g.id, g, okp ? {"pistas": 1, "energia": 0, "escudo": 0} : {"pistas": 0, "energia": 0, "escudo": -2}, okp, tools)
+      var texto = okp ? "Empujón logrado: +1 Pista." : "El empujón falla: −2 Escudo."
+      `UPDATE games SET fase = 'resuelto', empujado = 1, ultimo = ?, tirado = 0, dado1 = 0, dado2 = 0, bonus = 0, giro = 0, suerte = 0 WHERE id = ?`.query(texto, g.id)
+      Game.log(g.id, texto)
     } else {
       var tools = Game.ids(g.id, "herramientas")
-      var ok = Game.evalTest(opt["tipoPrueba"], opt["objetivo"], g.dado1, g.dado2, g.bonus, tools.contains("plus_one_sum"))
+      var d1 = g.dado1
+      var d2 = g.dado2
+      var ok = Game.evalTest(opt["tipoPrueba"], opt["objetivo"], d1, d2, g.bonus, tools.contains("plus_one_sum"))
+      if (!ok && g.suerte) {
+        var dice = Game.roll(opt["dados"])
+        d1 = dice[0]
+        d2 = opt["dados"] == 2 ? dice[1] : 0
+        ok = Game.evalTest(opt["tipoPrueba"], opt["objetivo"], d1, d2, g.bonus, tools.contains("plus_one_sum"))
+        Game.log(g.id, "Suerte del Principiante: nueva tirada " + d1.toString + (opt["dados"] == 2 ? " y " + d2.toString : "") + ".")
+      }
       var eff = Game.parseEffects(ok ? opt["exito"] : opt["fallo"])
       var res = Game.apply(g.id, g, eff, ok, tools)
       var mesaRow = `SELECT id FROM game_cards WHERE gameId = ? AND cardId = ? AND zone = 'mesa'`.first(g.id, g.pruebaCarta)
       if (mesaRow != null) Game.move(mesaRow["id"], "descarte")
       var texto = (ok ? "Prueba superada" : "Prueba fallida") + ": " + c.name + " — " + opt["texto"] + "."
       if (!res["notas"].isEmpty) texto = texto + " " + res["notas"].join(". ") + "."
-      `UPDATE games SET fase = 'resuelto', resultado = ?, resueltas = 1, ultimo = ? WHERE id = ?`.query(ok ? "ganada" : "perdida", texto, g.id)
+      var nextFase = (ok && res["status"] == "activa") ? "empujon" : "resuelto"
+      `UPDATE games SET fase = ?, resultado = ?, resueltas = 1, ultimo = ?, dado1 = ?, dado2 = ?, tirado = 0, bonus = 0, giro = 0, suerte = 0 WHERE id = ?`.query([nextFase, ok ? "ganada" : "perdida", texto, d1, d2, g.id])
       Game.log(g.id, texto)
       if (res["status"] == "victoria") Game.log(g.id, "¡Seis Pistas! El misterio queda resuelto.")
       if (res["status"] == "derrota") Game.log(g.id, "La expedición se pierde en la oscuridad.")
+    }
+  } else if (accion == "asegurar") {
+    if (g.fase != "empujon") {
+      aviso = "No hay un empujón pendiente."
+    } else if (g.tirado) {
+      aviso = "Ya arriesgaron: tienen que resolver el empujón."
+    } else {
+      `UPDATE games SET fase = 'resuelto', empujado = 1, ultimo = ? WHERE id = ?`.query("El equipo asegura la Pista y no arriesga más.", g.id)
+      Game.log(g.id, "El equipo asegura la Pista y no arriesga más.")
     }
   } else if (accion == "dado") {
     var d = Game.roll(1)[0]
     return Response.redirect("/juego?dado=" + d.toString)
   } else if (accion == "cancelar") {
-    `UPDATE games SET fase = 'listo', pruebaCarta = NULL, pruebaOpcion = NULL, dado1 = 0, dado2 = 0, tirado = 0, bonus = 0, cebo = 0, ahorro = 0 WHERE id = ?`.query(g.id)
-    Game.log(g.id, "El equipo duda y vuelve a mirar las cartas.")
+    if (g.tirado) {
+      aviso = "Ya tiraron: no pueden volver atrás. Resuelvan la prueba."
+    } else {
+      `UPDATE games SET fase = 'listo', pruebaCarta = NULL, pruebaOpcion = NULL, dado1 = 0, dado2 = 0, tirado = 0, bonus = 0, cebo = 0, ahorro = 0, giro = 0, suerte = 0 WHERE id = ?`.query(g.id)
+      Game.log(g.id, "El equipo duda y vuelve a mirar las cartas.")
+    }
   } else if (accion == "arpon") {
     var tools = g.fase == "listo" ? Game.cardsIn(g.id, "herramientas") : []
     var harpoon = null
@@ -239,11 +287,33 @@ if (Request.isPost) {
     if (g.fase != "resuelto") {
       aviso = "Primero resuelvan un misterio."
     } else {
-      Game.draw(g.id, "misterio", "mesa", 1)
-      var next = g.jugador >= g.players ? 1 : g.jugador + 1
-      `UPDATE games SET jugador = ?, turno = turno + 1, fase = 'listo', pruebaCarta = NULL, pruebaOpcion = NULL, dado1 = 0, dado2 = 0, tirado = 0, bonus = 0, cebo = 0, ahorro = 0, blindajeUsado = 0, focosUsado = 0, jugadas = 0, resueltas = 0, resultado = NULL WHERE id = ?`.query(next, g.id)
       var g2 = Game.find(g.id)
-      if (g2 != null && Game.hasTool(g.id, "energy_start") && g2.energia <= 2) {
+      if (g2.ahorro) {
+        Game.log(g.id, "Ahorro de Oxígeno: el consumo del submarino no gasta Energía.")
+      } else {
+        var en = Game.clamp(g2.energia - 1, 0, 6)
+        `UPDATE games SET energia = ? WHERE id = ?`.query(en, g.id)
+        Game.log(g.id, "El submarino consume 1 Energía.")
+        if (en <= 0) {
+          `UPDATE games SET status = 'derrota' WHERE id = ?`.query(g.id)
+          Game.log(g.id, "La Energía llegó a cero. La expedición termina.")
+          return Response.redirect("/juego")
+        }
+      }
+      var nueva = Game.draw(g.id, "misterio", "mesa", 1)
+      if (nueva != null) {
+        var nc = Card.get(nueva)
+        if (nc != null && nc.entry != "") {
+          var g4 = Game.find(g.id)
+          var resEntrada = Game.apply(g.id, g4, Game.parseEffects(nc.entry), true, Game.ids(g.id, "herramientas"))
+          Game.log(g.id, "Emboscada al entrar: " + nc.name + " — " + nc.entryLabel + ".")
+          if (resEntrada["status"] != "activa") return Response.redirect("/juego")
+        }
+      }
+      var next = g.jugador >= g.players ? 1 : g.jugador + 1
+      `UPDATE games SET jugador = ?, turno = turno + 1, fase = 'listo', pruebaCarta = NULL, pruebaOpcion = NULL, dado1 = 0, dado2 = 0, tirado = 0, bonus = 0, cebo = 0, ahorro = 0, blindajeUsado = 0, focosUsado = 0, jugadas = 0, resueltas = 0, resultado = NULL, giro = 0, suerte = 0, empujado = 0, pistasTurno = 0 WHERE id = ?`.query(next, g.id)
+      var g3 = Game.find(g.id)
+      if (g3 != null && Game.hasTool(g.id, "energy_start") && g3.energia <= 3) {
         `UPDATE games SET energia = energia + 1 WHERE id = ?`.query(g.id)
         Game.log(g.id, "Generador Auxiliar: +1 Energía al empezar el turno.")
       }
@@ -396,8 +466,23 @@ return Layout.render(<main class="game">
     </div>
 
     {{ g.bonus > 0 && <p class="hint">Bonificación acumulada: +{{ g.bonus }} al total.</p> }}
+    {{ g.giro && <p class="hint">Giro Brusco preparado: el dado se va a invertir.</p> }}
+    {{ g.suerte && <p class="hint">Suerte del Principiante preparada: si falla, se tira de nuevo.</p> }}
+    {{ g.cebo && <p class="hint">Lanzar Cebo: el próximo daño al Escudo se cancela.</p> }}
+    {{ g.ahorro && <p class="hint">Ahorro de Oxígeno: este turno no gastan Energía.</p> }}
 
     {{ !g.tirado && <section class="roll-controls">
+      {{ g.jugadas == 0 && maniobrasPrueba.count > 0 && <section class="maneuvers">
+        <p class="hint">Las Maniobras se juegan <strong>antes</strong> de tirar: se comprometen a ciegas.</p>
+        <div class="action-row">
+          {{ maniobrasPrueba.map{|h| <form method="post" class="inline-form">
+            <input type="hidden" name="accion" value="maniobra" />
+            <input type="hidden" name="rowId" value="{{ h["rowId"] }}" />
+            <button class="btn btn-ghost btn-small">Usar {{ h["card"].name }}</button>
+          </form>} }}
+        </div>
+      </section> }}
+      {{ g.jugadas > 0 && <p class="hint">Ya jugaron su carta de este turno. Tiren cuando quieran.</p> }}
       <form method="post" class="roll-form">
         <input type="hidden" name="accion" value="tirar" />
         <button class="btn btn-primary">Tirar en la app</button>
@@ -420,14 +505,8 @@ return Layout.render(<main class="game">
     </section> }}
 
     {{ g.tirado && <section class="test-actions">
-      <p class="muted">Tirada registrada. Pueden usar una Maniobra de la mano o resolver.</p>
+      <p class="muted">Tirada registrada. Ya no pueden jugar Maniobras: resuelvan.</p>
       <div class="action-row">
-        {{ g.jugadas == 0 && maniobrasPrueba.map{|h| <form method="post" class="inline-form">
-          <input type="hidden" name="accion" value="maniobra" />
-          <input type="hidden" name="rowId" value="{{ h["rowId"] }}" />
-          <button class="btn btn-ghost btn-small">Usar {{ h["card"].name }}</button>
-        </form>} }}
-        {{ g.jugadas > 0 && <p class="hint">Ya jugaron su carta de este turno: resuelvan la prueba.</p> }}
         {{ Game.hasTool(g.id, "reroll_parity") && !g.focosUsado && (pendingOpt["tipoPrueba"] == "cara" || pendingOpt["tipoPrueba"] == "seca") && <form method="post" class="inline-form">
           <input type="hidden" name="accion" value="focos" />
           <button class="btn btn-ghost btn-small">Focos Abisales: relanzar</button>
@@ -438,12 +517,53 @@ return Layout.render(<main class="game">
           <input type="hidden" name="accion" value="resolver" />
           <button class="btn btn-primary">Resolver la prueba</button>
         </form>
-        <form method="post" class="inline-form">
-          <input type="hidden" name="accion" value="cancelar" />
-          <button class="btn btn-ghost btn-small">Volver atrás</button>
-        </form>
       </div>
     </section> }}
+  </section> }}
+
+  {{ g.status == "activa" && g.fase == "empujon" && pendingCard != null && <section class="test-panel push-panel">
+    <p class="eyebrow">Oportunidad</p>
+    <span class="card-emoji test-emoji" aria-hidden="true">{{ pendingCard.emoji }}</span>
+    <h2>¿Profundizan?</h2>
+    <p class="muted">{{ g.ultimo }}</p>
+    <p><strong>Empujón:</strong> dos dados, 8+ para ganar 1 Pista extra. Si falla, pierden 2 de Escudo.</p>
+    <p class="hint">Es una tirada aparte: no gasta carta ni Maniobra. Pueden asegurar la Pista y terminar el turno.</p>
+
+    <div class="dice-row roller-stage">
+      {{ Layout.die(g.tirado ? g.dado1 : 0, "die-large") }}
+      {{ Layout.die(g.tirado ? g.dado2 : 0, "die-large") }}
+    </div>
+
+    {{ !g.tirado && <section class="roll-controls">
+      <form method="post" class="roll-form">
+        <input type="hidden" name="accion" value="tirar" />
+        <button class="btn btn-primary">Arriesgar y tirar en la app</button>
+      </form>
+      <form method="post" class="roll-form">
+        <input type="hidden" name="accion" value="mesa" />
+        <label class="die-select">Dado 1
+          <select name="d1">
+            {{ [1, 2, 3, 4, 5, 6].map{|n| <option value="{{ n }}">{{ n }}</option>} }}
+          </select>
+        </label>
+        <label class="die-select">Dado 2
+          <select name="d2">
+            {{ [1, 2, 3, 4, 5, 6].map{|n| <option value="{{ n }}">{{ n }}</option>} }}
+          </select>
+        </label>
+        <button class="btn btn-ghost">Arriesgar con dados de la mesa</button>
+      </form>
+    </section> }}
+
+    {{ g.tirado && <form method="post" class="push-form">
+      <input type="hidden" name="accion" value="resolver" />
+      <button class="btn btn-primary">Resolver el empujón</button>
+    </form> }}
+
+    {{ !g.tirado && <form method="post" class="push-form">
+      <input type="hidden" name="accion" value="asegurar" />
+      <button class="btn btn-ghost">Asegurar la Pista</button>
+    </form> }}
   </section> }}
 
   {{ g.status == "activa" && g.fase == "resuelto" && <section class="panel result-panel">
@@ -460,13 +580,14 @@ return Layout.render(<main class="game">
   {{ g.status == "activa" && g.fase == "listo" && <section>
     <div class="section-head">
       <h2>Cartas activas en la mesa</h2>
-      <p>Elijan una, lean la situación entre todos y elijan una de las dos opciones.</p>
+      <p>Elijan una carta y resuelvan su opción. Las emboscadas tienen una sola.</p>
     </div>
     <div class="card-grid">
       {{ mesa.map{|item| <article class="card" data-family="{{ item["card"].family }}">
         <span class="card-art"><span class="card-emoji" aria-hidden="true">{{ item["card"].emoji }}</span></span>
-        <span class="card-family">{{ item["card"].family == "exploracion" ? "Exploración" : (item["card"].family == "peligro" ? "Peligro" : "Dilema") }}</span>
+        <span class="card-family">{{ item["card"].family == "exploracion" ? "Exploración" : (item["card"].family == "peligro" ? "Peligro" : "Dilema") }}{{ item["card"].entry != "" ? " · Emboscada" : "" }}</span>
         <h3>{{ item["card"].name }}</h3>
+        {{ item["card"].entry != "" && <p class="entry-badge">Al entrar: {{ item["card"].entryLabel }}</p> }}
         <section class="card-text">{{ item["card"].body }}</section>
         <ul class="card-options">
           {{ item["card"].options.map{|o| <li class="option-row">
@@ -553,7 +674,7 @@ return Layout.render(<main class="game">
 
       <section class="panel">
         <p class="eyebrow">Regla rápida</p>
-        <p>Cada turno: roban 2, juegan 1 carta como máximo, resuelven 1 misterio y pasan el dispositivo.</p>
+        <p>Cada turno: roban 2, juegan 1 carta como máximo y resuelven 1 misterio. Al terminar, el submarino consume 1 Energía, ganen o no una Pista.</p>
         <a href="/reglas" class="btn btn-ghost btn-small">Ver reglas completas</a>
       </section>
     </aside>

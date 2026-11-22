@@ -3,3 +3,11 @@ Db.migrate("xp-games", "CREATE TABLE IF NOT EXISTS games (id INTEGER PRIMARY KEY
 Db.migrate("xp-cards", "CREATE TABLE IF NOT EXISTS game_cards (id INTEGER PRIMARY KEY AUTOINCREMENT, gameId INTEGER NOT NULL, cardId TEXT NOT NULL, zone TEXT NOT NULL DEFAULT 'mazo', ord INTEGER NOT NULL DEFAULT 0)")
 
 Db.migrate("xp-log", "CREATE TABLE IF NOT EXISTS game_log (id INTEGER PRIMARY KEY AUTOINCREMENT, gameId INTEGER NOT NULL, text TEXT NOT NULL, createdAt DATETIME DEFAULT CURRENT_TIMESTAMP)")
+
+Db.migrate("xp-giro", "ALTER TABLE games ADD COLUMN giro INTEGER NOT NULL DEFAULT 0")
+
+Db.migrate("xp-suerte", "ALTER TABLE games ADD COLUMN suerte INTEGER NOT NULL DEFAULT 0")
+
+Db.migrate("xp-empujado", "ALTER TABLE games ADD COLUMN empujado INTEGER NOT NULL DEFAULT 0")
+
+Db.migrate("xp-pistas-turno", "ALTER TABLE games ADD COLUMN pistasTurno INTEGER NOT NULL DEFAULT 0")

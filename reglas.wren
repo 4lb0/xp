@@ -51,7 +51,7 @@ return Layout.render(<main>
     <ol class="steps">
       <li><span class="num">1</span><span><strong>Robá 2 cartas de Equipo</strong>Límite de mano: 3 cartas. Si te pasás, descartá hasta quedar en 3 antes de seguir.</span></li>
       <li><span class="num">2</span><span><strong>Jugá 1 carta (opcional)</strong>Herramienta: queda en la mesa toda la partida. Máximo 4 en mesa; la quinta reemplaza a una. Maniobra: se resuelve y va al descarte.</span></li>
-      <li><span class="num">3</span><span><strong>Resolvé un Misterio</strong>Elegí una carta activa, lean la situación, debatan y elijan una de las dos opciones. Después viene la prueba de dados.</span></li>
+      <li><span class="num">3</span><span><strong>Resolvé un Misterio</strong>Elegí una carta activa, lean la situación, debatan y elijan una de sus opciones. Después viene la prueba de dados.</span></li>
       <li><span class="num">4</span><span><strong>Reponé la mesa y pasá el turno</strong>La carta resuelta va al descarte, se revela una nueva y juega la persona de la izquierda.</span></li>
     </ol>
   </section>
@@ -72,7 +72,7 @@ return Layout.render(<main>
         <tr><td><strong>1 dado, 4+</strong></td><td>El dado alcanza el número o más.</td><td>Sale 4, 5 o 6.</td></tr>
         <tr><td><strong>2 dados, 8+</strong></td><td>La suma de los dos dados alcanza el número.</td><td>5 + 3, 6 + 4.</td></tr>
         <tr><td><strong>Dobles</strong></td><td>Los dos dados muestran lo mismo.</td><td>3 y 3.</td></tr>
-        <tr><td><strong>Sin 1</strong></td><td>Ninguno de los dos dados muestra 1.</td><td>2 y 6 sirven; 1 y 6 no.</td></tr>
+        <tr><td><strong>Sin 1 ni 6</strong></td><td>Ninguno de los dos dados muestra 1 ni 6.</td><td>2 y 5 sirven; 1 y 3 no.</td></tr>
       </tbody>
     </table>
     <p class="hint">Las Maniobras pueden cambiar un dado, sumar al total o repetir la tirada. Se usan después de tirar y antes de resolver.</p>
@@ -88,7 +88,7 @@ return Layout.render(<main>
           <tbody>
             <tr><td>Sonar de Alta Frecuencia</td><td>Una vez por turno, mirá la carta de arriba del Mazo del Juego.</td></tr>
             <tr><td>Focos Abisales</td><td>Relanzá un dado en pruebas de Cara o Seca.</td></tr>
-            <tr><td>Generador Auxiliar</td><td>Si la Energía está en 1 o 2 al empezar el turno, sube 1.</td></tr>
+            <tr><td>Generador Auxiliar</td><td>Si la Energía está en 3 o menos al empezar el turno, sube 1.</td></tr>
             <tr><td>Blindaje de Titanio</td><td>Una vez por turno, reducí 1 el daño al Escudo.</td></tr>
             <tr><td>Brazo Robótico</td><td>Si ganás Pistas y algún dado muestra 6, ganás 1 Pista más.</td></tr>
             <tr><td>Arpón Rastreador</td><td>Gastá 2 de Energía y tirá un dado. Si sale Cara, +1 Pista y se descarta.</td></tr>
@@ -102,19 +102,27 @@ return Layout.render(<main>
         <table>
           <thead><tr><th>Carta</th><th>Efecto</th></tr></thead>
           <tbody>
-            <tr><td>Giro Brusco</td><td>Cambiá un dado de Cara a Seca, o al revés.</td></tr>
-            <tr><td>Turbo de Emergencia</td><td>Sumá 2 al total de una tirada.</td></tr>
-            <tr><td>Suerte del Principiante</td><td>Volvé a tirar todos los dados.</td></tr>
-            <tr><td>Soldadura Submarina</td><td>Recuperá 2 de Escudo.</td></tr>
-            <tr><td>Batería de Respaldo</td><td>Recuperá 2 de Energía.</td></tr>
+            <tr><td>Giro Brusco</td><td>Antes de tirar: el dado de Cara o Seca se invierte.</td></tr>
+            <tr><td>Turbo de Emergencia</td><td>Antes de tirar: sumá 2 al total de la prueba.</td></tr>
+            <tr><td>Suerte del Principiante</td><td>Antes de tirar: si la prueba falla, se vuelve a tirar una vez.</td></tr>
+            <tr><td>Soldadura Submarina</td><td>Recuperá 1 de Escudo.</td></tr>
+            <tr><td>Batería de Respaldo</td><td>Recuperá 2 de Energía. Hay 4 en el mazo.</td></tr>
             <tr><td>Análisis Rápido</td><td>Gastá 1 de Energía y ganá 1 Pista directa.</td></tr>
             <tr><td>Señuelo Luminoso</td><td>Cambiá una carta activa por otra sin resolverla.</td></tr>
             <tr><td>Lanzar Cebo</td><td>Cancelá una pérdida de Escudo en este turno.</td></tr>
-            <tr><td>Ahorro de Oxígeno</td><td>No gastes Energía durante este turno.</td></tr>
+            <tr><td>Ahorro de Oxígeno</td><td>Este turno no pierden Energía: ni por consumo, ni por cartas.</td></tr>
           </tbody>
         </table>
       </div>
     </div>
+  </section>
+
+  <section class="panel">
+    <h2>El reloj: consumo y empujón</h2>
+    <p><strong>Consumo:</strong> al terminar cada turno, el submarino pierde <strong>1 Energía</strong>, hayan ganado o no una Pista. La Energía es el reloj de la partida: no se puede quedar quieto.</p>
+    <p><strong>Recarga:</strong> la Batería de Respaldo devuelve 2 de Energía y hay 4 en el mazo. El Generador Auxiliar recarga 1 al empezar el turno si están en 3 o menos. Ahorro de Oxígeno saltea todo gasto de Energía durante un turno, incluido el consumo.</p>
+    <p><strong>Empujón:</strong> cuando una prueba sale bien, el equipo elige entre asegurar la Pista o arriesgar una tirada aparte de 2 dados (8+). Si sale, +1 Pista; si falla, −2 Escudo. Nadie está obligado a empujar.</p>
+    <p><strong>Emboscadas:</strong> algunas cartas de Peligro cuestan 1 Energía o 1 Escudo apenas entran a la mesa, y tienen una sola opción. No se elige cómo enfrentarlas: se resuelve la prueba y se sigue.</p>
   </section>
 
   <section class="panel">

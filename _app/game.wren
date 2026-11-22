@@ -20,6 +20,10 @@ class Game {
   bonus { _row["bonus"].toNum }
   cebo { _row["cebo"].toNum == 1 }
   ahorro { _row["ahorro"].toNum == 1 }
+  giro { _row["giro"].toNum == 1 }
+  suerte { _row["suerte"].toNum == 1 }
+  empujado { _row["empujado"].toNum == 1 }
+  pistasTurno { _row["pistasTurno"].toNum }
   blindajeUsado { _row["blindajeUsado"].toNum == 1 }
   focosUsado { _row["focosUsado"].toNum == 1 }
   jugadas { _row["jugadas"].toNum }
@@ -54,6 +58,15 @@ class Game {
     Game.draw(id, "equipo", "mano", 3)
     `UPDATE games SET ultimo = ? WHERE id = ?`.query("La expedición empieza. El submarino se hunde en la fosa.", id)
     Game.log(id, "Comienza la expedición con " + players.toString + " jugadores.")
+    var g0 = Game.find(id)
+    for (r in Game.rows(id, "mesa")) {
+      var c = Card.get(r["cardId"])
+      if (c != null && c.entry != "") {
+        Game.apply(id, g0, Game.parseEffects(c.entry), true, [])
+        Game.log(id, "Emboscada al entrar: " + c.name + " — " + c.entryLabel + ".")
+        g0 = Game.find(id)
+      }
+    }
     return id
   }
 
@@ -73,11 +86,14 @@ class Game {
   }
 
   static draw(id, from, to, amount) {
+    var last = null
     for (i in 1..amount) {
-      var row = `SELECT id FROM game_cards WHERE gameId = ? AND zone = ? ORDER BY ord`.first(id, from)
-      if (row == null) return
+      var row = `SELECT id, cardId FROM game_cards WHERE gameId = ? AND zone = ? ORDER BY ord`.first(id, from)
+      if (row == null) return last
       `UPDATE game_cards SET zone = ? WHERE id = ?`.query(to, row["id"])
+      last = row["cardId"]
     }
+    return last
   }
 
   static rows(id, zone) {
@@ -151,7 +167,7 @@ class Game {
     if (kind == "cara") return d1 % 2 == 0
     if (kind == "seca") return d1 % 2 == 1
     if (kind == "dobles") return d1 == d2
-    if (kind == "sin1") return d1 != 1 && d2 != 1
+    if (kind == "sin1") return d1 != 1 && d1 != 6 && d2 != 1 && d2 != 6
     if (kind == "suma") return d1 + d2 + bonus + (estabilizadores ? 1 : 0) >= target
     return d1 + bonus >= target
   }
@@ -192,7 +208,7 @@ class Game {
     } else if (en <= 0 || es <= 0) {
       status = "derrota"
     }
-    `UPDATE games SET energia = ?, escudo = ?, pistas = ?, status = ?, cebo = ?, blindajeUsado = ? WHERE id = ?`.query([en, es, pi, status, ceboUsado ? 0 : (g.cebo ? 1 : 0), blindajeAplicado ? 1 : (g.blindajeUsado ? 1 : 0), id])
+    `UPDATE games SET energia = ?, escudo = ?, pistas = ?, status = ?, cebo = ?, blindajeUsado = ?, pistasTurno = pistasTurno + ? WHERE id = ?`.query([en, es, pi, status, ceboUsado ? 0 : (g.cebo ? 1 : 0), blindajeAplicado ? 1 : (g.blindajeUsado ? 1 : 0), dPi > 0 ? dPi : 0, id])
     return {"energia": en, "escudo": es, "pistas": pi, "status": status, "notas": notas}
   }
 }

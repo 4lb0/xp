@@ -41,7 +41,9 @@ El pulso llega cada nueve segundos. Ustedes lo escuchan dos veces más antes de 
 - Lo que está debajo del bloque es la narrativa: Markdown normal (párrafos, **negritas**, listas). Se muestra en la carta y en la mesa.
 - `familia` es `exploracion`, `peligro` o `dilema`. Define el color de la carta.
 - `emoji` es el arte provisorio de la carta: se muestra grande en la mesa y en el visor. Cuando exista la ilustración definitiva, este campo desaparece y se reemplaza por la imagen.
-- Cada carta tiene exactamente **dos opciones**, `[A]` y `[B]`. Las letras son solo marcadores internos para separar los bloques: la app no las muestra. En la mesa se ven dos botones con la acción, sin numeración.
+- `entrada` es opcional: el costo que se paga cuando la carta se revela en la mesa. Ejemplos: `escudo-1`, `energia-1`, `escudo-2`. Las cartas con `entrada` son **emboscadas** y llevan una sola opción. La app aplica el costo al repartir la mesa, al reponerla al final del turno y al cambiarla con Señuelo Luminoso.
+- Casi todas las cartas tienen **dos opciones**, `[A]` y `[B]`. Las emboscadas tienen **una sola opción**, `[A]`.
+- Las letras son solo marcadores internos para separar los bloques: la app no las muestra. En la mesa se ven botones con la acción, sin numeración.
 - Cada opción necesita las cuatro claves: `texto`, `prueba`, `exito`, `fallo`.
 
 ## Pruebas disponibles
@@ -53,9 +55,9 @@ El pulso llega cada nueve segundos. Ustedes lo escuchan dos veces más antes de 
 | `1 dado, 4+` | 1 dado. Gana con 4 o más. |
 | `2 dados, 8+` | 2 dados. Gana si la suma llega a 8. |
 | `dobles` | 2 dados. Gana si salen iguales. |
-| `sin 1` | 2 dados. Gana si ninguno muestra 1. |
+| `sin 1 ni 6` | 2 dados. Gana si ninguno muestra 1 ni 6. |
 
-Los números son libres: `1 dado, 3+`, `1 dado, 5+`, `2 dados, 7+`, `2 dados, 9+`. El motor detecta si la prueba usa uno o dos dados automáticamente.
+Los números son libres: `1 dado, 3+`, `1 dado, 5+`, `2 dados, 7+`, `2 dados, 9+`. El motor detecta si la prueba usa uno o dos dados automáticamente. Una carta puede tener dos opciones con pruebas distintas: esa es la decisión de la mesa.
 
 ## Efectos disponibles
 

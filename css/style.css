@@ -818,3 +818,22 @@ tbody tr:hover { background: rgba(127, 230, 242, 0.04); }
 /* Con dos opciones, el botón se lee como una acción, no como un examen */
 .option-btn { padding: 0.7rem 0.8rem; }
 .option-text { font-size: 0.98rem; }
+
+/* Empujón */
+.push-panel { border-color: rgba(242, 193, 78, 0.5); background: radial-gradient(circle at 50% 0%, rgba(242, 193, 78, 0.14), transparent 60%), rgba(9, 32, 51, 0.7); }
+.push-panel h2 { color: var(--gold); }
+.push-form { margin-top: 0.8rem; }
+.maneuvers { margin-bottom: 0.4rem; }
+
+.entry-badge {
+  display: inline-flex;
+  align-self: flex-start;
+  margin: 0;
+  padding: 0.25rem 0.6rem;
+  border-radius: 999px;
+  background: rgba(239, 106, 91, 0.18);
+  border: 1px solid rgba(239, 106, 91, 0.45);
+  color: #ffb4a9;
+  font-size: 0.75rem;
+  font-weight: 700;
+}

@@ -58,8 +58,9 @@ return Layout.render(<main>
     <div class="deck-grid">
       {{ peligro.map{|c| <article class="mini-card" data-family="peligro">
         <span class="card-art"><span class="card-emoji" aria-hidden="true">{{ c.emoji }}</span></span>
-        <span class="card-family">Peligro</span>
+        <span class="card-family">Peligro{{ c.entry != "" ? " · Emboscada" : "" }}</span>
         <h3>{{ c.name }}</h3>
+        {{ c.entry != "" && <p class="entry-badge">Al entrar: {{ c.entryLabel }}</p> }}
         <section class="card-text">{{ c.body }}</section>
         <ul>
           {{ c.options.map{|o| <li>{{ o["texto"] }} — <span class="test-badge test-{{ o["tipoPrueba"] }}">{{ o["pruebaLabel"] }}</span><br/><span class="option-effects">Éxito: {{ o["exitoLabel"] }} · Fallo: {{ o["falloLabel"] }}</span></li>} }}

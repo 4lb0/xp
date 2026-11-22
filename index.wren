@@ -86,7 +86,7 @@ return Layout.render(<main>
       </li>
       <li>
         <span class="num">3</span>
-        <span><strong>Resolvé un Misterio</strong>Elegí una de las cartas activas, lean la situación entre todos y elijan una de las dos opciones. Después, la prueba de dados.</span>
+        <span><strong>Resolvé un Misterio</strong>Elegí una de las cartas activas, lean la situación entre todos y elijan una de sus opciones. Después, la prueba de dados.</span>
       </li>
       <li>
         <span class="num">4</span>

@@ -9,6 +9,8 @@ class Card {
     _copies = Num.fromString(meta["copias"] || "1")
     _effect = meta["efecto"] || ""
     _emoji = meta["emoji"] || "🫧"
+    _entry = meta["entrada"] || ""
+    _entryLabel = meta["entradaLabel"] || ""
     _body = body
     _options = options
   }
@@ -20,6 +22,8 @@ class Card {
   copies { _copies }
   effect { _effect }
   emoji { _emoji }
+  entry { _entry }
+  entryLabel { _entryLabel }
   body { _body }
   options { _options }
 
@@ -70,6 +74,7 @@ class Card {
       }
     }
     meta["id"] = id
+    meta["entradaLabel"] = meta["entrada"] == null ? "" : Card.effectsLabel(meta["entrada"])
     for (o in opts) Card.decorate(o)
     return Card.new(meta, body, opts)
   }
@@ -104,7 +109,7 @@ class Card {
     } else if (kind == "dobles") {
       label = "2 dados · dobles"
     } else if (kind == "sin1") {
-      label = "2 dados · sin 1"
+      label = "2 dados · sin 1 ni 6"
     } else if (kind == "suma") {
       label = "2 dados · " + target.toString + "+"
     } else {
