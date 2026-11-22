@@ -40,7 +40,7 @@ El estado de la partida se guarda en SQLite y se ata a la sesión del navegador.
 
 ## Cómo se juega en la app
 
-1. Elegís el modo (experto 5/5, casual 5/5 + 1 apoyo o fácil 6/6 + 2 apoyos) y arranca la expedición. No hay que elegir cantidad de jugadores: se juega solo o en equipo.
+1. Elegís el modo (Experto 5/5, Normal 5/5 + 1 apoyo o Asistido 6/6 + 2 apoyos) y arranca la expedición. No hay que elegir cantidad de jugadores: se juega solo o en equipo.
 2. La app reparte 3 cartas de Equipo y revela **siempre 3 cartas de Misterio**, sin importar cuántos jueguen. La cantidad de jugadores no cambia nada: las decisiones son del equipo.
 3. En cada ciclo: roban 2 cartas de Equipo, pueden jugar 1 carta, eligen una carta de Misterio y una de sus opciones. Al final del ciclo te quedan 3 cartas: el resto se descarta al azar, sin elección.
 4. La prueba de dados se puede resolver de dos formas:
@@ -116,8 +116,8 @@ El mazo se mezcla con `ORDER BY RANDOM()` de SQLite. Las tiradas digitales tambi
 
 - **Solo o en equipo.** El equipo comparte la mano y decide junto. También se puede jugar una sola persona. Al final del ciclo quedan 3 cartas; el resto se descarta al azar.
 - **La cantidad de jugadores no cambia la mesa.** Siempre 3 cartas de Misterio, siempre 2 de robo, siempre 6 Pistas. Se puede jugar solo o en equipo.
-- **Tres modos.** Experto (5 y 5), Casual (5 y 5 + 1 carta de apoyo) y Muy fácil (6 y 6 + 2 cartas de apoyo).
-- **Cartas de apoyo.** Kit de emergencia (+1 Energía o +1 Escudo) y Carga de emergencia (+2 Energía o +2 Escudo). En Experto se mezclan en el mazo; en Casual el Kit va al área de ayuda; en Muy fácil van las dos. Las cartas del área se usan una vez, en cualquier momento, sin gastar la carta del ciclo.
+- **Tres modos.** Experto (5 y 5), Normal (5 y 5 + 1 carta de apoyo) y Asistido (6 y 6 + 2 cartas de apoyo).
+- **Cartas de apoyo.** Kit de emergencia (+1 Energía o +1 Escudo) y Carga de emergencia (+2 Energía o +2 Escudo). En Experto se mezclan en el mazo; en Normal el Kit va al área de ayuda; en Asistido van las dos. Las cartas del área se usan una vez, en cualquier momento, sin gastar la carta del ciclo.
 - **Una sola Herramienta activa por equipo.** Si juegan otra, la anterior va al descarte.
 - **Un misterio por ciclo, una carta jugada por ciclo.** La app lo hace cumplir; si intentás saltearlo, te avisa.
 - **Dados físicos primero.** La app no obliga a tirar: el ingreso manual es de primera clase, no un modo oculto.

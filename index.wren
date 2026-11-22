@@ -81,8 +81,8 @@ return Layout.render(<main>
           <p style="margin: 0.4rem 0 0.9rem">
             <select id="modo" name="modo" style="font: inherit; padding: 0.5rem 0.7rem; border-radius: 8px; background: #0b2a44; color: inherit; border: 1px solid rgba(127,230,242,.3)">
               <option value="experto" selected>Experto — 5 y 5, sin apoyos</option>
-              <option value="casual">Casual — 5 y 5 + 1 apoyo</option>
-              <option value="facil">Muy fácil — 6 y 6 + 2 apoyos</option>
+              <option value="casual">Normal — 5 y 5 + 1 apoyo</option>
+              <option value="facil">Asistido — 6 y 6 + 2 apoyos</option>
             </select>
           </p>
           <button class="btn btn-primary">Empezar</button>

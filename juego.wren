@@ -376,8 +376,8 @@ if (g == null) {
         <label for="modo"><strong>Modo</strong></label>
         <select id="modo" name="modo">
           <option value="experto" selected>Experto — 5 y 5, sin apoyos</option>
-          <option value="casual">Casual — 5 y 5 + 1 carta de apoyo</option>
-          <option value="facil">Muy fácil — 6 y 6 + 2 cartas de apoyo</option>
+          <option value="casual">Normal — 5 y 5 + 1 carta de apoyo</option>
+          <option value="facil">Asistido — 6 y 6 + 2 cartas de apoyo</option>
         </select>
         <button class="btn btn-primary">Iniciar expedición</button>
       </form>
@@ -452,7 +452,7 @@ return Layout.render(<main class="game">
       <h1>La fosa del Megalodón</h1>
     </div>
     <div class="board-meta">
-      <span class="pill">{{ g.modo == "facil" ? "Muy fácil" : (g.modo == "casual" ? "Modo casual" : "Modo experto") }}</span>
+      <span class="pill">{{ g.modo == "facil" ? "Asistido" : (g.modo == "casual" ? "Modo normal" : "Modo experto") }}</span>
       <span class="pill">Ciclo {{ g.turno }}</span>
       <span class="pill">Mazo {{ mazo }}</span>
       <span class="pill">Descarte {{ descarte }}</span>

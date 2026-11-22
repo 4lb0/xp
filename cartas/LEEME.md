@@ -103,7 +103,7 @@ Una vez por ciclo, mirá la carta de arriba del Mazo del Juego antes de elegir.
 
 ### Cartas de apoyo
 
-`tipo: apoyo` con `valor: 1` o `2`. Al usarlas, el jugador elige **+valor Energía o +valor Escudo**. En Experto se mezclan en el mazo; en Casual una va al área de ayuda; en Fácil las dos. Las del área se usan una vez, en cualquier momento.
+`tipo: apoyo` con `valor: 1` o `2`. Al usarlas, el jugador elige **+valor Energía o +valor Escudo**. En Experto se mezclan en el mazo; en Normal una va al área de ayuda; en Asistido las dos. Las del área se usan una vez, en cualquier momento.
 
 ### Efectos que el motor ya implementa
 
