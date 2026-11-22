@@ -97,8 +97,13 @@ Una vez por turno, mirá la carta de arriba del Mazo del Juego antes de elegir.
 
 - `emoji`: arte provisorio, igual que en las cartas de Misterio.
 - `tipo`: `herramienta` (queda en la mesa) o `maniobra` (se descarta).
-- `copias`: cuántas veces entra esta carta en el mazo. La suma de todas las `copias` tiene que dar 40.
+- `copias`: cuántas veces entra esta carta en el mazo. La suma de todas las `copias` tiene que dar 42.
 - `efecto`: el identificador que usa el motor.
+- `valor` (solo cartas de apoyo): cuánto cura la elección (+1 o +2).
+
+### Cartas de apoyo
+
+`tipo: apoyo` con `valor: 1` o `2`. Al usarlas, el jugador elige **+valor Energía o +valor Escudo**. En Experto se mezclan en el mazo; en Casual una va al área de ayuda; en Fácil las dos. Las del área se usan una vez, en cualquier momento.
 
 ### Efectos que el motor ya implementa
 

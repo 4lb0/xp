@@ -104,8 +104,9 @@ return Layout.render(<main>
           <label for="modo"><strong>Modo</strong></label>
           <p style="margin: 0.4rem 0 0.9rem">
             <select id="modo" name="modo" style="font: inherit; padding: 0.5rem 0.7rem; border-radius: 8px; background: #0b2a44; color: inherit; border: 1px solid rgba(127,230,242,.3)">
-              <option value="normal" selected>Normal — 5 y 5</option>
-              <option value="facil">Fácil — 6 y 6 (chicos) + Batería de apoyo</option>
+              <option value="experto" selected>Experto — 5 y 5, sin apoyos</option>
+              <option value="casual">Casual — 5 y 5 + 1 apoyo</option>
+              <option value="facil">Fácil — 6 y 6 + 2 apoyos</option>
             </select>
           </p>
           <button class="btn btn-primary">Empezar</button>
@@ -122,7 +123,7 @@ return Layout.render(<main>
           </thead>
           <tbody>
             <tr><td>Cartas de Misterio</td><td>40</td></tr>
-            <tr><td>Cartas de Equipo</td><td>40 (14 Herramientas + 26 Maniobras)</td></tr>
+            <tr><td>Cartas de Equipo</td><td>42 (14 Herramientas + 26 Maniobras + 2 Apoyos)</td></tr>
             <tr><td>Dados de estado</td><td>3 D6</td></tr>
             <tr><td>Dados de prueba</td><td>2 a 4 D6</td></tr>
           </tbody>

@@ -7,6 +7,7 @@ class Card {
     _family = meta["familia"] || meta["tipo"] || "exploracion"
     _type = meta["tipo"] || ""
     _copies = Num.fromString(meta["copias"] || "1")
+    _value = Num.fromString(meta["valor"] || "1")
     _effect = meta["efecto"] || ""
     _emoji = meta["emoji"] || "🫧"
     _entry = meta["entrada"] || ""
@@ -20,6 +21,7 @@ class Card {
   family { _family }
   type { _type }
   copies { _copies }
+  value { _value }
   effect { _effect }
   emoji { _emoji }
   entry { _entry }
@@ -36,6 +38,7 @@ class Card {
 
   isTool { _type == "herramienta" }
   isManeuver { _type == "maniobra" }
+  isSupport { _type == "apoyo" }
 
   static get(id) {
     if (id == null || id.count < 3) return null

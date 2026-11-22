@@ -4,7 +4,7 @@ Versión jugable en el navegador del juego de mesa cooperativo **XP (Equipo eXPe
 
 - Se puede jugar solo o en equipo: un solo dispositivo, una mesa, el equipo XP contra el juego.
 - Partidas de 10 a 20 minutos.
-- 40 cartas de Misterio (una o dos opciones cada una) + 40 cartas de Equipo, todas editables como archivos Markdown.
+- 40 cartas de Misterio (una o dos opciones cada una) + 42 cartas de Equipo (incluye 2 de apoyo), todas editables como archivos Markdown.
 - Arte provisorio: un emoji grande por carta, hasta que lleguen las ilustraciones.
 - Tirada digital desde la app **o** carga manual de lo que salió en los dados de la mesa.
 - Hecho con [Bialet](https://bialet.dev): Wren, SQLite y HTML server-rendered, sin frameworks ni build step.
@@ -39,7 +39,7 @@ El estado de la partida se guarda en SQLite y se ata a la sesión del navegador.
 
 ## Cómo se juega en la app
 
-1. Elegís el modo (normal 5/5 o fácil 6/6) y arranca la expedición. No hay que elegir cantidad de jugadores: se juega solo o en equipo.
+1. Elegís el modo (experto 5/5, casual 5/5 + 1 apoyo o fácil 6/6 + 2 apoyos) y arranca la expedición. No hay que elegir cantidad de jugadores: se juega solo o en equipo.
 2. La app reparte 3 cartas de Equipo y revela **siempre 3 cartas de Misterio**, sin importar cuántos jueguen. La cantidad de jugadores no cambia nada: las decisiones son del equipo.
 3. En cada turno: roban 2 cartas de Equipo, pueden jugar 1 carta, eligen una carta de Misterio y una de sus opciones. Al final del turno te quedan 3 cartas: el resto se descarta al azar, sin elección.
 4. La prueba de dados se puede resolver de dos formas:
@@ -115,7 +115,8 @@ El mazo se mezcla con `ORDER BY RANDOM()` de SQLite. Las tiradas digitales tambi
 
 - **Solo o en equipo.** El equipo comparte la mano y decide junto. También se puede jugar una sola persona. Al final del turno quedan 3 cartas; el resto se descarta al azar.
 - **La cantidad de jugadores no cambia la mesa.** Siempre 3 cartas de Misterio, siempre 2 de robo, siempre 6 Pistas. Se puede jugar solo o en equipo.
-- **Dos modos.** Normal (5 y 5) y fácil (6 y 6) para los más chicos, con una carta de apoyo Batería de Respaldo (+2 Energía, una vez).
+- **Tres modos.** Experto (5 y 5), Casual (5 y 5 + 1 carta de apoyo) y Fácil (6 y 6 + 2 cartas de apoyo).
+- **Cartas de apoyo.** Kit de emergencia (+1 Energía o +1 Escudo) y Carga de emergencia (+2 Energía o +2 Escudo). En Experto se mezclan en el mazo; en Casual el Kit va al área de ayuda; en Fácil van las dos. Las cartas del área se usan una vez, en cualquier momento, sin gastar la carta del turno.
 - **Un misterio por turno, una carta jugada por turno.** La app lo hace cumplir; si intentás saltearlo, te avisa.
 - **Dados físicos primero.** La app no obliga a tirar: el ingreso manual es de primera clase, no un modo oculto.
 - **La mesa se repone al terminar el turno**, no al resolver, para que el resultado quede visible mientras se discute.

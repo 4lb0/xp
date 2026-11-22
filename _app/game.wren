@@ -27,7 +27,9 @@ class Game {
   pistasTurno { _row["pistasTurno"].toNum }
   saltar { _row["saltar"].toNum == 1 }
   reparado { _row["reparado"].toNum == 1 }
-  apoyo { _row["apoyo"].toNum == 1 }
+  apoyoCarta { _row["apoyoCarta"] == null ? null : _row["apoyoCarta"].toNum }
+  apoyoOrigen { _row["apoyoOrigen"] }
+  fasePrevia { _row["fasePrevia"] }
   blindajeUsado { _row["blindajeUsado"].toNum == 1 }
   focosUsado { _row["focosUsado"].toNum == 1 }
   jugadas { _row["jugadas"].toNum }
@@ -44,7 +46,7 @@ class Game {
   static create(players, modo) {
     var en = modo == "facil" ? 6 : 5
     var es = modo == "facil" ? 6 : 5
-    var ap = modo == "facil" ? 1 : 0
+    var ap = 0
     `INSERT INTO games (players, energia, escudo, modo, apoyo) VALUES (?, ?, ?, ?, ?)`.query([players, en, es, modo, ap])
     var id = `SELECT MAX(id) AS id FROM games`.first["id"].toNum
     for (i in 1..60) {
@@ -60,6 +62,12 @@ class Game {
       }
     }
     `UPDATE game_cards SET ord = RANDOM() WHERE gameId = ?`.query(id)
+    if (modo != "experto") {
+      `UPDATE game_cards SET zone = 'ayuda' WHERE gameId = ? AND cardId = 'e17'`.query(id)
+    }
+    if (modo == "facil") {
+      `UPDATE game_cards SET zone = 'ayuda' WHERE gameId = ? AND cardId = 'e18'`.query(id)
+    }
     Game.draw(id, "misterio", "mesa", 3)
     Game.draw(id, "equipo", "mano", 3)
     `UPDATE games SET ultimo = ? WHERE id = ?`.query("La expedición empieza. El submarino se hunde en la fosa.", id)

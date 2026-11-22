@@ -12,7 +12,8 @@ if (Request.isPost) {
 
   if (accion == "nueva") {
     if (g != null) Game.destroy(g.id)
-    var modo = Request.post("modo", "normal") == "facil" ? "facil" : "normal"
+    var modo = Request.post("modo", "experto")
+    if (modo != "casual" && modo != "facil") modo = "experto"
     var id = Game.create(1, modo)
     session.set("gameId", id.toString)
     return Response.redirect("/juego")
@@ -45,6 +46,9 @@ if (Request.isPost) {
       var c = Card.get(row["cardId"])
       if (c == null) {
         aviso = "No pudimos leer esa carta."
+      } else if (c.isSupport) {
+        `UPDATE games SET fase = 'apoyo', apoyoCarta = ?, apoyoOrigen = 'mano', fasePrevia = 'listo', jugadas = 1 WHERE id = ?`.query(rowId, g.id)
+        Game.log(g.id, "Preparan el apoyo: " + c.name + ".")
       } else if (c.isTool) {
         if (Game.count(g.id, "herramientas") >= 4) {
           var oldest = Game.rows(g.id, "herramientas").first
@@ -228,14 +232,36 @@ if (Request.isPost) {
       if (res["status"] == "victoria") Game.log(g.id, "¡Seis Pistas! El misterio queda resuelto.")
       if (res["status"] == "derrota") Game.log(g.id, "La expedición se pierde en la oscuridad.")
     }
-  } else if (accion == "apoyo") {
-    if (g.modo != "facil") {
-      aviso = "El apoyo del equipo XP es del modo fácil."
-    } else if (!g.apoyo) {
-      aviso = "La Batería de apoyo ya se usó."
+  } else if (accion == "usar_ayuda") {
+    if (g.fase == "apoyo") {
+      aviso = "Primero elegí el recurso del apoyo pendiente."
     } else {
-      `UPDATE games SET energia = MIN(6, energia + 2), apoyo = 0 WHERE id = ?`.query(g.id)
-      Game.log(g.id, "Batería de apoyo del equipo XP: +2 Energía.")
+      var row = `SELECT id, cardId FROM game_cards WHERE id = ? AND gameId = ? AND zone = 'ayuda'`.first(rowId, g.id)
+      if (row == null) {
+        aviso = "Ese apoyo ya no está en el área."
+      } else {
+        var c = Card.get(row["cardId"])
+        `UPDATE games SET fase = 'apoyo', apoyoCarta = ?, apoyoOrigen = 'ayuda', fasePrevia = ? WHERE id = ?`.query(row["id"], g.fase, g.id)
+        Game.log(g.id, "Usan el apoyo: " + c.name + ".")
+      }
+    }
+  } else if (accion == "elegir_apoyo") {
+    var recurso = Request.post("recurso", "energia")
+    var row = g.apoyoCarta == null ? null : `SELECT id, cardId FROM game_cards WHERE id = ? AND gameId = ?`.first(g.apoyoCarta, g.id)
+    var c = row == null ? null : Card.get(row["cardId"])
+    if (c == null) {
+      aviso = "No hay un apoyo pendiente."
+    } else {
+      var v = c.value
+      var volver = g.fasePrevia == null ? "listo" : g.fasePrevia
+      if (recurso == "escudo") {
+        `UPDATE games SET escudo = MIN(6, escudo + ?), fase = ?, apoyoCarta = NULL, apoyoOrigen = NULL, fasePrevia = NULL WHERE id = ?`.query(v, volver, g.id)
+        Game.log(g.id, "Apoyo " + c.name + ": +" + v.toString + " Escudo.")
+      } else {
+        `UPDATE games SET energia = MIN(6, energia + ?), fase = ?, apoyoCarta = NULL, apoyoOrigen = NULL, fasePrevia = NULL WHERE id = ?`.query(v, volver, g.id)
+        Game.log(g.id, "Apoyo " + c.name + ": +" + v.toString + " Energía.")
+      }
+      Game.move(row["id"], "descarte")
     }
   } else if (accion == "reparar") {
     if (g.fase != "listo") {
@@ -340,7 +366,8 @@ if (Request.isPost) {
 
 // Primer ingreso con cantidad de jugadores en la URL
 if (g == null && (Request.get("jugadores") != null || Request.get("modo") != null)) {
-  var modo = Request.get("modo", "normal") == "facil" ? "facil" : "normal"
+  var modo = Request.get("modo", "experto")
+  if (modo != "casual" && modo != "facil") modo = "experto"
   var id = Game.create(1, modo)
   session.set("gameId", id.toString)
   return Response.redirect("/juego")
@@ -362,8 +389,9 @@ if (g == null) {
         <input type="hidden" name="accion" value="nueva" />
         <label for="modo"><strong>Modo</strong></label>
         <select id="modo" name="modo">
-          <option value="normal" selected>Normal — 5 Energía y 5 Escudo</option>
-          <option value="facil">Fácil — 6 y 6 para los más chicos, con Batería de apoyo</option>
+          <option value="experto" selected>Experto — 5 y 5, sin apoyos</option>
+          <option value="casual">Casual — 5 y 5 + 1 carta de apoyo</option>
+          <option value="facil">Fácil — 6 y 6 + 2 cartas de apoyo</option>
         </select>
         <button class="btn btn-primary">Iniciar expedición</button>
       </form>
@@ -375,6 +403,7 @@ if (g == null) {
 var mesa = Game.cardsIn(g.id, "mesa")
 var hand = Game.cardsIn(g.id, "mano")
 var tools = Game.cardsIn(g.id, "herramientas")
+var ayuda = Game.cardsIn(g.id, "ayuda")
 var logs = Game.lastLogs(g.id, 8)
 var mazo = Game.count(g.id, "misterio")
 var descarte = Game.count(g.id, "descarte")
@@ -382,6 +411,12 @@ var top = Game.hasTool(g.id, "peek") ? Game.topCard(g.id) : null
 
 var pendingCard = g.pruebaCarta == null ? null : Card.get(g.pruebaCarta)
 var pendingOpt = pendingCard == null ? null : pendingCard.option(g.pruebaOpcion)
+
+var supportCard = null
+if (g.apoyoCarta != null) {
+  var srow = `SELECT cardId FROM game_cards WHERE id = ?`.first(g.apoyoCarta)
+  if (srow != null) supportCard = Card.get(srow["cardId"])
+}
 
 var handCount = hand.count
 var puedeElegir = g.status == "activa" && g.fase == "listo" && g.resueltas == 0
@@ -413,7 +448,7 @@ return Layout.render(<main class="game">
       <h1>La fosa del Megalodón</h1>
     </div>
     <div class="board-meta">
-      <span class="pill">{{ g.modo == "facil" ? "Modo fácil" : "Modo normal" }}</span>
+      <span class="pill">{{ g.modo == "facil" ? "Modo fácil" : (g.modo == "casual" ? "Modo casual" : "Modo experto") }}</span>
       <span class="pill">Turno {{ g.turno }}</span>
       <span class="pill">Mazo {{ mazo }}</span>
       <span class="pill">Descarte {{ descarte }}</span>
@@ -443,6 +478,25 @@ return Layout.render(<main class="game">
       </span>
     </article>
   </section>
+
+  {{ g.status == "activa" && g.fase == "apoyo" && supportCard != null && <section class="test-panel support-choice">
+    <p class="eyebrow">Apoyo del equipo</p>
+    <span class="card-emoji test-emoji" aria-hidden="true">{{ supportCard.emoji }}</span>
+    <h2>{{ supportCard.name }}</h2>
+    <p>Elegí el recurso. La carta se gasta.</p>
+    <div class="action-row">
+      <form method="post">
+        <input type="hidden" name="accion" value="elegir_apoyo" />
+        <input type="hidden" name="recurso" value="energia" />
+        <button class="btn btn-primary"><span class="chip chip-energia">⚡ +{{ supportCard.value }}</span> Energía</button>
+      </form>
+      <form method="post">
+        <input type="hidden" name="accion" value="elegir_apoyo" />
+        <input type="hidden" name="recurso" value="escudo" />
+        <button class="btn btn-primary"><span class="chip chip-escudo">🛡️ +{{ supportCard.value }}</span> Escudo</button>
+      </form>
+    </div>
+  </section> }}
 
   {{ aviso != "" && <p class="aviso" role="status">{{ aviso }}</p> }}
 
@@ -586,14 +640,34 @@ return Layout.render(<main class="game">
 
   {{ g.status == "activa" && <section class="split">
     <div>
+      {{ !ayuda.isEmpty && <section class="help-zone">
+        <div class="section-head">
+          <h2>Ayuda del equipo</h2>
+          <p>Una vez, en cualquier momento</p>
+        </div>
+        <div class="hand">
+          {{ ayuda.map{|a| <article class="card card-support" data-family="apoyo">
+            <span class="card-art"><span class="card-emoji" aria-hidden="true">{{ a["card"].emoji }}</span></span>
+            <span class="card-family">Apoyo · una vez</span>
+            <h3>{{ a["card"].name }}</h3>
+            <p>Elegí <span class="chip chip-energia">⚡ +{{ a["card"].value }}</span> o <span class="chip chip-escudo">🛡️ +{{ a["card"].value }}</span>.</p>
+            <form method="post">
+              <input type="hidden" name="accion" value="usar_ayuda" />
+              <input type="hidden" name="rowId" value="{{ a["rowId"] }}" />
+              <button class="btn btn-ghost btn-small" {{ g.fase == "apoyo" ? "disabled" : "" }}>Usar apoyo</button>
+            </form>
+          </article>} }}
+        </div>
+      </section> }}
+
       <div class="section-head">
         <h2>Mano del equipo</h2>
         <p>{{ handCount }} cartas · al final quedan 3</p>
       </div>
       <div class="hand">
-        {{ hand.map{|h| <article class="card" data-family="{{ h["card"].isTool ? "herramienta" : "maniobra" }}">
+        {{ hand.map{|h| <article class="card" data-family="{{ h["card"].isSupport ? "apoyo" : (h["card"].isTool ? "herramienta" : "maniobra") }}">
           <span class="card-art"><span class="card-emoji" aria-hidden="true">{{ h["card"].emoji }}</span></span>
-          <span class="card-family">{{ h["card"].isTool ? "Herramienta" : "Maniobra" }}</span>
+          <span class="card-family">{{ h["card"].isSupport ? "Apoyo" : (h["card"].isTool ? "Herramienta" : "Maniobra") }}</span>
           <h3>{{ h["card"].name }}</h3>
           <section class="card-text">{{ h["card"].body }}</section>
           <div class="action-row">
@@ -629,16 +703,6 @@ return Layout.render(<main class="game">
       {{ top != null && <section class="panel peek">
         <p class="eyebrow">Sonar de Alta Frecuencia</p>
         <p>La próxima carta del mazo es <strong>{{ top.name }}</strong>.</p>
-      </section> }}
-
-      {{ g.modo == "facil" && <section class="panel support-card">
-        <p class="eyebrow">Apoyo del equipo XP</p>
-        <h3>Batería de Respaldo</h3>
-        <p><span class="chip chip-energia">⚡ +2</span> en cualquier momento. Es una carta de apoyo: se usa una sola vez.</p>
-        {{ g.apoyo ? <form method="post">
-          <input type="hidden" name="accion" value="apoyo" />
-          <button class="btn btn-primary btn-small">Usar Batería de apoyo</button>
-        </form> : <p class="hint">Ya la usaron.</p> }}
       </section> }}
 
       <section class="panel">
