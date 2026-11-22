@@ -45,7 +45,7 @@ return Layout.render(<main>
     <div class="deck-grid">
       {{ exploracion.map{|c| <article class="mini-card" data-family="exploracion">
         <span class="card-art"><span class="card-emoji" aria-hidden="true">{{ c.emoji }}</span></span>
-        <span class="card-family">Exploración</span>
+        <span class="card-family">Exploración · <span class="card-id">{{ c.id }}</span></span>
         <h3>{{ c.name }}</h3>
         <section class="card-text">{{ c.body }}</section>
         <ul>
@@ -65,7 +65,7 @@ return Layout.render(<main>
     <div class="deck-grid">
       {{ peligro.map{|c| <article class="mini-card" data-family="peligro">
         <span class="card-art"><span class="card-emoji" aria-hidden="true">{{ c.emoji }}</span></span>
-        <span class="card-family">Peligro{{ c.entry != "" ? " · Emboscada" : "" }}</span>
+        <span class="card-family">Peligro{{ c.entry != "" ? " · Emboscada" : "" }} · <span class="card-id">{{ c.id }}</span></span>
         <h3>{{ c.name }}</h3>
         {{ c.entry != "" && <p class="entry-badge">Al entrar
           {{ c.entryChips.map{|c| <span class="chip {{ c["cls"] }}" title="{{ c["title"] }}" aria-label="{{ c["title"] }}">{{ c["icon"] }} {{ c["text"] }}</span>} }}
@@ -88,7 +88,7 @@ return Layout.render(<main>
     <div class="deck-grid">
       {{ dilema.map{|c| <article class="mini-card" data-family="dilema">
         <span class="card-art"><span class="card-emoji" aria-hidden="true">{{ c.emoji }}</span></span>
-        <span class="card-family">Dilema</span>
+        <span class="card-family">Dilema · <span class="card-id">{{ c.id }}</span></span>
         <h3>{{ c.name }}</h3>
         <section class="card-text">{{ c.body }}</section>
         <ul>
@@ -108,7 +108,7 @@ return Layout.render(<main>
     <div class="deck-grid">
       {{ herramientas.map{|c| <article class="mini-card" data-family="herramienta">
         <span class="card-art"><span class="card-emoji" aria-hidden="true">{{ c.emoji }}</span></span>
-        <span class="card-family">Herramienta · x{{ c.copies }}</span>
+        <span class="card-family">Herramienta · x{{ c.copies }} · <span class="card-id">{{ c.id }}</span></span>
         <h3>{{ c.name }}</h3>
         <section class="card-text">{{ c.body }}</section>
       </article>} }}
@@ -120,7 +120,7 @@ return Layout.render(<main>
     <div class="deck-grid">
       {{ apoyos.map{|c| <article class="mini-card" data-family="apoyo">
         <span class="card-art"><span class="card-emoji" aria-hidden="true">{{ c.emoji }}</span></span>
-        <span class="card-family">Apoyo · x{{ c.copies }}</span>
+        <span class="card-family">Apoyo · x{{ c.copies }} · <span class="card-id">{{ c.id }}</span></span>
         <h3>{{ c.name }}</h3>
         <section class="card-text">{{ c.body }}</section>
       </article>} }}
@@ -132,7 +132,7 @@ return Layout.render(<main>
     <div class="deck-grid">
       {{ maniobras.map{|c| <article class="mini-card" data-family="maniobra">
         <span class="card-art"><span class="card-emoji" aria-hidden="true">{{ c.emoji }}</span></span>
-        <span class="card-family">Maniobra · x{{ c.copies }}</span>
+        <span class="card-family">Maniobra · x{{ c.copies }} · <span class="card-id">{{ c.id }}</span></span>
         <h3>{{ c.name }}</h3>
         <section class="card-text">{{ c.body }}</section>
       </article>} }}

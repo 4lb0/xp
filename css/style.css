@@ -917,3 +917,10 @@ tbody tr:hover { background: rgba(127, 230, 242, 0.04); }
     rgba(9, 32, 51, 0.7);
 }
 .ambush-choice .card { border-color: rgba(255, 111, 97, 0.3); }
+
+.card-id {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.68em;
+  letter-spacing: 0.02em;
+  opacity: 0.55;
+}

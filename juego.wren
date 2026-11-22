@@ -510,7 +510,7 @@ return Layout.render(<main class="game">
     <div class="card-grid">
       {{ emboscadasIniciales.map{|item| <article class="card" data-family="{{ item["card"].family }}">
         <span class="card-art"><span class="card-emoji" aria-hidden="true">{{ item["card"].emoji }}</span></span>
-        <span class="card-family">Emboscada inicial</span>
+        <span class="card-family">Emboscada inicial · <span class="card-id">{{ item["card"].id }}</span></span>
         <h3>{{ item["card"].name }}</h3>
         <p class="entry-badge">Al entrar
           {{ item["card"].entryChips.map{|c| <span class="chip {{ c["cls"] }}" title="{{ c["title"] }}" aria-label="{{ c["title"] }}">{{ c["icon"] }} {{ c["text"] }}</span>} }}
@@ -561,7 +561,7 @@ return Layout.render(<main class="game">
     <p class="eyebrow">Prueba de dados</p>
     <span class="card-emoji test-emoji" aria-hidden="true">{{ pendingCard.emoji }}</span>
     <h2>{{ pendingCard.name }}</h2>
-    <p class="muted">{{ pendingCard.family == "exploracion" ? "Exploración" : (pendingCard.family == "peligro" ? "Peligro" : "Dilema") }}</p>
+    <p class="muted">{{ pendingCard.family == "exploracion" ? "Exploración" : (pendingCard.family == "peligro" ? "Peligro" : "Dilema") }} · {{ pendingCard.id }}</p>
     <p class="test-action">{{ pendingOpt["texto"] }}</p>
     <p><span class="test-badge test-{{ pendingOpt["tipoPrueba"] }}">{{ pendingOpt["pruebaLabel"] }}</span></p>
     <p class="option-chips">
@@ -664,7 +664,7 @@ return Layout.render(<main class="game">
     <div class="card-grid">
       {{ mesa.map{|item| <article class="card" data-family="{{ item["card"].family }}">
         <span class="card-art"><span class="card-emoji" aria-hidden="true">{{ item["card"].emoji }}</span></span>
-        <span class="card-family">{{ item["card"].family == "exploracion" ? "Exploración" : (item["card"].family == "peligro" ? "Peligro" : "Dilema") }}{{ item["card"].entry != "" ? " · Emboscada" : "" }}</span>
+        <span class="card-family">{{ item["card"].family == "exploracion" ? "Exploración" : (item["card"].family == "peligro" ? "Peligro" : "Dilema") }}{{ item["card"].entry != "" ? " · Emboscada" : "" }} · <span class="card-id">{{ item["card"].id }}</span></span>
         <h3>{{ item["card"].name }}</h3>
         {{ item["card"].entry != "" && <p class="entry-badge">Al entrar
           {{ item["card"].entryChips.map{|c| <span class="chip {{ c["cls"] }}" title="{{ c["title"] }}" aria-label="{{ c["title"] }}">{{ c["icon"] }} {{ c["text"] }}</span>} }}
@@ -704,7 +704,7 @@ return Layout.render(<main class="game">
         <div class="hand">
           {{ ayuda.map{|a| <article class="card card-support" data-family="apoyo">
             <span class="card-art"><span class="card-emoji" aria-hidden="true">{{ a["card"].emoji }}</span></span>
-            <span class="card-family">Apoyo · una vez</span>
+            <span class="card-family">Apoyo · una vez · <span class="card-id">{{ a["card"].id }}</span></span>
             <h3>{{ a["card"].name }}</h3>
             <p>Elegí <span class="chip chip-energia">⚡ +{{ a["card"].value }}</span> o <span class="chip chip-escudo">🛡️ +{{ a["card"].value }}</span>.</p>
             <form method="post">
@@ -723,7 +723,7 @@ return Layout.render(<main class="game">
       <div class="hand">
         {{ hand.map{|h| <article class="card" data-family="{{ h["card"].isSupport ? "apoyo" : (h["card"].isTool ? "herramienta" : "maniobra") }}">
           <span class="card-art"><span class="card-emoji" aria-hidden="true">{{ h["card"].emoji }}</span></span>
-          <span class="card-family">{{ h["card"].isSupport ? "Apoyo" : (h["card"].isTool ? "Herramienta" : "Maniobra") }}</span>
+          <span class="card-family">{{ h["card"].isSupport ? "Apoyo" : (h["card"].isTool ? "Herramienta" : "Maniobra") }} · <span class="card-id">{{ h["card"].id }}</span></span>
           <h3>{{ h["card"].name }}</h3>
           <section class="card-text">{{ h["card"].body }}</section>
           <div class="action-row">
@@ -746,7 +746,7 @@ return Layout.render(<main class="game">
       </div>
       {{ tools.map{|t| <article class="card card-tool" data-family="herramienta">
         <span class="card-art"><span class="card-emoji" aria-hidden="true">{{ t["card"].emoji }}</span></span>
-        <span class="card-family">Herramienta</span>
+        <span class="card-family">Herramienta · <span class="card-id">{{ t["card"].id }}</span></span>
         <h3>{{ t["card"].name }}</h3>
         <section class="card-text">{{ t["card"].body }}</section>
 
