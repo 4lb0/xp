@@ -123,7 +123,7 @@ return Layout.render(<main>
           </thead>
           <tbody>
             <tr><td>Cartas de Misterio</td><td>40</td></tr>
-            <tr><td>Cartas de Equipo</td><td>42 (14 Herramientas + 26 Maniobras + 2 Apoyos)</td></tr>
+            <tr><td>Cartas de Equipo</td><td>44 (10 Herramientas + 32 Maniobras + 2 Apoyos)</td></tr>
             <tr><td>Dados de estado</td><td>3 D6</td></tr>
             <tr><td>Dados de prueba</td><td>2 a 4 D6</td></tr>
           </tbody>

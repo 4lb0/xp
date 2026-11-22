@@ -97,7 +97,7 @@ Una vez por turno, mirá la carta de arriba del Mazo del Juego antes de elegir.
 
 - `emoji`: arte provisorio, igual que en las cartas de Misterio.
 - `tipo`: `herramienta` (queda en la mesa) o `maniobra` (se descarta).
-- `copias`: cuántas veces entra esta carta en el mazo. La suma de todas las `copias` tiene que dar 42.
+- `copias`: cuántas veces entra esta carta en el mazo. La suma de todas las `copias` tiene que dar 44.
 - `efecto`: el identificador que usa el motor.
 - `valor` (solo cartas de apoyo): cuánto cura la elección (+1 o +2).
 

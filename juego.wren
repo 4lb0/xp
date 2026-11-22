@@ -73,6 +73,24 @@ if (Request.isPost) {
         Game.move(rowId, "descarte")
         `UPDATE games SET jugadas = 1 WHERE id = ?`.query(g.id)
         Game.log(g.id, "Análisis Rápido: −1 Energía, +1 Pista.")
+      } else if (c.effect == "harpoon") {
+        if (g.energia < 2) {
+          aviso = "El Arpón Rastreador necesita 2 de Energía."
+        } else {
+          Game.apply(g.id, g, {"pistas": 0, "energia": -2, "escudo": 0}, true, [])
+          var gA = Game.find(g.id)
+          if (gA.status == "activa") {
+            var d = Game.roll(1)[0]
+            if (d % 2 == 0) {
+              Game.apply(g.id, gA, {"pistas": 1, "energia": 0, "escudo": 0}, true, [])
+              Game.log(g.id, "Arpón Rastreador: sale " + d.toString + " (CARA). +1 Pista.")
+            } else {
+              Game.log(g.id, "Arpón Rastreador: sale " + d.toString + " (SECA). Sin pista.")
+            }
+          }
+          Game.move(rowId, "descarte")
+          `UPDATE games SET jugadas = 1 WHERE id = ?`.query(g.id)
+        }
       } else if (c.effect == "discard_active") {
         var activas = Game.rows(g.id, "mesa")
         if (!activas.isEmpty) {
@@ -157,13 +175,17 @@ if (Request.isPost) {
       aviso = "Esa Maniobra se usa cuando hay una prueba de dados."
     } else if (g.jugadas > 0) {
       aviso = "Ya jugaron una carta este turno."
-    } else if (g.fase != "prueba") {
-      aviso = "Esa Maniobra se usa antes de resolver el misterio."
     } else if (c.effect == "flip_parity" && !parity) {
       aviso = "Giro Brusco solo sirve en pruebas de Cara o Seca."
     } else if (c.effect == "flip_parity" && !g.tirado) {
       aviso = "Giro Brusco se juega después de tirar: cambia un dado que ya vieron."
-    } else if (g.tirado && c.effect != "flip_parity") {
+    } else if (c.effect == "reroll_parity" && !parity) {
+      aviso = "Focos Abisales solo sirven en pruebas de Cara o Seca."
+    } else if (c.effect == "reroll_parity" && !g.tirado) {
+      aviso = "Focos Abisales se usan después de tirar."
+    } else if (c.effect == "reduce_damage" && g.tirado) {
+      aviso = "Blindaje de Titanio se prepara antes de tirar."
+    } else if (g.tirado && c.effect != "flip_parity" && c.effect != "reroll_parity") {
       aviso = "Esa Maniobra se juega antes de tirar: se compromete a ciegas."
     } else if (c.effect == "plus_two") {
       `UPDATE games SET bonus = bonus + 2, jugadas = 1 WHERE id = ?`.query(g.id)
@@ -174,6 +196,15 @@ if (Request.isPost) {
       `UPDATE games SET dado1 = ?, jugadas = 1 WHERE id = ?`.query(nuevo, g.id)
       Game.move(rowId, "descarte")
       Game.log(g.id, "Giro Brusco: el dado pasa de Cara a Seca (o al revés).")
+    } else if (c.effect == "reroll_parity") {
+      var d = Game.roll(1)[0]
+      `UPDATE games SET dado1 = ?, jugadas = 1 WHERE id = ?`.query(d, g.id)
+      Game.move(rowId, "descarte")
+      Game.log(g.id, "Focos Abisales: relanzan el dado y sale " + d.toString + ".")
+    } else if (c.effect == "reduce_damage") {
+      `UPDATE games SET blindajeM = 1, jugadas = 1 WHERE id = ?`.query(g.id)
+      Game.move(rowId, "descarte")
+      Game.log(g.id, "Blindaje de Titanio preparado: −1 daño al Escudo.")
     } else if (c.effect == "reroll_all") {
       `UPDATE games SET suerte = 1, jugadas = 1 WHERE id = ?`.query(g.id)
       Game.move(rowId, "descarte")
@@ -185,21 +216,9 @@ if (Request.isPost) {
     } else if (c.effect == "no_energy_cost") {
       `UPDATE games SET ahorro = 1, jugadas = 1 WHERE id = ?`.query(g.id)
       Game.move(rowId, "descarte")
-      Game.log(g.id, "Ahorro de Oxígeno: este turno no gastan Energía.")
+      Game.log(g.id, "Ahorro de Oxígeno: en este misterio no gastan Energía.")
     } else {
       aviso = "Esa carta no se usa durante la prueba."
-    }
-  } else if (accion == "focos") {
-    var opt = g.pruebaCarta == null ? null : (Card.get(g.pruebaCarta) == null ? null : Card.get(g.pruebaCarta).option(g.pruebaOpcion))
-    var parity = opt != null && (opt["tipoPrueba"] == "cara" || opt["tipoPrueba"] == "seca")
-    if (g.fase != "prueba" || !g.tirado || !parity) {
-      aviso = "Los Focos Abisales solo relanzan un dado de Cara o Seca."
-    } else if (!Game.hasTool(g.id, "reroll_parity") || g.focosUsado) {
-      aviso = "Los Focos Abisales ya se usaron este turno."
-    } else {
-      var d = Game.roll(1)[0]
-      `UPDATE games SET dado1 = ?, focosUsado = 1 WHERE id = ?`.query(d, g.id)
-      Game.log(g.id, "Focos Abisales: relanzan el dado y sale " + d.toString + ".")
     }
   } else if (accion == "resolver") {
     var c = Card.get(g.pruebaCarta)
@@ -267,7 +286,7 @@ if (Request.isPost) {
     if (g.fase != "listo") {
       aviso = "Reparen antes de elegir un misterio."
     } else if (g.reparado) {
-      aviso = "Ya repararon el casco este turno."
+      aviso = "Ya repararon el casco en este misterio."
     } else if (g.energia < 2) {
       aviso = "Necesitan al menos 2 de Energía para reparar."
     } else {
@@ -283,31 +302,6 @@ if (Request.isPost) {
     } else {
       `UPDATE games SET fase = 'listo', pruebaCarta = NULL, pruebaOpcion = NULL, dado1 = 0, dado2 = 0, tirado = 0, bonus = 0, cebo = 0, ahorro = 0, giro = 0, suerte = 0 WHERE id = ?`.query(g.id)
       Game.log(g.id, "El equipo duda y vuelve a mirar las cartas.")
-    }
-  } else if (accion == "arpon") {
-    var tools = g.fase == "listo" ? Game.cardsIn(g.id, "herramientas") : []
-    var harpoon = null
-    for (t in tools) {
-      if (t["card"].effect == "harpoon") harpoon = t
-    }
-    if (harpoon == null) {
-      aviso = "No tienen el Arpón Rastreador en la mesa."
-    } else if (g.energia < 2) {
-      aviso = "El Arpón necesita 2 de Energía."
-    } else if (g.fase != "listo") {
-      aviso = "El Arpón se usa antes de elegir un misterio."
-    } else {
-      Game.apply(g.id, g, {"pistas": 0, "energia": -2, "escudo": 0}, true, [])
-      var trasGasto = Game.find(g.id)
-      var d = Game.roll(1)[0]
-      if (trasGasto.status == "activa" && d % 2 == 0) {
-        var g2 = Game.find(g.id)
-        Game.apply(g.id, g2, {"pistas": 1, "energia": 0, "escudo": 0}, true, [])
-        Game.move(harpoon["rowId"], "descarte")
-        Game.log(g.id, "Arpón Rastreador: sale " + d.toString + " (CARA). +1 Pista y la carta se descarta.")
-      } else {
-        Game.log(g.id, "Arpón Rastreador: sale " + d.toString + " (SECA). El arpón vuelve a la mesa.")
-      }
     }
   } else if (accion == "terminar") {
     if (g.fase != "resuelto") {
@@ -347,17 +341,19 @@ if (Request.isPost) {
           if (resEntrada["status"] != "activa") return Response.redirect("/juego")
         }
       }
-      var gSkip = Game.find(g.id)
-      var salto = gSkip.saltar ? 2 : 1
-      if (gSkip.saltar) Game.log(g.id, "El equipo pierde el próximo turno reparando la emboscada.")
-      `UPDATE games SET jugador = 1, turno = turno + ?, fase = 'listo', pruebaCarta = NULL, pruebaOpcion = NULL, dado1 = 0, dado2 = 0, tirado = 0, bonus = 0, cebo = 0, ahorro = 0, blindajeUsado = 0, focosUsado = 0, jugadas = 0, resueltas = 0, resultado = NULL, giro = 0, suerte = 0, empujado = 0, pistasTurno = 0, saltar = 0, reparado = 0 WHERE id = ?`.query(salto, g.id)
+      `UPDATE games SET jugador = 1, turno = turno + 1, fase = 'listo', pruebaCarta = NULL, pruebaOpcion = NULL, dado1 = 0, dado2 = 0, tirado = 0, bonus = 0, cebo = 0, ahorro = 0, blindajeUsado = 0, blindajeM = 0, focosUsado = 0, jugadas = 0, resueltas = 0, resultado = NULL, giro = 0, suerte = 0, empujado = 0, pistasTurno = 0, reparado = 0 WHERE id = ?`.query(g.id)
       var g3 = Game.find(g.id)
       if (g3 != null && Game.hasTool(g.id, "energy_start") && g3.energia <= 4) {
         `UPDATE games SET energia = energia + 1 WHERE id = ?`.query(g.id)
-        Game.log(g.id, "Generador Auxiliar: +1 Energía al empezar el turno.")
+        Game.log(g.id, "Generador Auxiliar: +1 Energía al empezar.")
+      }
+      var g4 = Game.find(g.id)
+      if (g4 != null && Game.hasTool(g.id, "shield_start") && g4.escudo <= 4) {
+        `UPDATE games SET escudo = MIN(6, escudo + 1) WHERE id = ?`.query(g.id)
+        Game.log(g.id, "Generador de Escudo: +1 Escudo al empezar.")
       }
       Game.draw(g.id, "equipo", "mano", 2)
-      Game.log(g.id, "Turno " + (g.turno + salto).toString + ".")
+      Game.log(g.id, "Turno " + (g.turno + 1).toString + ".")
     }
   }
 
@@ -422,8 +418,9 @@ var handCount = hand.count
 var puedeElegir = g.status == "activa" && g.fase == "listo" && g.resueltas == 0
 var puedeJugar = g.status == "activa" && g.jugadas == 0 && g.fase == "listo"
 var puedeReparar = g.status == "activa" && g.fase == "listo" && !g.reparado && g.energia >= 2
-var maniobrasPrueba = hand.where { |h| ["plus_two", "reroll_all", "cancel_shield_loss", "no_energy_cost"].contains(h["card"].effect) }.toList
+var maniobrasPrueba = hand.where { |h| ["plus_two", "reroll_all", "cancel_shield_loss", "no_energy_cost", "reduce_damage"].contains(h["card"].effect) }.toList
 var girosPrueba = hand.where { |h| h["card"].effect == "flip_parity" }.toList
+var rerollsPrueba = hand.where { |h| h["card"].effect == "reroll_parity" }.toList
 
 var finalTitulo = "La expedición continúa"
 var finalTexto = ""
@@ -577,10 +574,11 @@ return Layout.render(<main class="game">
           <input type="hidden" name="rowId" value="{{ h["rowId"] }}" />
           <button class="btn btn-ghost btn-small">Giro Brusco: invertir el dado</button>
         </form>} }}
-        {{ Game.hasTool(g.id, "reroll_parity") && !g.focosUsado && (pendingOpt["tipoPrueba"] == "cara" || pendingOpt["tipoPrueba"] == "seca") && <form method="post" class="inline-form">
-          <input type="hidden" name="accion" value="focos" />
+        {{ g.jugadas == 0 && rerollsPrueba.map{|h| <form method="post" class="inline-form">
+          <input type="hidden" name="accion" value="maniobra" />
+          <input type="hidden" name="rowId" value="{{ h["rowId"] }}" />
           <button class="btn btn-ghost btn-small">Focos Abisales: relanzar</button>
-        </form> }}
+        </form>} }}
       </div>
       <div class="action-row">
         <form method="post" class="inline-form">
@@ -695,10 +693,7 @@ return Layout.render(<main class="game">
         <span class="card-family">Herramienta</span>
         <h3>{{ t["card"].name }}</h3>
         <section class="card-text">{{ t["card"].body }}</section>
-        {{ t["card"].effect == "harpoon" && g.fase == "listo" && <form method="post">
-          <input type="hidden" name="accion" value="arpon" />
-          <button class="btn btn-ghost btn-small" {{ g.energia >= 2 ? "" : "disabled" }}>Lanzar arpón (2 Energía)</button>
-        </form> }}
+
       </article>} }}
       {{ tools.isEmpty && <p class="muted">Todavía no bajaron ninguna Herramienta.</p> }}
 
@@ -714,7 +709,7 @@ return Layout.render(<main class="game">
           <input type="hidden" name="accion" value="reparar" />
           <button class="btn btn-ghost btn-small" {{ puedeReparar ? "" : "disabled" }}>Reparar casco</button>
         </form>
-        {{ g.reparado && <p class="hint">Ya repararon este turno; el casco aguanta un poco más.</p> }}
+        {{ g.reparado && <p class="hint">Ya repararon en este misterio; el casco aguanta un poco más.</p> }}
       </section>
 
       <section class="panel">

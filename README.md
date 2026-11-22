@@ -4,7 +4,7 @@ Versión jugable en el navegador del juego de mesa cooperativo **XP (Equipo eXPe
 
 - Se puede jugar solo o en equipo: un solo dispositivo, una mesa, el equipo XP contra el juego.
 - Partidas de 10 a 20 minutos.
-- 40 cartas de Misterio (una o dos opciones cada una) + 42 cartas de Equipo (incluye 2 de apoyo), todas editables como archivos Markdown.
+- 40 cartas de Misterio (una o dos opciones cada una) + 44 cartas de Equipo (incluye 2 de apoyo), todas editables como archivos Markdown.
 - Arte provisorio: un emoji grande por carta, hasta que lleguen las ilustraciones.
 - Tirada digital desde la app **o** carga manual de lo que salió en los dados de la mesa.
 - Hecho con [Bialet](https://bialet.dev): Wren, SQLite y HTML server-rendered, sin frameworks ni build step.

@@ -92,13 +92,11 @@ return Layout.render(<main>
         <table>
           <thead><tr><th>Carta</th><th>Efecto</th></tr></thead>
           <tbody>
-            <tr><td>Sonar de Alta Frecuencia</td><td>Una vez por turno, mirá la carta de arriba del Mazo del Juego.</td></tr>
-            <tr><td>Focos Abisales</td><td>Relanzá un dado en pruebas de Cara o Seca.</td></tr>
-            <tr><td>Generador Auxiliar</td><td>Si la Energía está en 4 o menos al empezar el turno, sube 1.</td></tr>
-            <tr><td>Blindaje de Titanio</td><td>Una vez por turno, reducí 1 el daño al Escudo.</td></tr>
-            <tr><td>Brazo Robótico</td><td>Si ganás Pistas y algún dado muestra 6, ganás 1 Pista más.</td></tr>
-            <tr><td>Arpón Rastreador</td><td>Gastá 2 de Energía y tirá un dado. Si sale Cara, +1 Pista y se descarta.</td></tr>
-            <tr><td>Estabilizadores</td><td>Sumá 1 al total en todas las pruebas de 2 dados.</td></tr>
+            <tr><td>Sonar de Alta Frecuencia</td><td>Una vez por misterio, mirá la carta de arriba del Mazo del Juego.</td></tr>
+                        <tr><td>Generador Auxiliar</td><td>Si la Energía está en 4 o menos al empezar cada misterio, sube 1.</td></tr>
+            <tr><td>Generador de Escudo</td><td>Si el Escudo está en 4 o menos al empezar cada misterio, sube 1.</td></tr>
+                        <tr><td>Brazo Robótico</td><td>Si ganás Pistas y algún dado muestra 6, ganás 1 Pista más.</td></tr>
+                        <tr><td>Estabilizadores</td><td>Sumá 1 al total en todas las pruebas de 2 dados.</td></tr>
           </tbody>
         </table>
       </div>
@@ -109,14 +107,17 @@ return Layout.render(<main>
           <thead><tr><th>Carta</th><th>Efecto</th></tr></thead>
           <tbody>
             <tr><td>Giro Brusco</td><td>Después de tirar: cambiá un dado de Cara a Seca, o al revés.</td></tr>
+            <tr><td>Focos Abisales</td><td>Después de tirar: relanzá un dado de Cara o Seca.</td></tr>
+            <tr><td>Blindaje de Titanio</td><td>Antes de resolver: reducí 1 el daño al Escudo.</td></tr>
+            <tr><td>Arpón Rastreador</td><td>Gastá 2 de Energía y tirá un dado. Si sale Cara, +1 Pista.</td></tr>
             <tr><td>Turbo de Emergencia</td><td>Antes de tirar: sumá 2 al total de la prueba.</td></tr>
             <tr><td>Suerte del Principiante</td><td>Antes de tirar: si la prueba falla, se vuelve a tirar una vez.</td></tr>
             <tr><td>Soldadura Submarina</td><td>Recuperá 3 de Escudo. Hay 4 en el mazo.</td></tr>
             <tr><td>Batería de Respaldo</td><td>Recuperá 2 de Energía. Hay 6 en el mazo.</td></tr>
             <tr><td>Análisis Rápido</td><td>Gastá 1 de Energía y ganá 1 Pista directa.</td></tr>
             <tr><td>Señuelo Luminoso</td><td>Cambiá una carta activa por otra sin resolverla.</td></tr>
-            <tr><td>Lanzar Cebo</td><td>Cancelá una pérdida de Escudo en este turno.</td></tr>
-            <tr><td>Ahorro de Oxígeno</td><td>Este turno no pierden Energía: ni por consumo, ni por cartas.</td></tr>
+            <tr><td>Lanzar Cebo</td><td>Cancelá una pérdida de Escudo en este misterio.</td></tr>
+            <tr><td>Ahorro de Oxígeno</td><td>En este misterio no pierden Energía: ni por consumo, ni por cartas.</td></tr>
           </tbody>
         </table>
       </div>
@@ -132,8 +133,8 @@ return Layout.render(<main>
   <section class="panel">
     <h2>El reloj: consumo de Energía</h2>
     <p><strong>Consumo:</strong> al terminar cada turno, el submarino pierde <strong>1 Energía</strong>, hayan ganado o no una Pista. La Energía es el reloj de la partida y no se recupera con las cartas de Misterio.</p>
-    <p><strong>Recarga:</strong> solo con Equipo. La Batería de Respaldo devuelve 2 de Energía y hay 6 en el mazo. El Generador Auxiliar recarga 1 al empezar el turno si están en 4 o menos. Ahorro de Oxígeno saltea el consumo de un turno.</p>
-    <p><strong>Reparación:</strong> una vez por turno, antes de elegir un misterio, pueden gastar 1 Energía para recuperar 2 Escudo. Reparar compra tiempo, pero acerca el final del aire.</p>
+    <p><strong>Recarga:</strong> solo con Equipo. La Batería de Respaldo devuelve 2 de Energía y hay 6 en el mazo. El Generador Auxiliar recarga 1 al empezar cada misterio si están en 4 o menos. El Generador de Escudo hace lo mismo con el casco. Ahorro de Oxígeno saltea el consumo de un turno.</p>
+    <p><strong>Reparación:</strong> una vez por misterio, antes de elegir, pueden gastar 1 Energía para recuperar 2 Escudo. Reparar compra tiempo, pero acerca el final del aire.</p>
     <p><strong>Emboscadas:</strong> algunas cartas de Peligro cuestan <strong>1 Energía</strong>, <strong>1 Escudo</strong> o <strong>1 Pista</strong> apenas entran a la mesa, y tienen una sola opción. Las cartas de Misterio nunca te sacan Energía: la Energía la baja el reloj y la recupera el Equipo.</p>
   </section>
 
