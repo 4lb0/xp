@@ -10,6 +10,20 @@ Versión jugable en el navegador del juego de mesa de aventura y misterio **XP (
 - Tirada digital desde la app **o** carga manual de lo que salió en los dados de la mesa.
 - Hecho con [Bialet](https://bialet.dev): Wren, SQLite y HTML server-rendered, sin frameworks ni build step.
 
+## Proxies para imprimir
+
+`pdf/xp-proxies-bw.pdf` contiene las **84 cartas** (40 de Misterio + 44 de Equipo,
+incluidas las copias) en blanco y negro, a **60 × 86 mm** —unos milímetros menos
+que una carta TCG estándar—, con **9 cartas por hoja A4** y líneas de corte.
+Imprimilo al **100% / tamaño real**, sin “ajustar a la página”.
+
+Para regenerarlo:
+
+```bash
+python3 -m pip install reportlab
+python3 tools/make_proxies.py
+```
+
 ## Caché de CSS
 
 Cloudflare cachea `/css/style.css` durante 4 horas. Al cambiar el CSS, subí

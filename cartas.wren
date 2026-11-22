@@ -40,6 +40,8 @@ return Layout.render(<main>
 
   <p class="hint">Cada carta es un archivo markdown en <code>cartas/</code>. El emoji es el arte provisorio hasta que llegue la ilustración. Editá el texto, los dados o los efectos y la próxima partida ya usa la versión nueva. <a href="/editar-cartas">Cómo editar una carta</a>.</p>
 
+  <p class="hint"><strong>Proxies para imprimir:</strong> <a href="/pdf/xp-proxies-bw.pdf">descargar el PDF B&amp;N</a> · 84 cartas de 60 × 86 mm · 9 por hoja A4 · con líneas de corte.</p>
+
   <section class="deck-section" id="exploracion">
     <div class="section-head"><h2>Exploración y pistas</h2><p>Investigar, descifrar, descubrir.</p></div>
     <div class="deck-grid">
