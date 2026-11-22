@@ -2,7 +2,7 @@
 
 Versión jugable en el navegador del juego de mesa cooperativo **XP (Equipo eXPedición)**, Edición 1. Sirve para probar el mazo, los contadores y las pruebas de dados antes de imprimir cartas.
 
-- 2 a 6 jugadores, un solo dispositivo que se pasa de mano en mano.
+- Se puede jugar solo o en equipo: un solo dispositivo, una mesa, el equipo XP contra el juego.
 - Partidas de 10 a 20 minutos.
 - 40 cartas de Misterio (una o dos opciones cada una) + 40 cartas de Equipo, todas editables como archivos Markdown.
 - Arte provisorio: un emoji grande por carta, hasta que lleguen las ilustraciones.
@@ -39,9 +39,9 @@ El estado de la partida se guarda en SQLite y se ata a la sesión del navegador.
 
 ## Cómo se juega en la app
 
-1. Elegís cuántos jugadores son y el modo (normal 5/5 o fácil 6/6) y arranca la expedición.
-2. La app reparte 3 cartas de Equipo y revela **siempre 3 cartas de Misterio**, sin importar cuántos jueguen. La cantidad de jugadores solo cambia el orden de las tiradas: las decisiones son del equipo.
-3. En cada turno: roban 2 cartas de Equipo, pueden jugar 1 carta, eligen una carta de Misterio y una de sus opciones. El descarte hasta 3 se hace al final, antes de pasar el turno.
+1. Elegís el modo (normal 5/5 o fácil 6/6) y arranca la expedición. No hay que elegir cantidad de jugadores: se juega solo o en equipo.
+2. La app reparte 3 cartas de Equipo y revela **siempre 3 cartas de Misterio**, sin importar cuántos jueguen. La cantidad de jugadores no cambia nada: las decisiones son del equipo.
+3. En cada turno: roban 2 cartas de Equipo, pueden jugar 1 carta, eligen una carta de Misterio y una de sus opciones. No hay descarte obligatorio: la mano puede crecer y descartás solo si querés.
 4. La prueba de dados se puede resolver de dos formas:
    - **Tirar en la app**: el servidor genera los D6.
    - **Ya tiré en la mesa**: elegís en pantalla lo que salió en cada dado físico.
@@ -105,7 +105,7 @@ xp/
 
 | Tabla | Qué guarda |
 |---|---|
-| `games` | Una fila por partida: contadores, turno, jugador activo, fase, prueba pendiente, banderas de maniobras. |
+| `games` | Una fila por partida: contadores, turno, fase, prueba pendiente, banderas de maniobras. |
 | `game_cards` | Cada copia física del mazo con su zona: `misterio`, `equipo`, `mesa`, `mano`, `herramientas`, `descarte`. |
 | `game_log` | Bitácora narrativa de la partida. |
 
@@ -113,9 +113,9 @@ El mazo se mezcla con `ORDER BY RANDOM()` de SQLite. Las tiradas digitales tambi
 
 ## Decisiones de este prototipo
 
-- **Mano compartida.** El GDD reparte cartas por jugador. Acá el equipo comparte una mano de 3 para que un solo dispositivo alcance y para que los más chicos participen sin gestionar su propio mazo. El turno rota igual entre jugadores.
-- **La cantidad de jugadores no cambia la mesa.** Siempre 3 cartas de Misterio, siempre 2 de robo, siempre 6 Pistas. Solo cambia a quién le toca tirar.
-- **Dos modos.** Normal (5 y 5) y fácil (6 y 6) para los más chicos.
+- **Solo o en equipo.** No hay mano por jugador ni rotación obligatoria: el equipo comparte la mano y decide junto. También se puede jugar una sola persona.
+- **La cantidad de jugadores no cambia la mesa.** Siempre 3 cartas de Misterio, siempre 2 de robo, siempre 6 Pistas. Se puede jugar solo o en equipo.
+- **Dos modos.** Normal (5 y 5) y fácil (6 y 6) para los más chicos, con una carta de apoyo Batería de Respaldo (+2 Energía, una vez).
 - **Un misterio por turno, una carta jugada por turno.** La app lo hace cumplir; si intentás saltearlo, te avisa.
 - **Dados físicos primero.** La app no obliga a tirar: el ingreso manual es de primera clase, no un modo oculto.
 - **La mesa se repone al terminar el turno**, no al resolver, para que el resultado quede visible mientras se discute.
@@ -132,7 +132,7 @@ El mazo se mezcla con `ORDER BY RANDOM()` de SQLite. Las tiradas digitales tambi
 
 ## Próximos pasos
 
-- Repartir mano por jugador y pantalla de “pasá el dispositivo”.
+- Modo cooperativo con roles opcionales, si el grupo lo pide.
 - Ilustraciones definitivas (una por carta) con el prompt maestro de `BRANDING.md`.
 - Modo “solo dados”: tirar D6 sin partida, para probar cartas impresas.
 - Balance del mazo: el motor ya registra cada tirada, así que se puede medir la tasa de éxito por prueba.

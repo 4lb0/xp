@@ -42,7 +42,7 @@ class Layout {
         <footer class="site-footer">
           <div class="wrap footer-inner">
             <p><strong>XP</strong> · Equipo eXPedición — Edición 1: <em>En busca del Megalodón</em></p>
-            <p class="muted">Prototipo web para probar el juego de mesa. 2 a 6 jugadores · 10 a 20 minutos.</p>
+            <p class="muted">Prototipo web para probar el juego de mesa. Solo o en equipo · 10 a 20 minutos.</p>
           </div>
         </footer>
       </body>

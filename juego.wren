@@ -12,11 +12,8 @@ if (Request.isPost) {
 
   if (accion == "nueva") {
     if (g != null) Game.destroy(g.id)
-    var n = Num.fromString(Request.post("jugadores", "3"))
-    if (n < 2) n = 2
-    if (n > 6) n = 6
     var modo = Request.post("modo", "normal") == "facil" ? "facil" : "normal"
-    var id = Game.create(n, modo)
+    var id = Game.create(1, modo)
     session.set("gameId", id.toString)
     return Response.redirect("/juego")
   }
@@ -241,6 +238,15 @@ if (Request.isPost) {
       if (res["status"] == "victoria") Game.log(g.id, "¡Seis Pistas! El misterio queda resuelto.")
       if (res["status"] == "derrota") Game.log(g.id, "La expedición se pierde en la oscuridad.")
     }
+  } else if (accion == "apoyo") {
+    if (g.modo != "facil") {
+      aviso = "El apoyo del equipo XP es del modo fácil."
+    } else if (!g.apoyo) {
+      aviso = "La Batería de apoyo ya se usó."
+    } else {
+      `UPDATE games SET energia = MIN(6, energia + 2), apoyo = 0 WHERE id = ?`.query(g.id)
+      Game.log(g.id, "Batería de apoyo del equipo XP: +2 Energía.")
+    }
   } else if (accion == "reparar") {
     if (g.fase != "listo") {
       aviso = "Reparen antes de elegir un misterio."
@@ -299,8 +305,6 @@ if (Request.isPost) {
   } else if (accion == "terminar") {
     if (g.fase != "resuelto") {
       aviso = "Primero resuelvan un misterio."
-    } else if (Game.count(g.id, "mano") > 3) {
-      aviso = "Antes de pasar el turno, descartá hasta quedarte con 3 cartas."
     } else {
       var g2 = Game.find(g.id)
       if (g2.ahorro) {
@@ -325,20 +329,17 @@ if (Request.isPost) {
           if (resEntrada["status"] != "activa") return Response.redirect("/juego")
         }
       }
-      var next = g.jugador >= g.players ? 1 : g.jugador + 1
       var gSkip = Game.find(g.id)
-      if (gSkip.saltar) {
-        next = next >= gSkip.players ? 1 : next + 1
-        Game.log(g.id, "El equipo pierde un turno reparando la emboscada. Juega el jugador " + next.toString + ".")
-      }
-      `UPDATE games SET jugador = ?, turno = turno + 1, fase = 'listo', pruebaCarta = NULL, pruebaOpcion = NULL, dado1 = 0, dado2 = 0, tirado = 0, bonus = 0, cebo = 0, ahorro = 0, blindajeUsado = 0, focosUsado = 0, jugadas = 0, resueltas = 0, resultado = NULL, giro = 0, suerte = 0, empujado = 0, pistasTurno = 0, saltar = 0, reparado = 0 WHERE id = ?`.query(next, g.id)
+      var salto = gSkip.saltar ? 2 : 1
+      if (gSkip.saltar) Game.log(g.id, "El equipo pierde el próximo turno reparando la emboscada.")
+      `UPDATE games SET jugador = 1, turno = turno + ?, fase = 'listo', pruebaCarta = NULL, pruebaOpcion = NULL, dado1 = 0, dado2 = 0, tirado = 0, bonus = 0, cebo = 0, ahorro = 0, blindajeUsado = 0, focosUsado = 0, jugadas = 0, resueltas = 0, resultado = NULL, giro = 0, suerte = 0, empujado = 0, pistasTurno = 0, saltar = 0, reparado = 0 WHERE id = ?`.query(salto, g.id)
       var g3 = Game.find(g.id)
-      if (g3 != null && Game.hasTool(g.id, "energy_start") && g3.energia <= 3) {
+      if (g3 != null && Game.hasTool(g.id, "energy_start") && g3.energia <= 4) {
         `UPDATE games SET energia = energia + 1 WHERE id = ?`.query(g.id)
         Game.log(g.id, "Generador Auxiliar: +1 Energía al empezar el turno.")
       }
       Game.draw(g.id, "equipo", "mano", 2)
-      Game.log(g.id, "Turno " + (g.turno + 1).toString + ": juega el jugador " + next.toString + ".")
+      Game.log(g.id, "Turno " + (g.turno + salto).toString + ".")
     }
   }
 
@@ -346,12 +347,9 @@ if (Request.isPost) {
 }
 
 // Primer ingreso con cantidad de jugadores en la URL
-if (g == null && Request.get("jugadores") != null) {
-  var n = Num.fromString(Request.get("jugadores", "3"))
-  if (n < 2) n = 2
-  if (n > 6) n = 6
+if (g == null && (Request.get("jugadores") != null || Request.get("modo") != null)) {
   var modo = Request.get("modo", "normal") == "facil" ? "facil" : "normal"
-  var id = Game.create(n, modo)
+  var id = Game.create(1, modo)
   session.set("gameId", id.toString)
   return Response.redirect("/juego")
 }
@@ -365,23 +363,15 @@ if (g == null) {
   return Layout.render(<main>
     <section class="hero-start">
       <p class="eyebrow">Preparación</p>
-      <h1>¿Cuántos bajan al agua?</h1>
-      <p class="lead">De 2 a 6 jugadores. La mesa decide entre todos: nadie tiene un rol secreto.</p>
-      <p class="hint">Siempre 3 cartas de Misterio en la mesa y 2 de robo por turno, sin importar cuántos jueguen.</p>
+      <h1>Prepará la expedición</h1>
+      <p class="lead">Se puede jugar solo o en equipo. La mesa es una: el equipo XP contra el juego.</p>
+      <p class="hint">Siempre 3 cartas de Misterio en la mesa y 2 de robo por turno. No importa cuántos jueguen.</p>
       <form method="post" class="panel start-form">
         <input type="hidden" name="accion" value="nueva" />
-        <label for="players"><strong>Jugadores</strong></label>
-        <select id="players" name="jugadores">
-          <option value="2">2 jugadores</option>
-          <option value="3" selected>3 jugadores</option>
-          <option value="4">4 jugadores</option>
-          <option value="5">5 jugadores</option>
-          <option value="6">6 jugadores</option>
-        </select>
         <label for="modo"><strong>Modo</strong></label>
         <select id="modo" name="modo">
           <option value="normal" selected>Normal — 5 Energía y 5 Escudo</option>
-          <option value="facil">Fácil — 6 y 6, para los más chicos</option>
+          <option value="facil">Fácil — 6 y 6 para los más chicos, con Batería de apoyo</option>
         </select>
         <button class="btn btn-primary">Iniciar expedición</button>
       </form>
@@ -433,7 +423,6 @@ return Layout.render(<main class="game">
     <div class="board-meta">
       <span class="pill">{{ g.modo == "facil" ? "Modo fácil" : "Modo normal" }}</span>
       <span class="pill">Turno {{ g.turno }}</span>
-      <span class="pill">Jugador {{ g.jugador }} de {{ g.players }}</span>
       <span class="pill">Mazo {{ mazo }}</span>
       <span class="pill">Descarte {{ descarte }}</span>
     </div>
@@ -599,12 +588,11 @@ return Layout.render(<main class="game">
     <p class="eyebrow">Resultado</p>
     <h2>{{ g.resultado == "ganada" ? "Prueba superada" : "Prueba fallida" }}</h2>
     <p class="muted">{{ g.ultimo }}</p>
-    <p>Revisen los contadores. Antes de pasar el dispositivo, descarten hasta quedar con 3 cartas.</p>
-    {{ handCount > 3 && <p class="hint">Tienen {{ handCount }} cartas. Descartá abajo las que sobren.</p> }}
-    {{ handCount <= 3 && <form method="post">
+    <p>Revisen los contadores. Cuando estén listos, sigan con el próximo turno.</p>
+    <form method="post">
       <input type="hidden" name="accion" value="terminar" />
       <button class="btn btn-primary">Terminar turno y reponer la mesa</button>
-    </form> }}
+    </form>
   </section> }}
 
   {{ g.status == "activa" && g.fase == "listo" && <section>
@@ -642,7 +630,7 @@ return Layout.render(<main class="game">
     <div>
       <div class="section-head">
         <h2>Mano del equipo</h2>
-        <p>{{ handCount }} cartas · descartás al final</p>
+        <p>{{ handCount }} cartas</p>
       </div>
       <div class="hand">
         {{ hand.map{|h| <article class="card" data-family="{{ h["card"].isTool ? "herramienta" : "maniobra" }}">
@@ -665,7 +653,7 @@ return Layout.render(<main class="game">
         </article>} }}
       </div>
       {{ hand.isEmpty && <p class="muted">Sin cartas en mano. Al terminar el turno roban 2.</p> }}
-      <p class="hint">{{ g.jugadas == 0 ? "Todavía pueden jugar 1 carta este turno." : "Ya jugaron su carta de este turno." }} Al final del turno tienen que quedar con 3.</p>
+      <p class="hint">{{ g.jugadas == 0 ? "Todavía pueden jugar 1 carta este turno." : "Ya jugaron su carta de este turno." }} No hay límite de mano: descartá solo si querés.</p>
     </div>
 
     <aside>
@@ -688,6 +676,16 @@ return Layout.render(<main class="game">
       {{ top != null && <section class="panel peek">
         <p class="eyebrow">Sonar de Alta Frecuencia</p>
         <p>La próxima carta del mazo es <strong>{{ top.name }}</strong>.</p>
+      </section> }}
+
+      {{ g.modo == "facil" && <section class="panel support-card">
+        <p class="eyebrow">Apoyo del equipo XP</p>
+        <h3>Batería de Respaldo</h3>
+        <p class="muted">+2 Energía en cualquier momento. Es una carta de apoyo: se usa una sola vez.</p>
+        {{ g.apoyo ? <form method="post">
+          <input type="hidden" name="accion" value="apoyo" />
+          <button class="btn btn-primary btn-small">Usar Batería de apoyo</button>
+        </form> : <p class="hint">Ya la usaron.</p> }}
       </section> }}
 
       <section class="panel">

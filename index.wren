@@ -1,7 +1,5 @@
 import "_app/template" for Layout
 
-var jugadores = Request.get("jugadores", "3")
-
 return Layout.render(<main>
   <section class="hero">
     <div class="hero-grid">
@@ -78,7 +76,7 @@ return Layout.render(<main>
     <ol class="steps">
       <li>
         <span class="num">1</span>
-        <span><strong>Robá 2 cartas de Equipo</strong>Jugás el turno con lo que tengas. El límite de 3 se ajusta al final, cuando descartás.</span>
+        <span><strong>Robá 2 cartas de Equipo</strong>No hay límite de mano: jugás con lo que tengas y descartás solo si querés.</span>
       </li>
       <li>
         <span class="num">2</span>
@@ -90,7 +88,7 @@ return Layout.render(<main>
       </li>
       <li>
         <span class="num">4</span>
-        <span><strong>Reponé la mesa</strong>Descarten la carta resuelta, revelen una nueva y descarten hasta quedar con 3. Ahora juega la persona de la izquierda.</span>
+        <span><strong>Reponé la mesa</strong>Descarten la carta resuelta, revelen una nueva y pase el dispositivo. No hay descarte obligatorio.</span>
       </li>
     </ol>
   </section>
@@ -101,22 +99,13 @@ return Layout.render(<main>
         <div class="section-head">
           <h2>Prepará la mesa</h2>
         </div>
-        <p class="muted">Siempre hay 3 cartas de Misterio en la mesa y se roban 2 de Equipo por turno. La cantidad de jugadores solo cambia a quién le toca tirar: las decisiones son del equipo.</p>
+        <p class="muted">Se puede jugar solo o en equipo: la mesa es una. Siempre hay 3 cartas de Misterio y se roban 2 de Equipo por turno.</p>
         <form method="get" action="/juego" class="panel">
-          <label for="jugadores"><strong>Jugadores en la mesa</strong></label>
+          <label for="modo"><strong>Modo</strong></label>
           <p style="margin: 0.4rem 0 0.9rem">
-            <select id="jugadores" name="jugadores" style="font: inherit; padding: 0.5rem 0.7rem; border-radius: 8px; background: #0b2a44; color: inherit; border: 1px solid rgba(127,230,242,.3)">
-              <option value="2">2 jugadores</option>
-              <option value="3" selected>3 jugadores</option>
-              <option value="4">4 jugadores</option>
-              <option value="5">5 jugadores</option>
-              <option value="6">6 jugadores</option>
-            </select>
-          </p>
-          <p style="margin: 0.4rem 0 0">
-            <select name="modo" style="font: inherit; padding: 0.5rem 0.7rem; border-radius: 8px; background: #0b2a44; color: inherit; border: 1px solid rgba(127,230,242,.3)">
+            <select id="modo" name="modo" style="font: inherit; padding: 0.5rem 0.7rem; border-radius: 8px; background: #0b2a44; color: inherit; border: 1px solid rgba(127,230,242,.3)">
               <option value="normal" selected>Normal — 5 y 5</option>
-              <option value="facil">Fácil — 6 y 6 (chicos)</option>
+              <option value="facil">Fácil — 6 y 6 (chicos) + Batería de apoyo</option>
             </select>
           </p>
           <button class="btn btn-primary">Empezar</button>
@@ -145,7 +134,7 @@ return Layout.render(<main>
   <section class="panel" style="text-align:center">
     <p class="eyebrow">Modo restaurante</p>
     <h2>Se explica en una ronda y se juega en una mesa chica</h2>
-    <p class="muted">10 a 20 minutos. De 2 a 6 jugadores. Desde los 5 años, con las cartas a la vista.</p>
+    <p class="muted">10 a 20 minutos. Solo o en equipo. Desde los 5 años, con las cartas a la vista.</p>
     <a class="btn btn-primary" href="/juego">Probar la expedición</a>
   </section>
 </main>)

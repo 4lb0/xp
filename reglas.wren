@@ -6,7 +6,7 @@ return Layout.render(<main>
       <p class="eyebrow">Manual de bolsillo</p>
       <h1>Reglas de XP</h1>
     </div>
-    <p class="pill">2 a 6 jugadores · 10 a 20 minutos</p>
+    <p class="pill">Solo o en equipo · 10 a 20 minutos</p>
   </header>
 
   <section>
@@ -18,7 +18,7 @@ return Layout.render(<main>
           <li><strong>Ganan</strong> si reúnen 6 Pistas.</li>
           <li><strong>Pierden</strong> si la Energía llega a 0 (se quedan sin aire) o el Escudo llega a 0 (el casco cede).</li>
         </ul>
-        <p class="hint">En la app, el equipo comparte una sola mano y decide entre todos. La cantidad de jugadores no cambia la dificultad: todos debaten la misma mesa y el dispositivo rota.</p>
+        <p class="hint">En la app, el equipo comparte una sola mano y decide entre todos. Se puede jugar solo o en equipo: la mesa es la misma.</p>
       </div>
       <div class="console">
         <h2>Los tres contadores</h2>
@@ -37,22 +37,22 @@ return Layout.render(<main>
       <h2>Preparación</h2>
     </div>
     <ol class="steps">
-      <li><span class="num">1</span><span><strong>Repartan una carta de Equipo a cada jugador</strong>Con niños de 5 años conviene jugar con las cartas visibles y leer las opciones en voz alta.</span></li>
+      <li><span class="num">1</span><span><strong>Arranquen con 3 cartas de Equipo</strong>La mano es compartida. Con niños de 5 años conviene leer las opciones en voz alta.</span></li>
       <li><span class="num">2</span><span><strong>Revelen siempre 3 cartas de Misterio</strong>Sin importar cuántos jueguen. La mesa no cambia: cambia a quién le toca tirar.</span></li>
-      <li><span class="num">3</span><span><strong>Pongan los contadores</strong>Modo normal: Energía 5 y Escudo 5. Modo fácil, para los más chicos: 6 y 6. Pistas 0 en ambos.</span></li>
+      <li><span class="num">3</span><span><strong>Pongan los contadores</strong>Modo normal: Energía 5 y Escudo 5. Modo fácil, para los más chicos: 6 y 6, más una carta de apoyo Batería de Respaldo (+2 Energía, una vez). Pistas 0 en ambos.</span></li>
     </ol>
   </section>
 
   <section>
     <div class="section-head">
       <h2>El turno, paso a paso</h2>
-      <p>Juegan en sentido horario.</p>
+      <p>El equipo juega un turno por vez, sea una sola persona o varias.</p>
     </div>
     <ol class="steps">
-      <li><span class="num">1</span><span><strong>Robá 2 cartas de Equipo</strong>El límite de mano es 3, pero se ajusta al final del turno: no descartás al robar.</span></li>
+      <li><span class="num">1</span><span><strong>Robá 2 cartas de Equipo</strong>No hay límite de mano: robás 2 por turno y jugás con lo que tengas. Descartás solo si querés.</span></li>
       <li><span class="num">2</span><span><strong>Jugá 1 carta (opcional)</strong>Herramienta: queda en la mesa toda la partida. Máximo 4 en mesa; la quinta reemplaza a una. Maniobra: se resuelve y va al descarte.</span></li>
       <li><span class="num">3</span><span><strong>Resolvé un Misterio</strong>Elegí una carta activa, lean la situación, debatan y elijan una de sus opciones. Después viene la prueba de dados.</span></li>
-      <li><span class="num">4</span><span><strong>Reponé la mesa y pasá el turno</strong>La carta resuelta va al descarte, se revela una nueva, descartás hasta quedar con 3 cartas y juega la persona de la izquierda.</span></li>
+      <li><span class="num">4</span><span><strong>Reponé la mesa y pasá el turno</strong>La carta resuelta va al descarte, se revela una nueva y pasan al siguiente turno. No hay descarte obligatorio.</span></li>
     </ol>
   </section>
 
