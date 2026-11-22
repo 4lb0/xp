@@ -109,7 +109,6 @@ return Layout.render(<main>
   </section>
 
   <section class="panel" style="text-align:center">
-    <p class="eyebrow">Modo restaurante</p>
     <h2>Se explica en una ronda y se juega en una mesa chica</h2>
     <p class="muted">10 a 20 minutos. Solo o en cooperativo. Desde los 5 años, con las cartas a la vista.</p>
     <a class="btn btn-primary" href="/juego">Probar la expedición</a>
