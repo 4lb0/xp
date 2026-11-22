@@ -50,11 +50,10 @@ if (Request.isPost) {
         `UPDATE games SET fase = 'apoyo', apoyoCarta = ?, apoyoOrigen = 'mano', fasePrevia = 'listo', jugadas = 1 WHERE id = ?`.query(rowId, g.id)
         Game.log(g.id, "Preparan el apoyo: " + c.name + ".")
       } else if (c.isTool) {
-        if (Game.count(g.id, "herramientas") >= 1) {
-          var oldest = Game.rows(g.id, "herramientas").first
-          if (oldest != null) Game.move(oldest["id"], "descarte")
-          Game.log(g.id, "Se retira la Herramienta activa para hacer lugar.")
-        }
+        // Solo una Herramienta activa por equipo: la nueva pisa la anterior.
+        var anteriores = Game.rows(g.id, "herramientas")
+        for (t in anteriores) Game.move(t["id"], "descarte")
+        if (!anteriores.isEmpty) Game.log(g.id, "La nueva Herramienta reemplaza a la anterior: solo hay una activa.")
         Game.move(rowId, "herramientas")
         `UPDATE games SET jugadas = 1 WHERE id = ?`.query(g.id)
         Game.log(g.id, "Herramienta en juego: " + c.name + ".")
@@ -700,8 +699,8 @@ return Layout.render(<main class="game">
 
     <aside>
       <div class="section-head">
-        <h2>Herramientas activas</h2>
-        <p>{{ tools.count }} / 1</p>
+        <h2>Herramienta activa</h2>
+        <p>{{ tools.count }} / 1 · una por equipo</p>
       </div>
       {{ tools.map{|t| <article class="card card-tool" data-family="herramienta">
         <span class="card-art"><span class="card-emoji" aria-hidden="true">{{ t["card"].emoji }}</span></span>
@@ -710,7 +709,7 @@ return Layout.render(<main class="game">
         <section class="card-text">{{ t["card"].body }}</section>
 
       </article>} }}
-      {{ tools.isEmpty && <p class="muted">Todavía no bajaron ninguna Herramienta.</p> }}
+      {{ tools.isEmpty && <p class="muted">Todavía no jugaron ninguna Herramienta.</p> }}
 
       {{ top != null && <section class="panel peek">
         <p class="eyebrow">Sonar de Alta Frecuencia</p>

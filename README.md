@@ -118,6 +118,7 @@ El mazo se mezcla con `ORDER BY RANDOM()` de SQLite. Las tiradas digitales tambi
 - **La cantidad de jugadores no cambia la mesa.** Siempre 3 cartas de Misterio, siempre 2 de robo, siempre 6 Pistas. Se puede jugar solo o en equipo.
 - **Tres modos.** Experto (5 y 5), Casual (5 y 5 + 1 carta de apoyo) y Muy fácil (6 y 6 + 2 cartas de apoyo).
 - **Cartas de apoyo.** Kit de emergencia (+1 Energía o +1 Escudo) y Carga de emergencia (+2 Energía o +2 Escudo). En Experto se mezclan en el mazo; en Casual el Kit va al área de ayuda; en Muy fácil van las dos. Las cartas del área se usan una vez, en cualquier momento, sin gastar la carta del ciclo.
+- **Una sola Herramienta activa por equipo.** Si juegan otra, la anterior va al descarte.
 - **Un misterio por ciclo, una carta jugada por ciclo.** La app lo hace cumplir; si intentás saltearlo, te avisa.
 - **Dados físicos primero.** La app no obliga a tirar: el ingreso manual es de primera clase, no un modo oculto.
 - **La mesa se repone al terminar el ciclo**, no al resolver, para que el resultado quede visible mientras se discute.

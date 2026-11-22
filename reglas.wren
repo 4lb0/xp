@@ -88,6 +88,7 @@ return Layout.render(<main>
     <div class="split">
       <div>
         <div class="section-head"><h2>Herramientas</h2></div>
+        <p class="muted">Solo una activa por equipo: si juegan otra, la anterior va al descarte.</p>
         <p class="muted">Quedan boca arriba frente al equipo. Una sola.</p>
         <table>
           <thead><tr><th>Carta</th><th>Efecto</th></tr></thead>
