@@ -130,6 +130,7 @@ El mazo se mezcla con `ORDER BY RANDOM()` de SQLite. Las tiradas digitales tambi
 - **Una o dos opciones por carta, sin A/B/C.** Se muestran como acciones; las letras quedan solo como separadores internos del Markdown. Las emboscadas muestran una sola.
 - **Maniobras a ciegas.** Se juegan antes de tirar. Ver el dado y después decidir convertía cada prueba en una decisión sin riesgo.
 - **Consumo fijo.** −1 Energía por ciclo: el juego se juega contra el reloj, no contra la suerte de una sola tirada.
+- **Dilemas sin Pistas.** Las 10 cartas de Dilema no otorgan ni quitan Pistas: solo mueven Energía y Escudo. Las Pistas vienen de Exploración y Peligro.
 - **Emboscadas.** Diez de las 40 cartas cuestan 1 Energía, 1 Escudo o 1 Pista al entrar a la mesa. Tienen una sola opción. Golpean al equipo justo cuando repone la mesa.
 - **Emboscada inicial.** Si entre las 3 cartas del inicio hay más de una, no se aplican todas: el equipo elige cuál sufrir. Solo una golpea al empezar.
 - **La Energía es solo el reloj.** Las cartas de Misterio pegan al Escudo o a las Pistas; la Energía baja 1 por ciclo y se recupera únicamente con Batería (+2, ×6) y Generador Auxiliar. Soldadura cura 1 de Escudo (×4): parece una gran cura, pero es de las cartas trampa.

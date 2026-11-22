@@ -19,6 +19,7 @@ return Layout.render(<main>
           <li><strong>Pierden</strong> si la Energía llega a 0 (se quedan sin aire) o el Escudo llega a 0 (el casco cede).</li>
         </ul>
         <p class="hint">En la app, la mano es una sola y las decisiones se comparten. Podés jugar solo o en cooperativo con amigos: la mesa es la misma.</p>
+        <p class="hint">Las cartas de Dilema no dan ni quitan Pistas: solo mueven Energía y Escudo.</p>
       </div>
       <div class="console">
         <h2>Los tres contadores</h2>

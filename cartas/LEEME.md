@@ -39,7 +39,7 @@ El pulso llega cada nueve segundos. Ustedes lo escuchan dos veces más antes de 
 
 - El bloque ` ```xp ` es la ficha técnica. **No cambies el orden de las claves ni el formato.**
 - Lo que está debajo del bloque es la narrativa: Markdown normal (párrafos, **negritas**, listas). Se muestra en la carta y en la mesa.
-- `familia` es `exploracion`, `peligro` o `dilema`. Define el color de la carta.
+- `familia` es `exploracion`, `peligro` o `dilema`. Define el color de la carta. Los **Dilemas** no otorgan ni quitan Pistas: solo mueven Energía y Escudo.
 - `emoji` es el arte provisorio de la carta: se muestra grande en la mesa y en el visor. Cuando exista la ilustración definitiva, este campo desaparece y se reemplaza por la imagen.
 - `entrada` es opcional: el costo que se paga cuando la carta se revela en la mesa. Ejemplos: `energia-1`, `escudo-1`, `pistas-1`. Las cartas con `entrada` son **emboscadas** y llevan una sola opción. La app aplica el costo al repartir la mesa, al reponerla al final del ciclo y al cambiarla con Señuelo Luminoso. Al empezar la partida, si hay varias emboscadas entre las 3 cartas iniciales, se aplica solo una y el equipo elige cuál.
 - Casi todas las cartas tienen **dos opciones**, `[A]` y `[B]`. Las emboscadas tienen **una sola opción**, `[A]`.

@@ -84,7 +84,7 @@ return Layout.render(<main>
   </section>
 
   <section class="deck-section" id="dilema">
-    <div class="section-head"><h2>Dilemas y recursos</h2><p>Elegir también cuesta.</p></div>
+    <div class="section-head"><h2>Dilemas y recursos</h2><p>Elegir también cuesta: solo mueven Energía y Escudo.</p></div>
     <div class="deck-grid">
       {{ dilema.map{|c| <article class="mini-card" data-family="dilema">
         <span class="card-art"><span class="card-emoji" aria-hidden="true">{{ c.emoji }}</span></span>
