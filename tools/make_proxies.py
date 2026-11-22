@@ -20,7 +20,9 @@ from pathlib import Path
 
 from reportlab.lib.pagesizes import A4
 from reportlab.lib.units import mm
+from reportlab.pdfbase import pdfmetrics
 from reportlab.pdfbase.pdfmetrics import stringWidth
+from reportlab.pdfbase.ttfonts import TTFont
 from reportlab.pdfgen import canvas
 from reportlab.lib.styles import ParagraphStyle
 from reportlab.platypus import Paragraph
@@ -28,13 +30,18 @@ from reportlab.platypus import Paragraph
 ROOT = Path(__file__).resolve().parents[1]
 CARD_W = 60 * mm
 CARD_H = 86 * mm
-GAP_X = 4 * mm
-GAP_Y = 3 * mm
-MARGIN_X = 11 * mm
-MARGIN_BOTTOM = 16 * mm
+GAP_X = 0
+GAP_Y = 0
+MARGIN_X = (A4[0] - 3 * CARD_W) / 2
+MARGIN_Y = (A4[1] - 3 * CARD_H) / 2
 COLS = 3
 ROWS = 3
 OUT = ROOT / "pdf" / "xp-proxies-bw.pdf"
+EMOJI_FONT = ROOT / "tools" / "fonts" / "NotoEmoji.ttf"
+
+if not EMOJI_FONT.exists():
+    raise SystemExit("Falta tools/fonts/NotoEmoji.ttf (ver README).")
+pdfmetrics.registerFont(TTFont("NotoEmoji", str(EMOJI_FONT)))
 
 
 def clean(text: str) -> str:
@@ -109,14 +116,60 @@ def test_text(raw: str) -> str:
         return ""
     raw = raw.strip().lower()
     if raw == "cara":
-        return "CARA (par)"
+        return "CARA · SALE PAR"
     if raw == "seca":
-        return "SECA (impar)"
+        return "SECA · SALE IMPAR"
     if raw == "dobles":
-        return "DOBLES"
+        return "2 DADOS · DOBLES"
     if raw.startswith("sin 1"):
-        return "SIN 1 NI 6"
-    return clean(raw.upper())
+        return "2 DADOS · SIN 1 NI 6"
+    return clean(raw.upper().replace(",", " ·"))
+
+
+def parse_effects(raw: str) -> list[tuple[str, str, str]]:
+    out: list[tuple[str, str, str]] = []
+    if not raw:
+        return out
+    for piece in raw.split(","):
+        match = re.match(r"\s*(pistas|energia|escudo)\s*([+-])\s*(\d+)", piece)
+        if match:
+            out.append(match.groups())
+    return out
+
+
+def draw_chips(c: canvas.Canvas, effects: list[tuple[str, str, str]], x: float, y: float) -> float:
+    """Dibuja chips tipo app: icono emoji + valor. Devuelve el ancho usado."""
+    icons = {"energia": "⚡", "escudo": "🛡️", "pistas": "🔍"}
+    start = x
+    for key, sign, value in effects:
+        icon = icons.get(key, "•")
+        c.setFont("NotoEmoji", 6.2)
+        iw = stringWidth(icon, "NotoEmoji", 6.2)
+        c.setFont("Helvetica-Bold", 5.4)
+        tw = stringWidth(f"{sign}{value}", "Helvetica-Bold", 5.4)
+        chip_w = iw + tw + 2.8 * mm
+        c.setFillGray(0.90)
+        c.roundRect(x, y, chip_w, 4.5 * mm, 1.4 * mm, stroke=0, fill=1)
+        c.setFillGray(0)
+        c.setFont("NotoEmoji", 6.2)
+        c.drawString(x + 1.1 * mm, y + 1.15 * mm, icon)
+        c.setFont("Helvetica-Bold", 5.4)
+        c.drawString(x + 1.1 * mm + iw + 0.45 * mm, y + 1.25 * mm, f"{sign}{value}")
+        x += chip_w + 0.8 * mm
+    return x - start
+
+
+def draw_effects_row(
+    c: canvas.Canvas, label: str, effects: list[tuple[str, str, str]], x: float, y: float
+) -> None:
+    c.setFillGray(0.20)
+    c.setFont("Helvetica-Bold", 4.4)
+    c.drawString(x, y + 1.3 * mm, label)
+    if effects:
+        draw_chips(c, effects, x + 11.0 * mm, y)
+    else:
+        c.setFont("Helvetica", 5.0)
+        c.drawString(x + 11.0 * mm, y + 1.3 * mm, "—")
 
 
 def team_type(card: dict) -> str:
@@ -132,71 +185,40 @@ def mystery_family(card: dict) -> str:
     return {"exploracion": "EXPLORACIÓN", "peligro": "PELIGRO", "dilema": "DILEMA"}.get(family, family.upper())
 
 
-def draw_crop_marks(c: canvas.Canvas, x: float, y: float, w: float, h: float) -> None:
-    c.saveState()
-    c.setStrokeGray(0.15)
-    c.setLineWidth(0.3)
-    m = 2.2 * mm
-    for cx, cy, dx, dy in (
-        (x, y, -1, -1),
-        (x + w, y, 1, -1),
-        (x, y + h, -1, 1),
-        (x + w, y + h, 1, 1),
-    ):
-        c.line(cx, cy, cx + dx * m, cy)
-        c.line(cx, cy, cx, cy + dy * m)
-    c.restoreState()
-
-
 def draw_card(c: canvas.Canvas, card: dict, x: float, y: float) -> None:
     kind = "misterio" if card.get("id", "").startswith("m") else "equipo"
     c.saveState()
 
-    # Línea de corte + marcas de esquina.
-    c.setStrokeGray(0.62)
-    c.setLineWidth(0.3)
-    c.setDash(2, 2)
-    c.rect(x, y, CARD_W, CARD_H, stroke=1, fill=0)
-    c.setDash()
-    draw_crop_marks(c, x, y, CARD_W, CARD_H)
-
-    inset = 1.3 * mm
-    c.setStrokeGray(0)
-    c.setLineWidth(0.55)
-    c.rect(x + inset, y + inset, CARD_W - 2 * inset, CARD_H - 2 * inset, stroke=1, fill=0)
-
-    # Marca de agua muy clara para llenar el espacio y ayudar a separar tipos.
+    inset = 2.6 * mm
+    header_h = 6.0 * mm
     if kind == "misterio":
-        mark = mystery_family(card)[0]
-    elif (card.get("subtipo") or "").lower() == "apoyo" or (card.get("tipo") or "").lower() == "apoyo":
-        mark = "A"
-    elif (card.get("tipo") or "").lower() == "herramienta":
-        mark = "H"
+        # Misterio: cabecera arriba, pie de marca abajo.
+        header_y = y + CARD_H - inset - header_h
+        content_top = header_y - 1.8 * mm
+        footer_y = y + 3.8 * mm
     else:
-        mark = "M"
-    c.setFillGray(0.92)
-    c.setFont("Helvetica-Bold", 58)
-    c.drawCentredString(x + CARD_W / 2, y + 22 * mm, mark)
+        # Equipo: la cabecera con id y mazo va abajo; la marca XP queda justo arriba.
+        header_y = y + inset
+        content_top = y + CARD_H - inset - 1.8 * mm
+        footer_y = y + inset + header_h + 1.8 * mm
 
     # Cabecera gris con id y mazo.
-    header_h = 6.0 * mm
-    header_y = y + CARD_H - inset - header_h
-    c.setFillGray(0.88)
+    c.setFillGray(0.90 if kind == "misterio" else 0.84)
     c.rect(x + inset, header_y, CARD_W - 2 * inset, header_h, stroke=0, fill=1)
     c.setFillGray(0)
     c.setFont("Helvetica-Bold", 5.6)
-    c.drawString(x + inset + 2.0 * mm, header_y + 1.8 * mm, clean(card.get("id", "")).upper())
-    c.setFont("Helvetica", 4.8)
+    c.drawString(x + inset + 1.5 * mm, header_y + 1.8 * mm, clean(card.get("id", "")).upper())
+    c.setFont("Helvetica-Bold" if kind == "equipo" else "Helvetica", 4.8)
     deck = "MAZO DEL JUEGO" if kind == "misterio" else "MAZO DEL EQUIPO"
-    c.drawRightString(x + CARD_W - inset - 2.0 * mm, header_y + 1.8 * mm, deck)
+    c.drawRightString(x + CARD_W - inset - 1.5 * mm, header_y + 1.8 * mm, deck)
 
-    left = x + inset + 2.0 * mm
-    width = CARD_W - 2 * inset - 4.0 * mm
-    top = header_y - 1.8 * mm
+    left = x + inset
+    width = CARD_W - 2 * inset
+    top = content_top
 
     # Nombre.
     name_style = ParagraphStyle(
-        "name", fontName="Helvetica-Bold", fontSize=9.0, leading=9.8, textColor=(0, 0, 0), spaceAfter=0
+        "name", fontName="Helvetica-Bold", fontSize=9.5, leading=10.3, textColor=(0, 0, 0), spaceAfter=0
     )
     name = Paragraph(clean(card.get("nombre", "Sin nombre")), name_style)
     _, name_h = name.wrap(width, 20 * mm)
@@ -208,49 +230,63 @@ def draw_card(c: canvas.Canvas, card: dict, x: float, y: float) -> None:
     c.setFont("Helvetica-Bold", 5.2)
     c.setFillGray(0.25)
     c.drawString(left, top - 4.0 * mm, sub)
+    emoji = (card.get("emoji") or "").strip()
+    if emoji:
+        c.setFont("NotoEmoji", 7.2)
+        c.setFillGray(0.20)
+        c.drawRightString(left + width, top - 4.0 * mm, emoji)
     top -= 5.0 * mm
 
     if kind == "misterio":
-        entry = effect_text(card.get("entrada", ""))
-        if entry:
-            badge_w = width
-            c.setFillGray(0)
-            c.rect(left, top - 4.6 * mm, badge_w, 4.6 * mm, stroke=0, fill=1)
-            c.setFillGray(1)
-            c.setFont("Helvetica-Bold", 4.9)
-            c.drawString(left + 1.2 * mm, top - 3.3 * mm, f"EMBOSCADA · Al entrar: {entry}")
-            c.setFillGray(0)
-            top -= 6.0 * mm
+        entry_effects = parse_effects(card.get("entrada", ""))
+        if entry_effects:
+            c.setFillGray(0.90)
+            c.roundRect(left, top - 5.6 * mm, width, 5.6 * mm, 1.4 * mm, stroke=0, fill=1)
+            c.setFillGray(0.15)
+            c.setFont("Helvetica-Bold", 4.6)
+            entry_label = "AL ENTRAR"
+            c.drawString(left + 1.4 * mm, top - 3.8 * mm, entry_label)
+            entry_label_w = stringWidth(entry_label, "Helvetica-Bold", 4.6)
+            draw_chips(c, entry_effects, left + 1.4 * mm + entry_label_w + 2.5 * mm, top - 5.0 * mm)
+            top -= 6.6 * mm
 
-        option_style = ParagraphStyle(
-            "option", fontName="Helvetica", fontSize=5.25, leading=6.15, textColor=(0.08, 0.08, 0.08), spaceAfter=0
+        title_style = ParagraphStyle(
+            "option_title", fontName="Helvetica-Bold", fontSize=6.3, leading=7.3,
+            textColor=(0.05, 0.05, 0.05), spaceAfter=0
         )
         for idx, opt in enumerate(card.get("options", [])):
             label = opt.get("label", chr(65 + idx))
-            # círculo con la opción
-            c.setFillGray(0)
-            c.circle(left + 2.0 * mm, top - 2.1 * mm, 2.0 * mm, stroke=0, fill=1)
             c.setFillGray(1)
+            c.setStrokeGray(0)
+            c.setLineWidth(0.5)
+            c.circle(left + 2.0 * mm, top - 2.1 * mm, 2.0 * mm, stroke=1, fill=1)
+            c.setFillGray(0)
             c.setFont("Helvetica-Bold", 5.3)
             c.drawCentredString(left + 2.0 * mm, top - 3.5 * mm, clean(label))
-            c.setFillGray(0)
 
             title = clean(opt.get("texto", ""))
             prueba = test_text(opt.get("prueba", ""))
-            exito = effect_text(opt.get("exito", ""))
-            fallo = effect_text(opt.get("fallo", ""))
-            lines = [f"<b>{title}</b>"]
-            if prueba:
-                lines.append(f"Prueba: {prueba}")
-            if exito:
-                lines.append(f"Éxito: {exito}")
-            if fallo:
-                lines.append(f"Fallo: {fallo}")
-            p = Paragraph("<br/>".join(lines), option_style)
             text_width = width - 5.2 * mm
-            _, option_h = p.wrap(text_width, 40 * mm)
-            p.drawOn(c, left + 5.2 * mm, top - option_h)
-            top -= max(option_h, 5.0 * mm) + 2.0 * mm
+            tp = Paragraph(title, title_style)
+            _, th = tp.wrap(text_width, 20 * mm)
+            tp.drawOn(c, left + 5.2 * mm, top - th)
+            y = top - th - 1.0 * mm
+
+            # Prueba: pill gris.
+            if prueba:
+                c.setFont("Helvetica-Bold", 4.9)
+                tw = stringWidth(prueba, "Helvetica-Bold", 4.9)
+                c.setFillGray(0.90)
+                c.roundRect(left + 5.2 * mm, y - 4.3 * mm, tw + 2.6 * mm, 4.3 * mm, 1.4 * mm, stroke=0, fill=1)
+                c.setFillGray(0.15)
+                c.drawString(left + 6.5 * mm, y - 3.0 * mm, prueba)
+                y -= 5.2 * mm
+
+            draw_effects_row(c, "ÉXITO", parse_effects(opt.get("exito", "")), left + 5.2 * mm, y - 4.5 * mm)
+            y -= 5.0 * mm
+            draw_effects_row(c, "FALLO", parse_effects(opt.get("fallo", "")), left + 5.2 * mm, y - 4.5 * mm)
+            y -= 5.2 * mm
+            top = y - 0.6 * mm
 
         # Un fragmento de narrativa al pie, para que la carta no quede vacía.
         flavor = clean(card.get("body", ""))
@@ -263,7 +299,7 @@ def draw_card(c: canvas.Canvas, card: dict, x: float, y: float) -> None:
             )
             fp = Paragraph(flavor, flavor_style)
             _, fh = fp.wrap(width, 20 * mm)
-            fy = y + inset + 7.0 * mm
+            fy = y + 8.0 * mm
             if fy + fh < top - 2.0 * mm:
                 c.setStrokeGray(0.75)
                 c.setLineWidth(0.3)
@@ -277,28 +313,35 @@ def draw_card(c: canvas.Canvas, card: dict, x: float, y: float) -> None:
         p = Paragraph(body, body_style)
         _, body_h = p.wrap(width, 48 * mm)
         p.drawOn(c, left, top - body_h)
-        top -= body_h + 3.0 * mm
 
-        # Recordatorio de uso según el tipo de carta.
-        if (card.get("subtipo") or "").lower() == "apoyo" or (card.get("tipo") or "").lower() == "apoyo":
-            usage = "Se usa una vez y va al descarte. Elegí Energía o Escudo."
-        elif (card.get("tipo") or "").lower() == "herramienta":
-            usage = "Queda en la mesa. Solo una Herramienta activa por equipo."
-        else:
-            usage = "Se juega antes de tirar. Después va al descarte."
-        usage_style = ParagraphStyle(
-            "usage", fontName="Helvetica", fontSize=5.6, leading=6.8,
-            textColor=(0.35, 0.35, 0.35), spaceAfter=0
-        )
-        up = Paragraph(f"<b>CÓMO SE USA:</b> {usage}", usage_style)
-        _, uh = up.wrap(width, 18 * mm)
-        up.drawOn(c, left, top - uh)
+    # Pie de carta.
+    c.setFillGray(0.35)
+    c.setFont("Helvetica", 4.3)
+    c.drawCentredString(x + CARD_W / 2, footer_y, "XP: En busca del Megalodón")
 
-    # Marca de proxy.
-    c.setFillGray(0.55)
-    c.setFont("Helvetica", 4.2)
-    c.drawRightString(x + CARD_W - inset - 2 * mm, y + inset + 2.0 * mm, "PROXY B&N")
+    c.restoreState()
 
+
+def draw_cut_lines(c: canvas.Canvas, cards: list[dict]) -> None:
+    vertical = set()
+    horizontal = set()
+    for i, _card in enumerate(cards):
+        row, col = divmod(i, COLS)
+        x = MARGIN_X + col * CARD_W
+        y = A4[1] - MARGIN_Y - CARD_H - row * CARD_H
+        vertical.add((round(x, 3), round(y, 3), round(y + CARD_H, 3)))
+        vertical.add((round(x + CARD_W, 3), round(y, 3), round(y + CARD_H, 3)))
+        horizontal.add((round(y, 3), round(x, 3), round(x + CARD_W, 3)))
+        horizontal.add((round(y + CARD_H, 3), round(x, 3), round(x + CARD_W, 3)))
+
+    c.saveState()
+    c.setStrokeGray(0.58)
+    c.setLineWidth(0.3)
+    c.setDash(2, 2)
+    for x, y0, y1 in sorted(vertical):
+        c.line(x, y0, x, y1)
+    for y, x0, x1 in sorted(horizontal):
+        c.line(x0, y, x1, y)
     c.restoreState()
 
 
@@ -323,34 +366,13 @@ def build() -> None:
     c.setCreator("tools/make_proxies.py")
 
     for page in range(pages):
-        # Encabezado de página.
-        c.setFillGray(0)
-        c.setFont("Helvetica-Bold", 6.2)
-        c.drawString(MARGIN_X, A4[1] - 9 * mm, "XP · EQUIPO EXPEDICIÓN · PROXIES B&N")
-        c.setFont("Helvetica", 5.4)
-        c.drawRightString(A4[0] - MARGIN_X, A4[1] - 9 * mm, "60 × 86 mm · IMPRIMIR AL 100% · SIN ESCALAR")
-
         chunk = cards[page * per_page : (page + 1) * per_page]
         for i, card in enumerate(chunk):
             row, col = divmod(i, COLS)
-            x = MARGIN_X + col * (CARD_W + GAP_X)
-            y = A4[1] - MARGIN_BOTTOM - CARD_H - row * (CARD_H + GAP_Y)
+            x = MARGIN_X + col * CARD_W
+            y = A4[1] - MARGIN_Y - CARD_H - row * CARD_H
             draw_card(c, card, x, y)
-
-        # Pie de página.
-        c.setFillGray(0.25)
-        c.setFont("Helvetica", 5.0)
-        c.drawString(MARGIN_X, 9 * mm, "Cortá por las líneas y meté cada carta en un folio. Si imprimís desde Preview, elegí “Tamaño real”.")
-        c.drawRightString(A4[0] - MARGIN_X, 9 * mm, f"pág. {page + 1}/{pages}")
-
-        # Regla de calibración de 50 mm.
-        c.setStrokeGray(0.2)
-        c.setLineWidth(0.35)
-        c.line(MARGIN_X, 5.2 * mm, MARGIN_X + 50 * mm, 5.2 * mm)
-        c.setFillGray(0.25)
-        c.setFont("Helvetica", 4.6)
-        c.drawString(MARGIN_X + 51.5 * mm, 4.5 * mm, "50 mm")
-
+        draw_cut_lines(c, chunk)
         c.showPage()
 
     c.save()

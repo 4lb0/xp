@@ -24,6 +24,8 @@ python3 -m pip install reportlab
 python3 tools/make_proxies.py
 ```
 
+Los iconos usan **Noto Emoji** (OFL) en `tools/fonts/`.
+
 ## Caché de CSS
 
 Cloudflare cachea `/css/style.css` durante 4 horas. Al cambiar el CSS, subí
