@@ -12,8 +12,9 @@ if (Request.isPost) {
 
   if (accion == "nueva") {
     if (g != null) Game.destroy(g.id)
-    var modo = Request.post("modo", "experto")
-    if (modo != "casual" && modo != "facil") modo = "experto"
+    var modo = Request.post("modo", "casual")
+    if (modo != "experto" && modo != "casual" && modo != "facil") modo = "casual"
+    session.set("modo", modo)
     var id = Game.create(1, modo)
     session.set("gameId", id.toString)
     return Response.redirect("/juego")
@@ -371,8 +372,9 @@ if (Request.isPost) {
 
 // Primer ingreso con cantidad de jugadores en la URL
 if (g == null && (Request.get("jugadores") != null || Request.get("modo") != null)) {
-  var modo = Request.get("modo", "experto")
-  if (modo != "casual" && modo != "facil") modo = "experto"
+  var modo = Request.get("modo", "casual")
+  if (modo != "experto" && modo != "casual" && modo != "facil") modo = "casual"
+  session.set("modo", modo)
   var id = Game.create(1, modo)
   session.set("gameId", id.toString)
   return Response.redirect("/juego")
@@ -382,6 +384,8 @@ if (g == null && (Request.get("jugadores") != null || Request.get("modo") != nul
 
 var aviso = Util.urlDecode(Request.get("aviso", ""))
 var dadoLibre = Request.get("dado")
+var modoGuardado = session.get("modo")
+var modoInicial = (modoGuardado == "experto" || modoGuardado == "casual" || modoGuardado == "facil") ? modoGuardado : "casual"
 
 if (g == null) {
   return Layout.render(<main>
@@ -394,9 +398,9 @@ if (g == null) {
         <input type="hidden" name="accion" value="nueva" />
         <label for="modo"><strong>Modo</strong></label>
         <select id="modo" name="modo">
-          <option value="experto" selected>Experto — 5 y 5, sin apoyos</option>
-          <option value="casual">Normal — 5 y 5 + 1 carta de apoyo</option>
-          <option value="facil">Asistido — 6 y 6 + 2 cartas de apoyo</option>
+          <option value="experto" {{ modoInicial == "experto" ? "selected" : "" }}>Experto — 5 y 5, sin apoyos</option>
+          <option value="casual" {{ modoInicial == "casual" ? "selected" : "" }}>Normal — 5 y 5 + 1 carta de apoyo</option>
+          <option value="facil" {{ modoInicial == "facil" ? "selected" : "" }}>Asistido — 6 y 6 + 2 cartas de apoyo</option>
         </select>
         <button class="btn btn-primary">Iniciar expedición</button>
       </form>

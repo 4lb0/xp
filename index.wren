@@ -1,5 +1,9 @@
 import "_app/template" for Layout
 
+var session = Session.new()
+var modoGuardado = session.get("modo")
+var modoInicial = (modoGuardado == "experto" || modoGuardado == "casual" || modoGuardado == "facil") ? modoGuardado : "casual"
+
 return Layout.render(<main>
   <section class="hero">
     <div class="hero-grid">
@@ -80,9 +84,9 @@ return Layout.render(<main>
           <label for="modo"><strong>Modo</strong></label>
           <p style="margin: 0.4rem 0 0.9rem">
             <select id="modo" name="modo" style="font: inherit; padding: 0.5rem 0.7rem; border-radius: 8px; background: #0b2a44; color: inherit; border: 1px solid rgba(127,230,242,.3)">
-              <option value="experto" selected>Experto — 5 y 5, sin apoyos</option>
-              <option value="casual">Normal — 5 y 5 + 1 apoyo</option>
-              <option value="facil">Asistido — 6 y 6 + 2 apoyos</option>
+              <option value="experto" {{ modoInicial == "experto" ? "selected" : "" }}>Experto — 5 y 5, sin apoyos</option>
+              <option value="casual" {{ modoInicial == "casual" ? "selected" : "" }}>Normal — 5 y 5 + 1 apoyo</option>
+              <option value="facil" {{ modoInicial == "facil" ? "selected" : "" }}>Asistido — 6 y 6 + 2 apoyos</option>
             </select>
           </p>
           <button class="btn btn-primary">Empezar</button>
