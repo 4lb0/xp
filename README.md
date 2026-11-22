@@ -41,7 +41,7 @@ El estado de la partida se guarda en SQLite y se ata a la sesión del navegador.
 
 1. Elegís el modo (normal 5/5 o fácil 6/6) y arranca la expedición. No hay que elegir cantidad de jugadores: se juega solo o en equipo.
 2. La app reparte 3 cartas de Equipo y revela **siempre 3 cartas de Misterio**, sin importar cuántos jueguen. La cantidad de jugadores no cambia nada: las decisiones son del equipo.
-3. En cada turno: roban 2 cartas de Equipo, pueden jugar 1 carta, eligen una carta de Misterio y una de sus opciones. No hay descarte obligatorio: la mano puede crecer y descartás solo si querés.
+3. En cada turno: roban 2 cartas de Equipo, pueden jugar 1 carta, eligen una carta de Misterio y una de sus opciones. Al final del turno te quedan 3 cartas: el resto se descarta al azar, sin elección.
 4. La prueba de dados se puede resolver de dos formas:
    - **Tirar en la app**: el servidor genera los D6.
    - **Ya tiré en la mesa**: elegís en pantalla lo que salió en cada dado físico.
@@ -113,7 +113,7 @@ El mazo se mezcla con `ORDER BY RANDOM()` de SQLite. Las tiradas digitales tambi
 
 ## Decisiones de este prototipo
 
-- **Solo o en equipo.** No hay mano por jugador ni rotación obligatoria: el equipo comparte la mano y decide junto. También se puede jugar una sola persona.
+- **Solo o en equipo.** El equipo comparte la mano y decide junto. También se puede jugar una sola persona. Al final del turno quedan 3 cartas; el resto se descarta al azar.
 - **La cantidad de jugadores no cambia la mesa.** Siempre 3 cartas de Misterio, siempre 2 de robo, siempre 6 Pistas. Se puede jugar solo o en equipo.
 - **Dos modos.** Normal (5 y 5) y fácil (6 y 6) para los más chicos, con una carta de apoyo Batería de Respaldo (+2 Energía, una vez).
 - **Un misterio por turno, una carta jugada por turno.** La app lo hace cumplir; si intentás saltearlo, te avisa.

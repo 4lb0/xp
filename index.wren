@@ -76,7 +76,7 @@ return Layout.render(<main>
     <ol class="steps">
       <li>
         <span class="num">1</span>
-        <span><strong>Robá 2 cartas de Equipo</strong>No hay límite de mano: jugás con lo que tengas y descartás solo si querés.</span>
+        <span><strong>Robá 2 cartas de Equipo</strong>Al final del turno te quedan 3 cartas: el resto se descarta al azar.</span>
       </li>
       <li>
         <span class="num">2</span>
@@ -88,7 +88,7 @@ return Layout.render(<main>
       </li>
       <li>
         <span class="num">4</span>
-        <span><strong>Reponé la mesa</strong>Descarten la carta resuelta, revelen una nueva y pase el dispositivo. No hay descarte obligatorio.</span>
+        <span><strong>Reponé la mesa</strong>Descarten la carta resuelta, revelen una nueva y pase el dispositivo. Al final se descartan al azar hasta 3.</span>
       </li>
     </ol>
   </section>

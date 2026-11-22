@@ -49,10 +49,10 @@ return Layout.render(<main>
       <p>El equipo juega un turno por vez, sea una sola persona o varias.</p>
     </div>
     <ol class="steps">
-      <li><span class="num">1</span><span><strong>Robá 2 cartas de Equipo</strong>No hay límite de mano: robás 2 por turno y jugás con lo que tengas. Descartás solo si querés.</span></li>
+      <li><span class="num">1</span><span><strong>Robá 2 cartas de Equipo</strong>Robás 2 por turno y jugás con las cartas que tengas. Al final del turno te quedan 3: el resto se descarta al azar.</span></li>
       <li><span class="num">2</span><span><strong>Jugá 1 carta (opcional)</strong>Herramienta: queda en la mesa toda la partida. Máximo 4 en mesa; la quinta reemplaza a una. Maniobra: se resuelve y va al descarte.</span></li>
       <li><span class="num">3</span><span><strong>Resolvé un Misterio</strong>Elegí una carta activa, lean la situación, debatan y elijan una de sus opciones. Después viene la prueba de dados.</span></li>
-      <li><span class="num">4</span><span><strong>Reponé la mesa y pasá el turno</strong>La carta resuelta va al descarte, se revela una nueva y pasan al siguiente turno. No hay descarte obligatorio.</span></li>
+      <li><span class="num">4</span><span><strong>Reponé la mesa y pasá el turno</strong>La carta resuelta va al descarte, se revela una nueva y pasan al siguiente turno. Al final, las cartas que sobren de 3 se descartan al azar.</span></li>
     </ol>
   </section>
 

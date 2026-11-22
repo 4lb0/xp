@@ -306,6 +306,17 @@ if (Request.isPost) {
     if (g.fase != "resuelto") {
       aviso = "Primero resuelvan un misterio."
     } else {
+      var sobra = Game.count(g.id, "mano") - 3
+      if (sobra > 0) {
+        var mano = `SELECT id, cardId FROM game_cards WHERE gameId = ? AND zone = 'mano' ORDER BY RANDOM()`.fetch(g.id)
+        for (i in 0...sobra) {
+          if (i < mano.count) {
+            var c = Card.get(mano[i]["cardId"])
+            Game.move(mano[i]["id"], "descarte")
+            Game.log(g.id, "Descarte al azar: " + (c == null ? "una carta" : c.name) + ".")
+          }
+        }
+      }
       var g2 = Game.find(g.id)
       if (g2.ahorro) {
         Game.log(g.id, "Ahorro de Oxígeno: el consumo del submarino no gasta Energía.")
@@ -588,7 +599,7 @@ return Layout.render(<main class="game">
     <p class="eyebrow">Resultado</p>
     <h2>{{ g.resultado == "ganada" ? "Prueba superada" : "Prueba fallida" }}</h2>
     <p class="muted">{{ g.ultimo }}</p>
-    <p>Revisen los contadores. Cuando estén listos, sigan con el próximo turno.</p>
+    <p>Revisen los contadores. Al terminar el turno, las cartas que sobren de 3 se descartan al azar.</p>
     <form method="post">
       <input type="hidden" name="accion" value="terminar" />
       <button class="btn btn-primary">Terminar turno y reponer la mesa</button>
@@ -630,7 +641,7 @@ return Layout.render(<main class="game">
     <div>
       <div class="section-head">
         <h2>Mano del equipo</h2>
-        <p>{{ handCount }} cartas</p>
+        <p>{{ handCount }} cartas · al final quedan 3</p>
       </div>
       <div class="hand">
         {{ hand.map{|h| <article class="card" data-family="{{ h["card"].isTool ? "herramienta" : "maniobra" }}">
@@ -644,16 +655,11 @@ return Layout.render(<main class="game">
               <input type="hidden" name="rowId" value="{{ h["rowId"] }}" />
               <button class="btn btn-primary btn-small" {{ puedeJugar ? "" : "disabled" }}>Jugar</button>
             </form>
-            <form method="post" class="inline-form">
-              <input type="hidden" name="accion" value="descartar" />
-              <input type="hidden" name="rowId" value="{{ h["rowId"] }}" />
-              <button class="btn btn-ghost btn-small">Descartar</button>
-            </form>
           </div>
         </article>} }}
       </div>
       {{ hand.isEmpty && <p class="muted">Sin cartas en mano. Al terminar el turno roban 2.</p> }}
-      <p class="hint">{{ g.jugadas == 0 ? "Todavía pueden jugar 1 carta este turno." : "Ya jugaron su carta de este turno." }} No hay límite de mano: descartá solo si querés.</p>
+      <p class="hint">{{ g.jugadas == 0 ? "Todavía pueden jugar 1 carta este turno." : "Ya jugaron su carta de este turno." }} Al final del turno, las que sobren de 3 se descartan al azar.</p>
     </div>
 
     <aside>
@@ -712,7 +718,7 @@ return Layout.render(<main class="game">
 
       <section class="panel">
         <p class="eyebrow">Regla rápida</p>
-        <p>Cada turno: roban 2, juegan 1 carta como máximo y resuelven 1 misterio. Al final descartan hasta 3 y el submarino consume 1 Energía.</p>
+        <p>Cada turno: roban 2, juegan 1 carta como máximo y resuelven 1 misterio. Al final se descartan al azar hasta 3 y el submarino consume 1 Energía.</p>
         <a href="/reglas" class="btn btn-ghost btn-small">Ver reglas completas</a>
       </section>
     </aside>
