@@ -49,6 +49,12 @@ class Card {
     return isTool || isSupport || ["heal_shield", "heal_energy", "clue_for_energy", "harpoon", "discard_active"].contains(_effect)
   }
 
+  // Maniobras genéricas que se pueden preparar desde la mano, antes de
+  // elegir el Misterio. El efecto queda armado para la próxima prueba.
+  isPrep {
+    return ["plus_two", "reroll_all", "cancel_shield_loss", "no_energy_cost", "reduce_damage"].contains(_effect)
+  }
+
   static get(id) {
     if (id == null || id.count < 3) return null
     var kind = id[0] == "m" ? "misterio" : "equipo"

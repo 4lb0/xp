@@ -145,7 +145,7 @@ if (Request.isPost) {
         aviso = "Esa carta ya no está en la mesa."
       } else {
         var c = Card.get(row["cardId"])
-        `UPDATE games SET fase = 'prueba', pruebaCarta = ?, pruebaOpcion = ?, dado1 = 0, dado2 = 0, tirado = 0, bonus = 0 WHERE id = ?`.query(row["cardId"], optLabel, g.id)
+        `UPDATE games SET fase = 'prueba', pruebaCarta = ?, pruebaOpcion = ?, dado1 = 0, dado2 = 0, tirado = 0 WHERE id = ?`.query(row["cardId"], optLabel, g.id)
         Game.log(g.id, "Eligen " + c.name + ".")
       }
     }
@@ -187,8 +187,8 @@ if (Request.isPost) {
     var parity = opt != null && (opt["tipoPrueba"] == "cara" || opt["tipoPrueba"] == "seca")
     if (c == null) {
       aviso = "Esa carta ya no está en tu mano."
-    } else if (g.fase != "prueba") {
-      aviso = "Esa Maniobra se usa cuando hay una prueba de dados."
+    } else if (g.fase != "prueba" && g.fase != "listo") {
+      aviso = "Esa Maniobra se usa antes de tirar."
     } else if (g.jugadas > 0) {
       aviso = "Ya jugaron una carta este ciclo."
     } else if (c.effect == "flip_parity" && !parity) {
@@ -727,11 +727,17 @@ return Layout.render(<main class="game">
           <h3>{{ h["card"].name }}</h3>
           <section class="card-text">{{ h["card"].body }}</section>
           <div class="action-row">
-            {{ h["card"].playNow ? <form method="post" class="inline-form">
+            {{ h["card"].playNow && <form method="post" class="inline-form">
               <input type="hidden" name="accion" value="jugar" />
               <input type="hidden" name="rowId" value="{{ h["rowId"] }}" />
               <button class="btn btn-primary btn-small" {{ puedeJugar ? "" : "disabled" }}>Jugar</button>
-            </form> : <p class="hint card-hint">Elegí un Misterio y usala antes de tirar.</p> }}
+            </form> }}
+            {{ !h["card"].playNow && h["card"].isPrep && <form method="post" class="inline-form">
+              <input type="hidden" name="accion" value="maniobra" />
+              <input type="hidden" name="rowId" value="{{ h["rowId"] }}" />
+              <button class="btn btn-ghost btn-small" {{ puedeJugar ? "" : "disabled" }}>Preparar</button>
+            </form> }}
+            {{ !h["card"].playNow && !h["card"].isPrep && <p class="hint card-hint">Elegí un Misterio de Cara o Seca y usala antes de tirar.</p> }}
           </div>
         </article>} }}
       </div>
