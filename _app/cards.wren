@@ -79,6 +79,48 @@ class Card {
     return Card.new(meta, body, opts)
   }
 
+  static chips(text) {
+    var out = []
+    if (text != null) {
+      for (piece in text.split(",")) {
+        var t = piece.trim
+        if (t == "") continue
+        var i = t.indexOf("+")
+        var sign = "+"
+        if (i == -1) {
+          i = t.indexOf("-")
+          sign = "−"
+        }
+        if (i < 1) continue
+        var key = t[0...i].trim
+        var val = t[i + 1..t.count - 1].trim
+        var icon = "·"
+        var name = key
+        if (key == "pistas") {
+          icon = "🔍"
+          name = "Pistas"
+        }
+        if (key == "energia") {
+          icon = "⚡"
+          name = "Energía"
+        }
+        if (key == "escudo") {
+          icon = "🛡️"
+          name = "Escudo"
+        }
+        if (key == "turno") {
+          icon = "⏳"
+          name = "Turno"
+        }
+        var cls = "chip-" + key
+        if (sign == "−") cls = cls + " chip-loss"
+        out.add({"icon": icon, "text": sign + val, "cls": cls, "title": name + " " + sign + val})
+      }
+    }
+    if (out.isEmpty) out.add({"icon": "·", "text": "—", "cls": "chip-none", "title": "Sin efecto"})
+    return out
+  }
+
   static decorate(o) {
     var p = (o["prueba"] || "cara").trim
     var kind = "cara"
@@ -118,6 +160,8 @@ class Card {
     o["pruebaLabel"] = label
     o["exitoLabel"] = Card.effectsLabel(o["exito"])
     o["falloLabel"] = Card.effectsLabel(o["fallo"])
+    o["exitoChips"] = Card.chips(o["exito"])
+    o["falloChips"] = Card.chips(o["fallo"])
   }
 
   static targetOf(text) {

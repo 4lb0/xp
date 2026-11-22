@@ -837,3 +837,36 @@ tbody tr:hover { background: rgba(127, 230, 242, 0.04); }
   font-size: 0.75rem;
   font-weight: 700;
 }
+
+
+/* Fichas visuales de efectos */
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.15rem;
+  padding: 0.14rem 0.45rem;
+  border-radius: 999px;
+  border: 1px solid transparent;
+  font-weight: 800;
+  font-size: 0.74rem;
+  line-height: 1.25;
+  white-space: nowrap;
+}
+.chip-energia { background: #35cdc0; color: #03262b; }
+.chip-escudo { background: #f2c14e; color: #3a2a06; }
+.chip-pista { background: #ef6a5b; color: #3a0d08; }
+.chip-turno { background: #a78bfa; color: #1b1030; }
+.chip-loss { border-color: #ffb3a8; box-shadow: 0 0 0 2px rgba(255, 120, 100, 0.22); }
+.chip-none { background: rgba(157, 184, 199, 0.16); color: var(--muted); }
+.chip-label {
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-left: 0.15rem;
+}
+.option-effects, .option-chips { display: flex; flex-wrap: wrap; gap: 0.3rem; align-items: center; }
+.option-effects { font-size: 0.74rem; color: var(--muted); }
+.option-chips { margin: 0.45rem 0; }
+.legend p { margin-bottom: 0.4rem; }

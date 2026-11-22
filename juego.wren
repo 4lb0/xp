@@ -117,32 +117,30 @@ if (Request.isPost) {
     if (opt == null) {
       aviso = "No hay una prueba preparada."
     } else {
-      var push = g.fase == "empujon"
-      var dados = push ? 2 : opt["dados"]
+      var dados = opt["dados"]
       var dice = Game.roll(dados)
       var d1 = dice[0]
       var d2 = dados == 2 ? dice[1] : 0
-      var parity = !push && (opt["tipoPrueba"] == "cara" || opt["tipoPrueba"] == "seca")
+      var parity = opt["tipoPrueba"] == "cara" || opt["tipoPrueba"] == "seca"
       if (parity && g.giro) d1 = 7 - d1
       `UPDATE games SET dado1 = ?, dado2 = ?, tirado = 1, giro = 0 WHERE id = ?`.query(d1, d2, g.id)
-      Game.log(g.id, (push ? "Empujón: " : "Tiran en la app: ") + d1.toString + (dados == 2 ? " y " + d2.toString : "") + ".")
+      Game.log(g.id, "Tiran en la app: " + d1.toString + (dados == 2 ? " y " + d2.toString : "") + ".")
     }
   } else if (accion == "mesa") {
     var d1 = Num.fromString(Request.post("d1", "0"))
     var d2 = Num.fromString(Request.post("d2", "0"))
     var c = Card.get(g.pruebaCarta)
     var opt = c == null ? null : c.option(g.pruebaOpcion)
-    var push = g.fase == "empujon"
-    var dados = push ? 2 : (opt == null ? 0 : opt["dados"])
+    var dados = opt == null ? 0 : opt["dados"]
     if (opt == null) {
       aviso = "No hay una prueba preparada."
     } else if (d1 < 1 || d1 > 6 || (dados == 2 && (d2 < 1 || d2 > 6))) {
       aviso = "Elegí valores de 1 a 6 para cada dado."
     } else {
-      var parity = !push && (opt["tipoPrueba"] == "cara" || opt["tipoPrueba"] == "seca")
+      var parity = opt["tipoPrueba"] == "cara" || opt["tipoPrueba"] == "seca"
       if (parity && g.giro) d1 = 7 - d1
       `UPDATE games SET dado1 = ?, dado2 = ?, tirado = 1, giro = 0 WHERE id = ?`.query(d1, dados == 2 ? d2 : 0, g.id)
-      Game.log(g.id, (push ? "Empujón en la mesa: " : "Dados de la mesa: ") + d1.toString + (dados == 2 ? " y " + d2.toString : "") + ".")
+      Game.log(g.id, "Dados de la mesa: " + d1.toString + (dados == 2 ? " y " + d2.toString : "") + ".")
     }
   } else if (accion == "maniobra") {
     var row = `SELECT * FROM game_cards WHERE id = ? AND gameId = ? AND zone = 'mano'`.first(rowId, g.id)
@@ -206,14 +204,6 @@ if (Request.isPost) {
       aviso = "No hay una prueba para resolver."
     } else if (!g.tirado) {
       aviso = "Primero tienen que tirar los dados."
-    } else if (g.fase == "empujon") {
-      var tools = Game.ids(g.id, "herramientas")
-      var total = g.dado1 + g.dado2 + (tools.contains("plus_one_sum") ? 1 : 0)
-      var okp = total >= 8
-      var res = Game.apply(g.id, g, okp ? {"pistas": 1, "energia": 0, "escudo": 0} : {"pistas": 0, "energia": 0, "escudo": -1}, okp, tools)
-      var texto = okp ? "Empujón logrado: +1 Pista." : "El empujón falla: −1 Escudo."
-      `UPDATE games SET fase = 'resuelto', empujado = 1, ultimo = ?, tirado = 0, dado1 = 0, dado2 = 0, bonus = 0, giro = 0, suerte = 0 WHERE id = ?`.query(texto, g.id)
-      Game.log(g.id, texto)
     } else {
       var tools = Game.ids(g.id, "herramientas")
       var d1 = g.dado1
@@ -232,7 +222,7 @@ if (Request.isPost) {
       if (mesaRow != null) Game.move(mesaRow["id"], "descarte")
       var texto = (ok ? "Prueba superada" : "Prueba fallida") + ": " + c.name + " — " + opt["texto"] + "."
       if (!res["notas"].isEmpty) texto = texto + " " + res["notas"].join(". ") + "."
-      var nextFase = (ok && res["status"] == "activa") ? "empujon" : "resuelto"
+      var nextFase = "resuelto"
       `UPDATE games SET fase = ?, resultado = ?, resueltas = 1, ultimo = ?, dado1 = ?, dado2 = ?, tirado = 0, bonus = 0, giro = 0, suerte = 0 WHERE id = ?`.query([nextFase, ok ? "ganada" : "perdida", texto, d1, d2, g.id])
       Game.log(g.id, texto)
       if (res["status"] == "victoria") Game.log(g.id, "¡Seis Pistas! El misterio queda resuelto.")
@@ -257,15 +247,6 @@ if (Request.isPost) {
     } else {
       `UPDATE games SET energia = energia - 1, escudo = MIN(6, escudo + 2), reparado = 1 WHERE id = ?`.query(g.id)
       Game.log(g.id, "Reparación de casco: −1 Energía, +2 Escudo.")
-    }
-  } else if (accion == "asegurar") {
-    if (g.fase != "empujon") {
-      aviso = "No hay un empujón pendiente."
-    } else if (g.tirado) {
-      aviso = "Ya arriesgaron: tienen que resolver el empujón."
-    } else {
-      `UPDATE games SET fase = 'resuelto', empujado = 1, ultimo = ? WHERE id = ?`.query("El equipo asegura la Pista y no arriesga más.", g.id)
-      Game.log(g.id, "El equipo asegura la Pista y no arriesga más.")
     }
   } else if (accion == "dado") {
     var d = Game.roll(1)[0]
@@ -483,6 +464,12 @@ return Layout.render(<main class="game">
     <p class="muted">{{ pendingCard.family == "exploracion" ? "Exploración" : (pendingCard.family == "peligro" ? "Peligro" : "Dilema") }}</p>
     <p class="test-action">{{ pendingOpt["texto"] }}</p>
     <p><span class="test-badge test-{{ pendingOpt["tipoPrueba"] }}">{{ pendingOpt["pruebaLabel"] }}</span></p>
+    <p class="option-chips">
+      <span class="chip-label">Éxito</span>
+      {{ pendingOpt["exitoChips"].map{|c| <span class="chip {{ c["cls"] }}" title="{{ c["title"] }}" aria-label="{{ c["title"] }}">{{ c["icon"] }} {{ c["text"] }}</span>} }}
+      <span class="chip-label">Fallo</span>
+      {{ pendingOpt["falloChips"].map{|c| <span class="chip {{ c["cls"] }}" title="{{ c["title"] }}" aria-label="{{ c["title"] }}">{{ c["icon"] }} {{ c["text"] }}</span>} }}
+    </p>
 
     <div class="dice-row roller-stage">
       {{ Layout.die(g.tirado ? g.dado1 : 0, "die-large") }}
@@ -550,51 +537,6 @@ return Layout.render(<main class="game">
     </section> }}
   </section> }}
 
-  {{ g.status == "activa" && g.fase == "empujon" && pendingCard != null && <section class="test-panel push-panel">
-    <p class="eyebrow">Oportunidad</p>
-    <span class="card-emoji test-emoji" aria-hidden="true">{{ pendingCard.emoji }}</span>
-    <h2>¿Profundizan?</h2>
-    <p class="muted">{{ g.ultimo }}</p>
-    <p><strong>Empujón:</strong> dos dados, 8+ para ganar 1 Pista extra. Si falla, pierden 1 de Escudo.</p>
-    <p class="hint">Es una tirada aparte: no gasta carta ni Maniobra. Pueden asegurar la Pista y terminar el turno.</p>
-
-    <div class="dice-row roller-stage">
-      {{ Layout.die(g.tirado ? g.dado1 : 0, "die-large") }}
-      {{ Layout.die(g.tirado ? g.dado2 : 0, "die-large") }}
-    </div>
-
-    {{ !g.tirado && <section class="roll-controls">
-      <form method="post" class="roll-form">
-        <input type="hidden" name="accion" value="tirar" />
-        <button class="btn btn-primary">Arriesgar y tirar en la app</button>
-      </form>
-      <form method="post" class="roll-form">
-        <input type="hidden" name="accion" value="mesa" />
-        <label class="die-select">Dado 1
-          <select name="d1">
-            {{ [1, 2, 3, 4, 5, 6].map{|n| <option value="{{ n }}">{{ n }}</option>} }}
-          </select>
-        </label>
-        <label class="die-select">Dado 2
-          <select name="d2">
-            {{ [1, 2, 3, 4, 5, 6].map{|n| <option value="{{ n }}">{{ n }}</option>} }}
-          </select>
-        </label>
-        <button class="btn btn-ghost">Arriesgar con dados de la mesa</button>
-      </form>
-    </section> }}
-
-    {{ g.tirado && <form method="post" class="push-form">
-      <input type="hidden" name="accion" value="resolver" />
-      <button class="btn btn-primary">Resolver el empujón</button>
-    </form> }}
-
-    {{ !g.tirado && <form method="post" class="push-form">
-      <input type="hidden" name="accion" value="asegurar" />
-      <button class="btn btn-ghost">Asegurar la Pista</button>
-    </form> }}
-  </section> }}
-
   {{ g.status == "activa" && g.fase == "resuelto" && <section class="panel result-panel">
     <p class="eyebrow">Resultado</p>
     <h2>{{ g.resultado == "ganada" ? "Prueba superada" : "Prueba fallida" }}</h2>
@@ -627,7 +569,12 @@ return Layout.render(<main class="game">
               <button class="option-btn" {{ puedeElegir ? "" : "disabled" }}>
                 <span class="option-text">{{ o["texto"] }}</span>
                 <span class="test-badge test-{{ o["tipoPrueba"] }}">{{ o["pruebaLabel"] }}</span>
-                <span class="option-effects">Éxito: {{ o["exitoLabel"] }} · Fallo: {{ o["falloLabel"] }}</span>
+                <span class="option-effects">
+                  <span class="chip-label">Éxito</span>
+                  {{ o["exitoChips"].map{|c| <span class="chip {{ c["cls"] }}" title="{{ c["title"] }}" aria-label="{{ c["title"] }}">{{ c["icon"] }} {{ c["text"] }}</span>} }}
+                  <span class="chip-label">Fallo</span>
+                  {{ o["falloChips"].map{|c| <span class="chip {{ c["cls"] }}" title="{{ c["title"] }}" aria-label="{{ c["title"] }}">{{ c["icon"] }} {{ c["text"] }}</span>} }}
+                </span>
               </button>
             </form>
           </li>} }}
@@ -687,7 +634,7 @@ return Layout.render(<main class="game">
       {{ g.modo == "facil" && <section class="panel support-card">
         <p class="eyebrow">Apoyo del equipo XP</p>
         <h3>Batería de Respaldo</h3>
-        <p class="muted">+2 Energía en cualquier momento. Es una carta de apoyo: se usa una sola vez.</p>
+        <p><span class="chip chip-energia">⚡ +2</span> en cualquier momento. Es una carta de apoyo: se usa una sola vez.</p>
         {{ g.apoyo ? <form method="post">
           <input type="hidden" name="accion" value="apoyo" />
           <button class="btn btn-primary btn-small">Usar Batería de apoyo</button>
@@ -696,7 +643,7 @@ return Layout.render(<main class="game">
 
       <section class="panel">
         <p class="eyebrow">Reparación de casco</p>
-        <p class="muted">Una vez por turno: 1 Energía → 2 Escudo.</p>
+        <p><span class="chip chip-energia chip-loss">⚡ −1</span> <span class="chip chip-escudo">🛡️ +2</span> Una vez por turno.</p>
         <form method="post">
           <input type="hidden" name="accion" value="reparar" />
           <button class="btn btn-ghost btn-small" {{ puedeReparar ? "" : "disabled" }}>Reparar casco</button>

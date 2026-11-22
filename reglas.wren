@@ -56,6 +56,12 @@ return Layout.render(<main>
     </ol>
   </section>
 
+  <section class="panel legend">
+    <p class="eyebrow">Fichas de efectos</p>
+    <p><span class="chip chip-energia">⚡ +1</span> Energía · <span class="chip chip-escudo">🛡️ +2</span> Escudo · <span class="chip chip-pista">🔍 +1</span> Pistas · <span class="chip chip-turno">⏳ −1</span> Turno</p>
+    <p class="hint">El ícono dice qué recurso cambia y el número, cuánto. La ficha con borde rojo es una pérdida.</p>
+  </section>
+
   <section>
     <div class="section-head">
       <h2>Pruebas de dados</h2>
@@ -118,10 +124,9 @@ return Layout.render(<main>
   </section>
 
   <section class="panel">
-    <h2>El reloj: consumo y empujón</h2>
+    <h2>El reloj: consumo de Energía</h2>
     <p><strong>Consumo:</strong> al terminar cada turno, el submarino pierde <strong>1 Energía</strong>, hayan ganado o no una Pista. La Energía es el reloj de la partida y no se recupera con las cartas de Misterio.</p>
     <p><strong>Recarga:</strong> solo con Equipo. La Batería de Respaldo devuelve 2 de Energía y hay 6 en el mazo. El Generador Auxiliar recarga 1 al empezar el turno si están en 4 o menos. Ahorro de Oxígeno saltea el consumo de un turno.</p>
-    <p><strong>Empujón:</strong> cuando una prueba sale bien, el equipo elige entre asegurar la Pista o arriesgar una tirada aparte de 2 dados (8+). Si sale, +1 Pista; si falla, −2 Escudo. Nadie está obligado a empujar.</p>
     <p><strong>Reparación:</strong> una vez por turno, antes de elegir un misterio, pueden gastar 1 Energía para recuperar 2 Escudo. Reparar compra tiempo, pero acerca el final del aire.</p>
     <p><strong>Emboscadas:</strong> algunas cartas de Peligro cuestan <strong>1 Escudo</strong> o <strong>1 Pista</strong> apenas entran a la mesa, y tienen una sola opción. Otras, cada tanto, hacen <strong>perder un turno</strong> entero. Las cartas de Misterio nunca te sacan Energía: la Energía la baja el reloj y la recupera el Equipo.</p>
   </section>

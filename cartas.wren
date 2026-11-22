@@ -47,7 +47,12 @@ return Layout.render(<main>
         <h3>{{ c.name }}</h3>
         <section class="card-text">{{ c.body }}</section>
         <ul>
-          {{ c.options.map{|o| <li>{{ o["texto"] }} — <span class="test-badge test-{{ o["tipoPrueba"] }}">{{ o["pruebaLabel"] }}</span><br/><span class="option-effects">Éxito: {{ o["exitoLabel"] }} · Fallo: {{ o["falloLabel"] }}</span></li>} }}
+          {{ c.options.map{|o| <li>{{ o["texto"] }} — <span class="test-badge test-{{ o["tipoPrueba"] }}">{{ o["pruebaLabel"] }}</span><br/><span class="option-effects">
+  <span class="chip-label">Éxito</span>
+  {{ o["exitoChips"].map{|c| <span class="chip {{ c["cls"] }}" title="{{ c["title"] }}" aria-label="{{ c["title"] }}">{{ c["icon"] }} {{ c["text"] }}</span>} }}
+  <span class="chip-label">Fallo</span>
+  {{ o["falloChips"].map{|c| <span class="chip {{ c["cls"] }}" title="{{ c["title"] }}" aria-label="{{ c["title"] }}">{{ c["icon"] }} {{ c["text"] }}</span>} }}
+</span></li>} }}
         </ul>
       </article>} }}
     </div>
@@ -63,7 +68,12 @@ return Layout.render(<main>
         {{ c.entry != "" && <p class="entry-badge">Al entrar: {{ c.entryLabel }}</p> }}
         <section class="card-text">{{ c.body }}</section>
         <ul>
-          {{ c.options.map{|o| <li>{{ o["texto"] }} — <span class="test-badge test-{{ o["tipoPrueba"] }}">{{ o["pruebaLabel"] }}</span><br/><span class="option-effects">Éxito: {{ o["exitoLabel"] }} · Fallo: {{ o["falloLabel"] }}</span></li>} }}
+          {{ c.options.map{|o| <li>{{ o["texto"] }} — <span class="test-badge test-{{ o["tipoPrueba"] }}">{{ o["pruebaLabel"] }}</span><br/><span class="option-effects">
+  <span class="chip-label">Éxito</span>
+  {{ o["exitoChips"].map{|c| <span class="chip {{ c["cls"] }}" title="{{ c["title"] }}" aria-label="{{ c["title"] }}">{{ c["icon"] }} {{ c["text"] }}</span>} }}
+  <span class="chip-label">Fallo</span>
+  {{ o["falloChips"].map{|c| <span class="chip {{ c["cls"] }}" title="{{ c["title"] }}" aria-label="{{ c["title"] }}">{{ c["icon"] }} {{ c["text"] }}</span>} }}
+</span></li>} }}
         </ul>
       </article>} }}
     </div>
@@ -78,7 +88,12 @@ return Layout.render(<main>
         <h3>{{ c.name }}</h3>
         <section class="card-text">{{ c.body }}</section>
         <ul>
-          {{ c.options.map{|o| <li>{{ o["texto"] }} — <span class="test-badge test-{{ o["tipoPrueba"] }}">{{ o["pruebaLabel"] }}</span><br/><span class="option-effects">Éxito: {{ o["exitoLabel"] }} · Fallo: {{ o["falloLabel"] }}</span></li>} }}
+          {{ c.options.map{|o| <li>{{ o["texto"] }} — <span class="test-badge test-{{ o["tipoPrueba"] }}">{{ o["pruebaLabel"] }}</span><br/><span class="option-effects">
+  <span class="chip-label">Éxito</span>
+  {{ o["exitoChips"].map{|c| <span class="chip {{ c["cls"] }}" title="{{ c["title"] }}" aria-label="{{ c["title"] }}">{{ c["icon"] }} {{ c["text"] }}</span>} }}
+  <span class="chip-label">Fallo</span>
+  {{ o["falloChips"].map{|c| <span class="chip {{ c["cls"] }}" title="{{ c["title"] }}" aria-label="{{ c["title"] }}">{{ c["icon"] }} {{ c["text"] }}</span>} }}
+</span></li>} }}
         </ul>
       </article>} }}
     </div>
