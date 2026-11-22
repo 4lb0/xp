@@ -25,7 +25,6 @@ class Game {
   suerte { _row["suerte"].toNum == 1 }
   empujado { _row["empujado"].toNum == 1 }
   pistasTurno { _row["pistasTurno"].toNum }
-  reparado { _row["reparado"].toNum == 1 }
   blindajeM { _row["blindajeM"].toNum == 1 }
   focosM { _row["focosM"].toNum == 1 }
   apoyoCarta { _row["apoyoCarta"] == null ? null : _row["apoyoCarta"].toNum }

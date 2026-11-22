@@ -48,7 +48,7 @@ El estado de la partida se guarda en SQLite y se ata a la sesión del navegador.
    - **Ya tiré en la mesa**: elegís en pantalla lo que salió en cada dado físico.
 5. Todas las Maniobras se juegan **antes** de tirar (Turbo, Giro, Focos, Suerte, Cebo, Ahorro, Blindaje): se comprometen a ciegas. Giro invierte el dado y Focos lo relanza si la prueba falla.
 6. Al resolver, la app aplica los efectos de la opción y controla victoria/derrota. La prueba da exactamente lo que dice la carta: no hay tirada extra.
-7. Al terminar el ciclo el submarino consume **1 Energía**, siempre. La Energía es el reloj: cada ciclo hay que decidir entre buscar Pistas, recargar o **reparar el casco** (1 Energía → 2 Escudo, una vez por ciclo).
+7. Al terminar el ciclo el submarino consume **1 Energía**, siempre. La Energía es el reloj: cada ciclo hay que decidir entre buscar Pistas o recargar.
 
 Los contadores son los tres dados del juego: **Energía** (6 → 0, derrota), **Escudo** (6 → 0, derrota) y **Pistas** (0 → 6, victoria).
 

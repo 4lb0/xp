@@ -284,17 +284,6 @@ if (Request.isPost) {
       }
       Game.move(row["id"], "descarte")
     }
-  } else if (accion == "reparar") {
-    if (g.fase != "listo") {
-      aviso = "Reparen antes de elegir un misterio."
-    } else if (g.reparado) {
-      aviso = "Ya repararon el casco en este misterio."
-    } else if (g.energia < 2) {
-      aviso = "Necesitan al menos 2 de Energía para reparar."
-    } else {
-      `UPDATE games SET energia = energia - 1, escudo = MIN(6, escudo + 2), reparado = 1 WHERE id = ?`.query(g.id)
-      Game.log(g.id, "Reparación de casco: −1 Energía, +2 Escudo.")
-    }
   } else if (accion == "dado") {
     var d = Game.roll(1)[0]
     return Response.redirect("/juego?dado=" + d.toString)
@@ -343,7 +332,7 @@ if (Request.isPost) {
           if (resEntrada["status"] != "activa") return Response.redirect("/juego")
         }
       }
-      `UPDATE games SET jugador = 1, turno = turno + 1, fase = 'listo', pruebaCarta = NULL, pruebaOpcion = NULL, dado1 = 0, dado2 = 0, tirado = 0, bonus = 0, cebo = 0, ahorro = 0, blindajeUsado = 0, blindajeM = 0, focosUsado = 0, focosM = 0, jugadas = 0, resueltas = 0, resultado = NULL, giro = 0, suerte = 0, empujado = 0, pistasTurno = 0, reparado = 0 WHERE id = ?`.query(g.id)
+      `UPDATE games SET jugador = 1, turno = turno + 1, fase = 'listo', pruebaCarta = NULL, pruebaOpcion = NULL, dado1 = 0, dado2 = 0, tirado = 0, bonus = 0, cebo = 0, ahorro = 0, blindajeUsado = 0, blindajeM = 0, focosUsado = 0, focosM = 0, jugadas = 0, resueltas = 0, resultado = NULL, giro = 0, suerte = 0, empujado = 0, pistasTurno = 0 WHERE id = ?`.query(g.id)
       var g3 = Game.find(g.id)
       if (g3 != null && Game.hasTool(g.id, "energy_start") && g3.energia <= 4) {
         `UPDATE games SET energia = energia + 1 WHERE id = ?`.query(g.id)
@@ -439,7 +428,6 @@ if (g.tirado && pendingOpt != null) {
 var handCount = hand.count
 var puedeElegir = g.status == "activa" && g.fase == "listo" && g.resueltas == 0
 var puedeJugar = g.status == "activa" && g.jugadas == 0 && g.fase == "listo"
-var puedeReparar = g.status == "activa" && g.fase == "listo" && !g.reparado && g.energia >= 2
 var maniobrasPrueba = hand.where { |h| ["plus_two", "reroll_all", "cancel_shield_loss", "no_energy_cost", "reduce_damage", "flip_parity", "reroll_parity"].contains(h["card"].effect) }.toList
 
 var finalTitulo = "La expedición continúa"
@@ -733,17 +721,6 @@ return Layout.render(<main class="game">
         <h2>Acciones base</h2>
         <p>No son cartas</p>
       </div>
-
-      <section class="panel base-action">
-        <p class="eyebrow">Reparación de casco</p>
-        <p><span class="chip chip-energia chip-loss">⚡ −1</span> <span class="chip chip-escudo">🛡️ +2</span> Una vez por ciclo.</p>
-        <form method="post">
-          <input type="hidden" name="accion" value="reparar" />
-          <button class="btn btn-ghost btn-small" {{ puedeReparar ? "" : "disabled" }}>Reparar casco</button>
-        </form>
-        <p class="hint">Siempre disponible: no ocupa el lugar de la Herramienta activa.</p>
-        {{ g.reparado && <p class="hint">Ya repararon en este misterio; el casco aguanta un poco más.</p> }}
-      </section>
 
       <section class="panel">
         <p class="eyebrow">Dado libre</p>
