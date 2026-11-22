@@ -147,9 +147,15 @@ class Game {
     return out
   }
 
-  static topCard(id) {
-    var row = `SELECT cardId FROM game_cards WHERE gameId = ? AND zone = 'misterio' ORDER BY ord`.first(id)
+  static topCard(id, zone) {
+    var row = `SELECT cardId FROM game_cards WHERE gameId = ? AND zone = ? ORDER BY ord`.first(id, zone)
     return row == null ? null : Card.get(row["cardId"])
+  }
+
+  static nthCard(id, zone, n) {
+    var rows = `SELECT cardId FROM game_cards WHERE gameId = ? AND zone = ? ORDER BY ord`.fetch(id, zone)
+    if (n < 1 || rows.count < n) return null
+    return Card.get(rows[n - 1]["cardId"])
   }
 
   static move(rowId, zone) {

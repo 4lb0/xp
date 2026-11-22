@@ -109,7 +109,7 @@ Una vez por ciclo, mirá la carta de arriba del Mazo del Juego antes de elegir.
 
 | `efecto` | Qué hace |
 |---|---|
-| `peek` | Muestra la próxima carta del mazo mientras la Herramienta esté en la mesa. |
+| `peek` | Con la Herramienta en la mesa, muestra la segunda carta del Mazo del Juego (el tope ya está siempre revelado). |
 | `reroll_parity` | Antes de tirar en una prueba de Cara o Seca: si falla, relanza el dado una vez (1 vez por ciclo). |
 | `energy_start` | Al empezar el ciclo, si la Energía está en 4 o menos, sube 1. |
 | `reduce_damage` | Antes de tirar: reduce 1 el daño al Escudo (1 vez por ciclo). |
