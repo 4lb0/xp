@@ -105,9 +105,15 @@ class Game {
     return rows
   }
 
+  // Cada mazo tiene su propia pila de descarte: las cartas de Misterio no se
+  // mezclan con las de Equipo. La zona se elige por el mazo de origen.
+  static discardZone(from) {
+    return from == "misterio" ? "descarteJuego" : "descarteEquipo"
+  }
+
   static recycleDiscard(id, from) {
-    var prefix = from == "misterio" ? "m%" : "e%"
-    var rows = `SELECT id FROM game_cards WHERE gameId = ? AND zone = 'descarte' AND cardId LIKE ?`.fetch(id, prefix)
+    var zone = Game.discardZone(from)
+    var rows = `SELECT id FROM game_cards WHERE gameId = ? AND zone = ?`.fetch(id, zone)
     if (rows.isEmpty) return false
     for (r in rows) {
       `UPDATE game_cards SET zone = ?, ord = RANDOM() WHERE id = ?`.query(from, r["id"])
@@ -286,7 +292,7 @@ class Game {
     var eff = Game.parseEffects(ok ? opt["exito"] : opt["fallo"])
     var res = Game.apply(id, g, eff, ok, tools)
     var mesaRow = `SELECT id FROM game_cards WHERE gameId = ? AND cardId = ? AND zone = 'mesa'`.first(id, g.pruebaCarta)
-    if (mesaRow != null) Game.move(mesaRow["id"], "descarte")
+    if (mesaRow != null) Game.move(mesaRow["id"], "descarteJuego")
     var texto = (ok ? "Prueba superada" : "Prueba fallida") + ": " + c.name + " — " + opt["texto"] + "."
     if (!res["notas"].isEmpty) texto = texto + " " + res["notas"].join(". ") + "."
     `UPDATE games SET fase = 'resuelto', resultado = ?, resueltas = 1, ultimo = ?, dado1 = ?, dado2 = ?, tirado = 0, bonus = 0, giro = 0, suerte = 0, focosM = 0 WHERE id = ?`.query([ok ? "ganada" : "perdida", texto, d1, d2, id])

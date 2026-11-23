@@ -29,3 +29,8 @@ Db.migrate("xp-fase-previa", "ALTER TABLE games ADD COLUMN fasePrevia TEXT")
 Db.migrate("xp-blindaje-m", "ALTER TABLE games ADD COLUMN blindajeM INTEGER NOT NULL DEFAULT 0")
 
 Db.migrate("xp-focos-m", "ALTER TABLE games ADD COLUMN focosM INTEGER NOT NULL DEFAULT 0")
+
+// Los descartes de Misterio y de Equipo ahora son pilas separadas. Las
+// partidas viejas tenían una sola zona 'descarte'; se reparte por el prefijo
+// de la carta. Las partidas nuevas ya nacen con las dos zonas.
+Db.migrate("xp-descartes", "UPDATE game_cards SET zone = CASE WHEN cardId LIKE 'm%' THEN 'descarteJuego' ELSE 'descarteEquipo' END WHERE zone = 'descarte'")

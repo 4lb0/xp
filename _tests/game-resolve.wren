@@ -11,7 +11,7 @@ class Fixture {
        blindajeM = 0, blindajeUsado = 0, focosM = 0, jugadas = 0,
        resueltas = 0, resultado = NULL, ultimo = NULL
        WHERE id = ?`.query(id)
-    `UPDATE game_cards SET zone = 'descarte' WHERE gameId = ? AND zone = 'herramientas'`.query(id)
+    `UPDATE game_cards SET zone = 'descarteEquipo' WHERE gameId = ? AND zone = 'herramientas'`.query(id)
     return id
   }
 
@@ -64,7 +64,7 @@ Test.assert(!g.tirado, "la tirada se limpia al resolver")
 Test.assert(g.dado1 == 2, "el dado queda guardado para mostrarlo")
 Test.assert(g.ultimo != null && g.ultimo.contains("Prueba superada"), "ultimo guarda el texto")
 Test.assert(Game.count(id, "mesa") == 0, "la carta resuelta sale de la mesa")
-Test.assert(Game.ids(id, "descarte").contains("m01"), "la carta resuelta va al descarte")
+Test.assert(Game.ids(id, "descarteJuego").contains("m01"), "la carta resuelta va al descarte")
 Test.assert(Game.lastLogs(id, 1)[0]["text"].contains("Prueba superada"), "la bitácora registra el resultado")
 Game.destroy(id)
 
@@ -79,7 +79,7 @@ g = Game.find(id)
 Test.assert(g.escudo == 5, "el fallo aplica escudo-1")
 Test.assert(g.pistas == 0, "el fallo no suma Pistas")
 Test.assert(g.resultado == "perdida", "el resultado queda como perdida")
-Test.assert(Game.ids(id, "descarte").contains("m01"), "la carta fallada también va al descarte")
+Test.assert(Game.ids(id, "descarteJuego").contains("m01"), "la carta fallada también va al descarte")
 Game.destroy(id)
 
 // --- Suerte del Principiante: re-tirada ---

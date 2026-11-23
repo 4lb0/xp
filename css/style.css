@@ -1655,3 +1655,210 @@ section[id] { scroll-margin-top: 5.5rem; }
 }
 
 .game .card-grid { grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); }
+
+/* ---------- Mazos, preferencias y animaciones ---------- */
+
+.pill-btn {
+  font: inherit;
+  cursor: pointer;
+  background: transparent;
+}
+
+.pill-btn:hover {
+  color: var(--paper);
+  border-color: rgba(127, 230, 242, 0.32);
+}
+
+.view-tools {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  flex-wrap: wrap;
+}
+
+.pref-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.22rem 0.55rem;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: transparent;
+  color: var(--muted);
+  font: inherit;
+  font-size: 0.72rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.pref-toggle:hover { color: var(--paper); }
+.pref-toggle[aria-pressed="false"] { opacity: 0.55; }
+
+.mazos-dialog {
+  width: min(760px, calc(100% - 1.5rem));
+  max-height: min(86vh, 760px);
+  padding: 0;
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  background: var(--deep);
+  color: var(--paper);
+  overflow: hidden;
+}
+
+.mazos-dialog::backdrop {
+  background: rgba(2, 8, 14, 0.72);
+  backdrop-filter: blur(4px);
+}
+
+.mazos-dialog-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1.1rem 1.3rem;
+  border-bottom: 1px solid var(--line);
+}
+.mazos-dialog-head h2 { margin: 0; }
+
+.dialog-close {
+  display: grid;
+  place-items: center;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 50%;
+  border: 1px solid var(--line);
+  background: transparent;
+  color: var(--paper);
+  font-size: 1.2rem;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.mazos-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-content: start;
+  gap: 1.1rem;
+  padding: 1.1rem 1.3rem 1.3rem;
+  max-height: calc(86vh - 92px);
+  overflow: auto;
+}
+
+.mazos-pile { min-width: 0; align-self: start; margin: 0; }
+
+.mazos-pile-head {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  padding: 0.7rem;
+  margin-bottom: 0.7rem;
+  border-radius: 14px;
+  border: 1px solid var(--line);
+  background: rgba(127, 230, 242, 0.05);
+}
+.mazos-pile-head img {
+  flex: none;
+  border-radius: 6px;
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.4);
+}
+.mazos-pile-head h3 { margin: 0 0 0.15rem; font-size: 1rem; }
+.mazos-pile-head p { margin: 0; color: var(--muted); font-size: 0.8rem; }
+.mazos-pile-head strong { color: var(--paper); }
+
+.mazos-pile h4 {
+  margin: 0.9rem 0 0.4rem;
+  color: var(--turquoise);
+  font-size: 0.7rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.discard-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.3rem;
+  max-height: 30vh;
+  overflow: auto;
+}
+.discard-list li {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  padding: 0.35rem 0.45rem;
+  border-radius: 8px;
+  background: rgba(127, 230, 242, 0.035);
+}
+.discard-emoji { width: 1.6rem; flex: none; text-align: center; font-size: 1.05rem; }
+.discard-body { display: grid; min-width: 0; }
+.discard-body strong { font-size: 0.8rem; line-height: 1.2; }
+.discard-body small { color: var(--muted); font-size: 0.68rem; }
+
+@keyframes card-new {
+  0% { box-shadow: 0 0 0 0 rgba(242, 193, 78, 0.7), var(--shadow); outline-color: rgba(242, 193, 78, 0); transform: translateY(-8px) scale(0.985); }
+  25%, 65% { box-shadow: 0 0 0 5px rgba(242, 193, 78, 0.32), var(--shadow); outline-color: rgba(242, 193, 78, 0.82); transform: translateY(0) scale(1); }
+  100% { box-shadow: 0 0 0 0 rgba(242, 193, 78, 0), var(--shadow); outline-color: rgba(242, 193, 78, 0); }
+}
+.is-new {
+  outline: 2px solid transparent;
+  outline-offset: -2px;
+  animation: card-new 1.5s ease-out both;
+}
+
+.card-ghost {
+  position: fixed;
+  z-index: 80;
+  pointer-events: none;
+  border-radius: 7px;
+  background-size: cover;
+  background-position: center;
+  box-shadow: 0 14px 30px rgba(0, 0, 0, 0.55);
+  will-change: transform, opacity;
+}
+.card-ghost-front {
+  display: grid;
+  place-items: center;
+  background: var(--navy);
+  border: 1px solid rgba(127, 230, 242, 0.35);
+  font-size: 1.6rem;
+}
+
+.move-toast {
+  position: fixed;
+  left: 1rem;
+  bottom: max(1rem, env(safe-area-inset-bottom));
+  z-index: 90;
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  max-width: min(420px, calc(100% - 2rem));
+  padding: 0.55rem 0.85rem;
+  border-radius: 999px;
+  border: 1px solid rgba(127, 230, 242, 0.22);
+  background: rgba(4, 14, 25, 0.96);
+  color: var(--paper);
+  box-shadow: var(--shadow);
+  font-size: 0.82rem;
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity 0.18s ease, transform 0.18s ease;
+  pointer-events: none;
+}
+.move-toast.is-visible { opacity: 1; transform: translateY(0); }
+.move-toast-icon { font-size: 1rem; }
+
+[data-motion="off"] .is-new { animation: none !important; }
+[data-motion="off"] .move-toast { transition: none; }
+
+@media (max-width: 640px) {
+  .mazos-grid { grid-template-columns: 1fr; }
+  .mazos-dialog { max-height: 90vh; }
+  .move-toast {
+    left: 50%;
+    max-width: calc(100% - 2rem);
+    transform: translate(-50%, 10px);
+  }
+  .move-toast.is-visible { transform: translate(-50%, 0); }
+}
+

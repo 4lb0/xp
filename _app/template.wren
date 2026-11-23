@@ -1,6 +1,6 @@
 class Layout {
   // Subir al cambiar css/style.css para romper la caché de Cloudflare.
-  static assetVersion { "2026-11-23-2" }
+  static assetVersion { "2026-11-23-3" }
   static printVersion { "2026-11-23-1" }
   static description { "XP — Equipo eXPedición. LCG cooperativo de aventura y misterio para toda la familia. Mazos fijos, partidas de 10 a 20 minutos." }
 
@@ -20,6 +20,18 @@ class Layout {
         <title>{{ title }}</title>
         <meta name="description" content="{{ Layout.description }}" />
         <meta name="theme-color" content="#040e19" />
+        <script>
+          (function () {
+            try {
+              var d = document.documentElement;
+              var m = localStorage.getItem("xp-motion");
+              if (m === null) m = matchMedia("(prefers-reduced-motion: reduce)").matches ? "off" : "on";
+              d.dataset.motion = m;
+              var s = localStorage.getItem("xp-sound");
+              d.dataset.sound = s === null ? "on" : s;
+            } catch (e) {}
+          })();
+        </script>
         <meta name="application-name" content="XP" />
         <meta name="apple-mobile-web-app-title" content="XP" />
         <link rel="canonical" href="{{ Request.baseUrl }}{{ Request.uri }}" />
@@ -77,6 +89,7 @@ class Layout {
             <p class="muted">Creado con <a href="https://iz.ar" target="_blank">iz.ar</a></p>
           </div>
         </footer>
+        <script src="/js/game.js?v={{ Layout.assetVersion }}" defer></script>
       </body>
     </html> }
 }

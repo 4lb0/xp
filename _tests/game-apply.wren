@@ -11,7 +11,7 @@ class Fixture {
        blindajeM = 0, blindajeUsado = 0, focosM = 0, jugadas = 0,
        resueltas = 0, resultado = NULL, ultimo = NULL
        WHERE id = ?`.query(id)
-    `UPDATE game_cards SET zone = 'descarte' WHERE gameId = ? AND zone = 'herramientas'`.query(id)
+    `UPDATE game_cards SET zone = 'descarteEquipo' WHERE gameId = ? AND zone = 'herramientas'`.query(id)
     return id
   }
 

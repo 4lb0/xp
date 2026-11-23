@@ -33,7 +33,8 @@ class Flow {
     for (r in deck) {
       var c = Card.get(r["cardId"])
       if (c != null && c.entry == "") {
-        `UPDATE game_cards SET ord = -1 WHERE id = ?`.query(r["id"])
+        // RANDOM() puede dar negativos: -1 no garantiza quedar arriba.
+        `UPDATE game_cards SET ord = -9223372036854775808 WHERE id = ?`.query(r["id"])
         return c.id
       }
     }
@@ -68,17 +69,27 @@ Test.get("/juego")
   .status(200)
   .textContains("La fosa del Megalodón")
   .textContains("Energía")
+  .contains("Mazos y descartes")
+  .contains("dorso-misterio.png")
+  .contains("data-moves=")
+  .contains("&quot;kind&quot;:&quot;draw&quot;")
 
 // --- Elegir un Misterio y resolver con dados de la mesa ---
 
 Flow.normalize(gid)
 var rowId = Flow.putM01(gid)
+// Consumir los movimientos que hizo el fixture antes de medir la acción real.
+Test.get("/juego").status(200)
 Test.post("/juego", {"accion": "elegir", "rowId": rowId.toString, "opt": "A"})
   .status(302)
 g = Game.find(gid)
 Test.assert(g.fase == "prueba", "elegir deja la prueba preparada")
 Test.assert(g.pruebaCarta == "m01", "elegir guarda la carta")
 Test.assert(g.pruebaOpcion == "A", "elegir guarda la opción")
+
+Test.get("/juego")
+  .status(200)
+  .contains('data-moves="[]"')
 
 Test.post("/juego", {"accion": "mesa", "d1": "2", "d2": "0"})
   .status(302)
@@ -92,6 +103,8 @@ Test.assert(Game.count(gid, "mesa") == 2, "la carta resuelta sale de la mesa")
 Test.get("/juego")
   .status(200)
   .textContains("Prueba superada")
+  .contains("&quot;kind&quot;:&quot;discard&quot;")
+  .contains("&quot;to&quot;:&quot;descarteJuego&quot;")
 
 // --- Cerrar el turno: descarte, consumo y reposición ---
 
@@ -108,7 +121,8 @@ Test.assert(g.resueltas == 0, "el turno nuevo no arrastra un Misterio resuelto")
 Test.assert(!g.tirado, "el turno nuevo arranca sin tirada")
 Test.assert(Game.count(gid, "mesa") == 3, "la mesa vuelve a 3 Misterios")
 Test.assert(Game.count(gid, "mano") == 3, "la mano se repone a 3")
-Test.assert(Game.count(gid, "descarte") == 4, "la carta resuelta y la mano vieja van al descarte")
+Test.assert(Game.count(gid, "descarteJuego") == 1, "la carta resuelta va al descarte del Juego")
+Test.assert(Game.count(gid, "descarteEquipo") == 3, "la mano vieja va al descarte de Equipo")
 
 // --- Modo inválido: el servidor cae en Normal ---
 

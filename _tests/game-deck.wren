@@ -39,9 +39,9 @@ Test.assert(Game.ids(id, "ayuda").contains("e17"), "el apoyo del modo normal es 
 Test.assert(Game.count(id, "herramientas") == 0, "no hay Herramienta activa al empezar")
 
 // Las 40 cartas de Misterio y las 44 copias de Equipo están siempre.
-var totalMisterios = Game.count(id, "misterio") + Game.count(id, "mesa") + Game.count(id, "descarte")
+var totalMisterios = Game.count(id, "misterio") + Game.count(id, "mesa") + Game.count(id, "descarteJuego")
 Test.assert(totalMisterios == 40, "el Mazo del Juego tiene 40 cartas en total")
-var totalEquipo = Game.count(id, "equipo") + Game.count(id, "mano") + Game.count(id, "ayuda") + Game.count(id, "descarte") + Game.count(id, "herramientas")
+var totalEquipo = Game.count(id, "equipo") + Game.count(id, "mano") + Game.count(id, "ayuda") + Game.count(id, "descarteEquipo") + Game.count(id, "herramientas")
 Test.assert(totalEquipo == 44, "el Mazo del Equipo tiene 44 copias en total")
 
 // Cada partida tiene su propio mazo.
@@ -80,13 +80,13 @@ Game.destroy(deck)
 
 // Si el mazo de Equipo se agota, el descarte se mezcla y se sigue robando.
 deck = Fixture.fresh("experto")
-`UPDATE game_cards SET zone = 'descarte' WHERE gameId = ? AND cardId LIKE 'e%'`.query(deck)
+`UPDATE game_cards SET zone = 'descarteEquipo' WHERE gameId = ? AND cardId LIKE 'e%'`.query(deck)
 Test.assert(Game.count(deck, "equipo") == 0, "vaciamos el mazo de Equipo")
 var robada = Game.draw(deck, "equipo", "mano", 3)
 Test.assert(robada != null, "draw() recicla el descarte cuando el mazo está vacío")
 Test.assert(Game.count(deck, "mano") == 3, "la mano queda en 3 tras reciclar")
 Test.assert(Game.count(deck, "equipo") == 41, "el descarte reciclado vuelve al mazo")
-Test.assert(Game.count(deck, "descarte") == 0, "el descarte queda vacío")
+Test.assert(Game.count(deck, "descarteEquipo") == 0, "el descarte de Equipo queda vacío")
 Test.assert(Game.lastLogs(deck, 5).map { |l| l["text"] }.join(" ").contains("Se mezcla el descarte del Mazo del Equipo"), "el reciclado queda en la bitácora")
 Game.destroy(deck)
 
@@ -94,21 +94,21 @@ Game.destroy(deck)
 deck = Fixture.fresh("experto")
 Test.assert(Game.recycleDiscard(deck, "misterio") == false, "sin descarte no hay nada que reciclar")
 Test.assert(Game.draw(deck, "misterio", "mesa", 1) != null, "el mazo lleno sigue robando")
-`UPDATE game_cards SET zone = 'descarte' WHERE gameId = ? AND cardId LIKE 'm%'`.query(deck)
+`UPDATE game_cards SET zone = 'descarteJuego' WHERE gameId = ? AND cardId LIKE 'm%'`.query(deck)
 Test.assert(Game.count(deck, "misterio") == 0, "vaciamos el Mazo del Juego")
 Test.assert(Game.draw(deck, "misterio", "mesa", 1) != null, "robar de un mazo vacío recicla el descarte de Misterio")
 Game.destroy(deck)
 
 // Reciclar un mazo no toca el descarte del otro.
 deck = Fixture.fresh("experto")
-`UPDATE game_cards SET zone = 'descarte' WHERE gameId = ? AND cardId LIKE 'm%'`.query(deck)
+`UPDATE game_cards SET zone = 'descarteJuego' WHERE gameId = ? AND cardId LIKE 'm%'`.query(deck)
 var unaEquipo = `SELECT id FROM game_cards WHERE gameId = ? AND cardId LIKE 'e%'`.first(deck)
-Game.move(unaEquipo["id"], "descarte")
+Game.move(unaEquipo["id"], "descarteEquipo")
 Test.assert(Game.recycleDiscard(deck, "misterio") == true, "reciclar Misterio informa que hubo cartas")
 Test.assert(Game.count(deck, "misterio") == 40, "todo el descarte de Misterio vuelve al mazo")
-Test.assert(Game.count(deck, "descarte") == 1, "el descarte de Equipo queda intacto")
+Test.assert(Game.count(deck, "descarteEquipo") == 1, "el descarte de Equipo queda intacto")
 Test.assert(Game.recycleDiscard(deck, "equipo") == true, "reciclar Equipo informa que hubo cartas")
-Test.assert(Game.count(deck, "descarte") == 0, "el descarte de Equipo se vacía")
+Test.assert(Game.count(deck, "descarteEquipo") == 0, "el descarte de Equipo se vacía")
 Game.destroy(deck)
 
 // --- Consultas de cartas ---
@@ -122,9 +122,9 @@ Test.assert(inMesa[0]["rowId"] != null, "cardsIn() incluye el rowId")
 Test.assert(inMesa[0]["card"] != null, "cardsIn() incluye la carta parseada")
 
 var filaMesa = Game.rows(deck, "mesa")[0]
-Game.move(filaMesa["id"], "descarte")
+Game.move(filaMesa["id"], "descarteJuego")
 Test.assert(Game.count(deck, "mesa") == 2, "move() saca la carta de su zona")
-Test.assert(Game.count(deck, "descarte") == 1, "move() pone la carta en la zona nueva")
+Test.assert(Game.count(deck, "descarteJuego") == 1, "move() pone la carta en la zona nueva")
 
 // --- Herramientas y efectos ---
 
@@ -135,7 +135,7 @@ Test.assert(!Game.hasEffect(["no-existe"], "reduce_damage"), "hasEffect tolera i
 var filaBlindaje = `SELECT id FROM game_cards WHERE gameId = ? AND cardId = 'e04'`.first(deck)
 Game.move(filaBlindaje["id"], "herramientas")
 Test.assert(Game.hasTool(deck, "reduce_damage"), "hasTool ve el Blindaje equipado")
-Game.move(filaBlindaje["id"], "descarte")
+Game.move(filaBlindaje["id"], "descarteEquipo")
 Test.assert(!Game.hasTool(deck, "reduce_damage"), "hasTool deja de verlo al descartarlo")
 
 // --- Bitácora ---

@@ -55,6 +55,25 @@ Cloudflare cachea `/css/style.css` durante 4 horas. Al cambiar el CSS, subí
 `Layout.assetVersion` en `_app/template.wren` para que el HTML pida una URL
 nueva (`/css/style.css?v=…`).
 
+## Animaciones y sonido
+
+Las acciones siguen recargando la página. Al volver a `/juego`, el servidor
+compara las zonas con el estado anterior y deja en el HTML solo los movimientos
+nuevos; un módulo de JavaScript liviano (`js/game.js`) los usa para:
+
+- resaltar las cartas que acaban de entrar en mano, mesa, herramientas o apoyo;
+- animar una carta fantasma desde el mazo al destino, o desde la mesa/mano al
+  descarte;
+- mostrar un aviso breve con cuántas cartas se robaron o descartaron.
+
+Los dos botones de la cabecera, **Animaciones** y **Sonido**, se guardan en
+`localStorage` (`xp-motion` y `xp-sound`). Si el sistema pide
+`prefers-reduced-motion`, las animaciones arrancan apagadas. El sonido es
+sintetizado con Web Audio: no hay archivos de audio.
+
+**Mazos y descartes** abre un modal con las cartas que quedan en cada mazo, las
+que hay en cada descarte y la lista de cartas descartadas, separadas por mazo.
+
 ## Arrancar
 
 ```bash
@@ -173,7 +192,7 @@ xp/
 | Tabla | Qué guarda |
 |---|---|
 | `games` | Una fila por partida: contadores, turno, fase, prueba pendiente, banderas de maniobras. |
-| `game_cards` | Cada copia física del mazo con su zona: `misterio`, `equipo`, `mesa`, `mano`, `herramientas`, `descarte`. |
+| `game_cards` | Cada copia física del mazo con su zona: `misterio`, `equipo`, `mesa`, `mano`, `herramientas`, `ayuda`, `descarteJuego`, `descarteEquipo`. |
 | `game_log` | Bitácora narrativa de la partida. |
 
 El mazo se mezcla con `ORDER BY RANDOM()` de SQLite. Las tiradas digitales también salen de SQLite (`ABS(RANDOM()) % 6 + 1`), así que no hace falta ningún generador extra.

@@ -1,4 +1,5 @@
 import "_app/template" for Layout
+import "_app/moves" for Moves
 import "_app/cards" for Card
 import "_app/game" for Game
 
@@ -70,19 +71,19 @@ if (Request.isPost) {
       } else if (c.isTool) {
         // Solo una Herramienta activa por equipo: la nueva pisa la anterior.
         var anteriores = Game.rows(g.id, "herramientas")
-        for (t in anteriores) Game.move(t["id"], "descarte")
+        for (t in anteriores) Game.move(t["id"], "descarteEquipo")
         if (!anteriores.isEmpty) Game.log(g.id, "La nueva Herramienta reemplaza a la anterior: solo hay una activa.")
         Game.move(rowId, "herramientas")
         `UPDATE games SET jugadas = 1 WHERE id = ?`.query(g.id)
         Game.log(g.id, "Herramienta en juego: " + c.name + ".")
       } else if (c.effect == "heal_shield") {
         Game.apply(g.id, g, {"pistas": 0, "energia": 0, "escudo": 1}, true, [])
-        Game.move(rowId, "descarte")
+        Game.move(rowId, "descarteEquipo")
         `UPDATE games SET jugadas = 1 WHERE id = ?`.query(g.id)
         Game.log(g.id, "Soldadura Submarina: +1 Escudo.")
       } else if (c.effect == "heal_energy") {
         Game.apply(g.id, g, {"pistas": 0, "energia": 2, "escudo": 0}, true, [])
-        Game.move(rowId, "descarte")
+        Game.move(rowId, "descarteEquipo")
         `UPDATE games SET jugadas = 1 WHERE id = ?`.query(g.id)
         Game.log(g.id, "Batería de Respaldo: +2 Energía.")
       } else if (c.effect == "clue_for_energy") {
@@ -90,7 +91,7 @@ if (Request.isPost) {
           aviso = "Análisis Rápido necesita 1 de Energía."
         } else {
           Game.apply(g.id, g, {"pistas": 1, "energia": -1, "escudo": 0}, true, [])
-          Game.move(rowId, "descarte")
+          Game.move(rowId, "descarteEquipo")
           `UPDATE games SET jugadas = 1 WHERE id = ?`.query(g.id)
           Game.log(g.id, "Análisis Rápido: −1 Energía, +1 Pista.")
         }
@@ -109,13 +110,13 @@ if (Request.isPost) {
               Game.log(g.id, "Arpón Rastreador: sale " + d.toString + " (SECA). Sin pista.")
             }
           }
-          Game.move(rowId, "descarte")
+          Game.move(rowId, "descarteEquipo")
           `UPDATE games SET jugadas = 1 WHERE id = ?`.query(g.id)
         }
       } else if (c.effect == "discard_active") {
         var activas = Game.rows(g.id, "mesa")
         if (!activas.isEmpty) {
-          Game.move(activas[0]["id"], "descarte")
+          Game.move(activas[0]["id"], "descarteJuego")
           var nueva = Game.draw(g.id, "misterio", "mesa", 1)
           if (nueva != null) {
             var nc = Card.get(nueva)
@@ -126,7 +127,7 @@ if (Request.isPost) {
             }
           }
         }
-        Game.move(rowId, "descarte")
+        Game.move(rowId, "descarteEquipo")
         `UPDATE games SET jugadas = 1 WHERE id = ?`.query(g.id)
         Game.log(g.id, "Señuelo Luminoso: una carta activa se cambia por otra.")
       } else {
@@ -136,7 +137,7 @@ if (Request.isPost) {
   } else if (accion == "descartar") {
     var row = `SELECT id FROM game_cards WHERE id = ? AND gameId = ? AND zone = 'mano'`.first(rowId, g.id)
     if (row != null) {
-      Game.move(row["id"], "descarte")
+      Game.move(row["id"], "descarteEquipo")
       Game.log(g.id, "Una carta de Equipo va al descarte.")
     }
   } else if (accion == "elegir") {
@@ -214,31 +215,31 @@ if (Request.isPost) {
       aviso = "Todas las Maniobras se juegan antes de tirar: se comprometen a ciegas."
     } else if (c.effect == "plus_two") {
       `UPDATE games SET bonus = bonus + 2, jugadas = 1 WHERE id = ?`.query(g.id)
-      Game.move(rowId, "descarte")
+      Game.move(rowId, "descarteEquipo")
       Game.log(g.id, "Turbo de Emergencia: +2 al total.")
     } else if (c.effect == "flip_parity") {
       `UPDATE games SET giro = 1, jugadas = 1 WHERE id = ?`.query(g.id)
-      Game.move(rowId, "descarte")
+      Game.move(rowId, "descarteEquipo")
       Game.log(g.id, "Giro Brusco preparado: el dado se va a invertir.")
     } else if (c.effect == "reroll_parity") {
       `UPDATE games SET focosM = 1, jugadas = 1 WHERE id = ?`.query(g.id)
-      Game.move(rowId, "descarte")
+      Game.move(rowId, "descarteEquipo")
       Game.log(g.id, "Focos Abisales preparados: si falla, relanzan el dado.")
     } else if (c.effect == "reduce_damage") {
       `UPDATE games SET blindajeM = 1, jugadas = 1 WHERE id = ?`.query(g.id)
-      Game.move(rowId, "descarte")
+      Game.move(rowId, "descarteEquipo")
       Game.log(g.id, "Blindaje de Titanio preparado: −1 daño al Escudo.")
     } else if (c.effect == "reroll_all") {
       `UPDATE games SET suerte = 1, jugadas = 1 WHERE id = ?`.query(g.id)
-      Game.move(rowId, "descarte")
+      Game.move(rowId, "descarteEquipo")
       Game.log(g.id, "Suerte del Principiante preparada: si falla, se tira de nuevo.")
     } else if (c.effect == "cancel_shield_loss") {
       `UPDATE games SET cebo = 1, jugadas = 1 WHERE id = ?`.query(g.id)
-      Game.move(rowId, "descarte")
+      Game.move(rowId, "descarteEquipo")
       Game.log(g.id, "Lanzar Cebo: el próximo daño al Escudo se cancela.")
     } else if (c.effect == "no_energy_cost") {
       `UPDATE games SET ahorro = 1, jugadas = 1 WHERE id = ?`.query(g.id)
-      Game.move(rowId, "descarte")
+      Game.move(rowId, "descarteEquipo")
       Game.log(g.id, "Ahorro de Oxígeno: en este misterio no gastan Energía.")
     } else {
       aviso = "Esa carta no se usa durante la prueba."
@@ -316,7 +317,7 @@ if (Request.isPost) {
         `UPDATE games SET energia = energia + ?, fase = ?, apoyoCarta = NULL, apoyoOrigen = NULL, fasePrevia = NULL WHERE id = ?`.query(v, volver, g.id)
         Game.log(g.id, "Maniobra de apoyo " + c.name + ": +" + v.toString + " Energía.")
       }
-      Game.move(row["id"], "descarte")
+      Game.move(row["id"], "descarteEquipo")
     }
   } else if (accion == "cancelar") {
     if (g.tirado) {
@@ -336,7 +337,7 @@ if (Request.isPost) {
         for (m in mano) {
           var c = Card.get(m["cardId"])
           if (c != null) nombres.add(c.name)
-          Game.move(m["id"], "descarte")
+          Game.move(m["id"], "descarteEquipo")
         }
         Game.log(g.id, "Se descarta toda la mano: " + nombres.join(", ") + ".")
       }
@@ -435,8 +436,14 @@ var tools = Game.cardsIn(g.id, "herramientas")
 var activeTool = tools.isEmpty ? null : tools.first["card"]
 var ayuda = Game.cardsIn(g.id, "ayuda")
 var logs = Game.lastLogs(g.id, 8)
-var mazo = Game.count(g.id, "misterio")
-var descarte = Game.count(g.id, "descarte")
+var mazoJuego = Game.count(g.id, "misterio")
+var mazoEquipo = Game.count(g.id, "equipo")
+var descarteJuego = Game.count(g.id, "descarteJuego")
+var descarteEquipo = Game.count(g.id, "descarteEquipo")
+var descarteJuegoCards = Game.cardsIn(g.id, "descarteJuego")
+var descarteEquipoCards = Game.cardsIn(g.id, "descarteEquipo")
+var moves = Moves.take(g.id, session)
+var movesJson = Json.stringify(moves)
 var peekCard = Game.hasTool(g.id, "peek") ? Game.topCard(g.id) : null
 
 var pendingCard = g.pruebaCarta == null ? null : Card.get(g.pruebaCarta)
@@ -474,7 +481,7 @@ if (g.status == "victoria") {
 
 // ---------- Vista ----------
 
-return Layout.render(<main class="game">
+return Layout.render(<main class="game" data-moves="{{ movesJson }}">
   {{ g.status == "activa" && <aside class="game-rail" aria-label="Menú de la expedición">
     <div class="game-rail-menu">
       <span class="rail-menu-icon" aria-hidden="true">☰</span>
@@ -486,7 +493,7 @@ return Layout.render(<main class="game">
         <span class="rail-stat rail-escudo" title="Escudo {{ g.escudo }}"><b>{{ g.escudo }}</b><small>🛡️</small></span>
         <span class="rail-stat rail-pistas" title="Pistas {{ g.pistas }}"><b>{{ g.pistas }}</b><small>🔍</small></span>
       </div>
-      <p class="rail-meta">Turno {{ g.turno }} · Mazo {{ mazo }} · Descarte {{ descarte }}</p>
+      <p class="rail-meta">Turno {{ g.turno }}</p>
       <nav class="rail-nav">
         <a href="{{ focoHref }}" aria-label="Ir a la acción actual"><span aria-hidden="true">🃏</span> <span class="rail-label">Cartas activas</span> <b>{{ mesa.count }}</b></a>
         <a href="#mano" aria-label="Ver la mano"><span aria-hidden="true">🖐️</span> <span class="rail-label">Mano</span> <b>{{ handCount }}</b></a>
@@ -509,8 +516,17 @@ return Layout.render(<main class="game">
     <div class="board-meta">
       <span class="pill">{{ g.modo == "facil" ? "Asistido" : (g.modo == "casual" ? "Modo normal" : "Modo experto") }}</span>
       <span class="pill">Turno {{ g.turno }}</span>
-      <span class="pill">Mazo {{ mazo }}</span>
-      <span class="pill">Descarte {{ descarte }}</span>
+      <button class="pill pill-btn" id="mazos-btn" type="button" aria-haspopup="dialog" aria-controls="mazos-dialog">
+        <span aria-hidden="true">🂠</span> Mazos y descartes
+      </button>
+      <div class="view-tools" role="group" aria-label="Preferencias de la partida">
+        <button class="pref-toggle" id="toggle-motion" type="button" aria-pressed="true">
+          <span aria-hidden="true">✨</span> Animaciones
+        </button>
+        <button class="pref-toggle" id="toggle-sound" type="button" aria-pressed="true">
+          <span aria-hidden="true">🔊</span> Sonido
+        </button>
+      </div>
     </div>
   </header>
 
@@ -545,7 +561,7 @@ return Layout.render(<main class="game">
     <h2>Elijan qué golpe recibe el equipo</h2>
     <p class="muted">Las tres cartas iniciales están boca arriba. Solo una emboscada se aplica al empezar: elijan cuál sufrir.</p>
     <div class="card-grid">
-      {{ emboscadasIniciales.map{|item| <article class="card" data-family="{{ item["card"].family }}">
+      {{ emboscadasIniciales.map{|item| <article class="card" data-family="{{ item["card"].family }}" data-row="{{ item["rowId"] }}">
         <span class="card-art"><span class="card-emoji" aria-hidden="true">{{ item["card"].emoji }}</span></span>
         <span class="card-family">Emboscada inicial · <span class="card-id">{{ item["card"].id }}</span></span>
         <h3>{{ item["card"].name }}</h3>
@@ -712,7 +728,7 @@ return Layout.render(<main class="game">
       <p>Elijan una carta y resuelvan su opción. Las emboscadas tienen una sola.</p>
     </div>
     <div class="card-grid">
-      {{ mesa.map{|item| <article class="card" data-family="{{ item["card"].family }}">
+      {{ mesa.map{|item| <article class="card" data-family="{{ item["card"].family }}" data-row="{{ item["rowId"] }}">
         <span class="card-art"><span class="card-emoji" aria-hidden="true">{{ item["card"].emoji }}</span></span>
         <span class="card-family">{{ item["card"].family == "exploracion" ? "Exploración" : (item["card"].family == "peligro" ? "Peligro" : "Dilema") }}{{ item["card"].entry != "" ? " · Emboscada" : "" }} · <span class="card-id">{{ item["card"].id }}</span></span>
         <h3>{{ item["card"].name }}</h3>
@@ -751,7 +767,7 @@ return Layout.render(<main class="game">
           <p>Maniobras de apoyo · una vez</p>
         </div>
         <div class="hand">
-          {{ ayuda.map{|a| <article class="card card-support" data-family="apoyo">
+          {{ ayuda.map{|a| <article class="card card-support" data-family="apoyo" data-row="{{ a["rowId"] }}">
             <span class="card-ribbon">🎁 Apoyo</span>
             <span class="card-art"><span class="card-emoji" aria-hidden="true">{{ a["card"].emoji }}</span></span>
             <span class="card-family"><span aria-hidden="true">{{ a["card"].typeIcon }}</span> {{ a["card"].typeLabel }} · <span class="card-id">{{ a["card"].id }}</span></span>
@@ -773,7 +789,7 @@ return Layout.render(<main class="game">
         <h2>Herramienta activa</h2>
         <p>{{ tools.count }} / 1 · una por equipo</p>
       </div>
-      {{ tools.map{|t| <article class="card card-tool" data-family="herramienta">
+      {{ tools.map{|t| <article class="card card-tool" data-family="herramienta" data-row="{{ t["rowId"] }}">
         <span class="card-art"><span class="card-emoji" aria-hidden="true">{{ t["card"].emoji }}</span></span>
         <span class="card-family"><span aria-hidden="true">{{ t["card"].typeIcon }}</span> {{ t["card"].typeLabel }} · <span class="card-id">{{ t["card"].id }}</span></span>
         <h3>{{ t["card"].name }}</h3>
@@ -838,7 +854,7 @@ return Layout.render(<main class="game">
         </ul>
       </details>
       <div class="hand hand-main">
-        {{ hand.map{|h| <article class="card {{ puedeJugar ? "" : "is-locked" }}" data-family="{{ h["card"].isSupport ? "apoyo" : (h["card"].isTool ? "herramienta" : "maniobra") }}">
+        {{ hand.map{|h| <article class="card {{ puedeJugar ? "" : "is-locked" }}" data-row="{{ h["rowId"] }}" data-family="{{ h["card"].isSupport ? "apoyo" : (h["card"].isTool ? "herramienta" : "maniobra") }}">
           {{ h["card"].isSupport && <span class="card-ribbon">🎁 Apoyo</span> }}
           <span class="card-art"><span class="card-emoji" aria-hidden="true">{{ h["card"].emoji }}</span></span>
           <span class="card-family"><span aria-hidden="true">{{ h["card"].typeIcon }}</span> {{ h["card"].typeLabel }} · <span class="card-id">{{ h["card"].id }}</span></span>
@@ -880,4 +896,50 @@ return Layout.render(<main class="game">
       <button class="btn btn-ghost btn-small">Abandonar y empezar de nuevo</button>
     </form> }}
   </section>
+
+  <dialog id="mazos-dialog" class="mazos-dialog" aria-labelledby="mazos-title">
+    <div class="mazos-dialog-head">
+      <div>
+        <p class="eyebrow">Estado de los mazos</p>
+        <h2 id="mazos-title">Mazos y descartes</h2>
+      </div>
+      <button type="button" class="dialog-close" data-close aria-label="Cerrar">×</button>
+    </div>
+    <div class="mazos-grid">
+      <section class="mazos-pile">
+        <div class="mazos-pile-head">
+          <img src="/img/dorso-misterio.png" width="42" height="59" alt="" />
+          <div>
+            <h3>Mazo del Juego</h3>
+            <p><strong>{{ mazoJuego }}</strong> en el mazo · <strong>{{ descarteJuego }}</strong> en descarte</p>
+          </div>
+        </div>
+        <h4>Cartas descartadas</h4>
+        {{ descarteJuegoCards.isEmpty && <p class="muted">Todavía no hay cartas del Juego en el descarte.</p> }}
+        {{ !descarteJuegoCards.isEmpty && <ul class="discard-list">
+          {{ descarteJuegoCards.map{|d| <li>
+            <span class="discard-emoji" aria-hidden="true">{{ d["card"].emoji }}</span>
+            <span class="discard-body"><strong>{{ d["card"].name }}</strong><small>{{ d["card"].id }} · {{ d["card"].family == "exploracion" ? "Exploración" : (d["card"].family == "peligro" ? "Peligro" : "Dilema") }}</small></span>
+          </li>} }}
+        </ul> }}
+      </section>
+      <section class="mazos-pile">
+        <div class="mazos-pile-head">
+          <img src="/img/dorso-equipo.png" width="42" height="59" alt="" />
+          <div>
+            <h3>Mazo de Equipo</h3>
+            <p><strong>{{ mazoEquipo }}</strong> en el mazo · <strong>{{ descarteEquipo }}</strong> en descarte</p>
+          </div>
+        </div>
+        <h4>Cartas descartadas</h4>
+        {{ descarteEquipoCards.isEmpty && <p class="muted">Todavía no hay cartas de Equipo en el descarte.</p> }}
+        {{ !descarteEquipoCards.isEmpty && <ul class="discard-list">
+          {{ descarteEquipoCards.map{|d| <li>
+            <span class="discard-emoji" aria-hidden="true">{{ d["card"].emoji }}</span>
+            <span class="discard-body"><strong>{{ d["card"].name }}</strong><small>{{ d["card"].id }} · {{ d["card"].typeLabel }}</small></span>
+          </li>} }}
+        </ul> }}
+      </section>
+    </div>
+  </dialog>
 </main>, "XP · Equipo eXPedición", g.status == "activa")
