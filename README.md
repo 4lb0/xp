@@ -1,6 +1,6 @@
 # XP: En busca del Megalodón — prototipo web
 
-Versión jugable en el navegador del juego de mesa de aventura y misterio **XP (Equipo eXPedición)**, Edición 1. Pensado para jugar solo, o en cooperativo con amigos. Sirve para probar el mazo, los contadores y las pruebas de dados antes de imprimir cartas.
+Versión jugable en el navegador del **LCG** de aventura y misterio **XP (Equipo eXPedición)**, Edición 1. Mazos fijos, sin sobres aleatorios. Pensado para jugar solo, o en cooperativo con amigos. Sirve para probar el mazo, los contadores y las pruebas de dados antes de imprimir cartas.
 
 - Se puede jugar solo o en cooperativo con amigos: un solo dispositivo, una mesa, el equipo XP contra el juego.
 - La expedición busca la prueba de que el Megalodón existe: para el mundo es un mito, como el monstruo del lago Ness.
@@ -64,9 +64,9 @@ El estado de la partida se guarda en SQLite y se ata a la sesión del navegador.
 
 ## Cómo se juega en la app
 
-1. Elegís el modo (Experto 5/5, Normal 5/5 + 1 apoyo o Asistido 6/6 + 2 apoyos) y arranca la expedición. No hay que elegir cantidad de jugadores: se juega solo o en cooperativo con amigos.
+1. Elegís el modo (todos arrancan 6/6: Experto sin apoyos, Normal +1 o Asistido +2) y arranca la expedición. No hay que elegir cantidad de jugadores: se juega solo o en cooperativo con amigos.
 2. La app reparte 3 cartas de Equipo y revela **siempre 3 cartas de Misterio**, sin importar cuántos jueguen. La cantidad de jugadores no cambia nada: las decisiones son del equipo.
-3. En cada ciclo arrancan con 3 cartas de Equipo, pueden jugar 1, eligen una carta de Misterio y una de sus opciones. Al cerrar el ciclo, el juego descarta al azar hasta dejar 1 y roba 2: siempre empiezan el ciclo siguiente con 3.
+3. En cada ciclo arrancan con 3 cartas de Equipo, pueden jugar 1 carta antes o después de elegir el Misterio, y resuelven una de sus opciones. Al cerrar el ciclo descartan una carta propia al azar, roban 1 del Mazo del Juego y reponen la mano a 3.
 4. La prueba de dados se puede resolver de dos formas:
    - **Tirar en la app**: el servidor genera los D6.
    - **Ya tiré en la mesa**: elegís en pantalla lo que salió en cada dado físico.
@@ -74,7 +74,7 @@ El estado de la partida se guarda en SQLite y se ata a la sesión del navegador.
 6. Al resolver, la app aplica los efectos de la opción y controla victoria/derrota. La prueba da exactamente lo que dice la carta: no hay tirada extra.
 7. Al terminar el ciclo el submarino consume **1 Energía**, siempre. La Energía es el reloj: cada ciclo hay que decidir entre buscar Pistas o recargar.
 
-Los contadores son los tres dados del juego: **Energía** (6 → 0, derrota), **Escudo** (6 → 0, derrota) y **Pistas** (0 → 6, victoria).
+Los contadores son los tres dados del juego: **Energía** y **Escudo** arrancan en 6, pueden superar 6 y no se pierde por separado. **Pistas** arranca en 0 y con 6 se gana en el momento. La derrota llega solo si un turno termina con Energía y Escudo en 0 a la vez.
 
 **El reloj:** cada ciclo cuesta 1 Energía. Las Baterías de Respaldo (+2, seis en el mazo), el Generador Auxiliar y Ahorro de Oxígeno son la forma de sostenerlo. Si el equipo se queda quieto, pierde; si solo recarga, el misterio no avanza.
 
@@ -143,9 +143,9 @@ El mazo se mezcla con `ORDER BY RANDOM()` de SQLite. Las tiradas digitales tambi
 
 ## Decisiones de este prototipo
 
-- **Solo o en cooperativo.** Podés jugar una sola persona o compartir la mano y las decisiones con amigos. Al cerrar el ciclo el juego descarta al azar hasta dejar 1 y roba 2: la mano siempre arranca con 3.
-- **La cantidad de jugadores no cambia la mesa.** Siempre 3 cartas de Misterio, siempre 2 de robo, siempre 6 Pistas. Se puede jugar solo o en cooperativo con amigos.
-- **Tres modos.** Experto (5 y 5), Normal (5 y 5 + 1 carta de apoyo) y Asistido (6 y 6 + 2 cartas de apoyo).
+- **Solo o en cooperativo.** Podés jugar una sola persona o compartir la mano y las decisiones con amigos. Al cerrar el ciclo descartás una carta propia al azar y reponés la mano a 3.
+- **La cantidad de jugadores no cambia la mesa.** Siempre 3 cartas de Misterio, mano de 3 y siempre 6 Pistas. Se puede jugar solo o en cooperativo con amigos.
+- **Tres modos.** Todos empiezan con 6 de Energía y 6 de Escudo. Experto no tiene apoyos; Normal suma 1 Maniobra de apoyo; Asistido suma 2.
 - **Maniobras de apoyo.** Kit de emergencia (+1 Energía o +1 Escudo) y Carga de emergencia (+2 Energía o +2 Escudo) son Maniobras: se usan una vez y van al descarte. En Experto se mezclan en el mazo; en Normal el Kit va al área de ayuda; en Asistido van las dos. Las del área se usan sin gastar la carta del ciclo. En la app se destacan en rosa con la etiqueta **Apoyo**.
 - **Una sola Herramienta activa por equipo.** Si juegan otra, la anterior va al descarte.
 - **Un misterio por ciclo, una carta jugada por ciclo.** La app lo hace cumplir; si intentás saltearlo, te avisa.
@@ -158,7 +158,8 @@ El mazo se mezcla con `ORDER BY RANDOM()` de SQLite. Las tiradas digitales tambi
 - **Dilemas sin Pistas.** Las 10 cartas de Dilema no otorgan ni quitan Pistas: solo mueven Energía y Escudo. Las Pistas vienen de Exploración y Peligro.
 - **Emboscadas.** Diez de las 40 cartas cuestan 1 Energía, 1 Escudo o 1 Pista al entrar a la mesa. Tienen una sola opción. Golpean al equipo justo cuando repone la mesa.
 - **Emboscada inicial.** Si entre las 3 cartas del inicio hay más de una, no se aplican todas: el equipo elige cuál sufrir. Solo una golpea al empezar.
-- **La Energía es solo el reloj.** Las cartas de Misterio pegan al Escudo o a las Pistas; la Energía baja 1 por ciclo y se recupera únicamente con Batería (+2, ×6) y Generador Auxiliar. Soldadura cura 1 de Escudo (×4): parece una gran cura, pero es de las cartas trampa.
+- **La Energía es solo el reloj.** La Energía baja 1 por ciclo y se recupera con Batería (+2, ×6), Generador Auxiliar y apoyos. Energía y Escudo pueden pasar de 6. Soldadura cura 1 de Escudo (×4): parece una gran cura, pero es de las cartas trampa.
+- **Mazos fijos (LCG).** No hay sobres aleatorios: todas las cartas del juego están en los dos mazos. Si un mazo se agota, se mezcla su descarte y se sigue robando.
 
 ## Sobre la marca
 

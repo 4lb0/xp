@@ -56,8 +56,8 @@ if (Request.isPost) {
     var row = `SELECT * FROM game_cards WHERE id = ? AND gameId = ? AND zone = 'mano'`.first(rowId, g.id)
     if (row == null) {
       aviso = "Esa carta ya no está en tu mano."
-    } else if (g.fase != "listo") {
-      aviso = "Esa carta se juega antes de elegir un Misterio."
+    } else if (g.fase != "listo" && !(g.fase == "prueba" && !g.tirado)) {
+      aviso = "Esa carta se juega antes de tirar."
     } else if (g.jugadas > 0) {
       aviso = "Ya jugaron una carta este ciclo."
     } else {
@@ -65,7 +65,7 @@ if (Request.isPost) {
       if (c == null) {
         aviso = "No pudimos leer esa carta."
       } else if (c.isSupport) {
-        `UPDATE games SET fase = 'apoyo', apoyoCarta = ?, apoyoOrigen = 'mano', fasePrevia = 'listo', jugadas = 1 WHERE id = ?`.query(rowId, g.id)
+        `UPDATE games SET fase = 'apoyo', apoyoCarta = ?, apoyoOrigen = 'mano', fasePrevia = ?, jugadas = 1 WHERE id = ?`.query(rowId, g.fase, g.id)
         Game.log(g.id, "Preparan la maniobra de apoyo: " + c.name + ".")
       } else if (c.isTool) {
         // Solo una Herramienta activa por equipo: la nueva pisa la anterior.
@@ -86,10 +86,14 @@ if (Request.isPost) {
         `UPDATE games SET jugadas = 1 WHERE id = ?`.query(g.id)
         Game.log(g.id, "Batería de Respaldo: +2 Energía.")
       } else if (c.effect == "clue_for_energy") {
-        Game.apply(g.id, g, {"pistas": 1, "energia": -1, "escudo": 0}, true, [])
-        Game.move(rowId, "descarte")
-        `UPDATE games SET jugadas = 1 WHERE id = ?`.query(g.id)
-        Game.log(g.id, "Análisis Rápido: −1 Energía, +1 Pista.")
+        if (g.energia < 1) {
+          aviso = "Análisis Rápido necesita 1 de Energía."
+        } else {
+          Game.apply(g.id, g, {"pistas": 1, "energia": -1, "escudo": 0}, true, [])
+          Game.move(rowId, "descarte")
+          `UPDATE games SET jugadas = 1 WHERE id = ?`.query(g.id)
+          Game.log(g.id, "Análisis Rápido: −1 Energía, +1 Pista.")
+        }
       } else if (c.effect == "harpoon") {
         if (g.energia < 2) {
           aviso = "El Arpón Rastreador necesita 2 de Energía."
@@ -295,10 +299,10 @@ if (Request.isPost) {
       var v = c.value
       var volver = g.fasePrevia == null ? "listo" : g.fasePrevia
       if (recurso == "escudo") {
-        `UPDATE games SET escudo = MIN(6, escudo + ?), fase = ?, apoyoCarta = NULL, apoyoOrigen = NULL, fasePrevia = NULL WHERE id = ?`.query(v, volver, g.id)
+        `UPDATE games SET escudo = escudo + ?, fase = ?, apoyoCarta = NULL, apoyoOrigen = NULL, fasePrevia = NULL WHERE id = ?`.query(v, volver, g.id)
         Game.log(g.id, "Maniobra de apoyo " + c.name + ": +" + v.toString + " Escudo.")
       } else {
-        `UPDATE games SET energia = MIN(6, energia + ?), fase = ?, apoyoCarta = NULL, apoyoOrigen = NULL, fasePrevia = NULL WHERE id = ?`.query(v, volver, g.id)
+        `UPDATE games SET energia = energia + ?, fase = ?, apoyoCarta = NULL, apoyoOrigen = NULL, fasePrevia = NULL WHERE id = ?`.query(v, volver, g.id)
         Game.log(g.id, "Maniobra de apoyo " + c.name + ": +" + v.toString + " Energía.")
       }
       Game.move(row["id"], "descarte")
@@ -314,40 +318,42 @@ if (Request.isPost) {
     if (g.fase != "resuelto") {
       aviso = "Primero resuelvan un misterio."
     } else {
-      var sobra = Game.count(g.id, "mano") - 1
-      if (sobra > 0) {
-        var mano = `SELECT id, cardId FROM game_cards WHERE gameId = ? AND zone = 'mano' ORDER BY RANDOM()`.fetch(g.id)
-        for (i in 0...sobra) {
-          if (i < mano.count) {
-            var c = Card.get(mano[i]["cardId"])
-            Game.move(mano[i]["id"], "descarte")
-            Game.log(g.id, "Descarte al azar: " + (c == null ? "una carta" : c.name) + ".")
-          }
-        }
+      // Al cerrar el turno se descarta una carta propia al azar.
+      var mano = `SELECT id, cardId FROM game_cards WHERE gameId = ? AND zone = 'mano' ORDER BY RANDOM()`.fetch(g.id)
+      if (!mano.isEmpty) {
+        var c = Card.get(mano[0]["cardId"])
+        Game.move(mano[0]["id"], "descarte")
+        Game.log(g.id, "Descarte al azar: " + (c == null ? "una carta" : c.name) + ".")
       }
+
       var g2 = Game.find(g.id)
       if (g2.ahorro) {
         Game.log(g.id, "Ahorro de Oxígeno: el consumo del submarino no gasta Energía.")
       } else {
-        var en = Game.clamp(g2.energia - 1, 0, 6)
+        var en = g2.energia - 1
+        if (en < 0) en = 0
         `UPDATE games SET energia = ? WHERE id = ?`.query(en, g.id)
         Game.log(g.id, "El submarino consume 1 Energía.")
-        if (en <= 0) {
-          `UPDATE games SET status = 'derrota' WHERE id = ?`.query(g.id)
-          Game.log(g.id, "La Energía llegó a cero. La expedición termina.")
-          return Response.redirect("/juego")
-        }
       }
+
       var nueva = Game.draw(g.id, "misterio", "mesa", 1)
       if (nueva != null) {
         var nc = Card.get(nueva)
         if (nc != null && nc.entry != "") {
           var g4 = Game.find(g.id)
-          var resEntrada = Game.apply(g.id, g4, Game.parseEffects(nc.entry), true, Game.ids(g.id, "herramientas"))
+          Game.apply(g.id, g4, Game.parseEffects(nc.entry), true, Game.ids(g.id, "herramientas"))
           Game.log(g.id, "Emboscada al entrar: " + nc.name + " — " + nc.entryLabel + ".")
-          if (resEntrada["status"] != "activa") return Response.redirect("/juego")
         }
       }
+
+      // La derrota no es inmediata: solo al cerrar el turno con ambos en 0.
+      var gFin = Game.find(g.id)
+      if (gFin != null && gFin.energia <= 0 && gFin.escudo <= 0) {
+        `UPDATE games SET status = 'derrota' WHERE id = ?`.query(g.id)
+        Game.log(g.id, "La Energía y el Escudo llegaron a cero al cerrar el turno. La expedición termina.")
+        return Response.redirect("/juego")
+      }
+
       `UPDATE games SET jugador = 1, turno = turno + 1, fase = 'listo', pruebaCarta = NULL, pruebaOpcion = NULL, dado1 = 0, dado2 = 0, tirado = 0, bonus = 0, cebo = 0, ahorro = 0, blindajeUsado = 0, blindajeM = 0, focosUsado = 0, focosM = 0, jugadas = 0, resueltas = 0, resultado = NULL, giro = 0, suerte = 0, empujado = 0, pistasTurno = 0 WHERE id = ?`.query(g.id)
       var g3 = Game.find(g.id)
       if (g3 != null && Game.hasTool(g.id, "energy_start") && g3.energia <= 4) {
@@ -356,10 +362,12 @@ if (Request.isPost) {
       }
       var g4 = Game.find(g.id)
       if (g4 != null && Game.hasTool(g.id, "shield_start") && g4.escudo <= 4) {
-        `UPDATE games SET escudo = MIN(6, escudo + 1) WHERE id = ?`.query(g.id)
+        `UPDATE games SET escudo = escudo + 1 WHERE id = ?`.query(g.id)
         Game.log(g.id, "Generador de Escudo: +1 Escudo al empezar.")
       }
-      Game.draw(g.id, "equipo", "mano", 2)
+      var enMano = Game.count(g.id, "mano")
+      var aRobar = 3 - enMano
+      if (aRobar > 0) Game.draw(g.id, "equipo", "mano", aRobar)
       Game.log(g.id, "Ciclo " + (g.turno + 1).toString + ".")
     }
   }
@@ -389,13 +397,13 @@ if (g == null) {
       <p class="eyebrow">Preparación</p>
       <h1>Prepará la expedición</h1>
       <p class="lead">Podés jugar solo o en cooperativo con amigos. La mesa es una: el equipo XP contra el juego.</p>
-      <p class="hint">Siempre 3 cartas de Misterio en la mesa y 2 de robo por ciclo. No importa cuántos jueguen.</p>
+      <p class="hint">Siempre 3 cartas de Misterio en la mesa y la mano se repone a 3. No importa cuántos jueguen.</p>
       <form method="post" class="panel start-form">
         <input type="hidden" name="accion" value="nueva" />
         <label for="modo"><strong>Modo</strong></label>
         <select id="modo" name="modo">
-          <option value="experto" {{ modoInicial == "experto" ? "selected" : "" }}>Experto — 5 y 5, sin apoyos</option>
-          <option value="casual" {{ modoInicial == "casual" ? "selected" : "" }}>Normal — 5 y 5 + 1 carta de apoyo</option>
+          <option value="experto" {{ modoInicial == "experto" ? "selected" : "" }}>Experto — 6 y 6, sin apoyos</option>
+          <option value="casual" {{ modoInicial == "casual" ? "selected" : "" }}>Normal — 6 y 6 + 1 carta de apoyo</option>
           <option value="facil" {{ modoInicial == "facil" ? "selected" : "" }}>Asistido — 6 y 6 + 2 cartas de apoyo</option>
         </select>
         <button class="btn btn-primary">Iniciar expedición</button>
@@ -452,7 +460,7 @@ if (g.fase == "apoyo") focoHref = "#apoyo"
 if (g.fase == "prueba") focoHref = "#prueba"
 if (g.fase == "resuelto") focoHref = "#resultado"
 var puedeElegir = g.status == "activa" && g.fase == "listo" && g.resueltas == 0
-var puedeJugar = g.status == "activa" && g.jugadas == 0 && g.fase == "listo"
+var puedeJugar = g.status == "activa" && g.jugadas == 0 && (g.fase == "listo" || (g.fase == "prueba" && !g.tirado))
 var maniobrasPrueba = hand.where { |h| ["plus_two", "reroll_all", "cancel_shield_loss", "no_energy_cost", "reduce_damage", "flip_parity", "reroll_parity"].contains(h["card"].effect) }.toList
 
 var finalTitulo = "La expedición continúa"
@@ -460,12 +468,9 @@ var finalTexto = ""
 if (g.status == "victoria") {
   finalTitulo = "Lo encontraron"
   finalTexto = "Seis Pistas. La última sombra se hunde en la fosa y, por un instante, el Megalodón está ahí. El mundo seguirá creyendo que es un mito, como el monstruo del lago Ness. Ustedes ya saben la verdad."
-} else if (g.status == "derrota" && g.energia <= 0) {
-  finalTitulo = "Sin aire"
-  finalTexto = "La Energía llegó a cero. El submarino se queda quieto en la oscuridad y la expedición termina ahí."
 } else if (g.status == "derrota") {
-  finalTitulo = "El casco cedió"
-  finalTexto = "El Escudo llegó a cero. El vehículo no resiste la presión y la fosa se queda con el secreto."
+  finalTitulo = "La expedición se pierde"
+  finalTexto = "Al cerrar el turno, la Energía y el Escudo estaban en 0. El submarino se queda sin aire y sin casco en la oscuridad."
 }
 
 // ---------- Vista ----------
@@ -478,9 +483,9 @@ return Layout.render(<main class="game">
     </div>
     <div class="game-rail-body">
       <div class="rail-state">
-        <span class="rail-stat rail-energia" title="Energía {{ g.energia }} de 6"><b>{{ g.energia }}</b><small>⚡</small></span>
-        <span class="rail-stat rail-escudo" title="Escudo {{ g.escudo }} de 6"><b>{{ g.escudo }}</b><small>🛡️</small></span>
-        <span class="rail-stat rail-pistas" title="Pistas {{ g.pistas }} de 6"><b>{{ g.pistas }}</b><small>🔍</small></span>
+        <span class="rail-stat rail-energia" title="Energía {{ g.energia }}"><b>{{ g.energia }}</b><small>⚡</small></span>
+        <span class="rail-stat rail-escudo" title="Escudo {{ g.escudo }}"><b>{{ g.escudo }}</b><small>🛡️</small></span>
+        <span class="rail-stat rail-pistas" title="Pistas {{ g.pistas }}"><b>{{ g.pistas }}</b><small>🔍</small></span>
       </div>
       <p class="rail-meta">Ciclo {{ g.turno }} · Mazo {{ mazo }} · Descarte {{ descarte }}</p>
       <nav class="rail-nav">
@@ -512,24 +517,24 @@ return Layout.render(<main class="game">
 
   <section class="gauges-board" aria-label="Contadores de la expedición">
     <article class="counter">
-      {{ Layout.die(g.energia, "die-teal") }}
+      {{ Layout.die(g.energia > 6 ? 6 : g.energia, "die-teal") }}
       <span class="counter-body">
         <span class="counter-label">Energía</span>
-        <span class="counter-value">{{ g.energia }} / 6</span>
+        <span class="counter-value">{{ g.energia }}</span>
       </span>
     </article>
     <article class="counter">
-      {{ Layout.die(g.escudo, "die-gold") }}
+      {{ Layout.die(g.escudo > 6 ? 6 : g.escudo, "die-gold") }}
       <span class="counter-body">
         <span class="counter-label">Escudo</span>
-        <span class="counter-value">{{ g.escudo }} / 6</span>
+        <span class="counter-value">{{ g.escudo }}</span>
       </span>
     </article>
     <article class="counter">
-      {{ Layout.die(g.pistas, "die-coral") }}
+      {{ Layout.die(g.pistas > 6 ? 6 : g.pistas, "die-coral") }}
       <span class="counter-body">
         <span class="counter-label">Pistas</span>
-        <span class="counter-value">{{ g.pistas }} / 6</span>
+        <span class="counter-value">{{ g.pistas }}</span>
       </span>
     </article>
   </section>
@@ -774,8 +779,8 @@ return Layout.render(<main class="game">
           </div>
         </article>} }}
       </div>
-      {{ hand.isEmpty && <p class="muted">Sin cartas en mano. Al cerrar el ciclo se roban 2.</p> }}
-      <p class="hint">{{ g.jugadas == 0 ? "Todavía pueden jugar 1 carta este ciclo." : "Ya jugaron su carta de este ciclo." }} Al cerrar el ciclo, el juego descarta al azar hasta dejar 1 y roba 2.</p>
+      {{ hand.isEmpty && <p class="muted">Sin cartas en mano. Al cerrar el ciclo se repone la mano a 3.</p> }}
+      <p class="hint">{{ g.jugadas == 0 ? "Todavía pueden jugar 1 carta este ciclo." : "Ya jugaron su carta de este ciclo." }} Al cerrar el ciclo, descartá una carta al azar y reponé la mano a 3.</p>
     </div>
 
     <aside id="herramientas">

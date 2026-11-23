@@ -27,9 +27,10 @@ return Layout.render(<main>
       <div>
         <h2>La idea</h2>
         <p>Podés jugar solo o en cooperativo con amigos. El submarino baja hacia una fosa sin cartografiar en busca de seis Pistas que confirmen que el Megalodón existe. Para el resto del mundo es una leyenda, como el monstruo del lago Ness.</p>
+        <p class="hint">Es un <strong>LCG</strong>: los mazos son fijos, no hay sobres aleatorios ni cartas coleccionables.</p>
         <ul>
           <li><strong>Ganan</strong> si reúnen 6 Pistas.</li>
-          <li><strong>Pierden</strong> si la Energía llega a 0 (se quedan sin aire) o el Escudo llega a 0 (el casco cede).</li>
+          <li><strong>Pierden</strong> si al terminar un turno completo tienen Energía y Escudo en 0 a la vez.</li>
         </ul>
         <p class="hint">En la app, la mano es una sola y las decisiones se comparten. Podés jugar solo o en cooperativo con amigos: la mesa es la misma.</p>
         <p class="hint">Las cartas de Dilema no dan ni quitan Pistas: solo mueven Energía y Escudo.</p>
@@ -41,7 +42,7 @@ return Layout.render(<main>
           <div class="gauge">{{ Layout.die(6, "die-gold") }}<span class="gauge-name">Escudo</span></div>
           <div class="gauge">{{ Layout.die(0, "die-coral") }}<span class="gauge-name">Pistas</span></div>
         </div>
-        <p class="hint" style="margin: 0.9rem 0 0">Arrancan en 6, 6 y 0. Se mueven entre 0 y 6, nunca más.</p>
+        <p class="hint" style="margin: 0.9rem 0 0">Arrancan en 6, 6 y 0. Energía y Escudo pueden superar 6. Las Pistas llegan a 6 y ganan.</p>
       </div>
     </div>
   </section>
@@ -53,7 +54,7 @@ return Layout.render(<main>
     <ol class="steps">
       <li><span class="num">1</span><span><strong>Arranquen con 3 cartas de Equipo</strong>La mano es compartida. Con niños de 5 años conviene leer las opciones en voz alta.</span></li>
       <li><span class="num">2</span><span><strong>Revelen siempre 3 cartas de Misterio</strong>Sin importar cuántos jueguen. La mesa no cambia: cambia a quién le toca tirar.</span></li>
-      <li><span class="num">3</span><span><strong>Pongan los contadores</strong>Experto: 5 y 5. Normal: 5 y 5 + 1 Maniobra de apoyo en el área. Asistido: 6 y 6 + 2 Maniobras de apoyo. Pistas 0 en todos.</span></li>
+      <li><span class="num">3</span><span><strong>Pongan los contadores</strong>Todos: 6 de Energía y 6 de Escudo. Pistas 0. Experto: sin apoyos. Normal: +1 Maniobra de apoyo en el área. Asistido: +2 Maniobras de apoyo.</span></li>
     </ol>
   </section>
 
@@ -63,11 +64,12 @@ return Layout.render(<main>
       <p>Se juega un ciclo por vez, solo o en cooperativo.</p>
     </div>
     <ol class="steps">
-      <li><span class="num">1</span><span><strong>Arrancá con 3 cartas de Equipo</strong>La mano es compartida. Al cerrar cada ciclo el juego descarta al azar hasta dejar 1 y roba 2: el próximo ciclo empieza con 3.</span></li>
-      <li><span class="num">2</span><span><strong>Jugá 1 carta (opcional)</strong>Herramienta: queda en la mesa toda la partida. Una sola en mesa; la nueva reemplaza a la anterior. Maniobra: se resuelve y va al descarte.</span></li>
+      <li><span class="num">1</span><span><strong>Arrancá con 3 cartas de Equipo</strong>La mano es compartida. Al cerrar cada ciclo descartás una carta al azar y reponés la mano a 3.</span></li>
+      <li><span class="num">2</span><span><strong>Jugá 1 carta (opcional)</strong>Podés jugarla antes o después de elegir el Misterio, siempre antes de tirar. Herramienta: queda en la mesa. Una sola activa; la nueva reemplaza a la anterior. Maniobra: se resuelve y va al descarte.</span></li>
       <li><span class="num">3</span><span><strong>Resolvé un Misterio</strong>Elegí una carta activa, lean la situación, debatan y elijan una de sus opciones. Después viene la prueba de dados.</span></li>
-      <li><span class="num">4</span><span><strong>Reponé la mesa y pasá el ciclo</strong>La carta resuelta va al descarte y se revela una nueva. Al cerrar el ciclo, el juego descarta al azar hasta dejar 1 carta y roba 2.</span></li>
+      <li><span class="num">4</span><span><strong>Reponé la mesa y pasá el ciclo</strong>La carta resuelta va al descarte y se revela una nueva. Descartá una carta propia al azar, robá 1 del Mazo del Juego y reponé tu mano a 3.</span></li>
     </ol>
+    <p class="hint">Si se agota un mazo, mezclá su descarte y seguí robando. Energía y Escudo pueden superar 6.</p>
   </section>
 
   <section class="panel legend">
@@ -165,9 +167,8 @@ return Layout.render(<main>
     <table>
       <thead><tr><th>Condición</th><th>Qué pasa</th></tr></thead>
       <tbody>
-        <tr><td>Pistas llega a 6</td><td><strong>Victoria.</strong> Resuelven el misterio. El desenlace cambia según la Energía y el Escudo con los que lleguen.</td></tr>
-        <tr><td>Energía llega a 0</td><td><strong>Derrota.</strong> Se quedan sin aire en la oscuridad.</td></tr>
-        <tr><td>Escudo llega a 0</td><td><strong>Derrota.</strong> El vehículo no resiste la presión.</td></tr>
+        <tr><td>Pistas llega a 6</td><td><strong>Victoria.</strong> Resuelven el misterio en ese momento.</td></tr>
+        <tr><td>Energía y Escudo en 0 al cerrar un turno</td><td><strong>Derrota.</strong> No es inmediata: deben terminar el turno con ambos en 0.</td></tr>
       </tbody>
     </table>
   </section>

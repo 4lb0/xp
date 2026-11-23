@@ -8,16 +8,16 @@ return Layout.render(<main>
   <section class="hero">
     <div class="hero-grid">
       <div>
-        <p class="eyebrow">Juego de aventura y misterio</p>
+        <p class="eyebrow">LCG de aventura y misterio</p>
         <h1>XP <span>En busca del Megalodón</span></h1>
         <p class="lead">
           Podés jugar solo o en cooperativo con amigos. El submarino baja hacia una fosa que nadie
           cartografió. Para el mundo, el Megalodón es un mito, como el monstruo del lago Ness.
-          Ustedes van a comprobar si existe.
+          Ustedes van a comprobar si existe. Es un <strong>LCG</strong>: mazos fijos, sin sobres aleatorios.
         </p>
         <p class="lead">
           <strong>La misión:</strong> reunir 6 Pistas que confirmen al Megalodón antes de quedarse
-          sin Energía o sin Escudo. La mesa es una sola: las decisiones se comparten.
+          sin Energía y sin Escudo a la vez. La mesa es una sola: las decisiones se comparten.
         </p>
         <div class="hero-actions">
           <a class="btn btn-primary" href="/juego">Iniciar expedición</a>
@@ -41,8 +41,7 @@ return Layout.render(<main>
           </div>
         </div>
         <p class="hint" style="margin: 1rem 0 0">
-          Tres dados D6 quedan a la vista de todos. Si Energía o Escudo llegan a 0,
-          la expedición termina. Si Pistas llega a 6, el misterio queda resuelto.
+          Tres dados D6 quedan a la vista de todos. Energía y Escudo pueden superar 6. Si al cerrar un turno ambos están en 0, la expedición termina. Si Pistas llega a 6, el misterio queda resuelto.
         </p>
       </aside>
     </div>
@@ -56,11 +55,11 @@ return Layout.render(<main>
     <ol class="steps">
       <li>
         <span class="num">1</span>
-        <span><strong>Arrancá con 3 cartas de Equipo</strong>Al cerrar el ciclo el juego descarta al azar hasta dejar 1 y roba 2: siempre empezás con 3.</span>
+        <span><strong>Arrancá con 3 cartas de Equipo</strong>Al cerrar el ciclo descartás una carta al azar y reponés la mano a 3.</span>
       </li>
       <li>
         <span class="num">2</span>
-        <span><strong>Jugá 1 carta (opcional)</strong>Una Herramienta queda en la mesa toda la partida. Una Maniobra se usa una vez y va al descarte.</span>
+        <span><strong>Jugá 1 carta (opcional)</strong>Antes o después de elegir el Misterio, siempre antes de tirar. Herramienta: queda en la mesa. Maniobra: se usa una vez y va al descarte.</span>
       </li>
       <li>
         <span class="num">3</span>
@@ -68,7 +67,7 @@ return Layout.render(<main>
       </li>
       <li>
         <span class="num">4</span>
-        <span><strong>Reponé la mesa</strong>Descarten la carta resuelta, revelen una nueva y pase el dispositivo. Al cerrar el ciclo, descarten hasta 1 y roben 2.</span>
+        <span><strong>Reponé la mesa</strong>Descarten la carta resuelta y revelen una nueva. Al cerrar el ciclo, descarten una carta propia al azar, roben 1 del Mazo del Juego y repongan la mano a 3.</span>
       </li>
     </ol>
   </section>
@@ -79,13 +78,13 @@ return Layout.render(<main>
         <div class="section-head">
           <h2>Prepará la mesa</h2>
         </div>
-        <p class="muted">Podés jugar solo o en cooperativo con amigos: la mesa es una. Siempre hay 3 cartas de Misterio y se roban 2 de Equipo por ciclo.</p>
+        <p class="muted">Podés jugar solo o en cooperativo con amigos: la mesa es una. Siempre hay 3 cartas de Misterio y la mano se repone a 3 cada ciclo.</p>
         <form method="get" action="/juego" class="panel">
           <label for="modo"><strong>Modo</strong></label>
           <p style="margin: 0.4rem 0 0.9rem">
             <select id="modo" name="modo" style="font: inherit; padding: 0.5rem 0.7rem; border-radius: 8px; background: #0b2a44; color: inherit; border: 1px solid rgba(127,230,242,.3)">
-              <option value="experto" {{ modoInicial == "experto" ? "selected" : "" }}>Experto — 5 y 5, sin apoyos</option>
-              <option value="casual" {{ modoInicial == "casual" ? "selected" : "" }}>Normal — 5 y 5 + 1 apoyo</option>
+              <option value="experto" {{ modoInicial == "experto" ? "selected" : "" }}>Experto — 6 y 6, sin apoyos</option>
+              <option value="casual" {{ modoInicial == "casual" ? "selected" : "" }}>Normal — 6 y 6 + 1 apoyo</option>
               <option value="facil" {{ modoInicial == "facil" ? "selected" : "" }}>Asistido — 6 y 6 + 2 apoyos</option>
             </select>
           </p>

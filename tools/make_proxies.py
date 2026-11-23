@@ -364,8 +364,8 @@ def reference_cards() -> list[dict]:
             "kind": "referencia",
             "name": "ENERGÍA",
             "eyebrow": "EL RELOJ",
-            "range": "6 A 0",
-            "text": "Se gasta 1 por ciclo. Si llega a 0, la expedición termina.",
+            "range": "6+",
+            "text": "Se gasta 1 por ciclo. Puede superar 6. No pierde sola: la derrota es al cerrar un turno con Energía y Escudo en 0.",
             "icon": "energia",
         },
         {
@@ -382,8 +382,8 @@ def reference_cards() -> list[dict]:
             "kind": "referencia",
             "name": "ESCUDO",
             "eyebrow": "EL CASCO",
-            "range": "6 A 0",
-            "text": "Si llega a 0, el casco cede y la expedición termina.",
+            "range": "6+",
+            "text": "Puede superar 6. No pierde solo: la derrota es al cerrar un turno con Energía y Escudo en 0.",
             "icon": "escudo",
         },
     ]

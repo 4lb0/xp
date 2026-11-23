@@ -72,9 +72,9 @@ fallo: energia-2, escudo-1
 |---|---|
 | `pistas+1` / `pistas+2` | Suma Pistas (máximo 6). |
 | `energia+1` / `energia+2` | Recupera Energía (máximo 6). |
-| `energia-1` / `energia-2` | Gasta Energía. A 0, derrota. |
+| `energia-1` / `energia-2` | Gasta Energía. Llegar a 0 no derrota por sí solo. |
 | `escudo+1` / `escudo+2` | Recupera Escudo (máximo 6). |
-| `escudo-1` / `escudo-2` | Daña el Escudo. A 0, derrota. |
+| `escudo-1` / `escudo-2` | Daña el Escudo. Llegar a 0 no derrota por sí solo. |
 
 Las Pistas se pueden perder (`pistas-1`), pero es raro y fuerte: usalo solo en fallos o entradas muy malas. En las cartas de Misterio, la Energía no se toca: los golpes van al Escudo o a las Pistas. Si una carta no debe tener efecto, escribí `nada` o dejá el campo vacío.
 

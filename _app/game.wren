@@ -44,8 +44,8 @@ class Game {
   }
 
   static create(players, modo) {
-    var en = modo == "facil" ? 6 : 5
-    var es = modo == "facil" ? 6 : 5
+    var en = 6
+    var es = 6
     var ap = 0
     `INSERT INTO games (players, energia, escudo, modo, apoyo) VALUES (?, ?, ?, ?, ?)`.query([players, en, es, modo, ap])
     var id = `SELECT MAX(id) AS id FROM games`.first["id"].toNum
@@ -105,11 +105,26 @@ class Game {
     return rows
   }
 
+  static recycleDiscard(id, from) {
+    var prefix = from == "misterio" ? "m%" : "e%"
+    var rows = `SELECT id FROM game_cards WHERE gameId = ? AND zone = 'descarte' AND cardId LIKE ?`.fetch(id, prefix)
+    if (rows.isEmpty) return false
+    for (r in rows) {
+      `UPDATE game_cards SET zone = ?, ord = RANDOM() WHERE id = ?`.query(from, r["id"])
+    }
+    Game.log(id, from == "misterio" ? "Se mezcla el descarte del Mazo del Juego." : "Se mezcla el descarte del Mazo del Equipo.")
+    return true
+  }
+
   static draw(id, from, to, amount) {
     var last = null
     for (i in 1..amount) {
       var row = `SELECT id, cardId FROM game_cards WHERE gameId = ? AND zone = ? ORDER BY ord`.first(id, from)
-      if (row == null) return last
+      if (row == null) {
+        if (!Game.recycleDiscard(id, from)) return last
+        row = `SELECT id, cardId FROM game_cards WHERE gameId = ? AND zone = ? ORDER BY ord`.first(id, from)
+        if (row == null) return last
+      }
       `UPDATE game_cards SET zone = ? WHERE id = ?`.query(to, row["id"])
       last = row["cardId"]
     }
@@ -229,15 +244,14 @@ class Game {
       dPi = dPi + 1
       notas.add("Brazo Robótico sumó 1 Pista extra")
     }
-    var en = Game.clamp(g.energia + dEn, 0, 6)
-    var es = Game.clamp(g.escudo + dEs, 0, 6)
-    var pi = Game.clamp(g.pistas + dPi, 0, 6)
+    var en = g.energia + dEn
+    var es = g.escudo + dEs
+    var pi = g.pistas + dPi
+    if (en < 0) en = 0
+    if (es < 0) es = 0
+    if (pi < 0) pi = 0
     var status = "activa"
-    if (pi >= 6) {
-      status = "victoria"
-    } else if (en <= 0 || es <= 0) {
-      status = "derrota"
-    }
+    if (pi >= 6) status = "victoria"
     `UPDATE games SET energia = ?, escudo = ?, pistas = ?, status = ?, cebo = ?, blindajeUsado = ?, blindajeM = ?, pistasTurno = pistasTurno + ? WHERE id = ?`.query([en, es, pi, status, ceboUsado ? 0 : (g.cebo ? 1 : 0), blindajeAplicado ? 1 : (g.blindajeUsado ? 1 : 0), blindajeAplicado ? 0 : (g.blindajeM ? 1 : 0), dPi > 0 ? dPi : 0, id])
     return {"energia": en, "escudo": es, "pistas": pi, "status": status, "notas": notas}
   }

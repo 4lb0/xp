@@ -127,7 +127,7 @@ return Layout.render(<main class="quick">
       <p class="eyebrow">Guía visual</p>
       <h1>Cómo jugar</h1>
     </div>
-    <p class="pill">6 Pistas · 10 a 20 minutos · solo o en cooperativo</p>
+    <p class="pill">LCG · mazos fijos · 10 a 20 minutos · solo o en cooperativo</p>
   </header>
 
   <section class="quick-goal panel">
@@ -136,18 +136,19 @@ return Layout.render(<main class="quick">
       <h2>Encontrá al Megalodón con 6 Pistas.</h2>
       <p>
         La <strong>Energía</strong> es el aire. El <strong>Escudo</strong> es el casco.
-        Si cualquiera llega a 0, la expedición termina. Si las Pistas llegan a 6, ganan.
+        Pueden superar 6. Si al cerrar un turno ambos están en 0 a la vez, la expedición termina.
+        Si las Pistas llegan a 6, ganan en ese momento. Es un <strong>LCG</strong>: mazos fijos, sin sobres.
       </p>
     </div>
     <div class="quick-gauges" aria-label="Los tres contadores">
       <div class="quick-gauge">
         <svg aria-hidden="true"><use href="#ico-bolt"/></svg>
-        <strong>5–6</strong>
+        <strong>6</strong>
         <span>Energía</span>
       </div>
       <div class="quick-gauge">
         <svg aria-hidden="true"><use href="#ico-shield"/></svg>
-        <strong>5–6</strong>
+        <strong>6</strong>
         <span>Escudo</span>
       </div>
       <div class="quick-gauge">
@@ -181,7 +182,7 @@ return Layout.render(<main class="quick">
           <svg class="quick-card purple" aria-hidden="true"><use href="#ico-card"/></svg>
           <svg class="quick-card gold" aria-hidden="true"><use href="#ico-card"/></svg>
         </div>
-        <p>Compartida. Arrancás con 3 y robás 2 por ciclo.</p>
+        <p>Compartida. Arrancás con 3; se repone a 3 cada ciclo.</p>
       </article>
 
       <article class="quick-zone">
@@ -214,14 +215,14 @@ return Layout.render(<main class="quick">
       <h2>Tu primer turno</h2>
       <p>Estos 4 pasos se repiten en cada ciclo.</p>
     </div>
-    <p class="quick-note"><strong>Antes de empezar:</strong> 3 cartas de Equipo y 3 de Misterio. Contadores según el modo: Experto 5/5 · Normal 5/5 + 1 · Asistido 6/6 + 2.</p>
+    <p class="quick-note"><strong>Antes de empezar:</strong> 3 cartas de Equipo y 3 de Misterio. Todos: 6 de Energía y 6 de Escudo. Diferencia: Experto sin apoyos · Normal +1 · Asistido +2.</p>
     <ol class="quick-steps">
       <li>
         <span class="quick-step-num">1</span>
         <svg class="quick-icon" aria-hidden="true"><use href="#ico-play"/></svg>
         <div>
           <strong>Jugá 1 carta (o no)</strong>
-          <p>Arrancás con 3. Herramienta queda; Maniobra se gasta antes de tirar.</p>
+          <p>Arrancás con 3. Podés jugarla antes o después de elegir el Misterio, siempre antes de tirar. Herramienta queda; Maniobra se gasta.</p>
         </div>
       </li>
       <li>
@@ -245,7 +246,7 @@ return Layout.render(<main class="quick">
         <svg class="quick-icon" aria-hidden="true"><use href="#ico-deck"/></svg>
         <div>
           <strong>Cerrá el ciclo</strong>
-          <p>Descartá al azar hasta 1, robá 2 y pagá ⚡ 1.</p>
+          <p>Descartá una carta propia al azar, robá 1 del Mazo del Juego y reponé la mano a 3. Pagá ⚡ 1.</p>
         </div>
       </li>
     </ol>
@@ -254,8 +255,8 @@ return Layout.render(<main class="quick">
       <p>
         Tenés 3 cartas. Jugás <strong>Soldadura</strong> (🛡️ +1, va al descarte).
         Elegís <strong>El nido</strong>. Tirás <strong>Cara</strong>: éxito, ⚡ +2.
-        La carta va al descarte, entra la próxima, descartás al azar hasta 1,
-        robás 2 y el submarino paga <strong>⚡ 1</strong>.
+        La carta va al descarte, entra la próxima; descartás una carta propia al azar,
+        robás 1 del Mazo del Juego, reponés la mano a 3 y el submarino paga <strong>⚡ 1</strong>.
       </p>
     </div>
   </section>
@@ -303,7 +304,7 @@ return Layout.render(<main class="quick">
       <span><strong>1</strong> Herramienta activa</span>
       <span><strong>3</strong> al empezar</span>
       <span><strong>Emboscada:</strong> −1 ⚡, 🛡️ o Pista al entrar</span>
-      <span><strong>Modos:</strong> Experto 5/5 · Normal 5/5 + 1 · Asistido 6/6 + 2</span>
+      <span><strong>Modos:</strong> todos 6/6 · Experto sin apoyos · Normal +1 · Asistido +2</span>
     </div>
   </section>
 
@@ -320,8 +321,8 @@ return Layout.render(<main class="quick">
       <svg aria-hidden="true"><use href="#ico-broken"/></svg>
       <div>
         <p class="eyebrow">Perdés</p>
-        <h2>0 Energía o 0 Escudo</h2>
-        <p>Sin aire no hay expedición. Sin casco, la fosa se queda con el secreto.</p>
+        <h2>0 Energía y 0 Escudo al cerrar un turno</h2>
+        <p>No es inmediato: si al terminar el turno siguen ambos en 0, la expedición termina.</p>
       </div>
     </article>
   </section>
