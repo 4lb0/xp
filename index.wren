@@ -119,4 +119,4 @@ return Layout.render(<main>
     <p class="muted">10 a 20 minutos. Solo o en cooperativo. Desde los 5 años, con las cartas a la vista.</p>
     <a class="btn btn-primary" href="/juego">Probar la expedición</a>
   </section>
-</main>)
+</main>, "XP · En busca del Megalodón")

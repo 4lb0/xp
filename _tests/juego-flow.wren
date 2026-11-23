@@ -70,7 +70,7 @@ Test.get("/juego")
   .textContains("La fosa del Megalodón")
   .textContains("Energía")
   .contains("Mazos y descartes")
-  .contains("dorso-misterio.png")
+  .contains("dorso-misterio-thumb.png")
   .contains("data-moves=")
   .contains("&quot;kind&quot;:&quot;draw&quot;")
 

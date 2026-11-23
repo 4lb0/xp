@@ -434,7 +434,7 @@ if (g == null) {
       </form>
       <p class="hint">Todavía pueden leer <a href="/reglas">las reglas</a> antes de empezar.</p>
     </section>
-  </main>)
+  </main>, "La expedición · XP")
 }
 
 var mesa = Game.cardsIn(g.id, "mesa")
@@ -491,10 +491,6 @@ if (g.status == "victoria") {
 
 return Layout.render(<main class="game" data-moves="{{ movesJson }}" data-anim="{{ anim }}" data-outcome="{{ g.status == "victoria" || g.status == "derrota" ? g.status : "" }}">
   {{ g.status == "activa" && <aside class="game-rail" aria-label="Menú de la expedición">
-    <div class="game-rail-menu">
-      <span class="rail-menu-icon" aria-hidden="true">☰</span>
-      <span class="rail-menu-text">Menú</span>
-    </div>
     <div class="game-rail-body">
       <div class="rail-state">
         <span class="rail-stat rail-energia" title="Energía {{ g.energia }}"><b>{{ g.energia }}</b><small>⚡</small></span>
@@ -503,15 +499,15 @@ return Layout.render(<main class="game" data-moves="{{ movesJson }}" data-anim="
       </div>
       <p class="rail-meta">Turno {{ g.turno }}</p>
       <nav class="rail-nav">
-        <a href="{{ focoHref }}" aria-label="Ir a la acción actual"><span aria-hidden="true">🃏</span> <span class="rail-label">Cartas activas</span> <b>{{ mesa.count }}</b></a>
-        <a href="#mano" aria-label="Ver la mano"><span aria-hidden="true">🖐️</span> <span class="rail-label">Mano</span> <b>{{ handCount }}</b></a>
+        <a href="{{ focoHref }}" aria-label="Ir a la acción actual"><span aria-hidden="true">🃏</span> <span class="rail-label">Cartas activas</span><span class="rail-label-short">Cartas</span> <b>{{ mesa.count }}</b></a>
+        <a href="#mano" aria-label="Ver la mano"><span aria-hidden="true">🖐️</span> <span class="rail-label">Mano</span><span class="rail-label-short">Mano</span> <b>{{ handCount }}</b></a>
         <a href="#herramientas" class="{{ activeTool == null ? "is-empty" : "" }}" data-tool="{{ activeTool == null ? "Sin Herramienta activa" : activeTool.name }}" title="{{ activeTool == null ? "Sin Herramienta activa" : activeTool.name }}" aria-label="Herramienta: {{ activeTool == null ? "ninguna activa" : activeTool.name }}">
-          <span aria-hidden="true">🔧</span> <span class="rail-label">Herramienta</span>
+          <span aria-hidden="true">🔧</span> <span class="rail-label">Herramienta</span><span class="rail-label-short">Herram.</span>
           <span class="rail-dot {{ activeTool == null ? "" : "on" }}" aria-hidden="true"></span>
         </a>
-        <a href="#ayuda" class="{{ ayuda.isEmpty ? "is-empty" : "" }}" aria-label="Apoyo del equipo"><span aria-hidden="true">🎒</span> <span class="rail-label">Apoyo</span> <b>{{ ayuda.count }}</b></a>
-        <a href="/reglas" title="Reglas completas" aria-label="Reglas completas"><span aria-hidden="true">📖</span> <span class="rail-label">Reglas</span></a>
-        <a href="/" title="Inicio" aria-label="Inicio"><span aria-hidden="true">🏠</span> <span class="rail-label">Inicio</span></a>
+        <a href="#ayuda" class="{{ ayuda.isEmpty ? "is-empty" : "" }}" aria-label="Apoyo del equipo"><span aria-hidden="true">🎒</span> <span class="rail-label">Apoyo</span><span class="rail-label-short">Apoyo</span> <b>{{ ayuda.count }}</b></a>
+        <a href="/reglas" title="Reglas completas" aria-label="Reglas completas"><span aria-hidden="true">📖</span> <span class="rail-label">Reglas</span><span class="rail-label-short">Reglas</span></a>
+        <a href="/" title="Inicio" aria-label="Inicio"><span aria-hidden="true">🏠</span> <span class="rail-label">Inicio</span><span class="rail-label-short">Inicio</span></a>
       </nav>
     </div>
   </aside> }}
@@ -710,7 +706,7 @@ return Layout.render(<main class="game" data-moves="{{ movesJson }}" data-anim="
 
   </section> }}
 
-  {{ g.status == "activa" && g.fase == "resuelto" && <section class="panel result-panel" id="resultado">
+  {{ g.status == "activa" && g.fase == "resuelto" && <section class="panel result-panel" id="resultado" role="status" aria-live="polite">
     <p class="eyebrow">Resultado</p>
     <h2>{{ g.resultado == "ganada" ? "Prueba superada" : "Prueba fallida" }}</h2>
     {{ pendingCard != null && pendingOpt != null && <p class="muted">{{ pendingCard.name }} — {{ pendingOpt["texto"] }}</p> }}
@@ -839,7 +835,29 @@ return Layout.render(<main class="game" data-moves="{{ movesJson }}" data-anim="
     <p class="eyebrow">Fin de la partida</p>
     <h2>{{ finalTitulo }}</h2>
     <p>{{ finalTexto }}</p>
-    <p class="muted">Energía {{ g.energia }} · Escudo {{ g.escudo }} · Pistas {{ g.pistas }}</p>
+    <div class="gauges-board ending-gauges">
+      <article class="counter">
+        {{ Layout.die(g.energia > 6 ? 6 : g.energia, "die-teal") }}
+        <span class="counter-body">
+          <span class="counter-label">Energía</span>
+          <span class="counter-value">{{ g.energia }}</span>
+        </span>
+      </article>
+      <article class="counter">
+        {{ Layout.die(g.escudo > 6 ? 6 : g.escudo, "die-gold") }}
+        <span class="counter-body">
+          <span class="counter-label">Escudo</span>
+          <span class="counter-value">{{ g.escudo }}</span>
+        </span>
+      </article>
+      <article class="counter">
+        {{ Layout.die(g.pistas > 6 ? 6 : g.pistas, "die-coral") }}
+        <span class="counter-body">
+          <span class="counter-label">Pistas</span>
+          <span class="counter-value">{{ g.pistas }}</span>
+        </span>
+      </article>
+    </div>
     <form method="post">
       <input type="hidden" name="accion" value="reiniciar" />
       <button class="btn btn-primary">Nueva expedición</button>
@@ -896,7 +914,7 @@ return Layout.render(<main class="game" data-moves="{{ movesJson }}" data-anim="
       <h2>Bitácora de la expedición</h2>
     </div>
     <ul class="log">
-      {{ logs.map{|l| <li><time>{{ l["createdAt"] }}</time> <span>{{ l["text"] }}</span></li>} }}
+      {{ logs.map{|l| <li><time datetime="{{ l["iso"] }}">{{ l["hora"] }}</time> <span>{{ l["text"] }}</span></li>} }}
     </ul>
     {{ logs.isEmpty && <p class="muted">Todavía no pasó nada. Todo está por descubrirse.</p> }}
     {{ g.status == "activa" && <form method="post" class="restart-form">
@@ -916,7 +934,7 @@ return Layout.render(<main class="game" data-moves="{{ movesJson }}" data-anim="
     <div class="mazos-grid">
       <section class="mazos-pile mazos-pile-juego">
         <div class="mazos-pile-head">
-          <img src="/img/dorso-misterio.png" width="42" height="59" alt="" />
+          <img src="/img/dorso-misterio-thumb.png" width="42" height="59" alt="" />
           <div>
             <h3>Mazo del Juego</h3>
             <p><strong>{{ mazoJuego }}</strong> en el mazo · <strong>{{ descarteJuego }}</strong> en descarte</p>
@@ -933,7 +951,7 @@ return Layout.render(<main class="game" data-moves="{{ movesJson }}" data-anim="
       </section>
       <section class="mazos-pile mazos-pile-equipo">
         <div class="mazos-pile-head">
-          <img src="/img/dorso-equipo.png" width="42" height="59" alt="" />
+          <img src="/img/dorso-equipo-thumb.png" width="42" height="59" alt="" />
           <div>
             <h3>Mazo de Equipo</h3>
             <p><strong>{{ mazoEquipo }}</strong> en el mazo · <strong>{{ descarteEquipo }}</strong> en descarte</p>
@@ -950,4 +968,4 @@ return Layout.render(<main class="game" data-moves="{{ movesJson }}" data-anim="
       </section>
     </div>
   </dialog>
-</main>, "XP · Equipo eXPedición", g.status == "activa")
+</main>, "La expedición · XP", g.status == "activa")

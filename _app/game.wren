@@ -108,7 +108,7 @@ class Game {
   }
 
   static lastLogs(id, n) {
-    var rows = `SELECT text, createdAt FROM game_log WHERE gameId = ? ORDER BY id DESC LIMIT ?`.fetch(id, n)
+    var rows = `SELECT text, createdAt, strftime('%H:%M', createdAt, 'localtime') AS hora, strftime('%Y-%m-%dT%H:%M:%S', createdAt, 'localtime') AS iso FROM game_log WHERE gameId = ? ORDER BY id DESC LIMIT ?`.fetch(id, n)
     return rows
   }
 

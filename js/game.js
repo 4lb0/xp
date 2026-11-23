@@ -54,6 +54,19 @@
     if (state.sound === "on") playSound("toggle");
   });
 
+  // ----- Anuncio del resultado de la prueba -----
+  // El panel ya declara role="status"; además llevamos el foco al título para
+  // que el lector de pantalla lea "Prueba superada" / "Prueba fallida".
+  function announceResult() {
+    const panel = document.querySelector("#resultado");
+    if (!panel) return;
+    const title = panel.querySelector("h2");
+    if (!title) return;
+    title.setAttribute("tabindex", "-1");
+    title.focus();
+  }
+  announceResult();
+
   // ----- Mazos y descartes -----
 
   const dialog = document.getElementById("mazos-dialog");
@@ -228,7 +241,7 @@
     ghost.className = "card-ghost";
     ghost.setAttribute("aria-hidden", "true");
     if (isDraw) {
-      ghost.style.backgroundImage = `url("/img/dorso-${move.deck === "juego" ? "misterio" : "equipo"}.png")`;
+      ghost.style.backgroundImage = `url("/img/dorso-${move.deck === "juego" ? "misterio" : "equipo"}-thumb.png")`;
     } else {
       ghost.classList.add("card-ghost-front");
       ghost.textContent = move.emoji || "🃏";

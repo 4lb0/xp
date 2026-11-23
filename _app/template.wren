@@ -69,11 +69,11 @@ class Layout {
               </span>
             </a>
             <ul class="nav-links">
-              <li><a href="/" class="{{ Request.uri == "/" ? "active" : "" }}">Inicio</a></li>
-              <li><a href="/juego" class="{{ Request.uri.startsWith("/juego") ? "active" : "" }}">Expedición</a></li>
-              <li><a href="/como-jugar" class="{{ Request.uri == "/como-jugar" ? "active" : "" }}">Guía</a></li>
-              <li><a href="/reglas" class="{{ Request.uri == "/reglas" ? "active" : "" }}">Reglas</a></li>
-              <li><a href="/cartas" class="{{ Request.uri == "/cartas" ? "active" : "" }}">Cartas</a></li>
+              <li><a href="/" class="{{ Request.uri == "/" ? "active" : "" }}" aria-current="{{ Request.uri == "/" ? "page" : "false" }}">Inicio</a></li>
+              <li><a href="/juego" class="{{ Request.uri.startsWith("/juego") ? "active" : "" }}" aria-current="{{ Request.uri.startsWith("/juego") ? "page" : "false" }}">Expedición</a></li>
+              <li><a href="/como-jugar" class="{{ Request.uri == "/como-jugar" ? "active" : "" }}" aria-current="{{ Request.uri == "/como-jugar" ? "page" : "false" }}">Guía</a></li>
+              <li><a href="/reglas" class="{{ Request.uri == "/reglas" ? "active" : "" }}" aria-current="{{ Request.uri == "/reglas" ? "page" : "false" }}">Reglas</a></li>
+              <li><a href="/cartas" class="{{ Request.uri == "/cartas" ? "active" : "" }}" aria-current="{{ Request.uri == "/cartas" ? "page" : "false" }}">Cartas</a></li>
             </ul>
           </nav>
         </header> }}
@@ -88,7 +88,7 @@ class Layout {
               <img src="/img/logo-xp-mark.png" width="28" height="28" alt="" />
               <span><strong>XP</strong> · Equipo eXPedición — Edición 01: <em>En busca del Megalodón</em></span>
             </p>
-            <p class="muted">Creado con <a href="https://iz.ar" target="_blank">iz.ar</a></p>
+            <p class="muted">Hecho con <a href="https://bialet.dev" target="_blank" rel="noopener">Bialet</a></p>
           </div>
         </footer>
         <script src="/js/game.js?v={{ Layout.assetVersion }}" defer></script>

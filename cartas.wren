@@ -167,4 +167,4 @@ return Layout.render(<main>
       </article>} }}
     </div>
   </section>
-</main>)
+</main>, "El mazo completo · XP")

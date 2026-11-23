@@ -11,4 +11,4 @@ return Layout.render(<main>
   <section class="panel doc">
     {{ Markdown.file("cartas/LEEME.md") }}
   </section>
-</main>, "Cómo editar las cartas · XP")
+</main>, "Editar cartas · XP")

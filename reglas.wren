@@ -173,4 +173,4 @@ return Layout.render(<main>
     </table>
   </section>
 
-</main>)
+</main>, "Reglas · XP")
