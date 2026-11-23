@@ -30,6 +30,7 @@ if (Request.isPost) {
   }
 
   var aviso = ""
+  var anim = ""
 
   if (g.status != "activa") {
     return Response.redirect("/juego?aviso=" + Util.urlEncode("La expedición terminó. Empezá una nueva."))
@@ -168,6 +169,7 @@ if (Request.isPost) {
       var parity = opt["tipoPrueba"] == "cara" || opt["tipoPrueba"] == "seca"
       if (parity && g.giro) d1 = 7 - d1
       `UPDATE games SET dado1 = ?, dado2 = ?, tirado = 1, giro = 0 WHERE id = ?`.query(d1, d2, g.id)
+      anim = "dados"
       Game.log(g.id, "Tiran en la app: " + d1.toString + (dados == 2 ? " y " + d2.toString : "") + ".")
       var auto = Game.resolve(g.id)
       if (auto["error"] != "") aviso = auto["error"]
@@ -186,6 +188,7 @@ if (Request.isPost) {
       var parity = opt["tipoPrueba"] == "cara" || opt["tipoPrueba"] == "seca"
       if (parity && g.giro) d1 = 7 - d1
       `UPDATE games SET dado1 = ?, dado2 = ?, tirado = 1, giro = 0 WHERE id = ?`.query(d1, dados == 2 ? d2 : 0, g.id)
+      anim = "dados"
       Game.log(g.id, "Dados de la mesa: " + d1.toString + (dados == 2 ? " y " + d2.toString : "") + ".")
       var auto = Game.resolve(g.id)
       if (auto["error"] != "") aviso = auto["error"]
@@ -270,6 +273,7 @@ if (Request.isPost) {
         var carta = g.suerte ? "Suerte del Principiante" : "Focos Abisales"
         var tirada = d1.toString + ((!solaUna && opt["dados"] == 2) ? " y " + d2.toString : "")
         `UPDATE games SET dado1 = ?, dado2 = ?, fase = 'prueba', tirado = 1, suerte = 0, focosM = 0 WHERE id = ?`.query(d1, d2, g.id)
+        anim = "dados"
         Game.log(g.id, carta + ": vuelven a tirar " + tirada + ".")
         var res = Game.resolve(g.id)
         if (res["error"] != "") aviso = res["error"]
@@ -388,7 +392,10 @@ if (Request.isPost) {
     }
   }
 
-  return Response.redirect("/juego" + (aviso == "" ? "" : "?aviso=" + Util.urlEncode(aviso)))
+  var qs = ""
+  if (aviso != "") qs = "?aviso=" + Util.urlEncode(aviso)
+  if (anim != "") qs = qs + (qs == "" ? "?" : "&") + "anim=" + anim
+  return Response.redirect("/juego" + qs)
 }
 
 // Primer ingreso con cantidad de jugadores en la URL
@@ -404,6 +411,7 @@ if (g == null && (Request.get("jugadores") != null || Request.get("modo") != nul
 // ---------- Datos para la vista ----------
 
 var aviso = Util.urlDecode(Request.get("aviso", ""))
+var anim = Request.get("anim", "")
 var modoGuardado = session.get("modo")
 var modoInicial = (modoGuardado == "experto" || modoGuardado == "casual" || modoGuardado == "facil") ? modoGuardado : "casual"
 
@@ -481,7 +489,7 @@ if (g.status == "victoria") {
 
 // ---------- Vista ----------
 
-return Layout.render(<main class="game" data-moves="{{ movesJson }}">
+return Layout.render(<main class="game" data-moves="{{ movesJson }}" data-anim="{{ anim }}" data-outcome="{{ g.status == "victoria" || g.status == "derrota" ? g.status : "" }}">
   {{ g.status == "activa" && <aside class="game-rail" aria-label="Menú de la expedición">
     <div class="game-rail-menu">
       <span class="rail-menu-icon" aria-hidden="true">☰</span>
@@ -606,8 +614,8 @@ return Layout.render(<main class="game" data-moves="{{ movesJson }}">
     <h2>Pueden volver a tirar</h2>
     <p class="muted">{{ pendingCard.name }} — {{ pendingOpt["texto"] }}</p>
     <div class="dice-row">
-      {{ Layout.die(g.dado1, "die-large") }}
-      {{ pendingOpt["dados"] == 2 && Layout.die(g.dado2, "die-large") }}
+      {{ Layout.die(g.dado1, "die-large dice-roll") }}
+      {{ pendingOpt["dados"] == 2 && Layout.die(g.dado2, "die-large dice-roll") }}
     </div>
     <p>{{ g.focosM ? "Focos Abisales: relancen el dado." : "Suerte del Principiante: vuelvan a tirar los dados." }}</p>
     <section class="roll-controls">
@@ -653,8 +661,8 @@ return Layout.render(<main class="game" data-moves="{{ movesJson }}">
     </p>
 
     <div class="dice-row roller-stage">
-      {{ Layout.die(g.tirado ? g.dado1 : 0, "die-large") }}
-      {{ pendingOpt["dados"] == 2 && Layout.die(g.tirado ? g.dado2 : 0, "die-large") }}
+      {{ Layout.die(g.tirado ? g.dado1 : 0, "die-large dice-roll") }}
+      {{ pendingOpt["dados"] == 2 && Layout.die(g.tirado ? g.dado2 : 0, "die-large dice-roll") }}
     </div>
 
     {{ g.bonus > 0 && <p class="hint">Bonificación acumulada: +{{ g.bonus }} al total.</p> }}
@@ -707,8 +715,8 @@ return Layout.render(<main class="game" data-moves="{{ movesJson }}">
     <h2>{{ g.resultado == "ganada" ? "Prueba superada" : "Prueba fallida" }}</h2>
     {{ pendingCard != null && pendingOpt != null && <p class="muted">{{ pendingCard.name }} — {{ pendingOpt["texto"] }}</p> }}
     <div class="dice-row">
-      {{ Layout.die(g.dado1) }}
-      {{ pendingOpt != null && pendingOpt["dados"] == 2 && Layout.die(g.dado2) }}
+      {{ Layout.die(g.dado1, "dice-roll") }}
+      {{ pendingOpt != null && pendingOpt["dados"] == 2 && Layout.die(g.dado2, "dice-roll") }}
     </div>
     <p class="muted">{{ g.ultimo }}</p>
     {{ pendingOpt != null && <p class="option-chips">
@@ -827,7 +835,7 @@ return Layout.render(<main class="game" data-moves="{{ movesJson }}">
     </div>
   </section> }}
 
-  {{ g.status != "activa" && <section class="panel ending">
+  {{ g.status != "activa" && <section class="panel ending {{ g.status }}">
     <p class="eyebrow">Fin de la partida</p>
     <h2>{{ finalTitulo }}</h2>
     <p>{{ finalTexto }}</p>

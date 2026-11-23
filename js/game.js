@@ -79,6 +79,10 @@
   }
   if (!Array.isArray(moves)) moves = [];
 
+  const anim = main.dataset.anim || "";
+  const outcome = main.dataset.outcome || "";
+  let pendingOutcome = null;
+
   const draws = moves.filter((move) => move.kind === "draw");
   const discards = moves.filter((move) => move.kind === "discard");
   const plays = moves.filter((move) => move.kind === "play");
@@ -95,6 +99,41 @@
     if (draws.length) playSound("draw", 0);
     if (plays.length) playSound("play", 90);
     if (discards.length) playSound("discard", 160);
+    if (anim === "dados") playSound("dice", 100);
+  }
+
+  if (anim === "dados") {
+    if (motionOn()) animateDice();
+    // El parámetro es efímero: si recargás, no se repite la tirada.
+    try { history.replaceState(null, "", location.pathname + location.hash); } catch (error) {}
+  }
+
+  if (outcome && soundOn()) {
+    pendingOutcome = outcome;
+    window.setTimeout(() => {
+      if (!pendingOutcome) return;
+      const context = audioContext();
+      if (context && context.state === "running") {
+        playSound(pendingOutcome);
+        pendingOutcome = null;
+      }
+    }, 350);
+  }
+
+  function animateDice() {
+    const dice = [...main.querySelectorAll(".dice-roll")];
+    dice.forEach((die, index) => {
+      const finalValue = die.dataset.value;
+      die.classList.add("is-rolling");
+      const timer = window.setInterval(() => {
+        die.dataset.value = String(1 + Math.floor(Math.random() * 6));
+      }, 55);
+      window.setTimeout(() => {
+        window.clearInterval(timer);
+        die.dataset.value = finalValue;
+        die.classList.remove("is-rolling");
+      }, 460 + index * 60);
+    });
   }
 
   function cardNode(move) {
@@ -296,7 +335,15 @@
   function unlockAudio() {
     const context = audioContext();
     if (context && context.state === "suspended") {
-      context.resume().catch(() => {});
+      context.resume().then(() => {
+        if (pendingOutcome) {
+          playSound(pendingOutcome);
+          pendingOutcome = null;
+        }
+      }).catch(() => {});
+    } else if (context && pendingOutcome) {
+      playSound(pendingOutcome);
+      pendingOutcome = null;
     }
   }
   document.addEventListener("pointerdown", unlockAudio, { once: true, capture: true });
@@ -308,7 +355,13 @@
     window.setTimeout(() => {
       if (!soundOn()) return;
       const now = context.currentTime;
-      if (kind === "shuffle") {
+      if (kind === "victoria") {
+        victory(context, now);
+      } else if (kind === "derrota") {
+        defeat(context, now);
+      } else if (kind === "dice") {
+        diceSound(context, now);
+      } else if (kind === "shuffle") {
         noise(context, now, "draw");
         noise(context, now + 0.07, "draw");
       } else if (kind === "draw" || kind === "discard" || kind === "play" || kind === "card") {
@@ -364,7 +417,7 @@
     if (!action || !soundOn()) return;
     const kind = ["terminar", "jugar", "maniobra", "descartar", "usar_ayuda", "elegir_apoyo"].includes(action)
       ? "card"
-      : (action === "nueva" ? "shuffle" : "click");
+      : (["tirar", "mesa", "reroll"].includes(action) ? "dice" : (action === "nueva" ? "shuffle" : "click"));
     const play = () => {
       playSound(kind);
       write(tab, "xpSoundAt", String(Date.now()));
@@ -373,6 +426,35 @@
     if (context && context.state === "suspended") context.resume().then(play).catch(() => {});
     else play();
   }, true);
+
+  function tone(context, frequency, at, duration, type, volume) {
+    const oscillator = context.createOscillator();
+    const gain = context.createGain();
+    oscillator.type = type || "sine";
+    oscillator.frequency.setValueAtTime(frequency, at);
+    gain.gain.setValueAtTime(0.0001, at);
+    gain.gain.exponentialRampToValueAtTime(volume || 0.07, at + 0.02);
+    gain.gain.exponentialRampToValueAtTime(0.0001, at + duration);
+    oscillator.connect(gain).connect(context.destination);
+    oscillator.start(at);
+    oscillator.stop(at + duration + 0.03);
+  }
+
+  function victory(context, now) {
+    tone(context, 523.25, now, 0.18, "triangle", 0.08);
+    tone(context, 659.25, now + 0.12, 0.2, "triangle", 0.08);
+    tone(context, 783.99, now + 0.24, 0.32, "triangle", 0.09);
+  }
+
+  function defeat(context, now) {
+    tone(context, 220, now, 0.32, "sine", 0.09);
+    tone(context, 164.81, now + 0.16, 0.5, "sine", 0.09);
+    tone(context, 110, now + 0.32, 0.55, "sine", 0.07);
+  }
+
+  function diceSound(context, now) {
+    [0, 0.05, 0.11, 0.17].forEach((offset) => noise(context, now + offset, "play"));
+  }
 
   function click(context, now) {
     const oscillator = context.createOscillator();

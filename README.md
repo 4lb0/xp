@@ -71,6 +71,12 @@ La carta fantasma está posicionada en coordenadas del documento, no de la
 ventana: si seguís el movimiento con el scroll, la animación viaja con la página.
 Los robos duran unos 680 ms y los descartes 540 ms.
 
+En una tirada, los dados grandes hacen un shake rápido y cambian de cara durante
+unos 460 ms antes de quedar en el resultado. Al ganar, el panel final entra con
+un glow dorado; al perder, con un glow coral y un pequeño sacudón. Los sonidos
+también son distintos: rattle de dados, arpegio ascendente al ganar y descenso
+grave al perder.
+
 Los dos botones de la cabecera, **Animaciones** y **Sonido**, se guardan en
 `localStorage` (`xp-motion` y `xp-sound`). Si el sistema pide
 `prefers-reduced-motion`, las animaciones arrancan apagadas. El sonido es
