@@ -224,7 +224,7 @@ El mazo se mezcla con `ORDER BY RANDOM()` de SQLite. Las tiradas digitales tambi
 - **Consumo fijo.** −1 Energía por turno: el juego se juega contra el reloj, no contra la suerte de una sola tirada.
 - **Dilemas sin Pistas.** Las 10 cartas de Dilema no otorgan ni quitan Pistas: solo mueven Energía y Escudo. Las Pistas vienen de Exploración y Peligro.
 - **Emboscadas.** Diez de las 40 cartas cuestan 1 Energía, 1 Escudo o 1 Pista al entrar a la mesa. Tienen una sola opción. Golpean al equipo justo cuando repone la mesa.
-- **Emboscada inicial.** Si entre las 3 cartas del inicio hay más de una, no se aplican todas: el equipo elige cuál sufrir. Solo una golpea al empezar.
+- **Emboscada inicial.** Si en el reparto inicial entran varias emboscadas a la vez, no se aplican todas: el equipo elige cuál sufrir y las demás no cobran. El costo de entrada se paga una sola vez; una emboscada que ya está en la mesa no vuelve a cobrar.
 - **La Energía es solo el reloj.** La Energía baja 1 por turno y se recupera con Batería (+2, ×6), Generador Auxiliar y apoyos. Energía y Escudo pueden pasar de 6. Soldadura cura 1 de Escudo (×4): parece una gran cura, pero es de las cartas trampa.
 - **Mazos fijos (LCG).** No hay sobres aleatorios: todas las cartas del juego están en los dos mazos. Si un mazo se agota, se mezcla su descarte y se sigue robando.
 

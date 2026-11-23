@@ -567,7 +567,7 @@ return Layout.render(<main class="game" data-moves="{{ movesJson }}" data-anim="
   {{ g.status == "activa" && g.fase == "emboscada" && <section class="panel ambush-choice" id="emboscada">
     <p class="eyebrow">Emboscada inicial</p>
     <h2>Elijan qué golpe recibe el equipo</h2>
-    <p class="muted">Las tres cartas iniciales están boca arriba. Solo una emboscada se aplica al empezar: elijan cuál sufrir.</p>
+    <p class="muted">Entraron varias emboscadas a la vez. Solo se aplica la que elijan: las demás no cobran.</p>
     <div class="card-grid">
       {{ emboscadasIniciales.map{|item| <article class="card" data-family="{{ item["card"].family }}" data-row="{{ item["rowId"] }}">
         <span class="card-art"><span class="card-emoji" aria-hidden="true">{{ item["card"].emoji }}</span></span>
@@ -733,14 +733,14 @@ return Layout.render(<main class="game" data-moves="{{ movesJson }}" data-anim="
   {{ g.status == "activa" && g.fase == "listo" && <section id="cartas-activas">
     <div class="section-head">
       <h2>Cartas activas en la mesa</h2>
-      <p>Elijan una carta y resuelvan su opción. Las emboscadas tienen una sola.</p>
+      <p>Elijan una carta y resuelvan su opción. Las emboscadas tienen una sola y cobran únicamente al entrar.</p>
     </div>
     <div class="card-grid">
       {{ mesa.map{|item| <article class="card" data-family="{{ item["card"].family }}" data-row="{{ item["rowId"] }}">
         <span class="card-art"><span class="card-emoji" aria-hidden="true">{{ item["card"].emoji }}</span></span>
         <span class="card-family">{{ item["card"].family == "exploracion" ? "Exploración" : (item["card"].family == "peligro" ? "Peligro" : "Dilema") }}{{ item["card"].entry != "" ? " · Emboscada" : "" }} · <span class="card-id">{{ item["card"].id }}</span></span>
         <h3>{{ item["card"].name }}</h3>
-        {{ item["card"].entry != "" && <p class="entry-badge">Al entrar
+        {{ item["card"].entry != "" && <p class="entry-badge" title="El costo de entrar se resuelve una sola vez, cuando la carta entra a la mesa. Si ya está en la mesa, no se vuelve a cobrar.">Al entrar <span class="muted">ya resuelto</span>
           {{ item["card"].entryChips.map{|c| <span class="chip {{ c["cls"] }}" title="{{ c["title"] }}" aria-label="{{ c["title"] }}">{{ c["icon"] }} {{ c["text"] }}</span>} }}
         </p> }}
         <section class="card-text">{{ item["card"].body }}</section>

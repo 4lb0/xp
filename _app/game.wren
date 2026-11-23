@@ -73,21 +73,28 @@ class Game {
     `UPDATE games SET ultimo = ? WHERE id = ?`.query("La expedición empieza. El submarino se hunde en la fosa.", id)
     var modoLabel = modo == "facil" ? "Asistido" : (modo == "casual" ? "Normal" : "Experto")
     Game.log(id, "Comienza la expedición en modo " + modoLabel + ".")
+    Game.enterInitial(id)
+    return id
+  }
+
+  // Resuelve las emboscadas del reparto inicial. Con una sola, se cobra su
+  // costo. Con dos o más, la partida queda esperando la elección del equipo:
+  // solo la carta elegida se aplica; las demás no cobran.
+  static enterInitial(id) {
     var g0 = Game.find(id)
     var emboscadas = []
     for (r in Game.rows(id, "mesa")) {
       var c = Card.get(r["cardId"])
-      if (c != null && c.entry != "") emboscadas.add(c)
+      if (c != null && c.entry != "") emboscadas.add({"rowId": r["id"], "card": c})
     }
     if (emboscadas.count == 1) {
-      var c = emboscadas[0]
+      var c = emboscadas[0]["card"]
       Game.apply(id, g0, Game.parseEffects(c.entry), true, [])
       Game.log(id, "Emboscada al entrar: " + c.name + " — " + c.entryLabel + ".")
     } else if (emboscadas.count > 1) {
       `UPDATE games SET fase = 'emboscada' WHERE id = ?`.query(id)
-      Game.log(id, "Tres cartas en la mesa: elijan qué emboscada inicial sufrir.")
+      Game.log(id, "Emboscadas simultáneas en la mesa: elijan cuál sufrir.")
     }
-    return id
   }
 
   static destroy(id) {
