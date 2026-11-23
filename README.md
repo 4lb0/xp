@@ -6,7 +6,7 @@ Versión jugable en el navegador del **LCG** de aventura y misterio **XP (Equipo
 - La expedición busca la prueba de que el Megalodón existe: para el mundo es un mito, como el monstruo del lago Ness.
 - Partidas de 10 a 20 minutos.
 - 40 cartas de Misterio (una o dos opciones cada una) + 44 cartas de Equipo (10 Herramientas + 34 Maniobras, 2 de ellas de apoyo), todas editables como archivos Markdown.
-- Arte provisorio: un emoji grande por carta, hasta que lleguen las ilustraciones.
+- Arte provisorio: un emoji grande por carta, hasta que lleguen las ilustraciones. Las cartas de Equipo suman ícono de tipo, cuándo se usan y fichas de efecto para poder jugarlas sin leer.
 - Tirada digital desde la app **o** carga manual de lo que salió en los dados de la mesa.
 - Hecho con [Bialet](https://bialet.dev): Wren, SQLite y HTML server-rendered, sin frameworks ni build step.
 
@@ -15,7 +15,9 @@ Versión jugable en el navegador del **LCG** de aventura y misterio **XP (Equipo
 `pdf/xp-proxies-bw.pdf` contiene las **84 cartas** (40 de Misterio + 44 de Equipo,
 incluidas las copias) en blanco y negro, a **60 × 86 mm** —unos milímetros menos
 que una carta TCG estándar—, con **9 cartas por hoja A4** y líneas de corte.
-Al final agrega **3 cartas de referencia** con dibujos: Energía, Pistas y Escudo.
+Las cartas de Equipo muestran el tipo, cuándo se usan y las fichas de efecto con
+iconos para poder jugarlas sin leer. Al final agrega **3 cartas de referencia**
+con dibujos: Energía, Pistas y Escudo.
 Imprimilo al **100% / tamaño real**, sin “ajustar a la página”.
 
 Para regenerarlo:

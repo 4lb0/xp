@@ -105,13 +105,31 @@ return Layout.render(<main>
     </div>
   </section>
 
+  <section class="card-key" aria-labelledby="como-leer-equipo">
+    <div class="section-head">
+      <h2 id="como-leer-equipo">Cómo leer una carta de Equipo</h2>
+      <p>Con el ícono alcanza: no hace falta leer el texto para jugarla.</p>
+    </div>
+    <ul>
+      <li><span aria-hidden="true">🔧</span> <strong>Herramienta</strong> · queda en la mesa.</li>
+      <li><span aria-hidden="true">🃏</span> <strong>Maniobra</strong> · se usa una vez y va al descarte.</li>
+      <li><span aria-hidden="true">👆</span> <strong>Ahora</strong> · se juega y se resuelve enseguida.</li>
+      <li><span aria-hidden="true">🎲</span> <strong>Antes de tirar</strong> · se prepara antes de la prueba.</li>
+      <li><span aria-hidden="true">♾️</span> <strong>Siempre</strong> · funciona sola mientras está en la mesa.</li>
+    </ul>
+  </section>
+
   <section class="deck-section" id="herramientas">
     <div class="section-head"><h2>Herramientas</h2><p>Permanentes. Una sola activa por equipo.</p></div>
     <div class="deck-grid">
       {{ herramientas.map{|c| <article class="mini-card" data-family="herramienta">
         <span class="card-art"><span class="card-emoji" aria-hidden="true">{{ c.emoji }}</span></span>
-        <span class="card-family">Herramienta · x{{ c.copies }} · <span class="card-id">{{ c.id }}</span></span>
+        <span class="card-family"><span aria-hidden="true">{{ c.typeIcon }}</span> {{ c.typeLabel }} · x{{ c.copies }} · <span class="card-id">{{ c.id }}</span></span>
         <h3>{{ c.name }}</h3>
+        <span class="use-badge {{ c.useClass }}" title="{{ c.useHint }}"><span aria-hidden="true">{{ c.useIcon }}</span> {{ c.useLabel }}</span>
+        <div class="effect-chips">
+          {{ c.helpChips.map{|h| <span class="chip {{ h["cls"] }}" title="{{ h["title"] }}" aria-label="{{ h["title"] }}"><span aria-hidden="true">{{ h["icon"] }}</span> {{ h["text"] }}</span>} }}
+        </div>
         <section class="card-text">{{ c.body }}</section>
       </article>} }}
     </div>
@@ -122,8 +140,12 @@ return Layout.render(<main>
     <div class="deck-grid">
       {{ maniobras.map{|c| <article class="mini-card" data-family="maniobra">
         <span class="card-art"><span class="card-emoji" aria-hidden="true">{{ c.emoji }}</span></span>
-        <span class="card-family">Maniobra · x{{ c.copies }} · <span class="card-id">{{ c.id }}</span></span>
+        <span class="card-family"><span aria-hidden="true">{{ c.typeIcon }}</span> {{ c.typeLabel }} · x{{ c.copies }} · <span class="card-id">{{ c.id }}</span></span>
         <h3>{{ c.name }}</h3>
+        <span class="use-badge {{ c.useClass }}" title="{{ c.useHint }}"><span aria-hidden="true">{{ c.useIcon }}</span> {{ c.useLabel }}</span>
+        <div class="effect-chips">
+          {{ c.helpChips.map{|h| <span class="chip {{ h["cls"] }}" title="{{ h["title"] }}" aria-label="{{ h["title"] }}"><span aria-hidden="true">{{ h["icon"] }}</span> {{ h["text"] }}</span>} }}
+        </div>
         <section class="card-text">{{ c.body }}</section>
       </article>} }}
     </div>
@@ -133,10 +155,14 @@ return Layout.render(<main>
     <div class="section-head"><h2>Maniobras de apoyo</h2><p>Las cartas para encontrar rápido: se usan una vez, van al descarte y eligen Energía o Escudo.</p></div>
     <div class="deck-grid">
       {{ apoyos.map{|c| <article class="mini-card" data-family="apoyo">
-        <span class="card-ribbon">Apoyo</span>
+        <span class="card-ribbon">🎁 Apoyo</span>
         <span class="card-art"><span class="card-emoji" aria-hidden="true">{{ c.emoji }}</span></span>
-        <span class="card-family">Maniobra de apoyo · x{{ c.copies }} · <span class="card-id">{{ c.id }}</span></span>
+        <span class="card-family"><span aria-hidden="true">{{ c.typeIcon }}</span> {{ c.typeLabel }} · x{{ c.copies }} · <span class="card-id">{{ c.id }}</span></span>
         <h3>{{ c.name }}</h3>
+        <span class="use-badge {{ c.useClass }}" title="{{ c.useHint }}"><span aria-hidden="true">{{ c.useIcon }}</span> {{ c.useLabel }}</span>
+        <div class="effect-chips">
+          {{ c.helpChips.map{|h| <span class="chip {{ h["cls"] }}" title="{{ h["title"] }}" aria-label="{{ h["title"] }}"><span aria-hidden="true">{{ h["icon"] }}</span> {{ h["text"] }}</span>} }}
+        </div>
         <section class="card-text">{{ c.body }}</section>
       </article>} }}
     </div>

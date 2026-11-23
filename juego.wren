@@ -655,7 +655,9 @@ return Layout.render(<main class="game">
           {{ maniobrasPrueba.map{|h| <form method="post" class="inline-form">
             <input type="hidden" name="accion" value="maniobra" />
             <input type="hidden" name="rowId" value="{{ h["rowId"] }}" />
-            <button class="btn btn-ghost btn-small">Usar {{ h["card"].name }}</button>
+            <button class="btn btn-ghost btn-small"><span aria-hidden="true">{{ h["card"].emoji }}</span> {{ h["card"].name }}
+              {{ h["card"].helpChips.map{|c| <span class="chip {{ c["cls"] }}" title="{{ c["title"] }}">{{ c["icon"] }} {{ c["text"] }}</span>} }}
+            </button>
           </form>} }}
         </div>
       </section> }}
@@ -750,11 +752,14 @@ return Layout.render(<main class="game">
         </div>
         <div class="hand">
           {{ ayuda.map{|a| <article class="card card-support" data-family="apoyo">
-            <span class="card-ribbon">Apoyo</span>
+            <span class="card-ribbon">🎁 Apoyo</span>
             <span class="card-art"><span class="card-emoji" aria-hidden="true">{{ a["card"].emoji }}</span></span>
-            <span class="card-family">Maniobra de apoyo · una vez · <span class="card-id">{{ a["card"].id }}</span></span>
+            <span class="card-family"><span aria-hidden="true">{{ a["card"].typeIcon }}</span> {{ a["card"].typeLabel }} · <span class="card-id">{{ a["card"].id }}</span></span>
             <h3>{{ a["card"].name }}</h3>
-            <p>Elegí <span class="chip chip-energia">⚡ +{{ a["card"].value }}</span> o <span class="chip chip-escudo">🛡️ +{{ a["card"].value }}</span>.</p>
+            <span class="use-badge {{ a["card"].useClass }}" title="{{ a["card"].useHint }}"><span aria-hidden="true">{{ a["card"].useIcon }}</span> {{ a["card"].useLabel }}</span>
+            <div class="effect-chips">
+              {{ a["card"].helpChips.map{|h| <span class="chip {{ h["cls"] }}" title="{{ h["title"] }}" aria-label="{{ h["title"] }}"><span aria-hidden="true">{{ h["icon"] }}</span> {{ h["text"] }}</span>} }}
+            </div>
             <form method="post">
               <input type="hidden" name="accion" value="usar_ayuda" />
               <input type="hidden" name="rowId" value="{{ a["rowId"] }}" />
@@ -770,8 +775,12 @@ return Layout.render(<main class="game">
       </div>
       {{ tools.map{|t| <article class="card card-tool" data-family="herramienta">
         <span class="card-art"><span class="card-emoji" aria-hidden="true">{{ t["card"].emoji }}</span></span>
-        <span class="card-family">Herramienta · <span class="card-id">{{ t["card"].id }}</span></span>
+        <span class="card-family"><span aria-hidden="true">{{ t["card"].typeIcon }}</span> {{ t["card"].typeLabel }} · <span class="card-id">{{ t["card"].id }}</span></span>
         <h3>{{ t["card"].name }}</h3>
+        <span class="use-badge {{ t["card"].useClass }}" title="{{ t["card"].useHint }}"><span aria-hidden="true">{{ t["card"].useIcon }}</span> {{ t["card"].useLabel }}</span>
+        <div class="effect-chips">
+          {{ t["card"].helpChips.map{|h| <span class="chip {{ h["cls"] }}" title="{{ h["title"] }}" aria-label="{{ h["title"] }}"><span aria-hidden="true">{{ h["icon"] }}</span> {{ h["text"] }}</span>} }}
+        </div>
         <section class="card-text">{{ t["card"].body }}</section>
 
       </article>} }}
@@ -818,12 +827,26 @@ return Layout.render(<main class="game">
         <h2>Mano del equipo</h2>
         <p>{{ handCount }} cartas · siempre 3 al empezar</p>
       </div>
+      <details class="card-key card-key-inline">
+        <summary>👀 Cómo leer las cartas de Equipo</summary>
+        <ul>
+          <li><span aria-hidden="true">🔧</span> <strong>Herramienta</strong> · queda en la mesa.</li>
+          <li><span aria-hidden="true">🃏</span> <strong>Maniobra</strong> · una vez y al descarte.</li>
+          <li><span aria-hidden="true">👆</span> <strong>Ahora</strong> · se resuelve enseguida.</li>
+          <li><span aria-hidden="true">🎲</span> <strong>Antes de tirar</strong> · se prepara para la prueba.</li>
+          <li><span aria-hidden="true">♾️</span> <strong>Siempre</strong> · funciona sola en la mesa.</li>
+        </ul>
+      </details>
       <div class="hand hand-main">
         {{ hand.map{|h| <article class="card {{ puedeJugar ? "" : "is-locked" }}" data-family="{{ h["card"].isSupport ? "apoyo" : (h["card"].isTool ? "herramienta" : "maniobra") }}">
-          {{ h["card"].isSupport && <span class="card-ribbon">Apoyo</span> }}
+          {{ h["card"].isSupport && <span class="card-ribbon">🎁 Apoyo</span> }}
           <span class="card-art"><span class="card-emoji" aria-hidden="true">{{ h["card"].emoji }}</span></span>
-          <span class="card-family">{{ h["card"].isSupport ? "Maniobra de apoyo" : (h["card"].isTool ? "Herramienta" : "Maniobra") }} · <span class="card-id">{{ h["card"].id }}</span></span>
+          <span class="card-family"><span aria-hidden="true">{{ h["card"].typeIcon }}</span> {{ h["card"].typeLabel }} · <span class="card-id">{{ h["card"].id }}</span></span>
           <h3>{{ h["card"].name }}</h3>
+          <span class="use-badge {{ h["card"].useClass }}" title="{{ h["card"].useHint }}"><span aria-hidden="true">{{ h["card"].useIcon }}</span> {{ h["card"].useLabel }}</span>
+          <div class="effect-chips">
+            {{ h["card"].helpChips.map{|h2| <span class="chip {{ h2["cls"] }}" title="{{ h2["title"] }}" aria-label="{{ h2["title"] }}"><span aria-hidden="true">{{ h2["icon"] }}</span> {{ h2["text"] }}</span>} }}
+          </div>
           <section class="card-text">{{ h["card"].body }}</section>
           <div class="action-row">
             {{ h["card"].playNow && <form method="post" class="inline-form">

@@ -263,6 +263,46 @@ return Layout.render(<main class="quick">
 
   <section class="quick-section">
     <div class="quick-section-head">
+      <h2>Cómo leer una carta de Equipo</h2>
+      <p>Los íconos dicen qué es, cuándo se usa y qué hace. No hace falta leer el texto.</p>
+    </div>
+    <div class="quick-key">
+      <article class="fake-card gold">
+        <span class="fake-emoji">🔋</span>
+        <small>🔧 Herramienta · queda</small>
+        <strong>Generador</strong>
+        <span class="use-badge use-always">♾️ Siempre</span>
+        <span class="chip chip-energia">⚡ +1</span>
+        <small>si está en 4 o menos</small>
+      </article>
+      <article class="fake-card purple">
+        <span class="fake-emoji">⚡</span>
+        <small>🃏 Maniobra · una vez</small>
+        <strong>Batería</strong>
+        <span class="use-badge use-now">👆 Ahora</span>
+        <span class="chip chip-energia">⚡ +2</span>
+        <small>se juega y listo</small>
+      </article>
+      <article class="fake-card purple">
+        <span class="fake-emoji">🚀</span>
+        <small>🃏 Maniobra · una vez</small>
+        <strong>Turbo</strong>
+        <span class="use-badge use-before">🎲 Antes de tirar</span>
+        <span class="chip chip-dado">🎲 +2</span>
+        <small>se prepara antes de la prueba</small>
+      </article>
+    </div>
+    <div class="quick-rules">
+      <span><strong>🔧 Herramienta:</strong> queda en la mesa</span>
+      <span><strong>🃏 Maniobra:</strong> una vez y al descarte</span>
+      <span><strong>👆 Ahora:</strong> se resuelve enseguida</span>
+      <span><strong>🎲 Antes de tirar:</strong> se prepara para la prueba</span>
+      <span><strong>♾️ Siempre:</strong> funciona sola en la mesa</span>
+    </div>
+  </section>
+
+  <section class="quick-section">
+    <div class="quick-section-head">
       <h2>La tirada</h2>
       <p>La carta dice qué prueba toca. Siempre con dados de seis caras.</p>
     </div>

@@ -101,6 +101,16 @@ Una vez por turno, mirá la carta de arriba del Mazo del Juego antes de elegir.
 - `efecto`: el identificador que usa el motor.
 - `valor` (solo Maniobras de apoyo): cuánto cura la elección (+1 o +2).
 
+### Ayuda visual
+
+La app arma sola la ayuda visual de cada carta de Equipo a partir de `tipo`, `subtipo`, `efecto` y `valor`. No hay que escribir iconos en el Markdown:
+
+- **Tipo:** 🔧 Herramienta · queda en la mesa, o 🃏 Maniobra · una vez y al descarte. Las de apoyo llevan 🎁 Apoyo.
+- **Cuándo se usa:** 👆 Ahora (se resuelve enseguida), 🎲 Antes de tirar (se prepara para la prueba) o ♾️ Siempre (funciona sola mientras está en la mesa).
+- **Qué hace:** fichas con iconos y cifras (⚡, 🛡️, 🔍, 🎲, 🔁) para que la carta se entienda sin leer.
+
+Si agregás un `efecto` nuevo, sumá su ayuda visual en `_app/cards.wren` (`Card.visualFor`).
+
 ### Maniobras de apoyo
 
 `tipo: maniobra` + `subtipo: apoyo` con `valor: 1` o `2`. Al usarlas, el jugador elige **+valor Energía o +valor Escudo**. Actúan como cualquier Maniobra: se usan una vez y van al descarte. En la app se destacan en rosa con la etiqueta **Apoyo** para encontrarlas rápido. En Experto se mezclan en el mazo; en Normal una va al área de Apoyo; en Asistido las dos. Las del área no gastan la carta del turno.
@@ -112,6 +122,7 @@ Una vez por turno, mirá la carta de arriba del Mazo del Juego antes de elegir.
 | `peek` | Con la Herramienta en la mesa, muestra la carta de arriba del Mazo del Juego con su contenido. |
 | `reroll_parity` | Antes de tirar en una prueba de Cara o Seca: si falla, relanza el dado una vez (1 vez por turno). |
 | `energy_start` | Al empezar el turno, si la Energía está en 4 o menos, sube 1. |
+| `shield_start` | Al empezar el turno, si el Escudo está en 4 o menos, sube 1. |
 | `reduce_damage` | Antes de tirar: reduce 1 el daño al Escudo (1 vez por turno). |
 | `extra_clue_six` | Si ganan Pistas y un dado muestra 6, suma 1 Pista extra. |
 | `harpoon` | Habilita el botón del Arpón: 2 Energía, tira 1 dado, con Cara gana 1 Pista y se descarta. |

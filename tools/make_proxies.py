@@ -175,10 +175,112 @@ def draw_effects_row(
 
 def team_type(card: dict) -> str:
     if (card.get("subtipo") or "").strip().lower() == "apoyo" or (card.get("tipo") or "").lower() == "apoyo":
-        return "MANIOBRA DE APOYO"
+        return "MANIOBRA DE APOYO · UNA VEZ"
     if (card.get("tipo") or "").lower() == "herramienta":
-        return "HERRAMIENTA"
-    return "MANIOBRA"
+        return "HERRAMIENTA · QUEDA"
+    return "MANIOBRA · UNA VEZ"
+
+
+def team_help(card: dict) -> dict:
+    """Ayuda visual de una carta de Equipo: cuándo se usa y qué hace."""
+    effect = (card.get("efecto") or "").strip()
+    value = (card.get("valor") or "1").strip()
+    support = (card.get("subtipo") or "").strip().lower() == "apoyo"
+    help = {"use_icon": "👆", "use_label": "AHORA", "chips": []}
+
+    def before() -> None:
+        help["use_icon"], help["use_label"] = "🎲", "ANTES DE TIRAR"
+
+    def always() -> None:
+        help["use_icon"], help["use_label"] = "♾️", "SIEMPRE"
+
+    if effect == "peek":
+        always()
+        help["chips"] = [("👀", "Próxima carta")]
+    elif effect == "reroll_parity":
+        before()
+        help["chips"] = [("🔁", "1 dado")]
+    elif effect == "energy_start":
+        always()
+        help["chips"] = [("⚡", "+1"), ("", "4 o menos")]
+    elif effect == "reduce_damage":
+        before()
+        help["chips"] = [("🛡️", "-1 daño")]
+    elif effect == "extra_clue_six":
+        always()
+        help["chips"] = [("🔍", "+1"), ("🎲", "sale 6")]
+    elif effect == "harpoon":
+        help["chips"] = [("⚡", "-2"), ("🎲", "Cara"), ("🔍", "+1")]
+    elif effect == "plus_one_sum":
+        always()
+        help["chips"] = [("🎲", "+1"), ("", "2 dados")]
+    elif effect == "flip_parity":
+        before()
+        help["chips"] = [("🔄", "Cara / Seca")]
+    elif effect == "plus_two":
+        before()
+        help["chips"] = [("🎲", "+2")]
+    elif effect == "reroll_all":
+        before()
+        help["chips"] = [("🎲", "todos"), ("🔁", "si falla")]
+    elif effect == "heal_shield":
+        help["chips"] = [("🛡️", "+1")]
+    elif effect == "heal_energy":
+        help["chips"] = [("⚡", "+2")]
+    elif effect == "clue_for_energy":
+        help["chips"] = [("⚡", "-1"), ("🔍", "+1")]
+    elif effect == "discard_active":
+        help["chips"] = [("🔀", "Misterio nuevo")]
+    elif effect == "cancel_shield_loss":
+        before()
+        help["chips"] = [("🛡️", "no pierdas")]
+    elif effect == "no_energy_cost":
+        before()
+        help["chips"] = [("⚡", "gratis")]
+    elif effect == "shield_start":
+        always()
+        help["chips"] = [("🛡️", "+1"), ("", "4 o menos")]
+    elif support:
+        help["chips"] = [("⚡", f"+{value}"), ("", "o"), ("🛡️", f"+{value}")]
+    return help
+
+
+def draw_use_badge(c: canvas.Canvas, icon: str, label: str, x: float, y: float) -> None:
+    """Pastilla con el momento de uso: 👆 AHORA, 🎲 ANTES DE TIRAR, ♾️ SIEMPRE."""
+    c.setFont("NotoEmoji", 6.6)
+    iw = stringWidth(icon, "NotoEmoji", 6.6) if icon else 0
+    c.setFont("Helvetica-Bold", 5.4)
+    tw = stringWidth(label, "Helvetica-Bold", 5.4)
+    w = iw + tw + 3.0 * mm
+    c.setFillGray(0.90)
+    c.roundRect(x, y, w, 4.7 * mm, 2.2 * mm, stroke=0, fill=1)
+    if icon:
+        c.setFillGray(0.05)
+        c.setFont("NotoEmoji", 6.6)
+        c.drawString(x + 1.2 * mm, y + 1.3 * mm, icon)
+    c.setFillGray(0.05)
+    c.setFont("Helvetica-Bold", 5.4)
+    c.drawString(x + 1.2 * mm + iw + (0.5 * mm if icon else 0), y + 1.45 * mm, label)
+
+
+def draw_text_chips(c: canvas.Canvas, chips: list[tuple[str, str]], x: float, y: float) -> float:
+    """Fichas de efecto con icono y texto corto. Devuelve el ancho usado."""
+    start = x
+    for icon, text in chips:
+        clean_text = clean(text)
+        icon_w = stringWidth(icon, "NotoEmoji", 6.8) if icon else 0
+        text_w = stringWidth(clean_text, "Helvetica-Bold", 5.4)
+        chip_w = icon_w + text_w + 2.8 * mm
+        c.setFillGray(0.90)
+        c.roundRect(x, y, chip_w, 5.0 * mm, 1.8 * mm, stroke=0, fill=1)
+        c.setFillGray(0.05)
+        if icon:
+            c.setFont("NotoEmoji", 6.8)
+            c.drawString(x + 1.0 * mm, y + 1.25 * mm, icon)
+        c.setFont("Helvetica-Bold", 5.4)
+        c.drawString(x + 1.0 * mm + icon_w + (0.4 * mm if icon else 0), y + 1.45 * mm, clean_text)
+        x += chip_w + 0.7 * mm
+    return x - start
 
 
 def mystery_family(card: dict) -> str:
@@ -241,13 +343,31 @@ def draw_card(c: canvas.Canvas, card: dict, x: float, y: float) -> None:
     sub = mystery_family(card) if kind == "misterio" else team_type(card)
     c.setFont("Helvetica-Bold", 5.2)
     c.setFillGray(0.25)
-    c.drawString(left, top - 4.0 * mm, sub)
+    if kind == "misterio":
+        c.drawString(left, top - 4.0 * mm, sub)
+    else:
+        type_icon = "🎁" if is_support else ("🔧" if (card.get("tipo") or "").lower() == "herramienta" else "🃏")
+        c.setFont("NotoEmoji", 6.4)
+        c.setFillGray(0.20)
+        c.drawString(left, top - 4.0 * mm, type_icon)
+        icon_w = stringWidth(type_icon, "NotoEmoji", 6.4)
+        c.setFont("Helvetica-Bold", 5.0)
+        c.drawString(left + icon_w + 1.0 * mm, top - 4.0 * mm, sub)
     emoji = (card.get("emoji") or "").strip()
     if emoji:
         c.setFont("NotoEmoji", 7.2)
         c.setFillGray(0.20)
         c.drawRightString(left + width, top - 4.0 * mm, emoji)
     top -= 5.0 * mm
+
+    if kind == "equipo":
+        help = team_help(card)
+        top -= 1.3 * mm
+        draw_use_badge(c, help["use_icon"], help["use_label"], left, top - 4.7 * mm)
+        top -= 5.8 * mm
+        if help["chips"]:
+            draw_text_chips(c, help["chips"], left, top - 5.0 * mm)
+            top -= 6.0 * mm
 
     if kind == "misterio":
         entry_effects = parse_effects(card.get("entrada", ""))

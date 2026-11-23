@@ -16,6 +16,7 @@ class Card {
     _entryChips = meta["entradaChips"] || []
     _body = body
     _options = options
+    _visual = Card.visualFor(meta)
   }
 
   id { _id }
@@ -32,6 +33,17 @@ class Card {
   entryChips { _entryChips }
   body { _body }
   options { _options }
+
+  // Ayuda visual de las cartas de Equipo. Sale del efecto, así que editar
+  // el Markdown de la carta no obliga a repetir los iconos.
+  typeIcon { _visual["typeIcon"] }
+  typeLabel { _visual["typeLabel"] }
+  typeHint { _visual["typeHint"] }
+  useIcon { _visual["useIcon"] }
+  useLabel { _visual["useLabel"] }
+  useHint { _visual["useHint"] }
+  useClass { _visual["useClass"] }
+  helpChips { _visual["chips"] }
 
   option(label) {
     for (o in _options) {
@@ -98,6 +110,118 @@ class Card {
     meta["entradaChips"] = Card.chips(meta["entrada"] || "")
     for (o in opts) Card.decorate(o)
     return Card.new(meta, body, opts)
+  }
+
+  static hchip(icon, text, cls, title) {
+    return {"icon": icon, "text": text, "cls": cls, "title": title}
+  }
+
+  // Traduce el identificador de efecto a la ayuda visual que ve la mesa:
+  // qué tipo de carta es, cuándo se juega y qué hace, con iconos y cifras.
+  // Un nene de 5 años tiene que poder usarla sin leer el texto.
+  static visualFor(meta) {
+    var effect = meta["efecto"] || ""
+    var value = Num.fromString(meta["valor"] || "1")
+    var isSupport = meta["subtipo"] == "apoyo" || meta["tipo"] == "apoyo"
+    var isTool = meta["tipo"] == "herramienta"
+    var isMystery = (meta["id"] || "").startsWith("m")
+    var v = {
+      "typeIcon": isMystery ? "🌊" : (isSupport ? "🎁" : (isTool ? "🔧" : "🃏")),
+      "typeLabel": isMystery ? "Misterio" : (isSupport ? "Maniobra de apoyo · una vez" : (isTool ? "Herramienta · queda" : "Maniobra · una vez")),
+      "typeHint": isMystery ? "" : (isSupport ? "Se usa una vez, va al descarte y elegís Energía o Escudo." : (isTool ? "Queda en la mesa hasta que jueguen otra Herramienta." : "Se usa una vez y va al descarte.")),
+      "useIcon": "👆",
+      "useLabel": "Ahora",
+      "useHint": "Se juega y se resuelve en el momento.",
+      "useClass": "use-now",
+      "chips": [Card.hchip("·", "—", "chip-none", "Sin efecto")]
+    }
+
+    if (effect == "peek") {
+      v["useIcon"] = "♾️"
+      v["useLabel"] = "Siempre"
+      v["useHint"] = "Funciona sola mientras esté en la mesa."
+      v["useClass"] = "use-always"
+      v["chips"] = [Card.hchip("👀", "Próxima carta", "chip-neutral", "Mirá la carta de arriba del Mazo del Juego")]
+    } else if (effect == "reroll_parity") {
+      v["useIcon"] = "🎲"
+      v["useLabel"] = "Antes de tirar"
+      v["useHint"] = "Se prepara antes de la prueba, en Cara o Seca."
+      v["useClass"] = "use-before"
+      v["chips"] = [Card.hchip("🔁", "1 dado", "chip-dado", "Si la prueba falla, relanzá 1 dado")]
+    } else if (effect == "energy_start") {
+      v["useIcon"] = "♾️"
+      v["useLabel"] = "Siempre"
+      v["useHint"] = "Funciona sola al empezar cada Misterio."
+      v["useClass"] = "use-always"
+      v["chips"] = [Card.hchip("⚡", "+1", "chip-energia", "Si la Energía está en 4 o menos, sube 1"), Card.hchip("", "4 o menos", "chip-neutral", "Solo si la Energía está en 4 o menos")]
+    } else if (effect == "reduce_damage") {
+      v["useIcon"] = "🎲"
+      v["useLabel"] = "Antes de tirar"
+      v["useHint"] = "Se prepara antes de la prueba que va a golpear el Escudo."
+      v["useClass"] = "use-before"
+      v["chips"] = [Card.hchip("🛡️", "−1 daño", "chip-escudo", "Reduce 1 el daño al Escudo de esa prueba")]
+    } else if (effect == "extra_clue_six") {
+      v["useIcon"] = "♾️"
+      v["useLabel"] = "Siempre"
+      v["useHint"] = "Funciona sola cada vez que ganan Pistas."
+      v["useClass"] = "use-always"
+      v["chips"] = [Card.hchip("🔍", "+1", "chip-pista", "Ganás 1 Pista extra si un dado muestra 6"), Card.hchip("🎲", "sale 6", "chip-dado", "Solo si un dado muestra 6")]
+    } else if (effect == "harpoon") {
+      v["chips"] = [Card.hchip("⚡", "−2", "chip-energia chip-loss", "Gastá 2 de Energía"), Card.hchip("🎲", "Cara", "chip-dado", "Tirá 1 dado: gana si sale Cara"), Card.hchip("🔍", "+1", "chip-pista", "Si sale Cara, ganás 1 Pista")]
+    } else if (effect == "plus_one_sum") {
+      v["useIcon"] = "♾️"
+      v["useLabel"] = "Siempre"
+      v["useHint"] = "Funciona sola en las pruebas de 2 dados."
+      v["useClass"] = "use-always"
+      v["chips"] = [Card.hchip("🎲", "+1", "chip-dado", "Sumá 1 al total de la prueba"), Card.hchip("", "2 dados", "chip-neutral", "Solo en pruebas de 2 dados")]
+    } else if (effect == "flip_parity") {
+      v["useIcon"] = "🎲"
+      v["useLabel"] = "Antes de tirar"
+      v["useHint"] = "Se prepara antes de una prueba de Cara o Seca."
+      v["useClass"] = "use-before"
+      v["chips"] = [Card.hchip("🔄", "Cara ↔ Seca", "chip-dado", "El dado se invierte: Cara pasa a Seca y Seca a Cara")]
+    } else if (effect == "plus_two") {
+      v["useIcon"] = "🎲"
+      v["useLabel"] = "Antes de tirar"
+      v["useHint"] = "Se prepara antes de la prueba."
+      v["useClass"] = "use-before"
+      v["chips"] = [Card.hchip("🎲", "+2", "chip-dado", "Sumá 2 al total de la prueba")]
+    } else if (effect == "reroll_all") {
+      v["useIcon"] = "🎲"
+      v["useLabel"] = "Antes de tirar"
+      v["useHint"] = "Se prepara antes de la prueba."
+      v["useClass"] = "use-before"
+      v["chips"] = [Card.hchip("🎲", "todos", "chip-dado", "Volvé a tirar todos los dados"), Card.hchip("🔁", "si falla", "chip-dado", "Solo si la prueba falla")]
+    } else if (effect == "heal_shield") {
+      v["chips"] = [Card.hchip("🛡️", "+1", "chip-escudo", "Recuperás 1 de Escudo")]
+    } else if (effect == "heal_energy") {
+      v["chips"] = [Card.hchip("⚡", "+2", "chip-energia", "Recuperás 2 de Energía")]
+    } else if (effect == "clue_for_energy") {
+      v["chips"] = [Card.hchip("⚡", "−1", "chip-energia chip-loss", "Gastá 1 de Energía"), Card.hchip("🔍", "+1", "chip-pista", "Ganás 1 Pista enseguida")]
+    } else if (effect == "discard_active") {
+      v["chips"] = [Card.hchip("🔀", "Misterio nuevo", "chip-neutral", "Descartá una carta activa y sacá otra en su lugar")]
+    } else if (effect == "cancel_shield_loss") {
+      v["useIcon"] = "🎲"
+      v["useLabel"] = "Antes de tirar"
+      v["useHint"] = "Se prepara antes de la prueba que puede dañar el Escudo."
+      v["useClass"] = "use-before"
+      v["chips"] = [Card.hchip("🛡️", "no pierdas", "chip-escudo", "En este Misterio no perdés Escudo por una carta o un evento")]
+    } else if (effect == "no_energy_cost") {
+      v["useIcon"] = "🎲"
+      v["useLabel"] = "Antes de tirar"
+      v["useHint"] = "Se prepara antes de la prueba."
+      v["useClass"] = "use-before"
+      v["chips"] = [Card.hchip("⚡", "gratis", "chip-energia", "En este Misterio no pierden Energía: ni por consumo ni por cartas")]
+    } else if (effect == "shield_start") {
+      v["useIcon"] = "♾️"
+      v["useLabel"] = "Siempre"
+      v["useHint"] = "Funciona sola al empezar cada Misterio."
+      v["useClass"] = "use-always"
+      v["chips"] = [Card.hchip("🛡️", "+1", "chip-escudo", "Si el Escudo está en 4 o menos, sube 1"), Card.hchip("", "4 o menos", "chip-neutral", "Solo si el Escudo está en 4 o menos")]
+    } else if (isSupport) {
+      v["chips"] = [Card.hchip("⚡", "+" + value.toString, "chip-energia", "Sumá " + value.toString + " de Energía"), Card.hchip("", "o", "chip-or", "Elegí Energía o Escudo"), Card.hchip("🛡️", "+" + value.toString, "chip-escudo", "Sumá " + value.toString + " de Escudo")]
+    }
+    return v
   }
 
   static chips(text) {
