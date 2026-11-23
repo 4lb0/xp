@@ -270,16 +270,14 @@ class Game {
     var d1 = g.dado1
     var d2 = g.dado2
     var ok = Game.evalTest(opt["tipoPrueba"], opt["objetivo"], d1, d2, g.bonus, estab)
-    if (!ok && g.suerte) {
-      var dice = Game.roll(opt["dados"])
-      d1 = dice[0]
-      d2 = opt["dados"] == 2 ? dice[1] : 0
-      ok = Game.evalTest(opt["tipoPrueba"], opt["objetivo"], d1, d2, g.bonus, estab)
-      Game.log(id, "Suerte del Principiante: nueva tirada " + d1.toString + (opt["dados"] == 2 ? " y " + d2.toString : "") + ".")
-    } else if (!ok && g.focosM) {
-      d1 = Game.roll(1)[0]
-      ok = Game.evalTest(opt["tipoPrueba"], opt["objetivo"], d1, d2, g.bonus, estab)
-      Game.log(id, "Focos Abisales: nueva tirada " + d1.toString + ".")
+
+    // Si la tirada falla y hay una carta de re-tirada preparada, se frena acá.
+    // El jugador vuelve a tirar (en la app o en la mesa) y recién ahí se aplica.
+    if (!ok && (g.suerte || g.focosM) && g.fase != "reroll") {
+      var cual = g.suerte ? "Suerte del Principiante" : "Focos Abisales"
+      `UPDATE games SET fase = 'reroll', tirado = 1 WHERE id = ?`.query(id)
+      Game.log(id, "La prueba falló. " + cual + " permite volver a tirar.")
+      return {"ok": false, "error": "", "status": g.status, "texto": "", "reroll": true}
     }
 
     // Guardar los dados definitivos antes de aplicar para que Brazo Robótico vea el 6 real.

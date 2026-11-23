@@ -243,6 +243,45 @@ if (Request.isPost) {
     } else {
       aviso = "Esa carta no se usa durante la prueba."
     }
+  } else if (accion == "reroll") {
+    var c = g.pruebaCarta == null ? null : Card.get(g.pruebaCarta)
+    var opt = c == null ? null : c.option(g.pruebaOpcion)
+    if (opt == null || g.fase != "reroll") {
+      aviso = "No hay una tirada pendiente para repetir."
+    } else {
+      var solaUna = g.focosM && !g.suerte
+      var origen = Request.post("origen", "app")
+      var d1 = 0
+      var d2 = g.dado2
+      var valido = true
+      if (origen == "mesa") {
+        d1 = Num.fromString(Request.post("d1", "0"))
+        if (!solaUna && opt["dados"] == 2) d2 = Num.fromString(Request.post("d2", "0"))
+        if (d1 < 1 || d1 > 6) valido = false
+        if (!solaUna && opt["dados"] == 2 && (d2 < 1 || d2 > 6)) valido = false
+      } else {
+        d1 = Game.roll(1)[0]
+        if (!solaUna && opt["dados"] == 2) d2 = Game.roll(1)[0]
+      }
+      if (!valido) {
+        aviso = "Elegí valores de 1 a 6 para cada dado."
+      } else {
+        var carta = g.suerte ? "Suerte del Principiante" : "Focos Abisales"
+        var tirada = d1.toString + ((!solaUna && opt["dados"] == 2) ? " y " + d2.toString : "")
+        `UPDATE games SET dado1 = ?, dado2 = ?, fase = 'prueba', tirado = 1, suerte = 0, focosM = 0 WHERE id = ?`.query(d1, d2, g.id)
+        Game.log(g.id, carta + ": vuelven a tirar " + tirada + ".")
+        var res = Game.resolve(g.id)
+        if (res["error"] != "") aviso = res["error"]
+      }
+    }
+  } else if (accion == "aceptar") {
+    if (g.fase != "reroll") {
+      aviso = "No hay una tirada pendiente."
+    } else {
+      `UPDATE games SET fase = 'prueba', suerte = 0, focosM = 0 WHERE id = ?`.query(g.id)
+      var res = Game.resolve(g.id)
+      if (res["error"] != "") aviso = res["error"]
+    }
   } else if (accion == "resolver") {
     var res = Game.resolve(g.id)
     if (res["error"] != "") aviso = res["error"]
@@ -405,31 +444,15 @@ if (g.apoyoCarta != null) {
   if (srow != null) supportCard = Card.get(srow["cardId"])
 }
 
-var previewOk = false
-var previewEstab = false
-var previewBrazo = false
-var previewBlindaje = false
-var previewCebo = false
-var previewAhorro = false
-var previewChips = []
-if (g.tirado && pendingOpt != null) {
-  var tIds = Game.ids(g.id, "herramientas")
-  previewEstab = Game.hasEffect(tIds, "plus_one_sum") && pendingOpt["dados"] == 2
-  previewOk = Game.evalTest(pendingOpt["tipoPrueba"], pendingOpt["objetivo"], g.dado1, g.dado2, g.bonus, Game.hasEffect(tIds, "plus_one_sum"))
-  var succ = Game.parseEffects(pendingOpt["exito"])
-  var fail = Game.parseEffects(pendingOpt["fallo"])
-  previewBrazo = previewOk && succ["pistas"] > 0 && Game.hasEffect(tIds, "extra_clue_six") && (g.dado1 == 6 || g.dado2 == 6)
-  previewBlindaje = !previewOk && fail["escudo"] < 0 && g.blindajeM
-  previewCebo = !previewOk && fail["escudo"] < 0 && g.cebo
-  previewAhorro = !previewOk && fail["energia"] < 0 && g.ahorro
-  previewChips = previewOk ? pendingOpt["exitoChips"] : pendingOpt["falloChips"]
-}
+var pendingParity = pendingOpt != null && (pendingOpt["tipoPrueba"] == "cara" || pendingOpt["tipoPrueba"] == "seca")
+var maniobrasParidad = ["flip_parity", "reroll_parity"]
 
 var handCount = hand.count
 var focoHref = "#cartas-activas"
 if (g.fase == "emboscada") focoHref = "#emboscada"
 if (g.fase == "apoyo") focoHref = "#apoyo"
 if (g.fase == "prueba") focoHref = "#prueba"
+if (g.fase == "reroll") focoHref = "#reroll"
 if (g.fase == "resuelto") focoHref = "#resultado"
 var puedeElegir = g.status == "activa" && g.fase == "listo" && g.resueltas == 0
 var puedeJugar = g.status == "activa" && g.jugadas == 0 && (g.fase == "listo" || (g.fase == "prueba" && !g.tirado))
@@ -557,6 +580,43 @@ return Layout.render(<main class="game">
   {{ aviso != "" && <p class="aviso" role="status">{{ aviso }}</p> }}
 
 
+
+  {{ g.status == "activa" && g.fase == "reroll" && pendingCard != null && pendingOpt != null && <section class="test-panel reroll-panel" id="reroll">
+    <p class="eyebrow">La prueba falló</p>
+    <h2>Pueden volver a tirar</h2>
+    <p class="muted">{{ pendingCard.name }} — {{ pendingOpt["texto"] }}</p>
+    <div class="dice-row">
+      {{ Layout.die(g.dado1, "die-large") }}
+      {{ pendingOpt["dados"] == 2 && Layout.die(g.dado2, "die-large") }}
+    </div>
+    <p>{{ g.focosM ? "Focos Abisales: relancen el dado." : "Suerte del Principiante: vuelvan a tirar los dados." }}</p>
+    <section class="roll-controls">
+      <form method="post" class="roll-form">
+        <input type="hidden" name="accion" value="reroll" />
+        <input type="hidden" name="origen" value="app" />
+        <button class="btn btn-primary">Volver a tirar en la app</button>
+      </form>
+      <form method="post" class="roll-form">
+        <input type="hidden" name="accion" value="reroll" />
+        <input type="hidden" name="origen" value="mesa" />
+        <label class="die-select">Dado 1
+          <select name="d1">
+            {{ [1, 2, 3, 4, 5, 6].map{|n| <option value="{{ n }}">{{ n }}</option>} }}
+          </select>
+        </label>
+        {{ g.suerte && pendingOpt["dados"] == 2 && <label class="die-select">Dado 2
+          <select name="d2">
+            {{ [1, 2, 3, 4, 5, 6].map{|n| <option value="{{ n }}">{{ n }}</option>} }}
+          </select>
+        </label> }}
+        <button class="btn btn-ghost">Ya tiré en la mesa</button>
+      </form>
+      <form method="post">
+        <input type="hidden" name="accion" value="aceptar" />
+        <button class="btn btn-ghost btn-small">Aceptar el fallo</button>
+      </form>
+    </section>
+  </section> }}
 
   {{ g.status == "activa" && g.fase == "prueba" && pendingCard != null && <section class="test-panel" id="prueba">
     <p class="eyebrow">Prueba de dados</p>
@@ -767,12 +827,12 @@ return Layout.render(<main class="game">
               <input type="hidden" name="rowId" value="{{ h["rowId"] }}" />
               <button class="btn btn-primary btn-small" {{ puedeJugar ? "" : "disabled" }}>Jugar</button>
             </form> }}
-            {{ !h["card"].playNow && h["card"].isPrep && <form method="post" class="inline-form">
+            {{ !h["card"].playNow && (h["card"].isPrep || (pendingParity && maniobrasParidad.contains(h["card"].effect))) && <form method="post" class="inline-form">
               <input type="hidden" name="accion" value="maniobra" />
               <input type="hidden" name="rowId" value="{{ h["rowId"] }}" />
               <button class="btn btn-ghost btn-small" {{ puedeJugar ? "" : "disabled" }}>Preparar</button>
             </form> }}
-            {{ !h["card"].playNow && !h["card"].isPrep && <p class="hint card-hint">Elegí un Misterio de Cara o Seca y usala antes de tirar.</p> }}
+            {{ !h["card"].playNow && !h["card"].isPrep && !(pendingParity && maniobrasParidad.contains(h["card"].effect)) && <p class="hint card-hint">Elegí un Misterio de Cara o Seca y usala antes de tirar.</p> }}
           </div>
         </article>} }}
       </div>
