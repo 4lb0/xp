@@ -283,19 +283,19 @@ La insignia no lleva color dentro: se reproduce en negro y blanco, o en negativo
 
 ### Paleta del dorso de carta
 
-El dorso tiene una paleta propia, cerrada a **tres tintas planas**. No toma los colores de familia: es la marca, no una carta.
+Los dos mazos comparten estructura y acento; cambia el campo. Cada dorso usa **tres tintas planas**:
 
-| Tinta | Nombre | HEX | Uso |
+| Dorso | Campo | Claro | Acento |
 |---|---|---|---|
-| 1 | Azul de dorso | `#0B2239` | Panel oscuro que cubre el campo |
-| 2 | Hueso de dorso | `#F4F1EA` | Borde exterior claro, monograma XP y estrella |
-| 3 | Petróleo | `#1B6B72` | Órbita, sello y acentos |
+| **Mazo de Equipo** | Azul de dorso `#0B2239` | Hueso `#F4F1EA` | Petróleo `#1B6B72` |
+| **Mazo del Juego** | Borgoña de dorso `#4A1B24` | Hueso `#F4F1EA` | Petróleo `#1B6B72` |
 
-- Máximo **3 tintas planas**, sin degradados, sombras, metalizados ni texturas.
-- El dorso es **invertido**: campo oscuro con monograma y detalles en hueso. El borde exterior de 4 mm queda claro para disimular el desgaste del corte.
-- Si se imprime sobre cartulina hueso, el borde es el papel y el panel oscuro es **1 tinta**; el hueso del XP/estrella y el petróleo son las otras dos.
+- Máximo **3 tintas planas por dorso**, sin degradados, sombras, metalizados ni texturas.
+- Los dorsos son **invertidos**: campo oscuro con monograma y detalles en hueso. El borde exterior de 4 mm queda claro para disimular el desgaste del corte.
+- Si se imprime sobre cartulina hueso, el borde es el papel y el campo oscuro es **1 tinta**; el hueso del XP/estrella y el petróleo son las otras dos.
 - En cartulina oscura se puede invertir el planteo: **2 tintas** (hueso + petróleo) sin flood de fondo.
-- La estructura y el límite de tintas no se negocian. Los tres valores exactos se cierran con la prueba de imprenta; las variantes invertidas en evaluación viven en `assets/card-backs/opciones/`.
+- No se intercambian los campos: el Mazo del Juego siempre borgoña; el de Equipo, siempre azul.
+- La estructura y el límite de tintas no se negocian. Las variantes descartadas de la iteración quedan en `assets/card-backs/opciones/` como referencia.
 
 ---
 
@@ -553,13 +553,14 @@ El dorso es una pieza de marca, no una lámina ilustrada. Debe reconocerse como 
 
 - **Formato:** TCG estándar, **63,5 × 88,9 mm** (2,5 × 3,5 pulgadas). Sangrado de 2 mm y esquinas redondeadas de 3 mm.
 - **Composición:** simetría de 180°. El monograma XP se repite arriba y abajo, espejado; la carta se ve igual al girarla.
-- **Campo invertido:** panel azul de dorso desde 4 mm del corte hasta el otro borde. El panel es el marco: no lleva un filete extra alrededor.
+- **Dos campos:** **Equipo = Azul `#0B2239`**; **Juego = Borgoña `#4A1B24`**. La estructura, el hueso y el petróleo son idénticos: solo cambia el campo.
+- **Campo invertido:** panel del color del mazo desde 4 mm del corte hasta el otro borde. El panel es el marco: no lleva un filete extra alrededor.
 - **Borde exterior claro:** los primeros **4 mm** quedan en hueso (papel o tinta). Ese margen disimula el desgaste del corte y la esquina.
 - **Monograma:** XP en hueso, arriba y abajo, espejado. Sin cinta, sin texto de edición.
 - **Centro:** sello de líneas petróleo (círculo + órbita) y estrella en hueso. Sin rellenos grandes.
 - **Sin** degradados, sombras, biseles, foil, barniz sectorial ni texturas.
 - **Líneas:** mínimo 0,5 pt para cartón sin estucar; nada de tramas menores a 0,3 mm.
-- **Archivos:** `assets/card-backs/dorso-xp.svg` (fuente), `img/dorso-xp.png` (web) y `assets/card-backs/dorso-xp-print.png` (300 dpi).
+- **Archivos:** `assets/card-backs/dorso-equipo.svg` y `assets/card-backs/dorso-misterio.svg` (fuentes); `img/dorso-equipo.png` y `img/dorso-misterio.png` (web); los `-print.png` a 300 dpi.
 
 ### Fondo del frente
 
@@ -567,7 +568,7 @@ El frente **no repite** el campo oscuro del dorso: si ambas caras son oscuras, c
 
 - **Opción recomendada:** frente sobre **Hueso `#F4F1EA` o blanco**, con banda de familia y texto azul de dorso. La ilustración y los colores de familia quedan del lado claro.
 - **Opción alternativa:** frente con un campo de color claro de la edición, siempre más luminoso que el dorso.
-- **Nunca** un frente a todo Abismo si el dorso ya es Abismo. El contraste entre caras es parte de la legibilidad del mazo.
+- **Nunca** un frente del mismo campo que el dorso: si el dorso es Abismo o Borgoña, el frente va claro. El contraste entre caras es parte de la legibilidad del mazo.
 - El frente puede cambiar de paleta por edición. El dorso, no: es la marca permanente.
 
 ---
@@ -676,7 +677,7 @@ La identidad debe funcionar en cajas de juegos, cartas de Misterio y Equipo, dor
 |---|---|---|
 | **Caja** | Insignia completa, positiva o negativa | Debe leerse a 40 cm de distancia en estantería |
 | **Carta** | Monograma monocromo, 6–8 mm | Esquina inferior, nunca sobre el texto de efecto |
-| **Dorso** | Panel invertido, monograma hueso y órbita petróleo, 3 tintas | 63,5 × 88,9 mm; borde claro de 4 mm; simetría 180° |
+| **Dorso** | Panel invertido (Equipo azul / Juego borgoña), monograma hueso y órbita petróleo, 3 tintas | 63,5 × 88,9 mm; borde claro de 4 mm; simetría 180° |
 | **Manual** | Insignia completa positiva, 15 mm mínimo | Portada y colofón |
 | **Dados y fichas** | Monograma grabado, 4–6 mm, una tinta | Sin detalles por debajo de 1 pt |
 | **Web** | Monograma en el header; insignia completa en portada y OG | Monograma nunca por debajo de 32 px |
@@ -767,6 +768,7 @@ La identidad debe funcionar en cajas de juegos, cartas de Misterio y Equipo, dor
 - [ ] Assets tomados de `img/`, sin reescalados improvisados.
 - [ ] Una tinta y sin degradados si la pieza es impresa.
 - [ ] Dorso a 63,5 × 88,9 mm, 3 tintas planas, borde claro de 4 mm y simetría de 180°.
+- [ ] Dorso de Equipo en azul `#0B2239` y dorso del Juego en borgoña `#4A1B24`; nunca intercambiados.
 - [ ] Frente con un fondo distinto al del dorso: si el dorso es oscuro, el frente es claro.
 - [ ] Sin degradados, sombras, metalizados ni texturas en el dorso.
 

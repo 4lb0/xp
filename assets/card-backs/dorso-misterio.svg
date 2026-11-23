@@ -4,7 +4,7 @@
   <g id="star4"><path d="M0 -13 L3.2 -3.2 L13 0 L3.2 3.2 L0 13 L-3.2 3.2 L-13 0 L-3.2 -3.2 Z"/></g>
   <g id="star8"><use xlink:href="#star4"/><use xlink:href="#star4" transform="rotate(45)"/></g>
 </defs>
-<rect width="635" height="889" fill="#F4F1EA"/><rect x="40" y="40" width="555" height="809" rx="26" fill="#0B2239"/>
+<rect width="635" height="889" fill="#F4F1EA"/><rect x="40" y="40" width="555" height="809" rx="26" fill="#4A1B24"/>
 <g fill="none" stroke="#1B6B72">
   <circle cx="317.5" cy="444.5" r="150" stroke-width="3"/>
   <ellipse cx="317.5" cy="444.5" rx="195" ry="58" transform="rotate(-18 317.5 444.5)" stroke-width="2.5"/>
