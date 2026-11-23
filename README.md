@@ -41,6 +41,8 @@ El manual completo está en [`BRANDING.md`](BRANDING.md). Los archivos listos pa
 | `favicon.ico` + `img/favicon-16.png`, `img/favicon-32.png` | Favicon de la pestaña |
 | `img/apple-touch-icon.png`, `img/icon-192.png`, `img/icon-512.png` | Íconos de app |
 | `img/og-xp.jpg` | Tarjeta social de 1200 × 630 |
+| `assets/card-backs/dorso-xp.svg` | Dorso TCG 63,5 × 88,9 mm (fuente) |
+| `img/dorso-xp.png` | Vista previa del dorso |
 
 La cabecera usa el monograma y la portada la insignia completa. Los favicons se
 cachean fuerte en los navegadores: si cambia la insignia, conviene renombrar los

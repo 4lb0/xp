@@ -281,6 +281,22 @@ La insignia no lleva color dentro: se reproduce en negro y blanco, o en negativo
 - El **dorado nunca va como texto pequeño sobre cian ni sobre turquesa**: el contraste cae por debajo del mínimo.
 - **Ningún dato se comunica solo por color.** Toda familia de carta lleva además ícono distinto, patrón de franja distinto y palabra de familia en el encabezado. La paleta acelera la lectura; no la sostiene sola.
 
+### Paleta del dorso de carta
+
+El dorso tiene una paleta propia, cerrada a **tres tintas planas**. No toma los colores de familia: es la marca, no una carta.
+
+| Tinta | Nombre | HEX | Uso |
+|---|---|---|---|
+| 1 | Azul de dorso | `#0B2239` | Panel oscuro que cubre el campo |
+| 2 | Hueso de dorso | `#F4F1EA` | Borde exterior claro, monograma XP y estrella |
+| 3 | Petróleo | `#1B6B72` | Órbita, sello y acentos |
+
+- Máximo **3 tintas planas**, sin degradados, sombras, metalizados ni texturas.
+- El dorso es **invertido**: campo oscuro con monograma y detalles en hueso. El borde exterior de 4 mm queda claro para disimular el desgaste del corte.
+- Si se imprime sobre cartulina hueso, el borde es el papel y el panel oscuro es **1 tinta**; el hueso del XP/estrella y el petróleo son las otras dos.
+- En cartulina oscura se puede invertir el planteo: **2 tintas** (hueso + petróleo) sin flood de fondo.
+- La estructura y el límite de tintas no se negocian. Los tres valores exactos se cierran con la prueba de imprenta; las variantes invertidas en evaluación viven en `assets/card-backs/opciones/`.
+
 ---
 
 ## 6. Tipografía
@@ -531,6 +547,29 @@ Un nene de 5 años debe poder decir qué tipo de carta es y qué dado tirar **si
 | Adulto con poca luz | Texto 9 pt mínimo, contraste alto, fondo de placa opaco detrás del texto |
 | Mesa compartida | La carta se lee desde 50 cm: nada por debajo de 6.5 pt |
 
+### Dorso
+
+El dorso es una pieza de marca, no una lámina ilustrada. Debe reconocerse como XP a un metro y no competir con el frente.
+
+- **Formato:** TCG estándar, **63,5 × 88,9 mm** (2,5 × 3,5 pulgadas). Sangrado de 2 mm y esquinas redondeadas de 3 mm.
+- **Composición:** simetría de 180°. El monograma XP se repite arriba y abajo, espejado; la carta se ve igual al girarla.
+- **Campo invertido:** panel azul de dorso desde 4 mm del corte hasta el otro borde. El panel es el marco: no lleva un filete extra alrededor.
+- **Borde exterior claro:** los primeros **4 mm** quedan en hueso (papel o tinta). Ese margen disimula el desgaste del corte y la esquina.
+- **Monograma:** XP en hueso, arriba y abajo, espejado. Sin cinta, sin texto de edición.
+- **Centro:** sello de líneas petróleo (círculo + órbita) y estrella en hueso. Sin rellenos grandes.
+- **Sin** degradados, sombras, biseles, foil, barniz sectorial ni texturas.
+- **Líneas:** mínimo 0,5 pt para cartón sin estucar; nada de tramas menores a 0,3 mm.
+- **Archivos:** `assets/card-backs/dorso-xp.svg` (fuente), `img/dorso-xp.png` (web) y `assets/card-backs/dorso-xp-print.png` (300 dpi).
+
+### Fondo del frente
+
+El frente **no repite** el campo oscuro del dorso: si ambas caras son oscuras, cuesta distinguir boca arriba de boca abajo.
+
+- **Opción recomendada:** frente sobre **Hueso `#F4F1EA` o blanco**, con banda de familia y texto azul de dorso. La ilustración y los colores de familia quedan del lado claro.
+- **Opción alternativa:** frente con un campo de color claro de la edición, siempre más luminoso que el dorso.
+- **Nunca** un frente a todo Abismo si el dorso ya es Abismo. El contraste entre caras es parte de la legibilidad del mazo.
+- El frente puede cambiar de paleta por edición. El dorso, no: es la marca permanente.
+
 ---
 
 ## 9. Iconografía
@@ -637,7 +676,7 @@ La identidad debe funcionar en cajas de juegos, cartas de Misterio y Equipo, dor
 |---|---|---|
 | **Caja** | Insignia completa, positiva o negativa | Debe leerse a 40 cm de distancia en estantería |
 | **Carta** | Monograma monocromo, 6–8 mm | Esquina inferior, nunca sobre el texto de efecto |
-| **Dorso** | Insignia completa en negativo | Centrada y sola: sin texto ni ilustración compitiendo |
+| **Dorso** | Panel invertido, monograma hueso y órbita petróleo, 3 tintas | 63,5 × 88,9 mm; borde claro de 4 mm; simetría 180° |
 | **Manual** | Insignia completa positiva, 15 mm mínimo | Portada y colofón |
 | **Dados y fichas** | Monograma grabado, 4–6 mm, una tinta | Sin detalles por debajo de 1 pt |
 | **Web** | Monograma en el header; insignia completa en portada y OG | Monograma nunca por debajo de 32 px |
@@ -679,6 +718,9 @@ La identidad debe funcionar en cajas de juegos, cartas de Misterio y Equipo, dor
 | Monograma para header, avatar y favicon | Insignia completa a 16 px |
 | Color de edición alrededor de la marca | Color dentro de la insignia |
 | Una sola tinta en piezas impresas | Degradados, biseles o brillos en el logo |
+| Dorso invertido con borde claro de 4 mm | Dorso oscuro al corte, sin borde claro |
+| Dorso 180° simétrico | Un dorso con arriba y abajo únicos |
+| Frente claro si el dorso es oscuro | Frente y dorso con el mismo campo |
 | "El equipo pierde 1 de Escudo" | "Fallaste" |
 
 ---
@@ -724,6 +766,9 @@ La identidad debe funcionar en cajas de juegos, cartas de Misterio y Equipo, dor
 - [ ] Favicon generado desde el monograma, no desde una captura.
 - [ ] Assets tomados de `img/`, sin reescalados improvisados.
 - [ ] Una tinta y sin degradados si la pieza es impresa.
+- [ ] Dorso a 63,5 × 88,9 mm, 3 tintas planas, borde claro de 4 mm y simetría de 180°.
+- [ ] Frente con un fondo distinto al del dorso: si el dorso es oscuro, el frente es claro.
+- [ ] Sin degradados, sombras, metalizados ni texturas en el dorso.
 
 ---
 
