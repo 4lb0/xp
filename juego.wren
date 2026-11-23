@@ -800,7 +800,7 @@ return Layout.render(<main class="game">
         <p>{{ handCount }} cartas · siempre 3 al empezar</p>
       </div>
       <div class="hand hand-main">
-        {{ hand.map{|h| <article class="card" data-family="{{ h["card"].isSupport ? "apoyo" : (h["card"].isTool ? "herramienta" : "maniobra") }}">
+        {{ hand.map{|h| <article class="card {{ puedeJugar ? "" : "is-locked" }}" data-family="{{ h["card"].isSupport ? "apoyo" : (h["card"].isTool ? "herramienta" : "maniobra") }}">
           {{ h["card"].isSupport && <span class="card-ribbon">Apoyo</span> }}
           <span class="card-art"><span class="card-emoji" aria-hidden="true">{{ h["card"].emoji }}</span></span>
           <span class="card-family">{{ h["card"].isSupport ? "Maniobra de apoyo" : (h["card"].isTool ? "Herramienta" : "Maniobra") }} · <span class="card-id">{{ h["card"].id }}</span></span>

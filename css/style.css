@@ -242,6 +242,15 @@ section { margin-block: 2.5rem; }
 
 .btn-small { padding: 0.45rem 0.85rem; font-size: 0.85rem; }
 
+.btn:disabled {
+  opacity: 0.42;
+  filter: grayscale(1);
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+.card.is-locked { opacity: 0.55; }
+
 /* Panel de la portada: los 3 contadores */
 .console {
   border: 1px solid var(--line);
