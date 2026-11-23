@@ -1536,20 +1536,25 @@ section[id] { scroll-margin-top: 5.5rem; }
   .game .card-grid { grid-template-columns: 1fr; }
 }
 
-/* Mesa: apoyos y herramienta a la izquierda, referencias a la derecha. */
+/* Mesa: cartas activas primero; apoyo y herramienta justo debajo. */
 .game-top {
   display: grid;
-  grid-template-columns: 270px minmax(0, 1fr);
+  grid-template-columns: minmax(0, 1fr);
   gap: 1rem;
   align-items: start;
   margin: 0.8rem 0 1.2rem;
 }
-.game-top-left { display: grid; gap: 0.8rem; min-width: 0; }
-.game-top-right { min-width: 0; }
+.game-top-main { display: grid; gap: 0.8rem; min-width: 0; }
+.game-supports {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 1rem;
+  align-items: start;
+}
 .game-top .gauges-board { margin: 0; }
 .hand-full { margin-top: 1.2rem; }
 @media (max-width: 860px) {
-  .game-top { grid-template-columns: 1fr; }
+  .game-supports { grid-template-columns: 1fr; }
 }
 
 .game .card-grid { grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); }

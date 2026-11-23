@@ -488,65 +488,7 @@ return Layout.render(<main class="game">
   </header>
 
   {{ g.status == "activa" && <section class="game-top">
-    <aside class="game-top-left">
-      {{ !ayuda.isEmpty && <section class="help-zone" id="ayuda">
-        <div class="section-head">
-          <h2>Apoyo del equipo</h2>
-          <p>Maniobras de apoyo · una vez</p>
-        </div>
-        <div class="hand">
-          {{ ayuda.map{|a| <article class="card card-support" data-family="apoyo">
-            <span class="card-ribbon">Apoyo</span>
-            <span class="card-art"><span class="card-emoji" aria-hidden="true">{{ a["card"].emoji }}</span></span>
-            <span class="card-family">Maniobra de apoyo · una vez · <span class="card-id">{{ a["card"].id }}</span></span>
-            <h3>{{ a["card"].name }}</h3>
-            <p>Elegí <span class="chip chip-energia">⚡ +{{ a["card"].value }}</span> o <span class="chip chip-escudo">🛡️ +{{ a["card"].value }}</span>.</p>
-            <form method="post">
-              <input type="hidden" name="accion" value="usar_ayuda" />
-              <input type="hidden" name="rowId" value="{{ a["rowId"] }}" />
-              <button class="btn btn-ghost btn-small" {{ g.fase == "apoyo" ? "disabled" : "" }}>Usar maniobra</button>
-            </form>
-          </article>} }}
-        </div>
-      </section> }}
-    <aside id="herramientas">
-      <div class="section-head">
-        <h2>Herramienta activa</h2>
-        <p>{{ tools.count }} / 1 · una por equipo</p>
-      </div>
-      {{ tools.map{|t| <article class="card card-tool" data-family="herramienta">
-        <span class="card-art"><span class="card-emoji" aria-hidden="true">{{ t["card"].emoji }}</span></span>
-        <span class="card-family">Herramienta · <span class="card-id">{{ t["card"].id }}</span></span>
-        <h3>{{ t["card"].name }}</h3>
-        <section class="card-text">{{ t["card"].body }}</section>
-
-      </article>} }}
-      {{ tools.isEmpty && <p class="muted">Todavía no jugaron ninguna Herramienta.</p> }}
-
-      {{ peekCard != null && <section class="panel peek">
-        <p class="eyebrow">Sonar de Alta Frecuencia · próxima carta</p>
-        <h3><span aria-hidden="true">{{ peekCard.emoji }}</span> {{ peekCard.name }}</h3>
-        {{ peekCard.entry != "" && <p class="entry-badge">Al entrar
-          {{ peekCard.entryChips.map{|c| <span class="chip {{ c["cls"] }}" title="{{ c["title"] }}">{{ c["icon"] }} {{ c["text"] }}</span>} }}
-        </p> }}
-        <section class="card-text">{{ peekCard.body }}</section>
-        <ul class="mini-options">
-          {{ peekCard.options.map{|o| <li>
-            <strong>{{ o["texto"] }}</strong>
-            <span class="test-badge test-{{ o["tipoPrueba"] }}">{{ o["pruebaLabel"] }}</span>
-            <span class="option-effects">
-              <span class="chip-label">Éxito</span>
-              {{ o["exitoChips"].map{|c| <span class="chip {{ c["cls"] }}" title="{{ c["title"] }}">{{ c["icon"] }} {{ c["text"] }}</span>} }}
-              <span class="chip-label">Fallo</span>
-              {{ o["falloChips"].map{|c| <span class="chip {{ c["cls"] }}" title="{{ c["title"] }}">{{ c["icon"] }} {{ c["text"] }}</span>} }}
-            </span>
-          </li>} }}
-        </ul>
-      </section> }}
-
-    </aside>
-    </aside>
-    <div class="game-top-right">
+    <div class="game-top-main">
   <section class="gauges-board" aria-label="Contadores de la expedición">
     <article class="counter">
       {{ Layout.die(g.energia > 6 ? 6 : g.energia, "die-teal") }}
@@ -735,6 +677,64 @@ return Layout.render(<main class="game">
     </div>
     {{ mesa.isEmpty && <p class="muted">No quedan cartas activas. Repongan la mesa al terminar el turno.</p> }}
   </section> }}
+    </div>
+    <div class="game-supports">
+      {{ !ayuda.isEmpty && <section class="help-zone" id="ayuda">
+        <div class="section-head">
+          <h2>Apoyo del equipo</h2>
+          <p>Maniobras de apoyo · una vez</p>
+        </div>
+        <div class="hand">
+          {{ ayuda.map{|a| <article class="card card-support" data-family="apoyo">
+            <span class="card-ribbon">Apoyo</span>
+            <span class="card-art"><span class="card-emoji" aria-hidden="true">{{ a["card"].emoji }}</span></span>
+            <span class="card-family">Maniobra de apoyo · una vez · <span class="card-id">{{ a["card"].id }}</span></span>
+            <h3>{{ a["card"].name }}</h3>
+            <p>Elegí <span class="chip chip-energia">⚡ +{{ a["card"].value }}</span> o <span class="chip chip-escudo">🛡️ +{{ a["card"].value }}</span>.</p>
+            <form method="post">
+              <input type="hidden" name="accion" value="usar_ayuda" />
+              <input type="hidden" name="rowId" value="{{ a["rowId"] }}" />
+              <button class="btn btn-ghost btn-small" {{ g.fase == "apoyo" ? "disabled" : "" }}>Usar maniobra</button>
+            </form>
+          </article>} }}
+        </div>
+      </section> }}
+    <aside id="herramientas">
+      <div class="section-head">
+        <h2>Herramienta activa</h2>
+        <p>{{ tools.count }} / 1 · una por equipo</p>
+      </div>
+      {{ tools.map{|t| <article class="card card-tool" data-family="herramienta">
+        <span class="card-art"><span class="card-emoji" aria-hidden="true">{{ t["card"].emoji }}</span></span>
+        <span class="card-family">Herramienta · <span class="card-id">{{ t["card"].id }}</span></span>
+        <h3>{{ t["card"].name }}</h3>
+        <section class="card-text">{{ t["card"].body }}</section>
+
+      </article>} }}
+      {{ tools.isEmpty && <p class="muted">Todavía no jugaron ninguna Herramienta.</p> }}
+
+      {{ peekCard != null && <section class="panel peek">
+        <p class="eyebrow">Sonar de Alta Frecuencia · próxima carta</p>
+        <h3><span aria-hidden="true">{{ peekCard.emoji }}</span> {{ peekCard.name }}</h3>
+        {{ peekCard.entry != "" && <p class="entry-badge">Al entrar
+          {{ peekCard.entryChips.map{|c| <span class="chip {{ c["cls"] }}" title="{{ c["title"] }}">{{ c["icon"] }} {{ c["text"] }}</span>} }}
+        </p> }}
+        <section class="card-text">{{ peekCard.body }}</section>
+        <ul class="mini-options">
+          {{ peekCard.options.map{|o| <li>
+            <strong>{{ o["texto"] }}</strong>
+            <span class="test-badge test-{{ o["tipoPrueba"] }}">{{ o["pruebaLabel"] }}</span>
+            <span class="option-effects">
+              <span class="chip-label">Éxito</span>
+              {{ o["exitoChips"].map{|c| <span class="chip {{ c["cls"] }}" title="{{ c["title"] }}">{{ c["icon"] }} {{ c["text"] }}</span>} }}
+              <span class="chip-label">Fallo</span>
+              {{ o["falloChips"].map{|c| <span class="chip {{ c["cls"] }}" title="{{ c["title"] }}">{{ c["icon"] }} {{ c["text"] }}</span>} }}
+            </span>
+          </li>} }}
+        </ul>
+      </section> }}
+
+    </aside>
     </div>
   </section> }}
 
