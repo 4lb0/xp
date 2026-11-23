@@ -127,12 +127,12 @@
       die.classList.add("is-rolling");
       const timer = window.setInterval(() => {
         die.dataset.value = String(1 + Math.floor(Math.random() * 6));
-      }, 55);
+      }, 95);
       window.setTimeout(() => {
         window.clearInterval(timer);
         die.dataset.value = finalValue;
         die.classList.remove("is-rolling");
-      }, 460 + index * 60);
+      }, 300 + index * 40);
     });
   }
 
