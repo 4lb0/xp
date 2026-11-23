@@ -168,6 +168,8 @@ if (Request.isPost) {
       if (parity && g.giro) d1 = 7 - d1
       `UPDATE games SET dado1 = ?, dado2 = ?, tirado = 1, giro = 0 WHERE id = ?`.query(d1, d2, g.id)
       Game.log(g.id, "Tiran en la app: " + d1.toString + (dados == 2 ? " y " + d2.toString : "") + ".")
+      var auto = Game.resolve(g.id)
+      if (auto["error"] != "") aviso = auto["error"]
     }
   } else if (accion == "mesa") {
     var d1 = Num.fromString(Request.post("d1", "0"))
@@ -184,6 +186,8 @@ if (Request.isPost) {
       if (parity && g.giro) d1 = 7 - d1
       `UPDATE games SET dado1 = ?, dado2 = ?, tirado = 1, giro = 0 WHERE id = ?`.query(d1, dados == 2 ? d2 : 0, g.id)
       Game.log(g.id, "Dados de la mesa: " + d1.toString + (dados == 2 ? " y " + d2.toString : "") + ".")
+      var auto = Game.resolve(g.id)
+      if (auto["error"] != "") aviso = auto["error"]
     }
   } else if (accion == "maniobra") {
     var row = `SELECT * FROM game_cards WHERE id = ? AND gameId = ? AND zone = 'mano'`.first(rowId, g.id)
@@ -240,40 +244,8 @@ if (Request.isPost) {
       aviso = "Esa carta no se usa durante la prueba."
     }
   } else if (accion == "resolver") {
-    var c = Card.get(g.pruebaCarta)
-    var opt = c == null ? null : c.option(g.pruebaOpcion)
-    if (opt == null) {
-      aviso = "No hay una prueba para resolver."
-    } else if (!g.tirado) {
-      aviso = "Primero tienen que tirar los dados."
-    } else {
-      var tools = Game.ids(g.id, "herramientas")
-      var d1 = g.dado1
-      var d2 = g.dado2
-      var ok = Game.evalTest(opt["tipoPrueba"], opt["objetivo"], d1, d2, g.bonus, Game.hasEffect(tools, "plus_one_sum"))
-      if (!ok && g.suerte) {
-        var dice = Game.roll(opt["dados"])
-        d1 = dice[0]
-        d2 = opt["dados"] == 2 ? dice[1] : 0
-        ok = Game.evalTest(opt["tipoPrueba"], opt["objetivo"], d1, d2, g.bonus, Game.hasEffect(tools, "plus_one_sum"))
-        Game.log(g.id, "Suerte del Principiante: nueva tirada " + d1.toString + (opt["dados"] == 2 ? " y " + d2.toString : "") + ".")
-      } else if (!ok && g.focosM) {
-        d1 = Game.roll(1)[0]
-        ok = Game.evalTest(opt["tipoPrueba"], opt["objetivo"], d1, d2, g.bonus, Game.hasEffect(tools, "plus_one_sum"))
-        Game.log(g.id, "Focos Abisales: nueva tirada " + d1.toString + ".")
-      }
-      var eff = Game.parseEffects(ok ? opt["exito"] : opt["fallo"])
-      var res = Game.apply(g.id, g, eff, ok, tools)
-      var mesaRow = `SELECT id FROM game_cards WHERE gameId = ? AND cardId = ? AND zone = 'mesa'`.first(g.id, g.pruebaCarta)
-      if (mesaRow != null) Game.move(mesaRow["id"], "descarte")
-      var texto = (ok ? "Prueba superada" : "Prueba fallida") + ": " + c.name + " — " + opt["texto"] + "."
-      if (!res["notas"].isEmpty) texto = texto + " " + res["notas"].join(". ") + "."
-      var nextFase = "resuelto"
-      `UPDATE games SET fase = ?, resultado = ?, resueltas = 1, ultimo = ?, dado1 = ?, dado2 = ?, tirado = 0, bonus = 0, giro = 0, suerte = 0, focosM = 0 WHERE id = ?`.query([nextFase, ok ? "ganada" : "perdida", texto, d1, d2, g.id])
-      Game.log(g.id, texto)
-      if (res["status"] == "victoria") Game.log(g.id, "¡Seis Pistas! El misterio queda resuelto.")
-      if (res["status"] == "derrota") Game.log(g.id, "La expedición se pierde en la oscuridad.")
-    }
+    var res = Game.resolve(g.id)
+    if (res["error"] != "") aviso = res["error"]
   } else if (accion == "usar_ayuda") {
     if (g.fase == "apoyo") {
       aviso = "Primero elegí el recurso de la maniobra de apoyo pendiente."
@@ -703,40 +675,23 @@ return Layout.render(<main class="game">
       <p class="hint">CARA = par (2, 4, 6). SECA = impar (1, 3, 5).</p>
     </section> }}
 
-    {{ g.tirado && pendingOpt != null && <section class="panel test-preview">
-      <p class="eyebrow">Resultado de esta tirada</p>
-      <p>Con estos dados: <strong>{{ previewOk ? "superada" : "fallida" }}</strong>.</p>
-      {{ g.bonus > 0 && <p class="hint">Turbo: +{{ g.bonus }} al total.</p> }}
-      {{ previewEstab && <p class="hint">Estabilizadores: +1 al total.</p> }}
-      {{ previewBrazo && <p class="hint">Brazo Robótico: +1 Pista extra por el 6.</p> }}
-      {{ previewBlindaje && <p class="hint">Blindaje de Titanio: el daño al Escudo se reduce 1.</p> }}
-      {{ previewCebo && <p class="hint">Lanzar Cebo: el daño al Escudo se cancela.</p> }}
-      {{ previewAhorro && <p class="hint">Ahorro de Oxígeno: no se gasta Energía.</p> }}
-      <p class="option-chips">
-        <span class="chip-label">Se aplica</span>
-        {{ previewChips.map{|c| <span class="chip {{ c["cls"] }}" title="{{ c["title"] }}">{{ c["icon"] }} {{ c["text"] }}</span>} }}
-      </p>
-      {{ g.suerte && !previewOk && <p class="hint">Suerte del Principiante: al resolver, se relanza una vez.</p> }}
-      {{ g.focosM && !previewOk && <p class="hint">Focos Abisales: al resolver, se relanza el dado.</p> }}
-      <p class="hint">El efecto se aplica en esta tirada, al resolver. No se calcula al cerrar el misterio.</p>
-    </section> }}
 
-    {{ g.tirado && <section class="test-actions">
-      <p class="muted">Tirada registrada. Ya no pueden jugar Maniobras: resuelvan.</p>
-      <div class="action-row">
-        <form method="post" class="inline-form">
-          <input type="hidden" name="accion" value="resolver" />
-          <button class="btn btn-primary">Resolver la prueba</button>
-        </form>
-      </div>
-    </section> }}
   </section> }}
 
   {{ g.status == "activa" && g.fase == "resuelto" && <section class="panel result-panel" id="resultado">
     <p class="eyebrow">Resultado</p>
     <h2>{{ g.resultado == "ganada" ? "Prueba superada" : "Prueba fallida" }}</h2>
+    {{ pendingCard != null && pendingOpt != null && <p class="muted">{{ pendingCard.name }} — {{ pendingOpt["texto"] }}</p> }}
+    <div class="dice-row">
+      {{ Layout.die(g.dado1) }}
+      {{ pendingOpt != null && pendingOpt["dados"] == 2 && Layout.die(g.dado2) }}
+    </div>
     <p class="muted">{{ g.ultimo }}</p>
-    <p>Revisen los contadores. Al terminar el ciclo, las cartas que sobren de 3 se descartan al azar.</p>
+    {{ pendingOpt != null && <p class="option-chips">
+      <span class="chip-label">{{ g.resultado == "ganada" ? "Éxito" : "Fallo" }}</span>
+      {{ (g.resultado == "ganada" ? pendingOpt["exitoChips"] : pendingOpt["falloChips"]).map{|c| <span class="chip {{ c["cls"] }}" title="{{ c["title"] }}">{{ c["icon"] }} {{ c["text"] }}</span>} }}
+    </p> }}
+    <p>Al cerrar el turno se descarta una carta propia al azar, se roba 1 del Mazo del Juego y se repone la mano a 3.</p>
     <form method="post">
       <input type="hidden" name="accion" value="terminar" />
       <button class="btn btn-primary">Terminar ciclo y reponer la mesa</button>

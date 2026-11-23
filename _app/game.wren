@@ -255,4 +255,45 @@ class Game {
     `UPDATE games SET energia = ?, escudo = ?, pistas = ?, status = ?, cebo = ?, blindajeUsado = ?, blindajeM = ?, pistasTurno = pistasTurno + ? WHERE id = ?`.query([en, es, pi, status, ceboUsado ? 0 : (g.cebo ? 1 : 0), blindajeAplicado ? 1 : (g.blindajeUsado ? 1 : 0), blindajeAplicado ? 0 : (g.blindajeM ? 1 : 0), dPi > 0 ? dPi : 0, id])
     return {"energia": en, "escudo": es, "pistas": pi, "status": status, "notas": notas}
   }
+
+  // Resuelve la prueba ya tirada. Devuelve un mapa con ok/error/status.
+  static resolve(id) {
+    var g = Game.find(id)
+    if (g == null) return {"ok": false, "error": "No hay una partida activa.", "status": "activa"}
+    var c = g.pruebaCarta == null ? null : Card.get(g.pruebaCarta)
+    var opt = c == null ? null : c.option(g.pruebaOpcion)
+    if (opt == null) return {"ok": false, "error": "No hay una prueba para resolver.", "status": "activa"}
+    if (!g.tirado) return {"ok": false, "error": "Primero tienen que tirar los dados.", "status": "activa"}
+
+    var tools = Game.ids(id, "herramientas")
+    var estab = Game.hasEffect(tools, "plus_one_sum")
+    var d1 = g.dado1
+    var d2 = g.dado2
+    var ok = Game.evalTest(opt["tipoPrueba"], opt["objetivo"], d1, d2, g.bonus, estab)
+    if (!ok && g.suerte) {
+      var dice = Game.roll(opt["dados"])
+      d1 = dice[0]
+      d2 = opt["dados"] == 2 ? dice[1] : 0
+      ok = Game.evalTest(opt["tipoPrueba"], opt["objetivo"], d1, d2, g.bonus, estab)
+      Game.log(id, "Suerte del Principiante: nueva tirada " + d1.toString + (opt["dados"] == 2 ? " y " + d2.toString : "") + ".")
+    } else if (!ok && g.focosM) {
+      d1 = Game.roll(1)[0]
+      ok = Game.evalTest(opt["tipoPrueba"], opt["objetivo"], d1, d2, g.bonus, estab)
+      Game.log(id, "Focos Abisales: nueva tirada " + d1.toString + ".")
+    }
+
+    // Guardar los dados definitivos antes de aplicar para que Brazo Robótico vea el 6 real.
+    `UPDATE games SET dado1 = ?, dado2 = ? WHERE id = ?`.query(d1, d2, id)
+    g = Game.find(id)
+    var eff = Game.parseEffects(ok ? opt["exito"] : opt["fallo"])
+    var res = Game.apply(id, g, eff, ok, tools)
+    var mesaRow = `SELECT id FROM game_cards WHERE gameId = ? AND cardId = ? AND zone = 'mesa'`.first(id, g.pruebaCarta)
+    if (mesaRow != null) Game.move(mesaRow["id"], "descarte")
+    var texto = (ok ? "Prueba superada" : "Prueba fallida") + ": " + c.name + " — " + opt["texto"] + "."
+    if (!res["notas"].isEmpty) texto = texto + " " + res["notas"].join(". ") + "."
+    `UPDATE games SET fase = 'resuelto', resultado = ?, resueltas = 1, ultimo = ?, dado1 = ?, dado2 = ?, tirado = 0, bonus = 0, giro = 0, suerte = 0, focosM = 0 WHERE id = ?`.query([ok ? "ganada" : "perdida", texto, d1, d2, id])
+    Game.log(id, texto)
+    if (res["status"] == "victoria") Game.log(id, "¡Seis Pistas! El misterio queda resuelto.")
+    return {"ok": ok, "error": "", "status": res["status"], "texto": texto}
+  }
 }
