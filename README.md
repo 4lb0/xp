@@ -29,6 +29,23 @@ python3 tools/make_proxies.py
 
 Los iconos usan **Noto Emoji** (OFL) en `tools/fonts/`.
 
+## Marca
+
+El manual completo está en [`BRANDING.md`](BRANDING.md). Los archivos listos para usar viven en `img/`:
+
+| Archivo | Uso |
+|---|---|
+| `assets/logo-xp-original.jpg` | Original de la insignia. Fuente para regenerar todo |
+| `img/logo-xp.png` | Insignia completa, 1000 × 1000, fondo blanco |
+| `img/logo-xp-mark.png` | Monograma XP, 512 × 512, transparente |
+| `favicon.ico` + `img/favicon-16.png`, `img/favicon-32.png` | Favicon de la pestaña |
+| `img/apple-touch-icon.png`, `img/icon-192.png`, `img/icon-512.png` | Íconos de app |
+| `img/og-xp.jpg` | Tarjeta social de 1200 × 630 |
+
+La cabecera usa el monograma y la portada la insignia completa. Los favicons se
+cachean fuerte en los navegadores: si cambia la insignia, conviene renombrar los
+archivos además de subir `Layout.assetVersion`.
+
 ## Caché de CSS
 
 Cloudflare cachea `/css/style.css` durante 4 horas. Al cambiar el CSS, subí

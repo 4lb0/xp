@@ -1,7 +1,8 @@
 class Layout {
   // Subir al cambiar css/style.css para romper la caché de Cloudflare.
-  static assetVersion { "2026-11-23-1" }
+  static assetVersion { "2026-11-23-2" }
   static printVersion { "2026-11-23-1" }
+  static description { "XP — Equipo eXPedición. LCG cooperativo de aventura y misterio para toda la familia. Mazos fijos, partidas de 10 a 20 minutos." }
 
   static render(content) { Layout.render(content, "XP · Equipo eXPedición", false) }
 
@@ -17,16 +18,37 @@ class Layout {
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <title>{{ title }}</title>
-        <meta name="description" content="XP: En busca del Megalodón. LCG de aventura y misterio para toda la familia. Mazos fijos, solo o en cooperativo." />
-        <meta name="theme-color" content="#061423" />
+        <meta name="description" content="{{ Layout.description }}" />
+        <meta name="theme-color" content="#040e19" />
+        <meta name="application-name" content="XP" />
+        <meta name="apple-mobile-web-app-title" content="XP" />
+        <link rel="canonical" href="{{ Request.baseUrl }}{{ Request.uri }}" />
+        <link rel="icon" href="/favicon.ico" sizes="any" />
+        <link rel="icon" type="image/png" sizes="32x32" href="/img/favicon-32.png" />
+        <link rel="icon" type="image/png" sizes="16x16" href="/img/favicon-16.png" />
+        <link rel="apple-touch-icon" sizes="180x180" href="/img/apple-touch-icon.png" />
+        <meta property="og:type" content="website" />
+        <meta property="og:locale" content="es_AR" />
+        <meta property="og:site_name" content="XP · Equipo eXPedición" />
+        <meta property="og:title" content="{{ title }}" />
+        <meta property="og:description" content="{{ Layout.description }}" />
+        <meta property="og:url" content="{{ Request.baseUrl }}{{ Request.uri }}" />
+        <meta property="og:image" content="{{ Request.baseUrl }}/img/og-xp.jpg" />
+        <meta property="og:image:width" content="1200" />
+        <meta property="og:image:height" content="630" />
+        <meta property="og:image:alt" content="Insignia circular de XP, Equipo eXPedición" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="{{ title }}" />
+        <meta name="twitter:description" content="{{ Layout.description }}" />
+        <meta name="twitter:image" content="{{ Request.baseUrl }}/img/og-xp.jpg" />
         <link rel="stylesheet" href="/css/style.css?v={{ Layout.assetVersion }}" />
       </head>
       <body>
         <a class="skip-link" href="#contenido">Saltar al contenido</a>
         {{ !hideHeader && <header class="site-header">
           <nav class="nav wrap" aria-label="Principal">
-            <a class="brand" href="/" aria-label="XP, inicio">
-              <span class="brand-mark" aria-hidden="true">XP</span>
+            <a class="brand" href="/" aria-label="XP, Equipo eXPedición, inicio">
+              <img class="brand-mark" src="/img/logo-xp-mark.png" width="48" height="48" alt="" />
               <span class="brand-text">
                 <strong>Equipo eXPedición</strong>
                 <small>En busca del Megalodón</small>
@@ -48,7 +70,10 @@ class Layout {
 
         <footer class="site-footer">
           <div class="wrap footer-inner">
-            <p><strong>XP</strong> · Equipo eXPedición — Edición 1: <em>En busca del Megalodón</em></p>
+            <p class="footer-brand">
+              <img src="/img/logo-xp-mark.png" width="28" height="28" alt="" />
+              <span><strong>XP</strong> · Equipo eXPedición — Edición 01: <em>En busca del Megalodón</em></span>
+            </p>
             <p class="muted">Creado con <a href="https://iz.ar" target="_blank">iz.ar</a></p>
           </div>
         </footer>

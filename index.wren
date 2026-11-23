@@ -8,7 +8,10 @@ return Layout.render(<main>
   <section class="hero">
     <div class="hero-grid">
       <div>
-        <p class="eyebrow">LCG de aventura y misterio</p>
+        <div class="hero-brand">
+          <img src="/img/logo-xp.png" width="124" height="124" alt="Insignia XP, Equipo eXPedición" />
+          <p class="eyebrow">LCG de aventura y misterio</p>
+        </div>
         <h1>XP <span>En busca del Megalodón</span></h1>
         <p class="lead">
           Podés jugar solo o en cooperativo con amigos. El submarino baja hacia una fosa que nadie
