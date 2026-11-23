@@ -1796,8 +1796,8 @@ section[id] { scroll-margin-top: 5.5rem; }
 .discard-body small { color: var(--muted); font-size: 0.68rem; }
 
 @keyframes card-new {
-  0% { box-shadow: 0 0 0 0 rgba(242, 193, 78, 0.7), var(--shadow); outline-color: rgba(242, 193, 78, 0); transform: translateY(-8px) scale(0.985); }
-  25%, 65% { box-shadow: 0 0 0 5px rgba(242, 193, 78, 0.32), var(--shadow); outline-color: rgba(242, 193, 78, 0.82); transform: translateY(0) scale(1); }
+  0% { box-shadow: 0 0 0 0 rgba(242, 193, 78, 0.7), var(--shadow); outline-color: rgba(242, 193, 78, 0); }
+  25%, 65% { box-shadow: 0 0 0 5px rgba(242, 193, 78, 0.32), var(--shadow); outline-color: rgba(242, 193, 78, 0.82); }
   100% { box-shadow: 0 0 0 0 rgba(242, 193, 78, 0), var(--shadow); outline-color: rgba(242, 193, 78, 0); }
 }
 .is-new {
@@ -1806,8 +1806,21 @@ section[id] { scroll-margin-top: 5.5rem; }
   animation: card-new 1.5s ease-out both;
 }
 
+/* La carta robada se tapa mientras viaja el dorso y se revela al aterrizar. */
+.is-drawing {
+  opacity: 0;
+  transform: translateY(10px) scale(0.94);
+  pointer-events: none;
+}
+
+@keyframes card-reveal {
+  from { opacity: 0; transform: translateY(10px) scale(0.94); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+.is-revealed { animation: card-reveal 0.32s ease-out both; }
+
 .card-ghost {
-  position: fixed;
+  position: absolute;
   z-index: 80;
   pointer-events: none;
   border-radius: 7px;
@@ -1848,7 +1861,9 @@ section[id] { scroll-margin-top: 5.5rem; }
 .move-toast.is-visible { opacity: 1; transform: translateY(0); }
 .move-toast-icon { font-size: 1rem; }
 
-[data-motion="off"] .is-new { animation: none !important; }
+[data-motion="off"] .is-new,
+[data-motion="off"] .is-revealed { animation: none !important; }
+[data-motion="off"] .is-drawing { opacity: 1; transform: none; }
 [data-motion="off"] .move-toast { transition: none; }
 
 @media (max-width: 640px) {

@@ -83,8 +83,9 @@
   const discards = moves.filter((move) => move.kind === "discard");
   const plays = moves.filter((move) => move.kind === "play");
 
-  if (motionOn()) {
-    markNewCards(moves);
+  const revealed = new Set();
+  if (motionOn() && document.getElementById("mazos-btn")) {
+    prepareReveals(moves);
     showGhosts(moves);
   }
   showToast(draws, discards, plays);
@@ -96,45 +97,77 @@
     if (discards.length) playSound("discard", 160);
   }
 
-  function markNewCards(list) {
-    const fresh = list.filter((move) => move.kind === "draw" || move.kind === "play");
-    fresh.slice(0, 8).forEach((move, index) => {
-      const card = main.querySelector(`[data-row="${escapeId(move.rowId)}"]`);
-      if (!card) return;
-      card.classList.add("is-new");
-      card.style.animationDelay = `${Math.min(index, 5) * 70}ms`;
-      window.setTimeout(() => {
-        card.classList.remove("is-new");
-        card.style.animationDelay = "";
-      }, 1800 + Math.min(index, 5) * 70);
+  function cardNode(move) {
+    return main.querySelector(`[data-row="${escapeId(move.rowId)}"]`);
+  }
+
+  function prepareReveals(list) {
+    const drawMoves = list.filter((move) => move.kind === "draw");
+    const playMoves = list.filter((move) => move.kind === "play");
+    drawMoves.forEach((move, index) => {
+      const card = cardNode(move);
+      // En la pantalla de emboscada inicial las cartas son una decisión:
+      // no se tapan. El resto de los robos sí viaja con el dorso.
+      if (card && !card.closest("#emboscada")) card.classList.add("is-drawing");
+      // Si no hay fantasma (por ejemplo, más de 6 robos), la carta igual
+      // aparece; nunca se queda tapada.
+      window.setTimeout(() => revealCard(move), 1600 + index * 70);
     });
+    playMoves.slice(0, 8).forEach((move, index) => markNew(move, index));
+  }
+
+  function markNew(move, index) {
+    const card = cardNode(move);
+    if (!card) return;
+    card.classList.remove("is-drawing");
+    card.classList.add("is-new");
+    card.style.animationDelay = `${Math.min(index, 5) * 60}ms`;
+    window.setTimeout(() => {
+      card.classList.remove("is-new");
+      card.style.animationDelay = "";
+    }, 1900 + Math.min(index, 5) * 60);
+  }
+
+  function revealCard(move) {
+    if (revealed.has(move.rowId)) return;
+    revealed.add(move.rowId);
+    const card = cardNode(move);
+    if (!card) return;
+    const wasDrawing = card.classList.contains("is-drawing");
+    card.classList.remove("is-drawing");
+    card.classList.remove("is-new");
+    if (wasDrawing) {
+      void card.offsetWidth;
+      card.classList.add("is-revealed");
+      window.setTimeout(() => card.classList.remove("is-revealed"), 430);
+    }
+    card.classList.add("is-new");
+    window.setTimeout(() => card.classList.remove("is-new"), 1950);
   }
 
   function showGhosts(list) {
     const anchor = document.getElementById("mazos-btn");
     if (!anchor) return;
-    const anchorRect = anchor.getBoundingClientRect();
-    if (!inViewport(anchorRect)) return;
-
     const interesting = list.filter((move) => {
       return move.kind === "draw" || move.kind === "discard" || move.kind === "play";
-    }).slice(0, 4);
+    }).slice(0, 6);
 
     interesting.forEach((move, index) => {
       window.setTimeout(() => {
         if (!motionOn()) return;
-        const start = move.kind === "draw" ? anchorRect : zoneRect(move.from);
-        const end = move.kind === "discard" ? anchorRect : newCardRect(move) || zoneRect(move.to);
+        const start = move.kind === "draw" ? anchor.getBoundingClientRect() : zoneRect(move.from);
+        const end = move.kind === "discard" ? anchor.getBoundingClientRect() : (newCardRect(move) || zoneRect(move.to));
         if (!start || !end) return;
-        if (!inViewport(start) || !inViewport(end)) return;
-        flyCard(move, start, end);
-      }, index * 70);
+        flyCard(move, start, end, () => {
+          if (move.kind === "draw") revealCard(move);
+        });
+      }, index * 90);
     });
   }
 
   function newCardRect(move) {
-    const fresh = main.querySelector(`[data-row="${escapeId(move.rowId)}"]`);
-    return fresh ? fresh.getBoundingClientRect() : null;
+    const card = cardNode(move);
+    return card ? card.getBoundingClientRect() : null;
   }
 
   function zoneRect(zone) {
@@ -150,45 +183,51 @@
     return null;
   }
 
-  function inViewport(rect) {
-    return rect &&
-      rect.bottom > 8 &&
-      rect.top < window.innerHeight - 8 &&
-      rect.right > 8 &&
-      rect.left < window.innerWidth - 8;
-  }
-
-  function flyCard(move, start, end) {
+  function flyCard(move, start, end, onDone) {
+    const isDraw = move.kind === "draw";
     const ghost = document.createElement("div");
     ghost.className = "card-ghost";
     ghost.setAttribute("aria-hidden", "true");
-    if (move.kind === "draw") {
+    if (isDraw) {
       ghost.style.backgroundImage = `url("/img/dorso-${move.deck === "juego" ? "misterio" : "equipo"}.png")`;
     } else {
       ghost.classList.add("card-ghost-front");
       ghost.textContent = move.emoji || "🃏";
     }
-    const width = 58;
-    const height = 83;
+
+    // Coordenadas del documento: si el usuario hace scroll, la carta fantasma
+    // se mueve con la página en vez de quedar clavada en la ventana.
+    const width = isDraw ? 76 : 64;
+    const height = isDraw ? 107 : 90;
+    const sx = start.left + window.scrollX + start.width / 2;
+    const sy = start.top + window.scrollY + start.height / 2;
+    const ex = end.left + window.scrollX + end.width / 2;
+    const ey = end.top + window.scrollY + end.height / 2;
+
     ghost.style.width = `${width}px`;
     ghost.style.height = `${height}px`;
-    ghost.style.left = `${start.left + start.width / 2 - width / 2}px`;
-    ghost.style.top = `${start.top + start.height / 2 - height / 2}px`;
+    ghost.style.left = `${sx - width / 2}px`;
+    ghost.style.top = `${sy - height / 2}px`;
     document.body.appendChild(ghost);
 
-    const dx = end.left + end.width / 2 - (start.left + start.width / 2);
-    const dy = end.top + end.height / 2 - (start.top + start.height / 2);
+    const dx = ex - sx;
+    const dy = ey - sy;
     const spin = move.kind === "discard" ? 10 : -8;
     const animation = ghost.animate(
       [
-        { transform: "translate(0, 0) scale(0.86) rotate(0deg)", opacity: 0.15 },
-        { transform: `translate(${dx * 0.55}px, ${dy * 0.45 - 10}px) scale(1) rotate(${spin / 2}deg)`, opacity: 1, offset: 0.55 },
-        { transform: `translate(${dx}px, ${dy}px) scale(0.9) rotate(${spin}deg)`, opacity: 0 }
+        { transform: "translate(0, 0) scale(0.82) rotate(0deg)", opacity: 0.2 },
+        { transform: `translate(${dx * 0.6}px, ${dy * 0.55 - 14}px) scale(1.04) rotate(${spin / 2}deg)`, opacity: 1, offset: 0.55 },
+        { transform: `translate(${dx}px, ${dy}px) scale(${isDraw ? 1.1 : 0.95}) rotate(${spin}deg)`, opacity: 1, offset: 0.9 },
+        { transform: `translate(${dx}px, ${dy}px) scale(${isDraw ? 1.1 : 0.95}) rotate(${spin}deg)`, opacity: 0 }
       ],
-      { duration: 340, easing: "cubic-bezier(.2,.75,.25,1)" }
+      { duration: isDraw ? 680 : 540, easing: "cubic-bezier(.2,.7,.25,1)" }
     );
-    animation.onfinish = () => ghost.remove();
-    animation.oncancel = () => ghost.remove();
+    const done = () => {
+      ghost.remove();
+      if (onDone) onDone();
+    };
+    animation.onfinish = done;
+    animation.oncancel = done;
   }
 
   function showToast(drawList, discardList, playList) {

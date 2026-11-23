@@ -62,9 +62,14 @@ compara las zonas con el estado anterior y deja en el HTML solo los movimientos
 nuevos; un módulo de JavaScript liviano (`js/game.js`) los usa para:
 
 - resaltar las cartas que acaban de entrar en mano, mesa, herramientas o apoyo;
-- animar una carta fantasma desde el mazo al destino, o desde la mesa/mano al
-  descarte;
+- en los robos, ocultar la carta destino, hacer volar el **dorso** desde el
+  mazo hasta su lugar y recién ahí revelar la carta con un pequeño pop;
+- en los descartes, hacer volar la carta desde la mesa/mano hasta el descarte;
 - mostrar un aviso breve con cuántas cartas se robaron o descartaron.
+
+La carta fantasma está posicionada en coordenadas del documento, no de la
+ventana: si seguís el movimiento con el scroll, la animación viaja con la página.
+Los robos duran unos 680 ms y los descartes 540 ms.
 
 Los dos botones de la cabecera, **Animaciones** y **Sonido**, se guardan en
 `localStorage` (`xp-motion` y `xp-sound`). Si el sistema pide
