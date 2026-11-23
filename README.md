@@ -52,6 +52,21 @@ bialet .
 
 Para empezar de cero, borrá `_db.sqlite3` y volvé a levantar el servidor.
 
+## Tests
+
+El motor (`_app/cards.wren` y `_app/game.wren`) tiene una suite en `_tests/`:
+
+```bash
+bialet -T       # todos los tests
+bialet -T -q    # salida mínima para CI
+```
+
+Los tests corren sobre una base SQLite temporal: no tocan `_db.sqlite3`. Cubren
+la lectura y decoración de cartas, las pruebas de dados, los efectos (Ahorro,
+Cebo, Blindaje, Brazo Robótico), el robo y reciclado de mazos, la resolución de
+un Misterio y el flujo HTTP completo de `/juego` (crear, elegir, tirar,
+resolver y cerrar turno).
+
 ## Rutas
 
 | Ruta | Qué hace |
