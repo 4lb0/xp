@@ -25,7 +25,7 @@ class Fixture {
       `UPDATE game_cards SET zone = 'mesa' WHERE id = ?`.query(row["id"])
     }
     `UPDATE games SET fase = 'prueba', pruebaCarta = ?, pruebaOpcion = ?,
-       dado1 = ?, dado2 = ?, tirado = ?, bonus = 0, jugadas = 0 WHERE id = ?`.query(cardId, label, d1, d2, tirado, id)
+       dado1 = ?, dado2 = ?, tirado = ?, bonus = 0, jugadas = 0 WHERE id = ?`.query([cardId, label, d1, d2, tirado, id])
   }
 
   static equip(id, cardId) {
