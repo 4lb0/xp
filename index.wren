@@ -85,7 +85,7 @@ return Layout.render(<main>
         <form method="get" action="/juego" class="panel">
           <label for="modo"><strong>Modo</strong></label>
           <p style="margin: 0.4rem 0 0.9rem">
-            <select id="modo" name="modo" style="font: inherit; padding: 0.5rem 0.7rem; border-radius: 8px; background: #0b2a44; color: inherit; border: 1px solid rgba(127,230,242,.3)">
+            <select id="modo" name="modo" style="font: inherit; padding: 0.5rem 0.7rem; border-radius: 8px; background: var(--navy); color: inherit; border: 1px solid rgba(51,187,204,.35)">
               <option value="experto" {{ modoInicial == "experto" ? "selected" : "" }}>Experto — 6 y 6, sin apoyos</option>
               <option value="casual" {{ modoInicial == "casual" ? "selected" : "" }}>Normal — 6 y 6 + 1 apoyo</option>
               <option value="facil" {{ modoInicial == "facil" ? "selected" : "" }}>Asistido — 6 y 6 + 2 apoyos</option>

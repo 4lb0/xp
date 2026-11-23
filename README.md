@@ -49,6 +49,11 @@ La cabecera usa el monograma y la portada la insignia completa. Los favicons se
 cachean fuerte en los navegadores: si cambia la insignia, conviene renombrar los
 archivos además de subir `Layout.assetVersion`.
 
+La tipografía también se autoaloja: `css/fonts/` trae **Archivo** (wght 100–900,
+wdth 62–125) y **Source Sans 3** (wght 200–900) en WOFF2, en latin y latin-ext.
+No hay pedidos a Google en tiempo de ejecución. Si se reemplazan los archivos,
+subí `Layout.assetVersion`.
+
 ## Caché de CSS
 
 Cloudflare cachea `/css/style.css` durante 4 horas. Al cambiar el CSS, subí

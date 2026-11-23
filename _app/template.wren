@@ -1,6 +1,6 @@
 class Layout {
   // Subir al cambiar css/style.css para romper la caché de Cloudflare.
-  static assetVersion { "2026-11-23-3" }
+  static assetVersion { "2026-11-24-1" }
   static printVersion { "2026-11-23-1" }
   static description { "XP — Equipo eXPedición. LCG cooperativo de aventura y misterio para toda la familia. Mazos fijos, partidas de 10 a 20 minutos." }
 
@@ -19,7 +19,7 @@ class Layout {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <title>{{ title }}</title>
         <meta name="description" content="{{ Layout.description }}" />
-        <meta name="theme-color" content="#040e19" />
+        <meta name="theme-color" content="#071a2e" />
         <script>
           (function () {
             try {
@@ -53,6 +53,8 @@ class Layout {
         <meta name="twitter:title" content="{{ title }}" />
         <meta name="twitter:description" content="{{ Layout.description }}" />
         <meta name="twitter:image" content="{{ Request.baseUrl }}/img/og-xp.jpg" />
+        <link rel="preload" href="/css/fonts/archivo-latin.woff2" as="font" type="font/woff2" crossorigin />
+        <link rel="preload" href="/css/fonts/source-sans-3-latin.woff2" as="font" type="font/woff2" crossorigin />
         <link rel="stylesheet" href="/css/style.css?v={{ Layout.assetVersion }}" />
       </head>
       <body>

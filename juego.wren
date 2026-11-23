@@ -914,7 +914,7 @@ return Layout.render(<main class="game" data-moves="{{ movesJson }}" data-anim="
       <button type="button" class="dialog-close" data-close aria-label="Cerrar">×</button>
     </div>
     <div class="mazos-grid">
-      <section class="mazos-pile">
+      <section class="mazos-pile mazos-pile-juego">
         <div class="mazos-pile-head">
           <img src="/img/dorso-misterio.png" width="42" height="59" alt="" />
           <div>
@@ -931,7 +931,7 @@ return Layout.render(<main class="game" data-moves="{{ movesJson }}" data-anim="
           </li>} }}
         </ul> }}
       </section>
-      <section class="mazos-pile">
+      <section class="mazos-pile mazos-pile-equipo">
         <div class="mazos-pile-head">
           <img src="/img/dorso-equipo.png" width="42" height="59" alt="" />
           <div>

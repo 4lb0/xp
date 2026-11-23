@@ -241,45 +241,66 @@ La marca principal es monocromática: **Tinta**, **Blanco** y **Hueso**. El colo
 
 ### Núcleo de marca
 
-| Rol | Nombre | HEX | Uso |
-|---|---|---|---|
-| Negro de marca | Tinta | `#0A0A0A` | Insignia, monograma, favicon |
-| Blanco de marca | Blanco | `#FFFFFF` | Fondo positivo de la insignia |
-| Hueso / papel | Hueso | `#F4F1E8` | Fondo cálido, papel, versión clara |
+| Rol | Nombre | HEX | CMYK | Uso |
+|---|---|---|---|---|
+| Negro de marca | Tinta | `#0A0A0A` | K100 (o C60 M40 Y40 K100) | Insignia, monograma, favicon |
+| Blanco de marca | Blanco | `#FFFFFF` | 0/0/0/0 | Fondo positivo de la insignia |
+| Hueso / papel | Espuma | `#F4F1EA` | 4/4/5/0 | Texto sobre fondo oscuro, papel, versión clara |
 
 La insignia no lleva color dentro: se reproduce en negro y blanco, o en negativo. La paleta que sigue es la de la **Edición 01** y puede cambiar en cada expedición.
 
 ### Núcleo de la Edición 01
 
-| Rol | Nombre | HEX | Uso |
-|---|---|---|---|
-| Fondo profundo | Abismo | `#071A2E` | Fondo de caja, dorsos, HUD oscuro |
-| Azul marino | Fosa | `#0B2C4D` | Superficies grandes, marcos de carta |
-| Azul medio | Corriente | `#14547F` | Fondos secundarios, degradados |
-| Teal | Profundidad | `#0F6E78` | Acentos de ambiente, ilustración |
-| Turquesa | Arrecife | `#1F9AA0` | Familia Exploración, highlights |
-| Cian | Sonar | `#4FD1D9` | Acento principal, iconos activos, luz |
-| Dorado | Faro | `#F2B33D` | Acento de marca, Herramientas, títulos |
-| Dorado claro | Latón | `#FFD98A` | Texto sobre azul, detalles metálicos |
-| Hueso | Espuma | `#F4F1E8` | Texto principal sobre fondo oscuro |
-| Gris azulado | Sedimento | `#8FA6B3` | Texto secundario, metadatos |
+La edición parte del **dorso de carta**: un azul profundo y un borgoña, un hueso cálido y un petróleo. Sobre esa base, el frente usa acentos saturados — pero siempre dentro del gamut de cuatricromía, porque las cartas se imprimen.
+
+| Rol | Nombre | HEX | CMYK | Uso |
+|---|---|---|---|---|
+| Fondo profundo | Abismo | `#071A2E` | 89/73/33/63 | Fondo de caja, dorsos, HUD oscuro |
+| Azul de dorso | Fosa | `#0B2239` | 91/71/28/57 | Superficies grandes, dorso de Equipo |
+| Azul medio | Corriente | `#14547F` | 91/55/11/17 | Fondos secundarios, controles |
+| Azul claro | Corriente clara | `#1A6396` | 88/50/6/8 | Degradados, hover |
+| Borgoña de dorso | Borgoña | `#4A1B24` | 36/87/60/56 | Dorso del Juego, aire de misterio |
+| Teal | Profundidad | `#1B6B72` | 85/30/38/21 | Petróleo del dorso, acentos de ambiente |
+| Turquesa | Arrecife | `#0FA8A2` | 75/5/35/2 | Familia Exploración, highlights |
+| Cian | Sonar | `#33BBCC` | 66/1/14/0 | Acento principal, iconos activos, luz |
+| Dorado | Faro | `#F2B33D` | 1/29/87/2 | Acento de marca, Herramientas, títulos |
+| Dorado claro | Latón | `#F5DA8C` | 4/11/50/0 | Texto sobre azul, detalles metálicos |
+| Hueso | Espuma | `#F4F1EA` | 4/4/5/0 | Texto principal sobre fondo oscuro |
+| Hueso sombra | Espuma sombra | `#D9D5CC` | 13/11/14/0 | Texto corrido sobre superficies oscuras |
+| Gris azulado | Sedimento | `#8FA6B3` | 43/23/16/0 | Texto secundario, metadatos |
 
 ### Funcionales por familia de carta
 
-| Familia | Color | HEX | Refuerzo no cromático |
-|---|---|---|---|
-| **Exploración** | Azul / cian | `#1F9AA0` | Ícono de brújula + franja con onda |
-| **Peligro** | Coral / rojo | `#E2574C` | Ícono de triángulo + franja dentada |
-| **Dilema / Recursos** | Verde | `#3E9B6B` | Ícono de balanza + franja doble |
-| **Herramientas** | Amarillo | `#F2B33D` | Ícono de llave + franja sólida gruesa |
-| **Maniobras** | Cian claro | `#4FD1D9` | Ícono de rayo + franja fina |
+| Familia | Color | HEX | CMYK | Refuerzo no cromático |
+|---|---|---|---|---|
+| **Exploración** | Turquesa | `#0FA8A2` | 75/5/35/2 | Ícono de brújula + franja con onda |
+| **Peligro** | Coral | `#E06550` | 2/71/69/1 | Ícono de triángulo + franja dentada |
+| **Dilema / Recursos** | Verde | `#12A05F` | 79/3/80/3 | Ícono de balanza + franja doble |
+| **Herramientas** | Dorado | `#F2B33D` | 1/29/87/2 | Ícono de llave + franja sólida gruesa |
+| **Maniobras** | Cian | `#33BBCC` | 66/1/14/0 | Ícono de rayo + franja fina |
+| **Apoyo** | Anémona | `#C02F70` | 7/92/12/8 | Ícono de mano + franja punteada |
+
+Maniobras va en cian y no en violeta: el violeta de pantalla no existe en cuatricromía y salía lavanda al imprimir.
+
+Cada acento tiene una versión clara para texto, bordes y etiquetas sobre fondo oscuro: Arrecife clara `#A5D7D2` (33/1/14/0), Sonar clara `#9BD7E1` (35/1/7/0), Coral claro `#F0BEB4` (2/27/19/0), Anémona clara `#F0CDD7` (4/21/3/0).
 
 ### Contraste y accesibilidad
 
-- Texto principal: **Espuma `#F4F1E8` sobre Abismo `#071A2E`** — contraste superior a 12:1.
-- Texto secundario: **Sedimento `#8FA6B3` sobre Abismo** — nunca por debajo de 4.5:1; verificar siempre.
+- Texto principal: **Espuma `#F4F1EA` sobre Abismo `#071A2E`** — 15,5:1.
+- Texto corrido: **Espuma sombra `#D9D5CC` sobre Fosa `#0B2239`** — 11:1.
+- Texto secundario: **Sedimento `#8FA6B3` sobre Abismo** — 6,9:1; nunca por debajo de 4.5:1, verificar siempre.
+- Los cinco acentos de familia llegan a 5:1 o más como texto sobre Abismo. **Anémona `#C02F70` da 3,6:1 y no se usa para texto chico**: va como fondo, borde o etiqueta con Espuma encima (4,8:1).
 - El **dorado nunca va como texto pequeño sobre cian ni sobre turquesa**: el contraste cae por debajo del mínimo.
 - **Ningún dato se comunica solo por color.** Toda familia de carta lleva además ícono distinto, patrón de franja distinto y palabra de familia en el encabezado. La paleta acelera la lectura; no la sostiene sola.
+
+### Regla de imprenta
+
+Todo color de esta edición tiene que existir en **cuatricromía de proceso**. La cuaterna CMYK manda; el HEX es solo la aproximación en pantalla.
+
+- **TAC máximo 300 %** (suma de C+M+Y+K). Los fondos profundos quedan entre 240 % y 260 %.
+- Nada de neones de pantalla: ni cian eléctrico (`#4FD1D9`), ni violeta (`#7B4FC0`), ni rosa chicle (`#F472B6`). En proceso se lavan y el impreso no se parece al archivo.
+- Primero se elige la cuaterna y después el HEX que la represente, no al revés. Si un HEX de pantalla queda fuera de gamut, se corrige el HEX, no la cuaterna.
+- Los degradados y las transparencias de la web se traducen a **tintas planas o tramas**: ningún archivo final depende de un degradado para leerse.
 
 ### Paleta del dorso de carta
 
@@ -303,9 +324,11 @@ Los dos mazos comparten estructura y acento; cambia el campo. Cada dorso usa **t
 
 El logotipo no se compone con una fuente: la insignia está dibujada a medida y no se reconstruye tipográficamente. Para todo lo demás, dos familias gratuitas de Google Fonts, ninguna infantil.
 
-### Display — **Archivo Black** (o Archivo Expanded 800)
+La app las **autoaloja**: `css/fonts/` tiene los archivos variables en WOFF2 (Archivo wght 100–900 / wdth 62–125 y Source Sans 3 wght 200–900, en latin y latin-ext). No se le pide nada a Google en tiempo de ejecución; si se cambia una fuente, se reemplazan los archivos y se sube `Layout.assetVersion`.
 
-Títulos de carta, títulos de mazo, portada, HUD. Geométrica, ancha, con personalidad de señalética de expedición y de tapa de libro de aventuras. Legible en mayúsculas cortas.
+### Display — **Archivo** (variable: Archivo Black, peso 900, o 800 en el eje ancho)
+
+Títulos de carta, títulos de mazo, portada, HUD. Geométrica, ancha, con personalidad de señalética de expedición y de tapa de libro de aventuras. Legible en mayúsculas cortas. En pantalla se usa `font-weight: 900` y `font-stretch: 106–112 %` para títulos, 800 para cifras y botones.
 
 ### Texto — **Source Sans 3**
 

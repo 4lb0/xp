@@ -81,43 +81,43 @@ return Layout.render(<main class="quick">
         </g>
       </symbol>
       <symbol id="die1" viewBox="0 0 64 64">
-        <rect x="4" y="4" width="56" height="56" rx="10" fill="#eaf6f8"/>
-        <circle cx="32" cy="32" r="6" fill="#0a2239"/>
+        <rect x="4" y="4" width="56" height="56" rx="10" fill="#F4F1EA"/>
+        <circle cx="32" cy="32" r="6" fill="#0B2239"/>
       </symbol>
       <symbol id="die2" viewBox="0 0 64 64">
-        <rect x="4" y="4" width="56" height="56" rx="10" fill="#eaf6f8"/>
-        <circle cx="20" cy="20" r="6" fill="#0a2239"/>
-        <circle cx="44" cy="44" r="6" fill="#0a2239"/>
+        <rect x="4" y="4" width="56" height="56" rx="10" fill="#F4F1EA"/>
+        <circle cx="20" cy="20" r="6" fill="#0B2239"/>
+        <circle cx="44" cy="44" r="6" fill="#0B2239"/>
       </symbol>
       <symbol id="die3" viewBox="0 0 64 64">
-        <rect x="4" y="4" width="56" height="56" rx="10" fill="#eaf6f8"/>
-        <circle cx="20" cy="20" r="6" fill="#0a2239"/>
-        <circle cx="32" cy="32" r="6" fill="#0a2239"/>
-        <circle cx="44" cy="44" r="6" fill="#0a2239"/>
+        <rect x="4" y="4" width="56" height="56" rx="10" fill="#F4F1EA"/>
+        <circle cx="20" cy="20" r="6" fill="#0B2239"/>
+        <circle cx="32" cy="32" r="6" fill="#0B2239"/>
+        <circle cx="44" cy="44" r="6" fill="#0B2239"/>
       </symbol>
       <symbol id="die4" viewBox="0 0 64 64">
-        <rect x="4" y="4" width="56" height="56" rx="10" fill="#eaf6f8"/>
-        <circle cx="20" cy="20" r="6" fill="#0a2239"/>
-        <circle cx="44" cy="20" r="6" fill="#0a2239"/>
-        <circle cx="20" cy="44" r="6" fill="#0a2239"/>
-        <circle cx="44" cy="44" r="6" fill="#0a2239"/>
+        <rect x="4" y="4" width="56" height="56" rx="10" fill="#F4F1EA"/>
+        <circle cx="20" cy="20" r="6" fill="#0B2239"/>
+        <circle cx="44" cy="20" r="6" fill="#0B2239"/>
+        <circle cx="20" cy="44" r="6" fill="#0B2239"/>
+        <circle cx="44" cy="44" r="6" fill="#0B2239"/>
       </symbol>
       <symbol id="die5" viewBox="0 0 64 64">
-        <rect x="4" y="4" width="56" height="56" rx="10" fill="#eaf6f8"/>
-        <circle cx="20" cy="20" r="6" fill="#0a2239"/>
-        <circle cx="44" cy="20" r="6" fill="#0a2239"/>
-        <circle cx="32" cy="32" r="6" fill="#0a2239"/>
-        <circle cx="20" cy="44" r="6" fill="#0a2239"/>
-        <circle cx="44" cy="44" r="6" fill="#0a2239"/>
+        <rect x="4" y="4" width="56" height="56" rx="10" fill="#F4F1EA"/>
+        <circle cx="20" cy="20" r="6" fill="#0B2239"/>
+        <circle cx="44" cy="20" r="6" fill="#0B2239"/>
+        <circle cx="32" cy="32" r="6" fill="#0B2239"/>
+        <circle cx="20" cy="44" r="6" fill="#0B2239"/>
+        <circle cx="44" cy="44" r="6" fill="#0B2239"/>
       </symbol>
       <symbol id="die6" viewBox="0 0 64 64">
-        <rect x="4" y="4" width="56" height="56" rx="10" fill="#eaf6f8"/>
-        <circle cx="20" cy="20" r="6" fill="#0a2239"/>
-        <circle cx="44" cy="20" r="6" fill="#0a2239"/>
-        <circle cx="20" cy="32" r="6" fill="#0a2239"/>
-        <circle cx="44" cy="32" r="6" fill="#0a2239"/>
-        <circle cx="20" cy="44" r="6" fill="#0a2239"/>
-        <circle cx="44" cy="44" r="6" fill="#0a2239"/>
+        <rect x="4" y="4" width="56" height="56" rx="10" fill="#F4F1EA"/>
+        <circle cx="20" cy="20" r="6" fill="#0B2239"/>
+        <circle cx="44" cy="20" r="6" fill="#0B2239"/>
+        <circle cx="20" cy="32" r="6" fill="#0B2239"/>
+        <circle cx="44" cy="32" r="6" fill="#0B2239"/>
+        <circle cx="20" cy="44" r="6" fill="#0B2239"/>
+        <circle cx="44" cy="44" r="6" fill="#0B2239"/>
       </symbol>
     </defs>
   </svg>

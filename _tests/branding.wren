@@ -10,6 +10,8 @@ Test.get("/")
   .contains("logo-xp-mark.png")
   .contains("/img/og-xp.jpg")
   .contains("hero-brand")
+  .contains("archivo-latin.woff2")
+  .contains("preload")
   .textContains("Equipo eXPedición")
 
 Test.get("/juego")
