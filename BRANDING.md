@@ -228,10 +228,12 @@ El margen mínimo alrededor de la insignia equivale al **ancho de la letra X** d
 
 El favicon es una reducción del **monograma**, no de la insignia completa:
 
-- Fondo negro de tinta `#0A0A0A`, esquinas redondeadas, letras XP y órbita en blanco.
-- Tamaños 16, 32 y 48 px dentro de `favicon.ico`; PNG de 16 y 32 para navegadores modernos.
-- `apple-touch-icon.png` de 180 px con la insignia completa sobre un marco hueso.
-- En pantalla oscura, el monograma mantiene el contraste por las letras blancas; no se invierte ni se le agrega borde.
+- Fondo negro de tinta `#0A0A0A`, esquinas redondeadas, letras XP en hueso `#F4F1EA`.
+- **A 16 px se simplifica**: placa + XP, sin órbita ni estrellas. La órbita y los puntos periféricos son polvo a ese tamaño; el manual ya lo anticipa: si a 16 px se convierte en mancha, perdió.
+- Tamaños 16, 32 y 48 px dentro de `favicon.ico`; PNG de 16, 32 y 48 para navegadores modernos.
+- `apple-touch-icon.png` (180 px), `icon-192.png` e `icon-512.png` usan **la misma versión simplificada**: a esos tamaños la insignia con cinta no se lee en la pantalla de inicio.
+- La insignia completa queda para la portada y la tarjeta social (`og-xp.jpg`).
+- En pantalla oscura, el monograma mantiene el contraste por las letras claras; no se invierte ni se le agrega borde.
 
 ---
 

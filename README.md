@@ -31,19 +31,22 @@ Los iconos usan **Noto Emoji** (OFL) en `tools/fonts/`.
 
 ## Marca
 
-El manual completo está en [`BRANDING.md`](BRANDING.md). Los archivos listos para usar viven en `img/`:
+El manual completo está en [`BRANDING.md`](BRANDING.md). El sistema de diseño de
+la interfaz —tokens, componentes, estados y reglas de accesibilidad— está en
+[`DESIGN.md`](DESIGN.md). Los archivos listos para usar viven en `img/`:
 
 | Archivo | Uso |
 |---|---|
 | `assets/logo-xp-original.jpg` | Original de la insignia. Fuente para regenerar todo |
 | `img/logo-xp.png` | Insignia completa, 1000 × 1000, fondo blanco |
 | `img/logo-xp-mark.png` | Monograma XP, 512 × 512, transparente |
-| `favicon.ico` + `img/favicon-16.png`, `img/favicon-32.png` | Favicon de la pestaña |
+| `favicon.ico` + `img/favicon-16.png`, `img/favicon-32.png`, `img/favicon-48.png` | Favicon de la pestaña: monograma simplificado (placa negra + XP, sin órbita ni estrellas) para que se lea a 16 px |
 | `img/apple-touch-icon.png`, `img/icon-192.png`, `img/icon-512.png` | Íconos de app |
 | `img/og-xp.jpg` | Tarjeta social de 1200 × 630 |
 | `assets/card-backs/dorso-equipo.svg` | Dorso TCG del Mazo de Equipo (azul) |
 | `assets/card-backs/dorso-misterio.svg` | Dorso TCG del Mazo del Juego (borgoña) |
 | `img/dorso-equipo.png`, `img/dorso-misterio.png` | Vistas previas de los dorsos |
+| `img/dorso-equipo-thumb.png`, `img/dorso-misterio-thumb.png` | Miniaturas de los dorsos, 168 × 235 (2× del uso de 84 × 118) |
 
 La cabecera usa el monograma y la portada la insignia completa. Los favicons se
 cachean fuerte en los navegadores: si cambia la insignia, conviene renombrar los
