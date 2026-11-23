@@ -15,7 +15,7 @@ return Layout.render(<main>
   <nav class="toc" aria-label="Secciones de las reglas">
     <a class="pill" href="#idea">La idea</a>
     <a class="pill" href="#preparacion">Preparación</a>
-    <a class="pill" href="#ciclo">El ciclo</a>
+    <a class="pill" href="#turno">El turno</a>
     <a class="pill" href="#pruebas">Pruebas</a>
     <a class="pill" href="#equipo">Cartas</a>
     <a class="pill" href="#reloj">Energía</a>
@@ -58,16 +58,16 @@ return Layout.render(<main>
     </ol>
   </section>
 
-  <section id="ciclo">
+  <section id="turno">
     <div class="section-head">
-      <h2>El ciclo, paso a paso</h2>
-      <p>Se juega un ciclo por vez, solo o en cooperativo.</p>
+      <h2>El turno, paso a paso</h2>
+      <p>Se juega un turno por vez, solo o en cooperativo.</p>
     </div>
     <ol class="steps">
-      <li><span class="num">1</span><span><strong>Arrancá con 3 cartas de Equipo</strong>La mano es compartida. Al cerrar cada ciclo descartás una carta al azar y reponés la mano a 3.</span></li>
+      <li><span class="num">1</span><span><strong>Arrancá con 3 cartas de Equipo</strong>La mano es compartida. Al cerrar cada turno descartás una carta al azar y reponés la mano a 3.</span></li>
       <li><span class="num">2</span><span><strong>Jugá 1 carta (opcional)</strong>Podés jugarla antes o después de elegir el Misterio, siempre antes de tirar. Herramienta: queda en la mesa. Una sola activa; la nueva reemplaza a la anterior. Maniobra: se resuelve y va al descarte.</span></li>
       <li><span class="num">3</span><span><strong>Resolvé un Misterio</strong>Elegí una carta activa, lean la situación, debatan y elijan una de sus opciones. Después viene la prueba de dados.</span></li>
-      <li><span class="num">4</span><span><strong>Reponé la mesa y pasá el ciclo</strong>La carta resuelta va al descarte y se revela una nueva. Descartá una carta propia al azar, robá 1 del Mazo del Juego y reponé tu mano a 3.</span></li>
+      <li><span class="num">4</span><span><strong>Reponé la mesa y pasá el turno</strong>La carta resuelta va al descarte y se revela una nueva. Descartá una carta propia al azar, robá 1 del Mazo del Juego y reponé tu mano a 3.</span></li>
     </ol>
     <p class="hint">Si se agota un mazo, mezclá su descarte y seguí robando. Energía y Escudo pueden superar 6.</p>
   </section>
@@ -143,13 +143,13 @@ return Layout.render(<main>
   <section class="panel support-panel" id="apoyo">
     <h2>Maniobras de apoyo</h2>
     <p>Dos Maniobras del equipo: <strong>Kit de emergencia</strong> (<span class="chip chip-energia">⚡ +1</span> o <span class="chip chip-escudo">🛡️ +1</span>) y <strong>Carga de emergencia</strong> (<span class="chip chip-energia">⚡ +2</span> o <span class="chip chip-escudo">🛡️ +2</span>).</p>
-    <p>En <strong>Experto</strong> se mezclan en el mazo. En <strong>Normal</strong>, el Kit se busca y queda en el área de ayuda. En <strong>Asistido</strong>, las dos quedan en el área. Se usan una vez, van al descarte como cualquier Maniobra y, si están en el área de ayuda, no gastan la carta del ciclo.</p>
+    <p>En <strong>Experto</strong> se mezclan en el mazo. En <strong>Normal</strong>, el Kit se busca y queda en el área de Apoyo. En <strong>Asistido</strong>, las dos quedan en el área. Se usan una vez, van al descarte como cualquier Maniobra y, si están en el área de Apoyo, no gastan la carta del turno.</p>
   </section>
 
   <section class="panel" id="reloj">
     <h2>El reloj: consumo de Energía</h2>
-    <p><strong>Consumo:</strong> al terminar cada ciclo, el submarino pierde <strong>1 Energía</strong>, hayan ganado o no una Pista. La Energía es el reloj de la partida y no se recupera con las cartas de Misterio.</p>
-    <p><strong>Recarga:</strong> solo con Equipo. La Batería de Respaldo devuelve 2 de Energía y hay 6 en el mazo. El Generador Auxiliar recarga 1 al empezar cada misterio si están en 4 o menos. El Generador de Escudo hace lo mismo con el casco. Ahorro de Oxígeno saltea el consumo de un ciclo.</p>
+    <p><strong>Consumo:</strong> al terminar cada turno, el submarino pierde <strong>1 Energía</strong>, hayan ganado o no una Pista. La Energía es el reloj de la partida y no se recupera con las cartas de Misterio.</p>
+    <p><strong>Recarga:</strong> solo con Equipo. La Batería de Respaldo devuelve 2 de Energía y hay 6 en el mazo. El Generador Auxiliar recarga 1 al empezar cada misterio si están en 4 o menos. El Generador de Escudo hace lo mismo con el casco. Ahorro de Oxígeno saltea el consumo de un turno.</p>
     <p><strong>Emboscadas:</strong> diez cartas de Misterio cuestan <strong>1 Energía</strong>, <strong>1 Escudo</strong> o <strong>1 Pista</strong> apenas entran a la mesa, y tienen una sola opción. Al empezar la partida, si hay más de una entre las 3 cartas iniciales, el equipo elige cuál sufrir: solo una emboscada inicial se aplica. Las cartas de Misterio nunca te sacan Energía: la Energía la baja el reloj y la recupera el Equipo.</p>
   </section>
 

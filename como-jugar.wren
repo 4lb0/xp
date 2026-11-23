@@ -172,7 +172,7 @@ return Layout.render(<main class="quick">
           <svg class="quick-card green" aria-hidden="true"><use href="#ico-card"/></svg>
           <svg class="quick-card cyan" aria-hidden="true"><use href="#ico-card"/></svg>
         </div>
-        <p>Siempre 3 boca arriba. Elegís uno por ciclo.</p>
+        <p>Siempre 3 boca arriba. Elegís uno por turno.</p>
       </article>
 
       <article class="quick-zone">
@@ -182,7 +182,7 @@ return Layout.render(<main class="quick">
           <svg class="quick-card purple" aria-hidden="true"><use href="#ico-card"/></svg>
           <svg class="quick-card gold" aria-hidden="true"><use href="#ico-card"/></svg>
         </div>
-        <p>Compartida. Arrancás con 3; se repone a 3 cada ciclo.</p>
+        <p>Compartida. Arrancás con 3; se repone a 3 cada turno.</p>
       </article>
 
       <article class="quick-zone">
@@ -213,7 +213,7 @@ return Layout.render(<main class="quick">
   <section class="quick-section quick-first">
     <div class="quick-section-head">
       <h2>Tu primer turno</h2>
-      <p>Estos 4 pasos se repiten en cada ciclo.</p>
+      <p>Estos 4 pasos se repiten en cada turno.</p>
     </div>
     <p class="quick-note"><strong>Antes de empezar:</strong> 3 cartas de Equipo y 3 de Misterio. Todos: 6 de Energía y 6 de Escudo. Diferencia: Experto sin apoyos · Normal +1 · Asistido +2.</p>
     <ol class="quick-steps">
@@ -245,7 +245,7 @@ return Layout.render(<main class="quick">
         <span class="quick-step-num">4</span>
         <svg class="quick-icon" aria-hidden="true"><use href="#ico-deck"/></svg>
         <div>
-          <strong>Cerrá el ciclo</strong>
+          <strong>Cerrá el turno</strong>
           <p>Descartá una carta propia al azar, robá 1 del Mazo del Juego y reponé la mano a 3. Pagá ⚡ 1.</p>
         </div>
       </li>
@@ -300,7 +300,7 @@ return Layout.render(<main class="quick">
 
   <section class="quick-section">
     <div class="quick-rules">
-      <span><strong>1</strong> carta por ciclo</span>
+      <span><strong>1</strong> carta por turno</span>
       <span><strong>1</strong> Herramienta activa</span>
       <span><strong>3</strong> al empezar</span>
       <span><strong>Emboscada:</strong> −1 ⚡, 🛡️ o Pista al entrar</span>

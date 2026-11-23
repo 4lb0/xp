@@ -50,12 +50,12 @@ return Layout.render(<main>
   <section>
     <div class="section-head">
       <h2>Cómo se juega</h2>
-      <p>Cuatro pasos por ciclo. Sin tablero.</p>
+      <p>Cuatro pasos por turno. Sin tablero.</p>
     </div>
     <ol class="steps">
       <li>
         <span class="num">1</span>
-        <span><strong>Arrancá con 3 cartas de Equipo</strong>Al cerrar el ciclo descartás una carta al azar y reponés la mano a 3.</span>
+        <span><strong>Arrancá con 3 cartas de Equipo</strong>Al cerrar el turno descartás una carta al azar y reponés la mano a 3.</span>
       </li>
       <li>
         <span class="num">2</span>
@@ -67,7 +67,7 @@ return Layout.render(<main>
       </li>
       <li>
         <span class="num">4</span>
-        <span><strong>Reponé la mesa</strong>Descarten la carta resuelta y revelen una nueva. Al cerrar el ciclo, descarten una carta propia al azar, roben 1 del Mazo del Juego y repongan la mano a 3.</span>
+        <span><strong>Reponé la mesa</strong>Descarten la carta resuelta y revelen una nueva. Al cerrar el turno, descarten una carta propia al azar, roben 1 del Mazo del Juego y repongan la mano a 3.</span>
       </li>
     </ol>
   </section>
@@ -78,7 +78,7 @@ return Layout.render(<main>
         <div class="section-head">
           <h2>Prepará la mesa</h2>
         </div>
-        <p class="muted">Podés jugar solo o en cooperativo con amigos: la mesa es una. Siempre hay 3 cartas de Misterio y la mano se repone a 3 cada ciclo.</p>
+        <p class="muted">Podés jugar solo o en cooperativo con amigos: la mesa es una. Siempre hay 3 cartas de Misterio y la mano se repone a 3 cada turno.</p>
         <form method="get" action="/juego" class="panel">
           <label for="modo"><strong>Modo</strong></label>
           <p style="margin: 0.4rem 0 0.9rem">

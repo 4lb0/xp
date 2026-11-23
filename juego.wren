@@ -59,7 +59,7 @@ if (Request.isPost) {
     } else if (g.fase != "listo" && !(g.fase == "prueba" && !g.tirado)) {
       aviso = "Esa carta se juega antes de tirar."
     } else if (g.jugadas > 0) {
-      aviso = "Ya jugaron una carta este ciclo."
+      aviso = "Ya jugaron una carta este turno."
     } else {
       var c = Card.get(row["cardId"])
       if (c == null) {
@@ -143,7 +143,7 @@ if (Request.isPost) {
     if (g.fase != "listo") {
       aviso = "Ya hay una prueba en curso."
     } else if (g.resueltas > 0) {
-      aviso = "Ya resolvieron un misterio este ciclo."
+      aviso = "Ya resolvieron un misterio este turno."
     } else {
       var row = `SELECT * FROM game_cards WHERE id = ? AND gameId = ? AND zone = 'mesa'`.first(rowId, g.id)
       if (row == null) {
@@ -199,7 +199,7 @@ if (Request.isPost) {
     } else if (g.fase != "prueba" && g.fase != "listo") {
       aviso = "Esa Maniobra se usa antes de tirar."
     } else if (g.jugadas > 0) {
-      aviso = "Ya jugaron una carta este ciclo."
+      aviso = "Ya jugaron una carta este turno."
     } else if (c.effect == "flip_parity" && !parity) {
       aviso = "Giro Brusco solo sirve en pruebas de Cara o Seca."
     } else if (c.effect == "flip_parity" && g.tirado) {
@@ -340,7 +340,7 @@ if (Request.isPost) {
       var enMano = Game.count(g.id, "mano")
       var aRobar = 3 - enMano
       if (aRobar > 0) Game.draw(g.id, "equipo", "mano", aRobar)
-      Game.log(g.id, "Ciclo " + (g.turno + 1).toString + ".")
+      Game.log(g.id, "Turno " + (g.turno + 1).toString + ".")
     }
   }
 
@@ -459,7 +459,7 @@ return Layout.render(<main class="game">
         <span class="rail-stat rail-escudo" title="Escudo {{ g.escudo }}"><b>{{ g.escudo }}</b><small>🛡️</small></span>
         <span class="rail-stat rail-pistas" title="Pistas {{ g.pistas }}"><b>{{ g.pistas }}</b><small>🔍</small></span>
       </div>
-      <p class="rail-meta">Ciclo {{ g.turno }} · Mazo {{ mazo }} · Descarte {{ descarte }}</p>
+      <p class="rail-meta">Turno {{ g.turno }} · Mazo {{ mazo }} · Descarte {{ descarte }}</p>
       <nav class="rail-nav">
         <a href="{{ focoHref }}" aria-label="Ir a la acción actual"><span aria-hidden="true">🃏</span> <span class="rail-label">Cartas activas</span> <b>{{ mesa.count }}</b></a>
         <a href="#mano" aria-label="Ver la mano"><span aria-hidden="true">🖐️</span> <span class="rail-label">Mano</span> <b>{{ handCount }}</b></a>
@@ -467,7 +467,7 @@ return Layout.render(<main class="game">
           <span aria-hidden="true">🔧</span> <span class="rail-label">Herramienta</span>
           <span class="rail-dot {{ activeTool == null ? "" : "on" }}" aria-hidden="true"></span>
         </a>
-        <a href="#ayuda" class="{{ ayuda.isEmpty ? "is-empty" : "" }}" aria-label="Ayuda del equipo"><span aria-hidden="true">🎒</span> <span class="rail-label">Ayuda</span> <b>{{ ayuda.count }}</b></a>
+        <a href="#ayuda" class="{{ ayuda.isEmpty ? "is-empty" : "" }}" aria-label="Apoyo del equipo"><span aria-hidden="true">🎒</span> <span class="rail-label">Apoyo</span> <b>{{ ayuda.count }}</b></a>
         <a href="/reglas" title="Reglas completas" aria-label="Reglas completas"><span aria-hidden="true">📖</span> <span class="rail-label">Reglas</span></a>
         <a href="/" title="Inicio" aria-label="Inicio"><span aria-hidden="true">🏠</span> <span class="rail-label">Inicio</span></a>
       </nav>
@@ -481,7 +481,7 @@ return Layout.render(<main class="game">
     </div>
     <div class="board-meta">
       <span class="pill">{{ g.modo == "facil" ? "Asistido" : (g.modo == "casual" ? "Modo normal" : "Modo experto") }}</span>
-      <span class="pill">Ciclo {{ g.turno }}</span>
+      <span class="pill">Turno {{ g.turno }}</span>
       <span class="pill">Mazo {{ mazo }}</span>
       <span class="pill">Descarte {{ descarte }}</span>
     </div>
@@ -491,7 +491,7 @@ return Layout.render(<main class="game">
     <aside class="game-top-left">
       {{ !ayuda.isEmpty && <section class="help-zone" id="ayuda">
         <div class="section-head">
-          <h2>Ayuda del equipo</h2>
+          <h2>Apoyo del equipo</h2>
           <p>Maniobras de apoyo · una vez</p>
         </div>
         <div class="hand">
@@ -640,7 +640,7 @@ return Layout.render(<main class="game">
     {{ g.suerte && <p class="hint">Suerte del Principiante preparada: si falla, se tira de nuevo.</p> }}
     {{ g.focosM && <p class="hint">Focos Abisales preparados: si falla, relanzan el dado.</p> }}
     {{ g.cebo && <p class="hint">Lanzar Cebo: el próximo daño al Escudo se cancela.</p> }}
-    {{ g.ahorro && <p class="hint">Ahorro de Oxígeno: este ciclo no gastan Energía.</p> }}
+    {{ g.ahorro && <p class="hint">Ahorro de Oxígeno: este turno no gastan Energía.</p> }}
 
     {{ !g.tirado && <section class="roll-controls">
       {{ g.jugadas == 0 && maniobrasPrueba.count > 0 && <section class="maneuvers">
@@ -653,7 +653,7 @@ return Layout.render(<main class="game">
           </form>} }}
         </div>
       </section> }}
-      {{ g.jugadas > 0 && <p class="hint">Ya jugaron su carta de este ciclo. Tiren cuando quieran.</p> }}
+      {{ g.jugadas > 0 && <p class="hint">Ya jugaron su carta de este turno. Tiren cuando quieran.</p> }}
       <form method="post" class="roll-form">
         <input type="hidden" name="accion" value="tirar" />
         <button class="btn btn-primary">Tirar en la app</button>
@@ -694,7 +694,7 @@ return Layout.render(<main class="game">
     <p>Al cerrar el turno se descarta una carta propia al azar, se roba 1 del Mazo del Juego y se repone la mano a 3.</p>
     <form method="post">
       <input type="hidden" name="accion" value="terminar" />
-      <button class="btn btn-primary">Terminar ciclo y reponer la mesa</button>
+      <button class="btn btn-primary">Terminar turno y reponer la mesa</button>
     </form>
   </section> }}
 
@@ -733,7 +733,7 @@ return Layout.render(<main class="game">
         </ul>
       </article>} }}
     </div>
-    {{ mesa.isEmpty && <p class="muted">No quedan cartas activas. Repongan la mesa al terminar el ciclo.</p> }}
+    {{ mesa.isEmpty && <p class="muted">No quedan cartas activas. Repongan la mesa al terminar el turno.</p> }}
   </section> }}
     </div>
   </section> }}
@@ -776,8 +776,8 @@ return Layout.render(<main class="game">
           </div>
         </article>} }}
       </div>
-      {{ hand.isEmpty && <p class="muted">Sin cartas en mano. Al cerrar el ciclo se repone la mano a 3.</p> }}
-      <p class="hint">{{ g.jugadas == 0 ? "Todavía pueden jugar 1 carta este ciclo." : "Ya jugaron su carta de este ciclo." }} Al cerrar el ciclo, descartá una carta al azar y reponé la mano a 3.</p>
+      {{ hand.isEmpty && <p class="muted">Sin cartas en mano. Al cerrar el turno se repone la mano a 3.</p> }}
+      <p class="hint">{{ g.jugadas == 0 ? "Todavía pueden jugar 1 carta este turno." : "Ya jugaron su carta de este turno." }} Al cerrar el turno, descartá una carta al azar y reponé la mano a 3.</p>
   </section> }}
 
   <section class="log-section">
