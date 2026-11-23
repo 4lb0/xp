@@ -315,10 +315,10 @@ if (Request.isPost) {
       var v = c.value
       var volver = g.fasePrevia == null ? "listo" : g.fasePrevia
       if (recurso == "escudo") {
-        `UPDATE games SET escudo = escudo + ?, fase = ?, apoyoCarta = NULL, apoyoOrigen = NULL, fasePrevia = NULL WHERE id = ?`.query(v, volver, g.id)
+        `UPDATE games SET escudo = MIN(12, escudo + ?), fase = ?, apoyoCarta = NULL, apoyoOrigen = NULL, fasePrevia = NULL WHERE id = ?`.query(v, volver, g.id)
         Game.log(g.id, "Maniobra de apoyo " + c.name + ": +" + v.toString + " Escudo.")
       } else {
-        `UPDATE games SET energia = energia + ?, fase = ?, apoyoCarta = NULL, apoyoOrigen = NULL, fasePrevia = NULL WHERE id = ?`.query(v, volver, g.id)
+        `UPDATE games SET energia = MIN(12, energia + ?), fase = ?, apoyoCarta = NULL, apoyoOrigen = NULL, fasePrevia = NULL WHERE id = ?`.query(v, volver, g.id)
         Game.log(g.id, "Maniobra de apoyo " + c.name + ": +" + v.toString + " Energía.")
       }
       Game.move(row["id"], "descarteEquipo")
@@ -377,12 +377,12 @@ if (Request.isPost) {
       `UPDATE games SET jugador = 1, turno = turno + 1, fase = 'listo', pruebaCarta = NULL, pruebaOpcion = NULL, dado1 = 0, dado2 = 0, tirado = 0, bonus = 0, cebo = 0, ahorro = 0, blindajeUsado = 0, blindajeM = 0, focosUsado = 0, focosM = 0, jugadas = 0, resueltas = 0, resultado = NULL, giro = 0, suerte = 0, empujado = 0, pistasTurno = 0 WHERE id = ?`.query(g.id)
       var g3 = Game.find(g.id)
       if (g3 != null && Game.hasTool(g.id, "energy_start") && g3.energia <= 4) {
-        `UPDATE games SET energia = energia + 1 WHERE id = ?`.query(g.id)
+        `UPDATE games SET energia = MIN(12, energia + 1) WHERE id = ?`.query(g.id)
         Game.log(g.id, "Generador Auxiliar: +1 Energía al empezar.")
       }
       var g4 = Game.find(g.id)
       if (g4 != null && Game.hasTool(g.id, "shield_start") && g4.escudo <= 4) {
-        `UPDATE games SET escudo = escudo + 1 WHERE id = ?`.query(g.id)
+        `UPDATE games SET escudo = MIN(12, escudo + 1) WHERE id = ?`.query(g.id)
         Game.log(g.id, "Generador de Escudo: +1 Escudo al empezar.")
       }
       var enMano = Game.count(g.id, "mano")
@@ -538,21 +538,21 @@ return Layout.render(<main class="game" data-moves="{{ movesJson }}" data-anim="
     <div class="game-top-main">
   <section class="gauges-board" aria-label="Contadores de la expedición">
     <article class="counter">
-      {{ Layout.die(g.energia > 6 ? 6 : g.energia, "die-teal") }}
+      {{ Layout.die(g.energia, "die-teal") }}
       <span class="counter-body">
         <span class="counter-label">Energía</span>
         <span class="counter-value">{{ g.energia }}</span>
       </span>
     </article>
     <article class="counter">
-      {{ Layout.die(g.escudo > 6 ? 6 : g.escudo, "die-gold") }}
+      {{ Layout.die(g.escudo, "die-gold") }}
       <span class="counter-body">
         <span class="counter-label">Escudo</span>
         <span class="counter-value">{{ g.escudo }}</span>
       </span>
     </article>
     <article class="counter">
-      {{ Layout.die(g.pistas > 6 ? 6 : g.pistas, "die-coral") }}
+      {{ Layout.die(g.pistas, "die-coral") }}
       <span class="counter-body">
         <span class="counter-label">Pistas</span>
         <span class="counter-value">{{ g.pistas }}</span>
@@ -837,21 +837,21 @@ return Layout.render(<main class="game" data-moves="{{ movesJson }}" data-anim="
     <p>{{ finalTexto }}</p>
     <div class="gauges-board ending-gauges">
       <article class="counter">
-        {{ Layout.die(g.energia > 6 ? 6 : g.energia, "die-teal") }}
+        {{ Layout.die(g.energia, "die-teal") }}
         <span class="counter-body">
           <span class="counter-label">Energía</span>
           <span class="counter-value">{{ g.energia }}</span>
         </span>
       </article>
       <article class="counter">
-        {{ Layout.die(g.escudo > 6 ? 6 : g.escudo, "die-gold") }}
+        {{ Layout.die(g.escudo, "die-gold") }}
         <span class="counter-body">
           <span class="counter-label">Escudo</span>
           <span class="counter-value">{{ g.escudo }}</span>
         </span>
       </article>
       <article class="counter">
-        {{ Layout.die(g.pistas > 6 ? 6 : g.pistas, "die-coral") }}
+        {{ Layout.die(g.pistas, "die-coral") }}
         <span class="counter-body">
           <span class="counter-label">Pistas</span>
           <span class="counter-value">{{ g.pistas }}</span>

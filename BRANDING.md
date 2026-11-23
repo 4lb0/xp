@@ -670,6 +670,7 @@ La app no reemplaza la mesa: **la acompaña**. Toda decisión visual debe poder 
 ### HUD de tres contadores
 
 - Tres caras de dado grandes, no barras de progreso. **Energía**, **Escudo**, **Pistas**, cada una con su ícono y su cifra.
+- **Tope 12.** Ningún contador pasa de 12: es dos veces la cara del dado. De 1 a 6 la cara muestra puntos; de 7 a 12 muestra la cifra dibujada en el dado, para que nunca haya dos caras iguales con valores distintos.
 - La cifra manda: número grande en Archivo Black, color de estado por debajo (cian normal, coral en riesgo, dorado al llegar a 6 pistas).
 - Cambio de valor con animación breve de dado girando (200–300 ms). Sin fanfarria.
 - El estado también se comunica con forma: la cara se agrieta al bajar, se ilumina al subir. Nunca solo color.

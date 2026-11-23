@@ -44,7 +44,7 @@ return Layout.render(<main>
           </div>
         </div>
         <p class="hint" style="margin: 1rem 0 0">
-          Tres dados D6 quedan a la vista de todos. Energía y Escudo pueden superar 6. Si al cerrar un turno ambos están en 0, la expedición termina. Si Pistas llega a 6, el misterio queda resuelto.
+          Tres dados D6 quedan a la vista de todos. Energía y Escudo pueden superar 6, con tope 12. Si al cerrar un turno ambos están en 0, la expedición termina. Si Pistas llega a 6, el misterio queda resuelto.
         </p>
       </aside>
     </div>

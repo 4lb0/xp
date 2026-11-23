@@ -49,6 +49,19 @@ Test.assert(g.energia == 0 && g.escudo == 0 && g.pistas == 0, "los topes se guar
 Test.assert(g.status == "activa", "llegar a 0 no pierde por sí solo: hay que cerrar el turno")
 Game.destroy(id)
 
+// --- Tope de 12 ---
+
+id = Fixture.fresh()
+`UPDATE games SET energia = 11, escudo = 11, pistas = 4 WHERE id = ?`.query(id)
+res = Game.apply(id, Game.find(id), Game.parseEffects("energia+3, escudo+3, pistas+1"), true, [])
+Test.assert(res["energia"] == 12, "la Energía no pasa de 12")
+Test.assert(res["escudo"] == 12, "el Escudo no pasa de 12")
+Test.assert(res["pistas"] == 5, "las Pistas suman normal por debajo del tope")
+Test.assert(res["notas"].join(" ").contains("tope de 12"), "el tope deja una nota en la bitácora")
+var gTope = Game.find(id)
+Test.assert(gTope.energia == 12 && gTope.escudo == 12, "el tope se guarda en la partida")
+Game.destroy(id)
+
 // --- Ahorro de Oxígeno ---
 
 id = Fixture.fresh()

@@ -52,6 +52,10 @@ La cabecera usa el monograma y la portada la insignia completa. Los favicons se
 cachean fuerte en los navegadores: si cambia la insignia, conviene renombrar los
 archivos además de subir `Layout.assetVersion`.
 
+> **Ojo con `/favicon.ico`:** Bialet responde esa ruta con su propio ícono e
+> ignora el archivo del proyecto, así que la app declara los PNG de 16, 32 y 48
+> px. El `.ico` queda en el repo para hostings estáticos. Ver `feedback.md`.
+
 La tipografía también se autoaloja: `css/fonts/` trae **Archivo** (wght 100–900,
 wdth 62–125) y **Source Sans 3** (wght 200–900) en WOFF2, en latin y latin-ext.
 No hay pedidos a Google en tiempo de ejecución. Si se reemplazan los archivos,
@@ -149,7 +153,7 @@ El estado de la partida se guarda en SQLite y se ata a la sesión del navegador.
 6. Al resolver, la app aplica los efectos de la opción y controla victoria/derrota. La prueba da exactamente lo que dice la carta: no hay tirada extra.
 7. Al terminar el turno el submarino consume **1 Energía**, siempre. La Energía es el reloj: cada turno hay que decidir entre buscar Pistas o recargar.
 
-Los contadores son los tres dados del juego: **Energía** y **Escudo** arrancan en 6, pueden superar 6 y no se pierde por separado. **Pistas** arranca en 0 y con 6 se gana en el momento. La derrota llega solo si un turno termina con Energía y Escudo en 0 a la vez.
+Los contadores son los tres dados del juego: **Energía** y **Escudo** arrancan en 6, pueden superar 6 hasta un tope de 12 y no se pierde por separado. **Pistas** arranca en 0 y con 6 se gana en el momento. La derrota llega solo si un turno termina con Energía y Escudo en 0 a la vez.
 
 **El reloj:** cada turno cuesta 1 Energía. Las Baterías de Respaldo (+2, seis en el mazo), el Generador Auxiliar y Ahorro de Oxígeno son la forma de sostenerlo. Si el equipo se queda quieto, pierde; si solo recarga, el misterio no avanza.
 
@@ -233,7 +237,7 @@ El mazo se mezcla con `ORDER BY RANDOM()` de SQLite. Las tiradas digitales tambi
 - **Dilemas sin Pistas.** Las 10 cartas de Dilema no otorgan ni quitan Pistas: solo mueven Energía y Escudo. Las Pistas vienen de Exploración y Peligro.
 - **Emboscadas.** Diez de las 40 cartas cuestan 1 Energía, 1 Escudo o 1 Pista al entrar a la mesa. Tienen una sola opción. Golpean al equipo justo cuando repone la mesa.
 - **Emboscada inicial.** Si en el reparto inicial entran varias emboscadas a la vez, no se aplican todas: el equipo elige cuál sufrir y las demás no cobran. El costo de entrada se paga una sola vez; una emboscada que ya está en la mesa no vuelve a cobrar.
-- **La Energía es solo el reloj.** La Energía baja 1 por turno y se recupera con Batería (+2, ×6), Generador Auxiliar y apoyos. Energía y Escudo pueden pasar de 6. Soldadura cura 1 de Escudo (×4): parece una gran cura, pero es de las cartas trampa.
+- **La Energía es solo el reloj.** La Energía baja 1 por turno y se recupera con Batería (+2, ×6), Generador Auxiliar y apoyos. Energía y Escudo pueden pasar de 6, con tope 12. Soldadura cura 1 de Escudo (×4): parece una gran cura, pero es de las cartas trampa.
 - **Mazos fijos (LCG).** No hay sobres aleatorios: todas las cartas del juego están en los dos mazos. Si un mazo se agota, se mezcla su descarte y se sigue robando.
 
 ## Sobre la marca

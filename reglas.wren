@@ -42,7 +42,7 @@ return Layout.render(<main>
           <div class="gauge">{{ Layout.die(6, "die-gold") }}<span class="gauge-name">Escudo</span></div>
           <div class="gauge">{{ Layout.die(0, "die-coral") }}<span class="gauge-name">Pistas</span></div>
         </div>
-        <p class="hint" style="margin: 0.9rem 0 0">Arrancan en 6, 6 y 0. Energía y Escudo pueden superar 6. Las Pistas llegan a 6 y ganan.</p>
+        <p class="hint" style="margin: 0.9rem 0 0">Arrancan en 6, 6 y 0. Energía y Escudo pueden superar 6, pero ningún contador pasa de 12. Las Pistas llegan a 6 y ganan.</p>
       </div>
     </div>
   </section>
@@ -69,7 +69,7 @@ return Layout.render(<main>
       <li><span class="num">3</span><span><strong>Resolvé un Misterio</strong>Elegí una carta activa, lean la situación, debatan y elijan una de sus opciones. Después viene la prueba de dados.</span></li>
       <li><span class="num">4</span><span><strong>Reponé la mesa y pasá el turno</strong>La carta resuelta va al descarte y se revela una nueva. Descartá toda la mano, robá 1 del Mazo del Juego y reponé tu mano a 3.</span></li>
     </ol>
-    <p class="hint">Si se agota un mazo, mezclá su descarte y seguí robando. Energía y Escudo pueden superar 6.</p>
+    <p class="hint">Si se agota un mazo, mezclá su descarte y seguí robando. Energía y Escudo pueden superar 6, hasta 12.</p>
   </section>
 
   <section class="panel legend">

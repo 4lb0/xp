@@ -136,7 +136,7 @@ return Layout.render(<main class="quick">
       <h2>Encontrá al Megalodón con 6 Pistas.</h2>
       <p>
         La <strong>Energía</strong> es el aire. El <strong>Escudo</strong> es el casco.
-        Pueden superar 6. Si al cerrar un turno ambos están en 0 a la vez, la expedición termina.
+        Pueden superar 6, hasta 12. Si al cerrar un turno ambos están en 0 a la vez, la expedición termina.
         Si las Pistas llegan a 6, ganan en ese momento. Es un <strong>LCG</strong>: mazos fijos, sin sobres.
       </p>
     </div>

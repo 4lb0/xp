@@ -415,6 +415,36 @@ section { margin-block: 2.5rem; }
   opacity: 0.5;
 }
 
+/* De 7 a 12 la cara muestra la cifra dibujada, no puntos: el dado físico llega
+   a 6 y una cara con seis puntos nunca puede valer 9. */
+.die-num {
+  position: absolute;
+  inset: 0;
+  display: none;
+  place-items: center;
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+  font-size: calc(var(--size) * 0.46);
+  line-height: 1;
+  letter-spacing: -0.03em;
+}
+.die-number .p { display: none; }
+.die-number .die-num { display: grid; }
+
+/* Arriba de 6 la cifra ya está dibujada en la cara: no se repite al lado.
+   Queda en el árbol de accesibilidad, sólo se oculta a la vista. */
+.counter:has(.die-number) .counter-value {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
 .die-gold { color: #3a2a06; background: linear-gradient(155deg, #ffe9a3, var(--gold)); }
 .die-teal { color: #04262b; background: linear-gradient(155deg, var(--turquoise-soft), var(--turquoise)); }
 .die-coral { color: #3e0d08; background: linear-gradient(155deg, var(--coral-soft), var(--coral)); }

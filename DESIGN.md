@@ -162,8 +162,8 @@ largos van en `.chip-label`, en versalitas y `--muted`.
 (Escudo), `.die-coral` (Pistas), `.die-large` (tirada). Los pips son
 `aria-hidden`; el valor siempre se acompaña de texto.
 
-Los contadores que pueden pasar de 6 muestran el dado en 6 y la cifra real al
-lado: el dado nunca miente.
+Los contadores que pueden pasar de 6 muestran la cifra dibujada dentro de la
+cara (7–12) y la cifra real al lado: el dado nunca miente. El tope es 12.
 
 ### Paneles
 

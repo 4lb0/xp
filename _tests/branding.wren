@@ -4,7 +4,7 @@
 
 Test.get("/")
   .status(200)
-  .contains("favicon.ico")
+  .contains("favicon-48.png")
   .contains("favicon-32.png")
   .contains("apple-touch-icon.png")
   .contains("logo-xp-mark.png")

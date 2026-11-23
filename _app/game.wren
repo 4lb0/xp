@@ -103,6 +103,14 @@ class Game {
     `DELETE FROM games WHERE id = ?`.query(id)
   }
 
+  // La mesa no pasa de 12: es dos veces la cara del dado.
+  static maxContador { 12 }
+
+  static cap(v) {
+    if (v > Game.maxContador) return Game.maxContador
+    return v
+  }
+
   static log(id, text) {
     `INSERT INTO game_log (gameId, text) VALUES (?, ?)`.query(id, text)
   }
@@ -257,9 +265,15 @@ class Game {
       dPi = dPi + 1
       notas.add("Brazo Robótico sumó 1 Pista extra")
     }
-    var en = g.energia + dEn
-    var es = g.escudo + dEs
-    var pi = g.pistas + dPi
+    var enBruto = g.energia + dEn
+    var esBruto = g.escudo + dEs
+    var piBruto = g.pistas + dPi
+    var en = Game.cap(enBruto)
+    var es = Game.cap(esBruto)
+    var pi = Game.cap(piBruto)
+    if (enBruto > Game.maxContador) notas.add("La Energía llegó al tope de 12.")
+    if (esBruto > Game.maxContador) notas.add("El Escudo llegó al tope de 12.")
+    if (piBruto > Game.maxContador) notas.add("Las Pistas llegaron al tope de 12.")
     if (en < 0) en = 0
     if (es < 0) es = 0
     if (pi < 0) pi = 0

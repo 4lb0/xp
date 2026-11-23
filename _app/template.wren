@@ -8,7 +8,9 @@ class Layout {
 
   static die(value) { Layout.die(value, "") }
 
-  static die(value, extra) { <span class="die {{ extra }}" data-value="{{ value }}" aria-hidden="true"><span class="p p1"></span><span class="p p2"></span><span class="p p3"></span><span class="p p4"></span><span class="p p5"></span><span class="p p6"></span><span class="p p7"></span><span class="p p8"></span><span class="p p9"></span></span> }
+  // De 1 a 6, puntos. De 7 a 12, la cifra dentro de la cara: una cara de seis
+  // puntos no puede valer 9, así que arriba de 6 manda el número.
+  static die(value, extra) { <span class="die {{ value > 6 ? "die-number" : "" }} {{ extra }}" data-value="{{ value }}" aria-hidden="true"><span class="die-num">{{ value > 6 ? value : "" }}</span><span class="p p1"></span><span class="p p2"></span><span class="p p3"></span><span class="p p4"></span><span class="p p5"></span><span class="p p6"></span><span class="p p7"></span><span class="p p8"></span><span class="p p9"></span></span> }
 
   static render(content, title) { Layout.render(content, title, false) }
 
@@ -35,7 +37,7 @@ class Layout {
         <meta name="application-name" content="XP" />
         <meta name="apple-mobile-web-app-title" content="XP" />
         <link rel="canonical" href="{{ Request.baseUrl }}{{ Request.uri }}" />
-        <link rel="icon" href="/favicon.ico" sizes="any" />
+        <link rel="icon" type="image/png" sizes="48x48" href="/img/favicon-48.png" />
         <link rel="icon" type="image/png" sizes="32x32" href="/img/favicon-32.png" />
         <link rel="icon" type="image/png" sizes="16x16" href="/img/favicon-16.png" />
         <link rel="apple-touch-icon" sizes="180x180" href="/img/apple-touch-icon.png" />
