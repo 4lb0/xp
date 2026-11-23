@@ -515,6 +515,66 @@ return Layout.render(<main class="game">
     </div>
   </header>
 
+  {{ g.status == "activa" && <section class="game-top">
+    <aside class="game-top-left">
+      {{ !ayuda.isEmpty && <section class="help-zone" id="ayuda">
+        <div class="section-head">
+          <h2>Ayuda del equipo</h2>
+          <p>Maniobras de apoyo · una vez</p>
+        </div>
+        <div class="hand">
+          {{ ayuda.map{|a| <article class="card card-support" data-family="apoyo">
+            <span class="card-ribbon">Apoyo</span>
+            <span class="card-art"><span class="card-emoji" aria-hidden="true">{{ a["card"].emoji }}</span></span>
+            <span class="card-family">Maniobra de apoyo · una vez · <span class="card-id">{{ a["card"].id }}</span></span>
+            <h3>{{ a["card"].name }}</h3>
+            <p>Elegí <span class="chip chip-energia">⚡ +{{ a["card"].value }}</span> o <span class="chip chip-escudo">🛡️ +{{ a["card"].value }}</span>.</p>
+            <form method="post">
+              <input type="hidden" name="accion" value="usar_ayuda" />
+              <input type="hidden" name="rowId" value="{{ a["rowId"] }}" />
+              <button class="btn btn-ghost btn-small" {{ g.fase == "apoyo" ? "disabled" : "" }}>Usar maniobra</button>
+            </form>
+          </article>} }}
+        </div>
+      </section> }}
+    <aside id="herramientas">
+      <div class="section-head">
+        <h2>Herramienta activa</h2>
+        <p>{{ tools.count }} / 1 · una por equipo</p>
+      </div>
+      {{ tools.map{|t| <article class="card card-tool" data-family="herramienta">
+        <span class="card-art"><span class="card-emoji" aria-hidden="true">{{ t["card"].emoji }}</span></span>
+        <span class="card-family">Herramienta · <span class="card-id">{{ t["card"].id }}</span></span>
+        <h3>{{ t["card"].name }}</h3>
+        <section class="card-text">{{ t["card"].body }}</section>
+
+      </article>} }}
+      {{ tools.isEmpty && <p class="muted">Todavía no jugaron ninguna Herramienta.</p> }}
+
+      {{ peekCard != null && <section class="panel peek">
+        <p class="eyebrow">Sonar de Alta Frecuencia · próxima carta</p>
+        <h3><span aria-hidden="true">{{ peekCard.emoji }}</span> {{ peekCard.name }}</h3>
+        {{ peekCard.entry != "" && <p class="entry-badge">Al entrar
+          {{ peekCard.entryChips.map{|c| <span class="chip {{ c["cls"] }}" title="{{ c["title"] }}">{{ c["icon"] }} {{ c["text"] }}</span>} }}
+        </p> }}
+        <section class="card-text">{{ peekCard.body }}</section>
+        <ul class="mini-options">
+          {{ peekCard.options.map{|o| <li>
+            <strong>{{ o["texto"] }}</strong>
+            <span class="test-badge test-{{ o["tipoPrueba"] }}">{{ o["pruebaLabel"] }}</span>
+            <span class="option-effects">
+              <span class="chip-label">Éxito</span>
+              {{ o["exitoChips"].map{|c| <span class="chip {{ c["cls"] }}" title="{{ c["title"] }}">{{ c["icon"] }} {{ c["text"] }}</span>} }}
+              <span class="chip-label">Fallo</span>
+              {{ o["falloChips"].map{|c| <span class="chip {{ c["cls"] }}" title="{{ c["title"] }}">{{ c["icon"] }} {{ c["text"] }}</span>} }}
+            </span>
+          </li>} }}
+        </ul>
+      </section> }}
+
+    </aside>
+    </aside>
+    <div class="game-top-right">
   <section class="gauges-board" aria-label="Contadores de la expedición">
     <article class="counter">
       {{ Layout.die(g.energia > 6 ? 6 : g.energia, "die-teal") }}
@@ -582,16 +642,7 @@ return Layout.render(<main class="game">
 
   {{ aviso != "" && <p class="aviso" role="status">{{ aviso }}</p> }}
 
-  {{ g.status != "activa" && <section class="panel ending">
-    <p class="eyebrow">Fin de la partida</p>
-    <h2>{{ finalTitulo }}</h2>
-    <p>{{ finalTexto }}</p>
-    <p class="muted">Energía {{ g.energia }} · Escudo {{ g.escudo }} · Pistas {{ g.pistas }}</p>
-    <form method="post">
-      <input type="hidden" name="accion" value="reiniciar" />
-      <button class="btn btn-primary">Nueva expedición</button>
-    </form>
-  </section> }}
+
 
   {{ g.status == "activa" && g.fase == "prueba" && pendingCard != null && <section class="test-panel" id="prueba">
     <p class="eyebrow">Prueba de dados</p>
@@ -729,30 +780,21 @@ return Layout.render(<main class="game">
     </div>
     {{ mesa.isEmpty && <p class="muted">No quedan cartas activas. Repongan la mesa al terminar el ciclo.</p> }}
   </section> }}
+    </div>
+  </section> }}
 
-  {{ g.status == "activa" && <section class="split game-split">
-    <div id="mano">
-      {{ !ayuda.isEmpty && <section class="help-zone" id="ayuda">
-        <div class="section-head">
-          <h2>Ayuda del equipo</h2>
-          <p>Maniobras de apoyo · una vez</p>
-        </div>
-        <div class="hand">
-          {{ ayuda.map{|a| <article class="card card-support" data-family="apoyo">
-            <span class="card-ribbon">Apoyo</span>
-            <span class="card-art"><span class="card-emoji" aria-hidden="true">{{ a["card"].emoji }}</span></span>
-            <span class="card-family">Maniobra de apoyo · una vez · <span class="card-id">{{ a["card"].id }}</span></span>
-            <h3>{{ a["card"].name }}</h3>
-            <p>Elegí <span class="chip chip-energia">⚡ +{{ a["card"].value }}</span> o <span class="chip chip-escudo">🛡️ +{{ a["card"].value }}</span>.</p>
-            <form method="post">
-              <input type="hidden" name="accion" value="usar_ayuda" />
-              <input type="hidden" name="rowId" value="{{ a["rowId"] }}" />
-              <button class="btn btn-ghost btn-small" {{ g.fase == "apoyo" ? "disabled" : "" }}>Usar maniobra</button>
-            </form>
-          </article>} }}
-        </div>
-      </section> }}
+  {{ g.status != "activa" && <section class="panel ending">
+    <p class="eyebrow">Fin de la partida</p>
+    <h2>{{ finalTitulo }}</h2>
+    <p>{{ finalTexto }}</p>
+    <p class="muted">Energía {{ g.energia }} · Escudo {{ g.escudo }} · Pistas {{ g.pistas }}</p>
+    <form method="post">
+      <input type="hidden" name="accion" value="reiniciar" />
+      <button class="btn btn-primary">Nueva expedición</button>
+    </form>
+  </section> }}
 
+  {{ g.status == "activa" && <section id="mano" class="hand-full">
       <div class="section-head">
         <h2>Mano del equipo</h2>
         <p>{{ handCount }} cartas · siempre 3 al empezar</p>
@@ -781,44 +823,6 @@ return Layout.render(<main class="game">
       </div>
       {{ hand.isEmpty && <p class="muted">Sin cartas en mano. Al cerrar el ciclo se repone la mano a 3.</p> }}
       <p class="hint">{{ g.jugadas == 0 ? "Todavía pueden jugar 1 carta este ciclo." : "Ya jugaron su carta de este ciclo." }} Al cerrar el ciclo, descartá una carta al azar y reponé la mano a 3.</p>
-    </div>
-
-    <aside id="herramientas">
-      <div class="section-head">
-        <h2>Herramienta activa</h2>
-        <p>{{ tools.count }} / 1 · una por equipo</p>
-      </div>
-      {{ tools.map{|t| <article class="card card-tool" data-family="herramienta">
-        <span class="card-art"><span class="card-emoji" aria-hidden="true">{{ t["card"].emoji }}</span></span>
-        <span class="card-family">Herramienta · <span class="card-id">{{ t["card"].id }}</span></span>
-        <h3>{{ t["card"].name }}</h3>
-        <section class="card-text">{{ t["card"].body }}</section>
-
-      </article>} }}
-      {{ tools.isEmpty && <p class="muted">Todavía no jugaron ninguna Herramienta.</p> }}
-
-      {{ peekCard != null && <section class="panel peek">
-        <p class="eyebrow">Sonar de Alta Frecuencia · próxima carta</p>
-        <h3><span aria-hidden="true">{{ peekCard.emoji }}</span> {{ peekCard.name }}</h3>
-        {{ peekCard.entry != "" && <p class="entry-badge">Al entrar
-          {{ peekCard.entryChips.map{|c| <span class="chip {{ c["cls"] }}" title="{{ c["title"] }}">{{ c["icon"] }} {{ c["text"] }}</span>} }}
-        </p> }}
-        <section class="card-text">{{ peekCard.body }}</section>
-        <ul class="mini-options">
-          {{ peekCard.options.map{|o| <li>
-            <strong>{{ o["texto"] }}</strong>
-            <span class="test-badge test-{{ o["tipoPrueba"] }}">{{ o["pruebaLabel"] }}</span>
-            <span class="option-effects">
-              <span class="chip-label">Éxito</span>
-              {{ o["exitoChips"].map{|c| <span class="chip {{ c["cls"] }}" title="{{ c["title"] }}">{{ c["icon"] }} {{ c["text"] }}</span>} }}
-              <span class="chip-label">Fallo</span>
-              {{ o["falloChips"].map{|c| <span class="chip {{ c["cls"] }}" title="{{ c["title"] }}">{{ c["icon"] }} {{ c["text"] }}</span>} }}
-            </span>
-          </li>} }}
-        </ul>
-      </section> }}
-
-    </aside>
   </section> }}
 
   <section class="log-section">
