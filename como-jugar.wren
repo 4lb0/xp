@@ -246,7 +246,7 @@ return Layout.render(<main class="quick">
         <svg class="quick-icon" aria-hidden="true"><use href="#ico-deck"/></svg>
         <div>
           <strong>Cerrá el turno</strong>
-          <p>Descartá una carta propia al azar, robá 1 del Mazo del Juego y reponé la mano a 3. Pagá ⚡ 1.</p>
+          <p>Descartá toda la mano, robá 1 del Mazo del Juego, reponé la mano a 3 y pagá ⚡ 1.</p>
         </div>
       </li>
     </ol>
@@ -255,7 +255,7 @@ return Layout.render(<main class="quick">
       <p>
         Tenés 3 cartas. Jugás <strong>Soldadura</strong> (🛡️ +1, va al descarte).
         Elegís <strong>El nido</strong>. Tirás <strong>Cara</strong>: éxito, ⚡ +2.
-        La carta va al descarte, entra la próxima; descartás una carta propia al azar,
+        La carta va al descarte, entra la próxima; descartás toda la mano,
         robás 1 del Mazo del Juego, reponés la mano a 3 y el submarino paga <strong>⚡ 1</strong>.
       </p>
     </div>

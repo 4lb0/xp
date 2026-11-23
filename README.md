@@ -66,7 +66,7 @@ El estado de la partida se guarda en SQLite y se ata a la sesión del navegador.
 
 1. Elegís el modo (todos arrancan 6/6: Experto sin apoyos, Normal +1 o Asistido +2) y arranca la expedición. No hay que elegir cantidad de jugadores: se juega solo o en cooperativo con amigos.
 2. La app reparte 3 cartas de Equipo y revela **siempre 3 cartas de Misterio**, sin importar cuántos jueguen. La cantidad de jugadores no cambia nada: las decisiones son del equipo.
-3. En cada turno arrancan con 3 cartas de Equipo, pueden jugar 1 carta antes o después de elegir el Misterio, y resuelven una de sus opciones. Al cerrar el turno descartan una carta propia al azar, roban 1 del Mazo del Juego y reponen la mano a 3.
+3. En cada turno arrancan con 3 cartas de Equipo, pueden jugar 1 carta antes o después de elegir el Misterio, y resuelven una de sus opciones. Al cerrar el turno descartan toda la mano, roban 1 del Mazo del Juego y reponen la mano a 3.
 4. La prueba de dados se puede resolver de dos formas:
    - **Tirar en la app**: el servidor genera los D6.
    - **Ya tiré en la mesa**: elegís en pantalla lo que salió en cada dado físico.
@@ -143,7 +143,7 @@ El mazo se mezcla con `ORDER BY RANDOM()` de SQLite. Las tiradas digitales tambi
 
 ## Decisiones de este prototipo
 
-- **Solo o en cooperativo.** Podés jugar una sola persona o compartir la mano y las decisiones con amigos. Al cerrar el turno descartás una carta propia al azar y reponés la mano a 3.
+- **Solo o en cooperativo.** Podés jugar una sola persona o compartir la mano y las decisiones con amigos. Al cerrar el turno descartás toda la mano y robás 3 cartas nuevas.
 - **La cantidad de jugadores no cambia la mesa.** Siempre 3 cartas de Misterio, mano de 3 y siempre 6 Pistas. Se puede jugar solo o en cooperativo con amigos.
 - **Tres modos.** Todos empiezan con 6 de Energía y 6 de Escudo. Experto no tiene apoyos; Normal suma 1 Maniobra de apoyo; Asistido suma 2.
 - **Maniobras de apoyo.** Kit de emergencia (+1 Energía o +1 Escudo) y Carga de emergencia (+2 Energía o +2 Escudo) son Maniobras: se usan una vez y van al descarte. En Experto se mezclan en el mazo; en Normal el Kit va al área de Apoyo; en Asistido van las dos. Las del área se usan sin gastar la carta del turno. En la app se destacan en rosa con la etiqueta **Apoyo**.

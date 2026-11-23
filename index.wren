@@ -55,7 +55,7 @@ return Layout.render(<main>
     <ol class="steps">
       <li>
         <span class="num">1</span>
-        <span><strong>Arrancá con 3 cartas de Equipo</strong>Al cerrar el turno descartás una carta al azar y reponés la mano a 3.</span>
+        <span><strong>Arrancá con 3 cartas de Equipo</strong>Al cerrar el turno descartás toda la mano y robás 3 cartas nuevas.</span>
       </li>
       <li>
         <span class="num">2</span>
@@ -67,7 +67,7 @@ return Layout.render(<main>
       </li>
       <li>
         <span class="num">4</span>
-        <span><strong>Reponé la mesa</strong>Descarten la carta resuelta y revelen una nueva. Al cerrar el turno, descarten una carta propia al azar, roben 1 del Mazo del Juego y repongan la mano a 3.</span>
+        <span><strong>Reponé la mesa</strong>Descarten la carta resuelta y revelen una nueva. Al cerrar el turno, descarten toda la mano, roben 1 del Mazo del Juego y repongan la mano a 3.</span>
       </li>
     </ol>
   </section>

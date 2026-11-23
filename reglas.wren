@@ -64,10 +64,10 @@ return Layout.render(<main>
       <p>Se juega un turno por vez, solo o en cooperativo.</p>
     </div>
     <ol class="steps">
-      <li><span class="num">1</span><span><strong>Arrancá con 3 cartas de Equipo</strong>La mano es compartida. Al cerrar cada turno descartás una carta al azar y reponés la mano a 3.</span></li>
+      <li><span class="num">1</span><span><strong>Arrancá con 3 cartas de Equipo</strong>La mano es compartida. Al cerrar cada turno descartás toda la mano y robás 3 cartas nuevas.</span></li>
       <li><span class="num">2</span><span><strong>Jugá 1 carta (opcional)</strong>Podés jugarla antes o después de elegir el Misterio, siempre antes de tirar. Herramienta: queda en la mesa. Una sola activa; la nueva reemplaza a la anterior. Maniobra: se resuelve y va al descarte.</span></li>
       <li><span class="num">3</span><span><strong>Resolvé un Misterio</strong>Elegí una carta activa, lean la situación, debatan y elijan una de sus opciones. Después viene la prueba de dados.</span></li>
-      <li><span class="num">4</span><span><strong>Reponé la mesa y pasá el turno</strong>La carta resuelta va al descarte y se revela una nueva. Descartá una carta propia al azar, robá 1 del Mazo del Juego y reponé tu mano a 3.</span></li>
+      <li><span class="num">4</span><span><strong>Reponé la mesa y pasá el turno</strong>La carta resuelta va al descarte y se revela una nueva. Descartá toda la mano, robá 1 del Mazo del Juego y reponé tu mano a 3.</span></li>
     </ol>
     <p class="hint">Si se agota un mazo, mezclá su descarte y seguí robando. Energía y Escudo pueden superar 6.</p>
   </section>

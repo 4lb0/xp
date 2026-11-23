@@ -329,12 +329,16 @@ if (Request.isPost) {
     if (g.fase != "resuelto") {
       aviso = "Primero resuelvan un misterio."
     } else {
-      // Al cerrar el turno se descarta una carta propia al azar.
-      var mano = `SELECT id, cardId FROM game_cards WHERE gameId = ? AND zone = 'mano' ORDER BY RANDOM()`.fetch(g.id)
+      // Al cerrar el turno se descarta toda la mano. No hay azar.
+      var mano = `SELECT id, cardId FROM game_cards WHERE gameId = ? AND zone = 'mano'`.fetch(g.id)
       if (!mano.isEmpty) {
-        var c = Card.get(mano[0]["cardId"])
-        Game.move(mano[0]["id"], "descarte")
-        Game.log(g.id, "Descarte al azar: " + (c == null ? "una carta" : c.name) + ".")
+        var nombres = []
+        for (m in mano) {
+          var c = Card.get(m["cardId"])
+          if (c != null) nombres.add(c.name)
+          Game.move(m["id"], "descarte")
+        }
+        Game.log(g.id, "Se descarta toda la mano: " + nombres.join(", ") + ".")
       }
 
       var g2 = Game.find(g.id)
@@ -693,7 +697,7 @@ return Layout.render(<main class="game">
       <span class="chip-label">{{ g.resultado == "ganada" ? "Éxito" : "Fallo" }}</span>
       {{ (g.resultado == "ganada" ? pendingOpt["exitoChips"] : pendingOpt["falloChips"]).map{|c| <span class="chip {{ c["cls"] }}" title="{{ c["title"] }}">{{ c["icon"] }} {{ c["text"] }}</span>} }}
     </p> }}
-    <p>Al cerrar el turno se descarta una carta propia al azar, se roba 1 del Mazo del Juego y se repone la mano a 3.</p>
+    <p>Al cerrar el turno se descarta toda la mano, se roba 1 del Mazo del Juego y se repone la mano a 3.</p>
     <form method="post">
       <input type="hidden" name="accion" value="terminar" />
       <button class="btn btn-primary">Terminar turno y reponer la mesa</button>
@@ -837,7 +841,7 @@ return Layout.render(<main class="game">
         </article>} }}
       </div>
       {{ hand.isEmpty && <p class="muted">Sin cartas en mano. Al cerrar el turno se repone la mano a 3.</p> }}
-      <p class="hint">{{ g.jugadas == 0 ? "Todavía pueden jugar 1 carta este turno." : "Ya jugaron su carta de este turno." }} Al cerrar el turno, descartá una carta al azar y reponé la mano a 3.</p>
+      <p class="hint">{{ g.jugadas == 0 ? "Todavía pueden jugar 1 carta este turno." : "Ya jugaron su carta de este turno." }} Al cerrar el turno, descartá toda la mano y reponé la mano a 3.</p>
   </section> }}
 
   <section class="log-section">
