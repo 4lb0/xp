@@ -1,12 +1,20 @@
 # XP — Manual de Marca
 
-**XP (Equipo eXPedición)** · Franquicia modular de aventura y misterio
-Documento de identidad de marca · Versión 1.0
-Primer mazo: **XP: En busca del Megalodón**
+**XP (Equipo eXPedición)** · Franquicia de juegos de mesa cooperativos de aventura, exploración y misterio
+Documento de identidad de marca · Versión 2.0 · Noviembre de 2026
+Edición 01: **En busca del Megalodón**
+
+> Cada juego es una nueva expedición. XP es el equipo que las hace posibles.
 
 ---
 
-## 1. Esencia de marca
+## 1. Concepto de marca
+
+XP (Equipo eXPedición) es una franquicia de juegos de mesa cooperativos de aventura, exploración y misterio. Cada edición propone una expedición diferente: un equipo de exploradores viaja a bordo de un vehículo para descubrir lugares desconocidos, resolver misterios y enfrentar situaciones inesperadas.
+
+La primera edición es **En busca del Megalodón**, una expedición submarina. Las futuras ediciones podrán explorar otros escenarios —el espacio, el cielo, la selva o territorios desconocidos— sin cambiar la marca.
+
+XP no representa una aventura específica: representa el espíritu de todas las expediciones. Sus conceptos centrales son **exploración, descubrimiento, aventura, misterio, equipo y cooperación**.
 
 ### Promesa
 
@@ -24,15 +32,23 @@ Convertir el misterio y la aventura en una experiencia cooperativa, breve y comp
 | **Misterio antes que susto** | El peligro es emocionante, nunca perturbador. Lo que no se ve vale más que lo que se muestra. |
 | **Respeto por la edad** | Nada se explica "para nenes". El texto es claro, no infantil. La ilustración es sofisticada, no caricaturesca. |
 | **Densidad en poco tiempo** | Diez minutos con arco completo: partida, tensión, resolución. Sin relleno, sin esperas largas. |
-| **Mundo coherente** | Todo lo que aparece en una carta podría existir en el mismo océano. La tecnología XP tiene reglas, el submarino tiene historia. |
+| **Mundo coherente** | Todo lo que aparece en una edición pertenece al mismo mundo. La tecnología XP tiene reglas y cada vehículo tiene historia. |
 
 ### Personalidad
+
+La marca combina tres influencias:
+
+- **Retro futurismo.** Ciencia ficción y estética de exploración espacial de los años 50 y 60.
+- **Expediciones científicas.** Insignias, instrumentos de navegación, cartografía y organizaciones de exploradores.
+- **Aventura cinematográfica.** Misterio, descubrimiento y la sensación de estar frente a algo desconocido.
+
+Debe transmitir una aventura **emocionante, inteligente y accesible** para chicos y adultos. Nunca exclusivamente infantil, militar, corporativa ni tecnológica.
 
 **Curiosa · Valiente · Cálida · Precisa · Misteriosa.**
 
 Curiosa: el juego siempre mira hacia adelante, hacia lo que falta descubrir. Valiente: el equipo avanza aunque el oxígeno baje. Cálida: el tono invita, no exige. Precisa: las reglas y los textos no dejan dudas. Misteriosa: nunca se muestra todo.
 
-Lo que XP **no** es: infantil, irónico, solemne, oscuro, irónico-para-adultos, edulcorado.
+Lo que XP **no** es: infantil, irónico, solemne, oscuro, irónico-para-adultos, edulcorado, militar ni corporativo.
 
 ### Posicionamiento
 
@@ -90,77 +106,150 @@ La marca no elige una lectura: las usa a las dos. En lo visual, el monograma sos
 
 ### Arquitectura
 
-**XP** es el paraguas. Cada mazo es una expedición autónoma con subtítulo propio, con la fórmula:
+La marca se organiza en dos niveles.
+
+**1. Marca principal: XP — Equipo eXPedición.**
+
+Es permanente y no cambia entre ediciones. Siempre va primero y con el mismo peso visual. Cada edición puede sumar su propio título, pero nunca reemplaza ni modifica el logotipo de XP.
+
+**2. Identidad de cada expedición.**
+
+Cada aventura tiene un título, una ambientación y una identidad gráfica complementaria. La fórmula del título es:
 
 > **XP: [En busca de / La ruta del / El secreto del] + [objeto o lugar del misterio]**
 
-| Mazo | Subtítulo | Territorio | Núcleo de misterio |
+| Edición | Título | Territorio | Núcleo de misterio |
 |---|---|---|---|
-| 01 | **XP: En busca del Megalodón** | Océano profundo | Una criatura que casi nadie vio |
-| 02 | **XP: La ruta de la nave perdida** | Espacio cercano | Una nave que dejó de responder |
-| 03 | **XP: El secreto del avión fantasma** | Cielo y nubes | Un vuelo que no figura en ningún registro |
-| 04 | **XP: En busca del camión de la selva** | Selva y río | Una carga que alguien escondió |
+| 01 | **En busca del Megalodón** | Océano profundo | Una criatura que casi nadie vio |
+| 02 | **La ruta de la nave perdida** | Espacio cercano | Una nave que dejó de responder |
+| 03 | **El secreto del avión fantasma** | Cielo y nubes | Un vuelo que no figura en ningún registro |
+| 04 | **En busca del camión de la selva** | Selva y río | Una carga que alguien escondió |
 
 Reglas de arquitectura:
 
-- El paraguas **XP** siempre va primero y con el mismo peso visual.
+- El paraguas **XP** es intocable: mismo logotipo, misma posición, mismo peso.
 - El subtítulo puede cambiar de tono, pero nunca de estructura: artículo + objeto/lugar + preposición de búsqueda o secreto.
-- Los mazos son independientes: se puede jugar cualquiera sin haber jugado otro.
+- Las ediciones son independientes: se puede jugar cualquiera sin haber jugado otra.
 - La numeración de colección (01, 02, 03) vive en el lomo y en la caja, nunca compitiendo con el título.
-- Todos los mazos comparten el mismo sistema de 3 contadores, los mismos 5 tipos de prueba de dado y la misma gramática visual de carta. Cambia el mundo, no las reglas.
+- Todas las ediciones comparten el mismo sistema de 3 contadores, los mismos 5 tipos de prueba de dado y la misma gramática visual de carta. Cambia el mundo, no las reglas.
+
+### Sistema gráfico de las ediciones
+
+Cada edición puede incorporar:
+
+- Paletas cromáticas propias.
+- Ilustraciones temáticas, paisajes y escenarios.
+- Vehículos de exploración, criaturas, personajes y misterios.
+- Numeración de edición.
+
+El branding debe permitir que todas las cajas se reconozcan como parte de una misma franquicia, incluso cuando sus ambientaciones sean completamente diferentes. La Edición 01 usa azules, negros y tonos submarinos; una edición espacial podrá usar otros colores sin necesidad de alterar la marca XP.
 
 ---
 
-## 4. Logo
+## 4. Logotipo
 
 ### Concepto
 
-Un **monograma XP** construido como instrumento de expedición. La X y la P comparten trazo; la contraforma de la P sugiere una **brújula** vista desde arriba, y el remate inferior se afina como un **haz de sonar** hacia la profundidad. La X funciona además como marca de "punto en el mapa".
+El logotipo principal es una **insignia circular de expedición**. Debe sentirse como el emblema de una organización de exploradores, con referencias a las insignias de misiones científicas y espaciales de mediados del siglo XX.
 
-El logo debe leerse en tres tamaños: caja (grande), carta (mediano) y favicon de app (16 px). Si a 16 px se convierte en mancha, pierde.
+Sus elementos:
+
+- **Formato circular.** Una insignia de pertenencia a un equipo de exploración.
+- **Letras XP.** El elemento central y protagonista. Tipografía geométrica, robusta, inclinada y de carácter aventurero. Las letras están dibujadas a medida: no se reemplazan por una fuente.
+- **Órbita.** Una línea curva atraviesa y rodea las letras XP: movimiento, exploración y viaje. No es solo una órbita espacial, sino una trayectoria de expedición.
+- **Estrellas.** Descubrimiento, orientación y territorios desconocidos.
+- **Detalles de navegación.** Puntas y marcas geométricas inspiradas en brújulas y sistemas de orientación.
+- **Cinta inferior.** El nombre completo: "Equipo eXPedición".
+
+La composición es simétrica y compacta; los detalles decorativos están subordinados al monograma XP.
+
+### Tratamiento visual
+
+La primera versión del logotipo es **monocromática en blanco y negro**:
+
+- Alto contraste.
+- Formas geométricas definidas.
+- Contornos gruesos y consistentes.
+- Tipografía de fuerte presencia.
+- Composición simétrica y compacta.
+
+Debe funcionar en positivo y en negativo, sobre fondos claros y oscuros, y conservar su legibilidad en tamaños pequeños: cartas, dados, manuales y otros componentes.
+
+La insignia se reproduce siempre en negro y blanco (o hueso). El color de cada edición vive **alrededor** de la marca —fondos, ilustraciones, acentos—, nunca dentro de la insignia.
+
+### Archivos
+
+Los archivos de uso viven en `img/`. No se editan a mano: se regeneran desde `assets/logo-xp-original.jpg`.
+
+| Archivo | Formato | Uso |
+|---|---|---|
+| `assets/logo-xp-original.jpg` | JPEG 1254 × 1254 | Original de la insignia. Fuente para regenerar todo lo demás |
+| `img/logo-xp.png` | PNG 1000 × 1000, fondo blanco | Insignia completa para web, caja y manual |
+| `img/logo-xp-mark.png` | PNG 512 × 512, fondo transparente | Monograma para header, avatares y sello de carta |
+| `favicon.ico` | ICO 16 / 32 / 48 | Pestaña del navegador y accesos directos |
+| `img/favicon-16.png`, `img/favicon-32.png` | PNG | Favicon para navegadores modernos |
+| `img/apple-touch-icon.png` | PNG 180 × 180 | Ícono en iOS / iPadOS |
+| `img/icon-192.png`, `img/icon-512.png` | PNG | Ícono de app |
+| `img/og-xp.jpg` | JPEG 1200 × 630 | Tarjeta social (Open Graph / Twitter) |
 
 ### Versiones
 
 | Versión | Uso |
 |---|---|
-| **Principal horizontal** — monograma + "XP" + "EQUIPO EXPEDICIÓN" | Cajas, manuales, contratapa, web |
-| **Vertical / sello** — monograma arriba, XP debajo | Cartas, dorsos, stickers |
-| **Monograma solo** | Favicon, avatar de app, esquina de carta, ficha |
-| **Monocromo positivo / negativo** | Un solo color, para fondos planos o impresión a un tinta |
-| **Versión sobre ilustración** | Blanca con sombra suave, o azul profundo sobre zona clara |
+| **Insignia completa** — círculo + XP + órbita + cinta | Cajas, manuales, portada, contratapa, web |
+| **Monograma** — XP + órbita, sin cinta ni estrellas periféricas | Header, favicon, avatar, sello de carta, ficha |
+| **Monocromo positivo** — negro sobre blanco o hueso | Impresión a una tinta, sellos, papel |
+| **Monocromo negativo** — blanco sobre negro o ilustración oscura | Dorsos, caja oscura, pantalla |
+| **Versión sobre ilustración** | Blanca con halo suave, o sobre placa opaca. Nunca directo sobre alto contraste |
 
 ### Área de resguardo
 
-El margen mínimo alrededor del logo equivale al **ancho de la letra X** del propio logotipo, en los cuatro lados. Nada —ilustración, texto, borde de caja— puede entrar en ese perímetro.
+El margen mínimo alrededor de la insignia equivale al **ancho de la letra X** del propio logotipo, en los cuatro lados. Nada —ilustración, texto, borde de caja— puede entrar en ese perímetro.
 
 ### Tamaños mínimos
 
-- Impreso: 12 mm de ancho para la versión horizontal.
-- Digital: 24 px de ancho; por debajo, usar solo monograma.
+- Impreso: 15 mm de ancho para la insignia completa.
+- Digital: 32 px de ancho para el monograma; por debajo, no usar la insignia completa.
 - Carta: el sello nunca supera el 12 % del ancho de la carta.
+- Favicon: 16 px con el monograma solo. Si a 16 px se convierte en mancha, perdió.
 
 ### Usos incorrectos
 
 - No deformar, estirar, rotar ni inclinar.
-- No aplicar sombras duras, biseles, brillos ni degradados ajenos a la paleta.
-- No cambiar el orden de las letras ni separar la X de la P.
-- No ponerlo sobre una zona de la ilustración con alto contraste sin la versión con placa o halo.
+- No recolorear la insignia ni aplicar degradados, biseles, brillos o sombras duras.
+- No separar la X de la P ni cambiar el orden de las letras.
+- No reemplazar la cinta "Equipo eXPedición" ni traducirla dentro de la misma pieza.
+- No agregar tiburones, submarinos ni elementos de una edición específica al logotipo principal.
+- No ponerlo sobre una zona de la ilustración con alto contraste sin placa o halo.
 - No usarlo como textura repetida ni como marca de agua dentro de las ilustraciones.
-- No traducir "EQUIPO EXPEDICIÓN" a otro idioma en la misma pieza.
+- No usar la insignia completa a 16 px: para eso existe el monograma.
 
-### Versiones por soporte
+### Favicon y app
 
-| Soporte | Versión | Nota |
-|---|---|---|
-| **Caja** | Horizontal principal, 2 tintas (cian + dorado sobre azul profundo) | Debe leerse a 40 cm de distancia en estantería |
-| **Carta** | Sello vertical monocromo, 6–8 mm | Discreto, esquina inferior, nunca sobre el texto de efecto |
-| **App** | Monograma solo, con versión clara y oscura | Área táctil mínima de 44 px |
+El favicon es una reducción del **monograma**, no de la insignia completa:
+
+- Fondo negro de tinta `#0A0A0A`, esquinas redondeadas, letras XP y órbita en blanco.
+- Tamaños 16, 32 y 48 px dentro de `favicon.ico`; PNG de 16 y 32 para navegadores modernos.
+- `apple-touch-icon.png` de 180 px con la insignia completa sobre un marco hueso.
+- En pantalla oscura, el monograma mantiene el contraste por las letras blancas; no se invierte ni se le agrega borde.
 
 ---
 
 ## 5. Paleta de color
 
-### Núcleo
+La marca principal es monocromática: **Tinta**, **Blanco** y **Hueso**. El color pertenece a cada edición.
+
+### Núcleo de marca
+
+| Rol | Nombre | HEX | Uso |
+|---|---|---|---|
+| Negro de marca | Tinta | `#0A0A0A` | Insignia, monograma, favicon |
+| Blanco de marca | Blanco | `#FFFFFF` | Fondo positivo de la insignia |
+| Hueso / papel | Hueso | `#F4F1E8` | Fondo cálido, papel, versión clara |
+
+La insignia no lleva color dentro: se reproduce en negro y blanco, o en negativo. La paleta que sigue es la de la **Edición 01** y puede cambiar en cada expedición.
+
+### Núcleo de la Edición 01
 
 | Rol | Nombre | HEX | Uso |
 |---|---|---|---|
@@ -196,7 +285,7 @@ El margen mínimo alrededor del logo equivale al **ancho de la letra X** del pro
 
 ## 6. Tipografía
 
-Dos familias, ambas gratuitas en Google Fonts, ninguna infantil.
+El logotipo no se compone con una fuente: la insignia está dibujada a medida y no se reconstruye tipográficamente. Para todo lo demás, dos familias gratuitas de Google Fonts, ninguna infantil.
 
 ### Display — **Archivo Black** (o Archivo Expanded 800)
 
@@ -540,7 +629,38 @@ La app no reemplaza la mesa: **la acompaña**. Toda decisión visual debe poder 
 
 ---
 
-## 13. Do's & Don'ts
+## 13. Aplicaciones de la marca
+
+La identidad debe funcionar en cajas de juegos, cartas de Misterio y Equipo, dorso de cartas, manuales e instructivos, dados y componentes, sitio web, material promocional y futuras expansiones y ediciones. Se prioriza la **reproducibilidad** y la **simplicidad de impresión**.
+
+| Soporte | Versión | Nota |
+|---|---|---|
+| **Caja** | Insignia completa, positiva o negativa | Debe leerse a 40 cm de distancia en estantería |
+| **Carta** | Monograma monocromo, 6–8 mm | Esquina inferior, nunca sobre el texto de efecto |
+| **Dorso** | Insignia completa en negativo | Centrada y sola: sin texto ni ilustración compitiendo |
+| **Manual** | Insignia completa positiva, 15 mm mínimo | Portada y colofón |
+| **Dados y fichas** | Monograma grabado, 4–6 mm, una tinta | Sin detalles por debajo de 1 pt |
+| **Web** | Monograma en el header; insignia completa en portada y OG | Monograma nunca por debajo de 32 px |
+| **Favicon / avatar** | Monograma, 16–512 px | Fondo tinta, letras blancas |
+| **Promoción** | Insignia + identidad de la edición | La edición aporta color y escenario, no reemplaza la marca |
+
+---
+
+## 14. Criterios de consistencia
+
+- **XP siempre es la marca protagonista.** El título de la edición nunca la tapa ni la reemplaza.
+- **No incorporar tiburones, submarinos ni elementos de una aventura específica al logotipo principal.**
+- Mantener la **insignia circular**, el **monograma XP** y la **órbita** como elementos distintivos.
+- No modificar la estructura del logo para adaptarla a cada edición.
+- No meter el color de la edición dentro de la insignia.
+- Evitar efectos visuales que dificulten su reproducción impresa: sin degradados, sin sombras, sin texturas.
+- Mantener la estética **retro futurista de exploración**.
+- Priorizar **legibilidad y reconocimiento** sobre ornamentación.
+- La identidad de cada aventura es complementaria: puede cambiar todo lo que rodea a la marca, nunca la marca.
+
+---
+
+## 15. Do's & Don'ts
 
 | ✅ Do | ❌ Don't |
 |---|---|
@@ -555,11 +675,15 @@ La app no reemplaza la mesa: **la acompaña**. Toda decisión visual debe poder 
 | Marco vectorial fijo | Marco dibujado por la IA |
 | Dos pesos tipográficos | Cinco tipografías en una carta |
 | Familia de carta con ícono + patrón + palabra | Familia distinguida solo por color |
+| Insignia completa en negro/blanco o hueso | Recolorear la insignia |
+| Monograma para header, avatar y favicon | Insignia completa a 16 px |
+| Color de edición alrededor de la marca | Color dentro de la insignia |
+| Una sola tinta en piezas impresas | Degradados, biseles o brillos en el logo |
 | "El equipo pierde 1 de Escudo" | "Fallaste" |
 
 ---
 
-## 14. Checklist de control de calidad
+## 16. Checklist de control de calidad
 
 ### Para cada ilustración nueva
 
@@ -588,3 +712,21 @@ La app no reemplaza la mesa: **la acompaña**. Toda decisión visual debe poder 
 - [ ] Texto de todas las cartas pasa la prueba de "una idea por frase".
 - [ ] Un nene de 5 años puede jugar el mazo sin leer.
 - [ ] Un adulto puede jugar el mazo sin aburrirse en la segunda partida.
+
+### Para cada pieza de marca
+
+- [ ] Insignia completa o monograma según el tamaño; nunca la insignia completa a 16 px.
+- [ ] Área de resguardo equivalente al ancho de la X, en los cuatro lados.
+- [ ] Fondo con contraste suficiente: positivo sobre claro, negativo sobre oscuro.
+- [ ] Sin deformar, recolorear, rotar ni inclinar.
+- [ ] Sin tiburones, submarinos ni elementos de una edición dentro del logotipo.
+- [ ] Cinta "Equipo eXPedición" intacta y legible.
+- [ ] Favicon generado desde el monograma, no desde una captura.
+- [ ] Assets tomados de `img/`, sin reescalados improvisados.
+- [ ] Una tinta y sin degradados si la pieza es impresa.
+
+---
+
+## 17. Idea rectora
+
+**Cada juego es una nueva expedición. XP es el equipo que las hace posibles.**
