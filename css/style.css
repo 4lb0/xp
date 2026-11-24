@@ -1700,43 +1700,91 @@ section[id] { scroll-margin-top: 5.5rem; }
   .game { padding-right: 205px; }
 }
 @media (max-width: 999px) {
-  .game { padding-right: 0; padding-bottom: 1rem; }
-  /* El rail deja de flotar y de ocupar el 18 % del ancho: pasa a ser una
-     barra de navegación sobre la mesa. Los contadores viven una sola vez,
-     en .gauges-board. */
+  /* El rail se ancla abajo: en una mesa de juego el estado y los accesos
+     tienen que acompañar el scroll, no quedarse arriba. */
+  .game { padding-right: 0; padding-bottom: calc(76px + env(safe-area-inset-bottom)); }
+
   .game-rail {
-    position: static;
+    position: fixed;
+    inset: auto 0 0 0;
+    z-index: 30;
     width: auto;
-    margin: 0.6rem 0 0;
-    padding: 0.4rem;
-    border-radius: var(--radius);
-    background: rgba(11, 34, 57, 0.72);
-    box-shadow: none;
+    margin: 0;
+    padding: 0.4rem 0.5rem calc(0.4rem + env(safe-area-inset-bottom));
+    border: 0;
+    border-top: 1px solid var(--line-strong);
+    border-radius: 0;
+    background: rgba(7, 26, 46, 0.97);
+    box-shadow: 0 -6px 18px rgba(0, 0, 0, 0.35);
     backdrop-filter: none;
   }
-  .game-rail-body { margin: 0; }
-  .rail-state, .rail-meta { display: none; }
-  .rail-nav {
-    display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 0.2rem;
+
+  .game-rail-body {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin: 0;
   }
-  .rail-nav a {
-    justify-content: center;
+
+  /* Estado compacto: los tres contadores a la izquierda. */
+  .rail-state {
+    display: flex;
     gap: 0.3rem;
-    min-height: 44px;
-    padding: 0.4rem 0.3rem;
-    font-size: 0.78rem;
-    white-space: nowrap;
+    flex: none;
   }
+  .rail-stat {
+    display: flex;
+    align-items: baseline;
+    gap: 0.2rem;
+    padding: 0.25rem 0.4rem;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-sm);
+    background: transparent;
+  }
+  .rail-stat b { display: inline; font-size: 1rem; line-height: 1; }
+  .rail-stat small { display: inline; font-size: 0.72rem; }
+  .rail-meta { display: none; }
+
+  /* Accesos: desplazable en horizontal para no apilar filas. */
+  .rail-nav {
+    display: flex;
+    gap: 0.1rem;
+    margin-left: auto;
+    min-width: 0;
+    overflow-x: auto;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+  }
+  .rail-nav::-webkit-scrollbar { display: none; }
+
+  .rail-nav a {
+    flex: none;
+    flex-direction: column;
+    justify-content: center;
+    gap: 0.1rem;
+    min-height: 44px;
+    padding: 0.2rem 0.5rem;
+    font-size: 0.62rem;
+    line-height: 1.1;
+    white-space: nowrap;
+    border-radius: var(--radius-sm);
+  }
+  .rail-nav a > span[aria-hidden="true"] { font-size: 1.05rem; line-height: 1; }
+
   .rail-label { display: none; }
   .rail-label-short { display: inline; }
+
   .rail-nav a b {
-    margin-left: 0;
-    padding: 0.05rem 0.35rem;
-    font-size: 0.7rem;
+    margin-left: 0.15rem;
+    padding: 0;
+    background: none;
+    color: var(--gold);
+    font-size: 0.62rem;
   }
   .rail-dot { display: none; }
+
+  /* El detalle grande ya está en la barra; no se repite en el flujo. */
+  .game-top .gauges-board { display: none; }
 }
 
 .rail-nav a[data-tool] { position: relative; }
