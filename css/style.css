@@ -1866,6 +1866,16 @@ section[id] { scroll-margin-top: 5.5rem; }
 
 .game .card-grid { grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); }
 
+/* En móvil la mesa va en una sola columna: una carta por pantalla, sin
+   tarjetas de 180 px apretadas de a tres. Va después de la regla base
+   para que gane por orden. */
+@media (max-width: 820px) {
+  .game .card-grid { grid-template-columns: minmax(0, 1fr); }
+  /* La carta ocupa el ancho, pero el texto no se estira a 110 caracteres. */
+  .game .card .card-text { max-width: 64ch; }
+  .game .card .option-text { max-width: 56ch; }
+}
+
 /* ---------- Mazos, preferencias y animaciones ---------- */
 
 .pill-btn {
