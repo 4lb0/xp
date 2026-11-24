@@ -72,6 +72,23 @@ Test.assert(g.escudo == 5 && g.energia == 6, "la única emboscada cobra al entra
 Test.get("/juego").status(200)
 Test.assert(Game.find(gid).escudo == 5, "una emboscada ya en la mesa no vuelve a cobrar al recargar")
 
+// --- Varias emboscadas con el mismo costo: se aplica una al azar ---
+
+Fixture.mesa(gid, ["m25", "m27", "m01"])
+Fixture.reset(gid)
+Game.enterInitial(gid)
+
+g = Game.find(gid)
+Test.assert(g.fase == "listo", "con emboscadas del mismo costo no se pide elección")
+Test.assert(g.escudo == 5 && g.energia == 6, "solo cobra una de las emboscadas equivalentes")
+var logAzar = Game.lastLogs(gid, 6).map { |l| l["text"] }.join(" ")
+Test.assert(logAzar.contains("al azar"), "la bitácora avisa que se eligió al azar")
+Test.assert(logAzar.contains("El muro de anémonas") || logAzar.contains("La mandíbula en la niebla"), "la bitácora nombra la emboscada aplicada")
+
+Test.get("/juego")
+  .status(200)
+  .textContains("ya resuelto")
+
 // --- Limpieza: dejar la sesión sin partida para el resto de la suite ---
 
 Test.post("/juego", {"accion": "reiniciar"}).status(302)

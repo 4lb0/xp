@@ -79,7 +79,19 @@ class Game {
 
   // Resuelve las emboscadas del reparto inicial. Con una sola, se cobra su
   // costo. Con dos o más, la partida queda esperando la elección del equipo:
-  // solo la carta elegida se aplica; las demás no cobran.
+  // solo la carta elegida se aplica; las demás no cobran. Si todas cobran lo
+  // mismo no hay nada que elegir: se aplica una al azar.
+  static sameEntryCost(emboscadas) {
+    var first = Game.parseEffects(emboscadas[0]["card"].entry)
+    for (item in emboscadas) {
+      var eff = Game.parseEffects(item["card"].entry)
+      if (eff["energia"] != first["energia"]) return false
+      if (eff["escudo"] != first["escudo"]) return false
+      if (eff["pistas"] != first["pistas"]) return false
+    }
+    return true
+  }
+
   static enterInitial(id) {
     var g0 = Game.find(id)
     var emboscadas = []
@@ -92,8 +104,15 @@ class Game {
       Game.apply(id, g0, Game.parseEffects(c.entry), true, [])
       Game.log(id, "Emboscada al entrar: " + c.name + " — " + c.entryLabel + ".")
     } else if (emboscadas.count > 1) {
-      `UPDATE games SET fase = 'emboscada' WHERE id = ?`.query(id)
-      Game.log(id, "Emboscadas simultáneas en la mesa: elijan cuál sufrir.")
+      if (Game.sameEntryCost(emboscadas)) {
+        var idx = `SELECT ABS(RANDOM()) % ? AS n`.first(emboscadas.count)["n"].toNum
+        var c = emboscadas[idx]["card"]
+        Game.apply(id, g0, Game.parseEffects(c.entry), true, [])
+        Game.log(id, "Emboscada al entrar (mismo costo, al azar): " + c.name + " — " + c.entryLabel + ".")
+      } else {
+        `UPDATE games SET fase = 'emboscada' WHERE id = ?`.query(id)
+        Game.log(id, "Emboscadas simultáneas en la mesa: elijan cuál sufrir.")
+      }
     }
   }
 
