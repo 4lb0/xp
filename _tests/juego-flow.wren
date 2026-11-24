@@ -28,6 +28,15 @@ class Flow {
 
   // Deja arriba una carta sin emboscada para que cerrar el turno no mueva
   // contadores por sorpresa.
+  // Arranca una partida limpia y la deja visible para las pruebas.
+  static nuevaPartida() {
+    Test.post("/juego", {"accion": "nueva", "modo": "experto"}).status(302)
+    var id = `SELECT MAX(id) AS id FROM games`.first["id"].toNum
+    Flow.normalize(id)
+    Flow.safeOnTop(id)
+    return id
+  }
+
   static safeOnTop(id) {
     var deck = `SELECT id, cardId FROM game_cards WHERE gameId = ? AND zone = 'misterio'`.fetch(id)
     for (r in deck) {
@@ -125,28 +134,24 @@ Test.assert(Game.count(gid, "mano") == 3, "la mano se repone a 3")
 Test.assert(Game.count(gid, "descarteJuego") == 1, "la carta resuelta va al descarte del Juego")
 Test.assert(Game.count(gid, "descarteEquipo") == 3, "la mano vieja va al descarte de Equipo")
 
-// --- La derrota exige Energía y Escudo en 0 a la vez ---
+// --- La derrota llega con cualquiera de los dos contadores en 0 ---
 
-Test.post("/juego", {"accion": "nueva", "modo": "experto"})
-  .status(302)
-gid = `SELECT MAX(id) AS id FROM games`.first["id"].toNum
-Flow.normalize(gid)
-Flow.safeOnTop(gid)
-
-`UPDATE games SET fase = 'resuelto', resultado = 'ganada', energia = 0, escudo = 3 WHERE id = ?`.query(gid)
+var gDerrota = Flow.nuevaPartida()
+`UPDATE games SET fase = 'resuelto', resultado = 'ganada', energia = 0, escudo = 3 WHERE id = ?`.query(gDerrota)
 Test.post("/juego", {"accion": "terminar"}).status(302)
-var gCero = Game.find(gid)
-Test.assert(gCero.status == "activa", "cero Energía solo no termina la partida")
-Test.assert(gCero.turno == 2, "el turno avanza con la Energía en 0")
+var gCero = Game.find(gDerrota)
+Test.assert(gCero.status == "derrota", "cero Energía al cerrar el turno termina la partida")
+Test.assert(gCero.turno == 1, "la partida perdida no avanza de turno")
 
-`UPDATE games SET fase = 'resuelto', resultado = 'ganada', energia = 3, escudo = 0 WHERE id = ?`.query(gid)
+gDerrota = Flow.nuevaPartida()
+`UPDATE games SET fase = 'resuelto', resultado = 'ganada', energia = 3, escudo = 0 WHERE id = ?`.query(gDerrota)
 Test.post("/juego", {"accion": "terminar"}).status(302)
-gCero = Game.find(gid)
-Test.assert(gCero.status == "activa", "cero Escudo solo no termina la partida")
+Test.assert(Game.find(gDerrota).status == "derrota", "cero Escudo al cerrar el turno termina la partida")
 
-`UPDATE games SET fase = 'resuelto', resultado = 'ganada', energia = 0, escudo = 0 WHERE id = ?`.query(gid)
+gDerrota = Flow.nuevaPartida()
+`UPDATE games SET fase = 'resuelto', resultado = 'ganada', energia = 0, escudo = 0 WHERE id = ?`.query(gDerrota)
 Test.post("/juego", {"accion": "terminar"}).status(302)
-Test.assert(Game.find(gid).status == "derrota", "con Energía y Escudo en 0 la partida termina")
+Test.assert(Game.find(gDerrota).status == "derrota", "los dos en 0 también terminan la partida")
 
 // --- Modo inválido: el servidor cae en Normal ---
 

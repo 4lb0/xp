@@ -30,7 +30,7 @@ return Layout.render(<main>
         <p class="hint">Es un <strong>LCG</strong>: los mazos son fijos, no hay sobres aleatorios ni cartas coleccionables.</p>
         <ul>
           <li><strong>Ganan</strong> si reúnen 6 Pistas.</li>
-          <li><strong>Pierden</strong> si al terminar un turno completo tienen Energía y Escudo en 0 a la vez. Con uno solo en 0 siguen jugando.</li>
+          <li><strong>Pierden</strong> si al terminar un turno completo la Energía o el Escudo quedan en 0.</li>
         </ul>
         <p class="hint">En la app, la mano es una sola y las decisiones se comparten. Podés jugar solo o en cooperativo con amigos: la mesa es la misma.</p>
         <p class="hint">Las cartas de Dilema no dan ni quitan Pistas: solo mueven Energía y Escudo.</p>
@@ -168,7 +168,7 @@ return Layout.render(<main>
       <thead><tr><th>Condición</th><th>Qué pasa</th></tr></thead>
       <tbody>
         <tr><td>Pistas llega a 6</td><td><strong>Victoria.</strong> Resuelven el misterio en ese momento.</td></tr>
-        <tr><td>Energía y Escudo en 0 al cerrar un turno</td><td><strong>Derrota.</strong> No es inmediata: deben terminar el turno con ambos en 0.</td></tr>
+        <tr><td>Energía o Escudo en 0 al cerrar un turno</td><td><strong>Derrota.</strong> No es inmediata: se evalúa al cerrar el turno, con cualquiera de los dos en 0.</td></tr>
       </tbody>
     </table>
   </section>

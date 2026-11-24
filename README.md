@@ -173,7 +173,7 @@ El estado de la partida se guarda en SQLite y se ata a la sesión del navegador.
 6. Al resolver, la app aplica los efectos de la opción y controla victoria/derrota. La prueba da exactamente lo que dice la carta: no hay tirada extra.
 7. Al terminar el turno el submarino consume **1 Energía**, siempre. La Energía es el reloj: cada turno hay que decidir entre buscar Pistas o recargar.
 
-Los contadores son los tres dados del juego: **Energía** y **Escudo** arrancan en 6, pueden superar 6 hasta un tope de 12 y no se pierde por separado. **Pistas** arranca en 0 y con 6 se gana en el momento. La derrota llega solo si un turno termina con Energía y Escudo en 0 a la vez.
+Los contadores son los tres dados del juego: **Energía** y **Escudo** arrancan en 6, pueden superar 6 hasta un tope de 12 y no se pierde por separado. **Pistas** arranca en 0 y con 6 se gana en el momento. La derrota llega si un turno termina con la Energía o el Escudo en 0.
 
 **El reloj:** cada turno cuesta 1 Energía. Las Baterías de Respaldo (+2, seis en el mazo), el Generador Auxiliar y Ahorro de Oxígeno son la forma de sostenerlo. Si el equipo se queda quieto, pierde; si solo recarga, el misterio no avanza.
 
