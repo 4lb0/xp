@@ -28,16 +28,10 @@
     root.dataset.sound = state.sound;
     const motion = document.getElementById("toggle-motion");
     const sound = document.getElementById("toggle-sound");
-    if (motion) {
-      motion.setAttribute("aria-pressed", state.motion === "on" ? "true" : "false");
-      const icon = motion.querySelector("[aria-hidden]");
-      if (icon) icon.textContent = state.motion === "on" ? "✨" : "🚫";
-    }
-    if (sound) {
-      sound.setAttribute("aria-pressed", state.sound === "on" ? "true" : "false");
-      const icon = sound.querySelector("[aria-hidden]");
-      if (icon) icon.textContent = state.sound === "on" ? "🔊" : "🔇";
-    }
+    // El ícono es un <use> del sprite: no se le escribe texto encima. El
+    // estado on/off lo dicen aria-pressed y la opacidad del botón.
+    if (motion) motion.setAttribute("aria-pressed", state.motion === "on" ? "true" : "false");
+    if (sound) sound.setAttribute("aria-pressed", state.sound === "on" ? "true" : "false");
   }
   syncPrefs();
 
