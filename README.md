@@ -153,6 +153,21 @@ Cebo, Blindaje, Brazo Robótico), el robo y reciclado de mazos, la resolución d
 una Misión y el flujo HTTP completo de `/juego` (crear, elegir, tirar,
 resolver y cerrar turno).
 
+## Simulación de balance
+
+`tools/simular.py` juega miles de partidas con las cartas de `cartas/` —la misma
+fuente que usa la app— y cuatro arquetipos de jugador (Azar, Cauto, Buscador,
+Equilibrado) en los tres modos. Genera `reporte.html` con victorias, turnos,
+maniobras jugadas y Misiones elegidas.
+
+```bash
+python3 tools/simular.py --games 5000 --seed 20261124
+```
+
+Es una aproximación: bots con reglas fijas, sin charla de mesa ni información
+imperfecta. Sirve para detectar cartas muertas y medir el reloj de Energía, no
+para predecir una mesa real.
+
 ## Rutas
 
 | Ruta | Qué hace |
