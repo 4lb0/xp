@@ -70,7 +70,7 @@ return Layout.render(<main>
       </li>
       <li>
         <span class="num">4</span>
-        <span><strong>Reponé la mesa</strong>Descarten el Misterio resuelto y revelen otro. Al cerrar el turno, descarten toda la mano, roben 1 del Mazo del Juego y repongan la mano a 3.</span>
+        <span><strong>Reponé la mesa</strong>Descarten el Misterio resuelto y revelen otro. Al cerrar el turno, descarten toda la mano, roben 1 del Mazo de Misterios y repongan la mano a 3.</span>
       </li>
     </ol>
   </section>
@@ -104,8 +104,8 @@ return Layout.render(<main>
             <tr><th>Componente</th><th>Cantidad</th></tr>
           </thead>
           <tbody>
-            <tr><td>Cartas de Misterio</td><td>40</td></tr>
-            <tr><td>Cartas de Equipo</td><td>44 (10 Herramientas + 34 Maniobras, 2 de apoyo)</td></tr>
+            <tr><td>Misterios</td><td>40</td></tr>
+            <tr><td>Equipo</td><td>44 (10 Herramientas + 34 Maniobras, 2 de apoyo)</td></tr>
             <tr><td>Dados de estado</td><td>3 D6</td></tr>
             <tr><td>Dados de prueba</td><td>2 a 4 D6</td></tr>
           </tbody>

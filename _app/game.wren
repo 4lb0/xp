@@ -133,7 +133,7 @@ class Game {
     for (r in rows) {
       `UPDATE game_cards SET zone = ?, ord = RANDOM() WHERE id = ?`.query(from, r["id"])
     }
-    Game.log(id, from == "misterio" ? "Se mezcla el descarte del Mazo del Juego." : "Se mezcla el descarte del Mazo del Equipo.")
+    Game.log(id, from == "misterio" ? "Se mezcla el descarte del Mazo de Misterios." : "Se mezcla el descarte del Mazo de Equipo.")
     return true
   }
 

@@ -85,7 +85,7 @@ return Layout.render(<main class="quick">
             <small>Equipo</small>
           </div>
         </div>
-        <p>Los topes están ocultos. El Sonar revela el del Mazo del Juego.</p>
+        <p>Los topes están ocultos. El Sonar revela el del Mazo de Misterios.</p>
       </article>
     </div>
   </section>
@@ -95,7 +95,7 @@ return Layout.render(<main class="quick">
       <h2>Tu primer turno</h2>
       <p>Estos 4 pasos se repiten en cada turno.</p>
     </div>
-    <p class="quick-note"><strong>Antes de empezar:</strong> 3 cartas de Equipo y 3 de Misterio. Todos: 6 de Energía y 6 de Escudo. Diferencia: Experto sin apoyos · Normal +1 · Asistido +2.</p>
+    <p class="quick-note"><strong>Antes de empezar:</strong> 3 de Equipo y 3 Misterios. Todos: 6 de Energía y 6 de Escudo. Diferencia: Experto sin apoyos · Normal +1 · Asistido +2.</p>
     <ol class="quick-steps">
       <li>
         <span class="quick-step-num">1</span>
@@ -126,7 +126,7 @@ return Layout.render(<main class="quick">
         <svg class="quick-icon" aria-hidden="true"><use href="#ico-deck"/></svg>
         <div>
           <strong>Cerrá el turno</strong>
-          <p>Descartá toda la mano, robá 1 del Mazo del Juego, reponé la mano a 3 y pagá ⚡ 1.</p>
+          <p>Descartá toda la mano, robá 1 del Mazo de Misterios, reponé la mano a 3 y pagá ⚡ 1.</p>
         </div>
       </li>
     </ol>
@@ -136,14 +136,14 @@ return Layout.render(<main class="quick">
         Tenés 3 cartas. Jugás <strong>Soldadura</strong> (🛡️ +1, va al descarte).
         Elegís <strong>El nido</strong>. Tirás <strong>Cara</strong>: éxito, ⚡ +2.
         La carta va al descarte, entra la próxima; descartás toda la mano,
-        robás 1 del Mazo del Juego, reponés la mano a 3 y el submarino paga <strong>⚡ 1</strong>.
+        robás 1 del Mazo de Misterios, reponés la mano a 3 y el submarino paga <strong>⚡ 1</strong>.
       </p>
     </div>
   </section>
 
   <section class="quick-section">
     <div class="quick-section-head">
-      <h2>Cómo leer una carta de Equipo</h2>
+      <h2>Cómo leer el Equipo</h2>
       <p>Los íconos dicen qué es, cuándo se usa y qué hace. No hace falta leer el texto.</p>
     </div>
     <div class="quick-key">

@@ -139,7 +139,7 @@ if (Request.isPost) {
     var row = `SELECT id FROM game_cards WHERE id = ? AND gameId = ? AND zone = 'mano'`.first(rowId, g.id)
     if (row != null) {
       Game.move(row["id"], "descarteEquipo")
-      Game.log(g.id, "Una carta de Equipo va al descarte.")
+      Game.log(g.id, "Una de Equipo va al descarte.")
     }
   } else if (accion == "elegir") {
     if (g.fase != "listo") {
@@ -421,7 +421,7 @@ if (g == null) {
       <p class="eyebrow">Preparación</p>
       <h1>Prepará la expedición</h1>
       <p class="lead">Podés jugar solo o en cooperativo con amigos. La mesa es una: el equipo XP contra el juego.</p>
-      <p class="hint">Siempre 3 cartas de Misterio en la mesa y la mano se repone a 3. No importa cuántos jueguen.</p>
+      <p class="hint">Siempre 3 Misterios en la mesa y la mano se repone a 3. No importa cuántos jueguen.</p>
       <form method="post" class="panel start-form">
         <input type="hidden" name="accion" value="nueva" />
         <label for="modo"><strong>Modo</strong></label>
@@ -681,7 +681,7 @@ return Layout.render(<main class="game" data-moves="{{ movesJson }}" data-anim="
           </form>} }}
         </div>
       </section> }}
-      {{ g.jugadas > 0 && <p class="hint">Ya jugaron su carta de Equipo este turno. Tiren cuando quieran.</p> }}
+      {{ g.jugadas > 0 && <p class="hint">Ya jugaron una de Equipo este turno. Tiren cuando quieran.</p> }}
       <form method="post" class="roll-form">
         <input type="hidden" name="accion" value="tirar" />
         <button class="btn btn-primary">Tirar en la app</button>
@@ -719,7 +719,7 @@ return Layout.render(<main class="game" data-moves="{{ movesJson }}" data-anim="
       <span class="chip-label">{{ g.resultado == "ganada" ? "Éxito" : "Fallo" }}</span>
       {{ (g.resultado == "ganada" ? pendingOpt["exitoChips"] : pendingOpt["falloChips"]).map{|c| <span class="chip {{ c["cls"] }}" title="{{ c["title"] }}">{{ Layout.icon(c["icon"]) }} {{ c["text"] }}</span>} }}
     </p> }}
-    <p>Al cerrar el turno se descarta toda la mano, se roba 1 del Mazo del Juego y se repone la mano a 3.</p>
+    <p>Al cerrar el turno se descarta toda la mano, se roba 1 del Mazo de Misterios y se repone la mano a 3.</p>
     <form method="post">
       <input type="hidden" name="accion" value="terminar" />
       <button class="btn btn-primary">Terminar turno y reponer la mesa</button>
@@ -906,7 +906,7 @@ return Layout.render(<main class="game" data-moves="{{ movesJson }}" data-anim="
         </article>} }}
       </div>
       {{ hand.isEmpty && <p class="muted">Sin cartas en mano. Al cerrar el turno se repone la mano a 3.</p> }}
-      <p class="hint">{{ g.jugadas == 0 ? "Todavía pueden jugar 1 de Equipo este turno." : "Ya jugaron su carta de Equipo este turno." }} Al cerrar el turno, descartá toda la mano y reponé la mano a 3.</p>
+      <p class="hint">{{ g.jugadas == 0 ? "Todavía pueden jugar 1 de Equipo este turno." : "Ya jugaron una de Equipo este turno." }} Al cerrar el turno, descartá toda la mano y reponé la mano a 3.</p>
   </section> }}
 
   <section class="log-section">

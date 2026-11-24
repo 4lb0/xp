@@ -87,7 +87,7 @@ Test.assert(robada != null, "draw() recicla el descarte cuando el mazo está vac
 Test.assert(Game.count(deck, "mano") == 3, "la mano queda en 3 tras reciclar")
 Test.assert(Game.count(deck, "equipo") == 41, "el descarte reciclado vuelve al mazo")
 Test.assert(Game.count(deck, "descarteEquipo") == 0, "el descarte de Equipo queda vacío")
-Test.assert(Game.lastLogs(deck, 5).map { |l| l["text"] }.join(" ").contains("Se mezcla el descarte del Mazo del Equipo"), "el reciclado queda en la bitácora")
+Test.assert(Game.lastLogs(deck, 5).map { |l| l["text"] }.join(" ").contains("Se mezcla el descarte del Mazo de Equipo"), "el reciclado queda en la bitácora")
 Game.destroy(deck)
 
 // Un mazo vacío sin descarte no roba nada.

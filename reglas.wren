@@ -52,8 +52,8 @@ return Layout.render(<main>
       <h2>Preparación</h2>
     </div>
     <ol class="steps">
-      <li><span class="num">1</span><span><strong>Arranquen con 3 cartas de Equipo</strong>La mano es compartida. Con niños de 5 años conviene leer las opciones en voz alta.</span></li>
-      <li><span class="num">2</span><span><strong>Revelen siempre 3 cartas de Misterio</strong>Sin importar cuántos jueguen. La mesa no cambia: cambia a quién le toca tirar.</span></li>
+      <li><span class="num">1</span><span><strong>Arranquen con 3 de Equipo</strong>La mano es compartida. Con niños de 5 años conviene leer las opciones en voz alta.</span></li>
+      <li><span class="num">2</span><span><strong>Revelen siempre 3 Misterios</strong>Sin importar cuántos jueguen. La mesa no cambia: cambia a quién le toca tirar.</span></li>
       <li><span class="num">3</span><span><strong>Pongan los contadores</strong>Todos: 6 de Energía y 6 de Escudo. Pistas 0. Experto: sin apoyos. Normal: +1 Maniobra de apoyo en el área. Asistido: +2 Maniobras de apoyo.</span></li>
     </ol>
   </section>
@@ -64,10 +64,10 @@ return Layout.render(<main>
       <p>Se juega un turno por vez, solo o en cooperativo.</p>
     </div>
     <ol class="steps">
-      <li><span class="num">1</span><span><strong>Arrancá con 3 cartas de Equipo</strong>La mano es compartida. Al cerrar cada turno descartás toda la mano y robás 3 cartas nuevas.</span></li>
+      <li><span class="num">1</span><span><strong>Arrancá con 3 de Equipo</strong>La mano es compartida. Al cerrar cada turno descartás toda la mano y robás 3 de Equipo.</span></li>
       <li><span class="num">2</span><span><strong>Jugá 1 carta (opcional)</strong>Podés jugarla antes o después de elegir el Misterio, siempre antes de tirar. Herramienta: queda en la mesa. Una sola activa; la nueva reemplaza a la anterior. Maniobra: se resuelve y va al descarte.</span></li>
       <li><span class="num">3</span><span><strong>Resolvé un Misterio</strong>Elegí una carta activa, lean la situación, debatan y elijan una de sus opciones. Después viene la prueba de dados.</span></li>
-      <li><span class="num">4</span><span><strong>Reponé la mesa y pasá el turno</strong>La carta resuelta va al descarte y se revela una nueva. Descartá toda la mano, robá 1 del Mazo del Juego y reponé tu mano a 3.</span></li>
+      <li><span class="num">4</span><span><strong>Reponé la mesa y pasá el turno</strong>El Misterio resuelto va al descarte y se revela otro. Descartá toda la mano, robá 1 del Mazo de Misterios y reponé tu mano a 3.</span></li>
     </ol>
     <p class="hint">Si se agota un mazo, mezclá su descarte y seguí robando. Energía y Escudo pueden superar 6, hasta 12.</p>
   </section>
@@ -81,7 +81,7 @@ return Layout.render(<main>
   <section id="pruebas">
     <div class="section-head">
       <h2>Pruebas de dados</h2>
-      <p>Todas las cartas de Misterio se resuelven con un D6 o dos.</p>
+      <p>Todos los Misterios se resuelven con un D6 o dos.</p>
     </div>
     <table>
       <caption>Tipos de prueba que aparecen en las cartas</caption>
@@ -108,7 +108,7 @@ return Layout.render(<main>
         <table>
           <thead><tr><th>Carta</th><th>Efecto</th></tr></thead>
           <tbody>
-            <tr><td>Sonar de Alta Frecuencia</td><td>Una vez por misterio, mirá la carta de arriba del Mazo del Juego con todo su contenido.</td></tr>
+            <tr><td>Sonar de Alta Frecuencia</td><td>Una vez por misterio, mirá el próximo Misterio con todo su contenido.</td></tr>
                         <tr><td>Generador Auxiliar</td><td>Si la Energía está en 4 o menos al empezar cada misterio, sube 1.</td></tr>
             <tr><td>Generador de Escudo</td><td>Si el Escudo está en 4 o menos al empezar cada misterio, sube 1.</td></tr>
                         <tr><td>Brazo Robótico</td><td>Si ganás Pistas y algún dado muestra 6, ganás 1 Pista más.</td></tr>
@@ -148,9 +148,9 @@ return Layout.render(<main>
 
   <section class="panel" id="reloj">
     <h2>El reloj: consumo de Energía</h2>
-    <p><strong>Consumo:</strong> al terminar cada turno, el submarino pierde <strong>1 Energía</strong>, hayan ganado o no una Pista. La Energía es el reloj de la partida y no se recupera con las cartas de Misterio.</p>
+    <p><strong>Consumo:</strong> al terminar cada turno, el submarino pierde <strong>1 Energía</strong>, hayan ganado o no una Pista. La Energía es el reloj de la partida y no se recupera con los Misterios.</p>
     <p><strong>Recarga:</strong> solo con Equipo. La Batería de Respaldo devuelve 2 de Energía y hay 6 en el mazo. El Generador Auxiliar recarga 1 al empezar cada misterio si están en 4 o menos. El Generador de Escudo hace lo mismo con el casco. Ahorro de Oxígeno saltea el consumo de un turno.</p>
-    <p><strong>Emboscadas:</strong> diez cartas de Misterio cuestan <strong>1 Energía</strong>, <strong>1 Escudo</strong> o <strong>1 Pista</strong> apenas entran a la mesa, y tienen una sola opción. Si entran varias a la vez (por ejemplo, en el reparto inicial), el equipo elige cuál sufrir: solo esa se aplica y las demás no cobran. Una emboscada que ya está en la mesa no vuelve a cobrar. Las cartas de Misterio nunca te sacan Energía: la Energía la baja el reloj y la recupera el Equipo.</p>
+    <p><strong>Emboscadas:</strong> diez Misterios cuestan <strong>1 Energía</strong>, <strong>1 Escudo</strong> o <strong>1 Pista</strong> apenas entran a la mesa, y tienen una sola opción. Si entran varias a la vez (por ejemplo, en el reparto inicial), el equipo elige cuál sufrir: solo esa se aplica y las demás no cobran. Una emboscada que ya está en la mesa no vuelve a cobrar. Los Misterios nunca te sacan Energía: la Energía la baja el reloj y la recupera el Equipo.</p>
   </section>
 
   <section class="panel" id="dados">

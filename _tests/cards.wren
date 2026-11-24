@@ -146,7 +146,7 @@ var peek = Card.visualFor({"id": "e01", "tipo": "herramienta", "efecto": "peek"}
 Test.assert(peek["typeIcon"] == "🔧", "una Herramienta usa la llave")
 Test.assert(peek["useClass"] == "use-always", "peek es Siempre")
 Test.assert(peek["useLabel"] == "Siempre", "peek se rotula Siempre")
-Test.assert(peek["chips"][0]["text"] == "Próxima carta", "peek muestra la próxima carta")
+Test.assert(peek["chips"][0]["text"] == "Próximo Misterio", "peek muestra el próximo Misterio")
 
 var turbo = Card.visualFor({"id": "e09", "tipo": "maniobra", "efecto": "plus_two"})
 Test.assert(turbo["useClass"] == "use-before", "Turbo se prepara antes de tirar")
