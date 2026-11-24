@@ -85,7 +85,8 @@ Los robos duran unos 680 ms y los descartes 540 ms.
 
 En una tirada, los dados grandes hacen un shake leve y cambian de cara durante
 unos 300 ms antes de quedar en el resultado. Al ganar, el panel final entra con
-un glow dorado; al perder, con un glow coral y un pequeño sacudón. Los sonidos
+un glow dorado y unos fuegos artificiales suaves (latón, turquesa y coral) detrás
+del contenido; al perder, con un glow coral y un pequeño sacudón. Los sonidos
 también son distintos: rattle de dados, arpegio ascendente al ganar y descenso
 grave al perder.
 

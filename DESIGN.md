@@ -223,7 +223,7 @@ se achica y el contador pasa a vertical.
 | Mesa vacía | Texto que explica cómo reponerla, nunca un espacio en blanco |
 | Carta bloqueada | `.is-locked` (55 % de opacidad) + texto de por qué |
 | Resultado | `role="status"`, foco en el `h2`, dados visibles y fichas del efecto |
-| Victoria | `.ending.victoria`: glow dorado, dados reales del final |
+| Victoria | `.ending.victoria`: glow dorado, fuegos suaves detrás del contenido, dados reales del final |
 | Derrota | `.ending.derrota`: glow coral, dados reales del final |
 | Movimiento nuevo | `.is-new` (outline dorado) o animación de dorso |
 

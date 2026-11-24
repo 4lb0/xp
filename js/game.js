@@ -133,6 +133,124 @@
     }, 350);
   }
 
+  // ----- Fuegos suaves de victoria -----
+  // Decoración: detrás del contenido, sin capturar el puntero y apagada por
+  // el toggle de Animaciones (o por prefers-reduced-motion al arrancar).
+  if (outcome === "victoria") {
+    window.setTimeout(celebrate, 620);
+  }
+
+  function celebrate() {
+    if (!motionOn() || !document.querySelector(".ending.victoria")) return;
+    const canvas = document.createElement("canvas");
+    canvas.className = "fireworks";
+    canvas.setAttribute("aria-hidden", "true");
+    document.body.appendChild(canvas);
+    const context = canvas.getContext("2d");
+    if (!context) {
+      canvas.remove();
+      return;
+    }
+
+    // Los acentos del manual: latón, turquesa y coral, siempre con poca opacidad.
+    const colors = ["#F2B33D", "#F5DA8C", "#0FA8A2", "#9BD7E1", "#E06550", "#F0BEB4"];
+    const particles = [];
+    const bursts = [0, 390, 780, 1200, 1600];
+    let width = 0;
+    let height = 0;
+
+    function resize() {
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      width = window.innerWidth;
+      height = window.innerHeight;
+      canvas.width = Math.round(width * dpr);
+      canvas.height = Math.round(height * dpr);
+      context.setTransform(dpr, 0, 0, dpr, 0, 0);
+    }
+    resize();
+    window.addEventListener("resize", resize);
+
+    function burst() {
+      const margin = Math.min(width * 0.16, 96);
+      const top = Math.max(64, height * 0.12);
+      const bottom = Math.max(top, height * 0.46);
+      const x = margin + Math.random() * Math.max(width - margin * 2, 1);
+      const y = top + Math.random() * (bottom - top);
+      const color = colors[Math.floor(Math.random() * colors.length)];
+      const count = 18 + Math.floor(Math.random() * 8);
+      const speed = 52 + Math.random() * 34;
+      const twist = Math.random() * Math.PI * 2;
+      for (let i = 0; i < count; i += 1) {
+        const angle = twist + (Math.PI * 2 * i) / count;
+        const velocity = speed * (0.6 + Math.random() * 0.55);
+        const life = 1.25 + Math.random() * 0.65;
+        particles.push({
+          x,
+          y,
+          vx: Math.cos(angle) * velocity,
+          vy: Math.sin(angle) * velocity - 8,
+          life,
+          maxLife: life,
+          color,
+          size: 1.1 + Math.random() * 1.5
+        });
+      }
+    }
+
+    let startedAt = 0;
+    let lastAt = 0;
+
+    function tick(now) {
+      if (!motionOn() || !canvas.isConnected) {
+        window.removeEventListener("resize", resize);
+        canvas.remove();
+        return;
+      }
+      if (!startedAt) {
+        startedAt = now;
+        lastAt = now;
+      }
+      const dt = Math.min((now - lastAt) / 1000, 0.05);
+      lastAt = now;
+      if (bursts.length && now - startedAt >= bursts[0]) {
+        bursts.shift();
+        burst();
+      }
+
+      context.clearRect(0, 0, width, height);
+      context.globalCompositeOperation = "lighter";
+      for (let i = particles.length - 1; i >= 0; i -= 1) {
+        const particle = particles[i];
+        particle.life -= dt;
+        if (particle.life <= 0) {
+          particles.splice(i, 1);
+          continue;
+        }
+        particle.vy += 22 * dt;
+        particle.vx *= 0.985;
+        particle.vy *= 0.985;
+        particle.x += particle.vx * dt;
+        particle.y += particle.vy * dt;
+        const fade = particle.life / particle.maxLife;
+        context.globalAlpha = Math.min(1, fade * 0.72);
+        context.fillStyle = particle.color;
+        context.beginPath();
+        context.arc(particle.x, particle.y, particle.size * (0.35 + fade * 0.65), 0, Math.PI * 2);
+        context.fill();
+      }
+      context.globalAlpha = 1;
+      context.globalCompositeOperation = "source-over";
+
+      if (particles.length || bursts.length) {
+        window.requestAnimationFrame(tick);
+      } else {
+        window.removeEventListener("resize", resize);
+        canvas.remove();
+      }
+    }
+    window.requestAnimationFrame(tick);
+  }
+
   function animateDice() {
     const dice = [...main.querySelectorAll(".dice-roll")];
     dice.forEach((die, index) => {

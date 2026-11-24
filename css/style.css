@@ -2139,6 +2139,18 @@ section[id] { scroll-margin-top: 5.5rem; }
   background: none;
 }
 
+/* Fuegos de victoria: canvas decorativo detrás del contenido (el panel es
+   translúcido, así que las partículas se leen suaves a través de él). */
+.fireworks {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 0;
+}
+[data-motion="off"] .fireworks { display: none; }
+
 @keyframes win-panel {
   from { opacity: 0; transform: translateY(18px) scale(0.98); }
   to { opacity: 1; transform: translateY(0) scale(1); }
