@@ -59,8 +59,11 @@ los reemplazos globales y la imprenta dependen de eso.
 | `--paper-soft` | `#D9D5CC` | 13/11/14/0 | Texto corrido sobre superficies |
 | `--muted` | `#8FA6B3` | 43/23/16/0 | Metadatos, texto secundario |
 | `--ink` | `#0A0A0A` | K100 | Placas e íconos |
-| `--line` | `rgba(51,187,204,.18)` | — | Bordes y separadores |
-| `--card` | `rgba(11,34,57,.86)` | — | Superficie de carta |
+| `--bone-soft` | `#B9C2C6` | — | Texto corrido atenuado |
+| `--line` | `rgba(244,241,234,.16)` | — | Filetes y separadores |
+| `--line-strong` | `rgba(244,241,234,.34)` | — | Filetes de estructura |
+| `--card` | `rgba(11,34,57,.6)` | — | Superficie de carta |
+| `--panel` | `rgba(11,34,57,.5)` | — | Paneles y placas |
 
 Reglas de color:
 
@@ -97,9 +100,10 @@ Máximo dos pesos por carta. Sin sombras de texto ni tracking negativo.
 
 | Token | Valor |
 |---|---|
-| `--radius` | 16px — paneles y cartas |
-| `--radius-sm` | 10px — fichas, mini-cartas, inputs |
-| `--shadow` | `0 18px 40px rgba(0,0,0,.35)` |
+| `--radius` | 3px — todo: paneles, cartas, botones, fichas |
+| `--radius-sm` | 2px — sellos y etiquetas |
+| Sombra | sólo los dados (`0 5px 12px rgba(0,0,0,.35)`); nada más proyecta sombra |
+| Grano | `body::before`, ruido SVG al 5 % sobre el campo plano |
 | Duración de hover | 150ms |
 | Robo de carta | 680ms (dorso → revelado) |
 | Descarte | 540ms |
@@ -114,18 +118,25 @@ Máximo dos pesos por carta. Sin sombras de texto ni tracking negativo.
 
 ### Cabecera y navegación
 
-`.site-header` sticky, fondo `rgba(7,26,46,.7)` con blur, borde inferior
-`--line`. Cinco rutas: Inicio, Expedición, Guía, Reglas, Cartas. La ruta activa
-lleva `class="active"` **y** `aria-current="page"`; el resto `aria-current="false"`.
+`.site-header` sticky, **campo plano** (sin blur ni transparencia), borde inferior
+`--line`. Cinco rutas: Inicio, Expedición, Guía, Reglas, Cartas, en versalitas
+con `letter-spacing`, sin píldoras: la ruta activa lleva subrayado dorado de 2px,
+`class="active"` **y** `aria-current="page"`.
 
 En `/juego` la cabecera se oculta y la navegación vive en el rail.
+
+### Etiquetas
+
+No hay *eyebrow* de landing. `.eyebrow` es un **sello de documento**: una
+etiqueta con filete y versalitas que nombra el panel o la sección, igual que un
+campo de formulario impreso. Nunca flota como kicker arriba de un título.
 
 ### Botones
 
 | Clase | Uso | Color |
 |---|---|---|
-| `.btn-primary` | Acción principal de la pantalla | Fondo `--gold`, texto `#3A2A06` |
-| `.btn-ghost` | Acción secundaria | Borde `--line`, texto `--paper` |
+| `.btn-primary` | Acción principal de la pantalla | Fondo `--gold`, texto `#3A2A06`, filete de tinta |
+| `.btn-ghost` | Acción secundaria | Borde `--line-strong`, texto `--paper` |
 | `.btn-small` | Acciones dentro de cartas | Igual, padding menor |
 | `.pill` / `.pill-btn` | Metadatos y abrir el diálogo de mazos | Borde `--line`, texto `--muted` |
 
@@ -135,7 +146,9 @@ toggles miden 44 px de alto mínimo.
 ### Cartas
 
 Estructura: franja de familia → ilustración (emoji provisorio) → familia + ID →
-título → texto → opciones o acciones.
+título → texto → opciones o acciones. La carta es una **ficha**: filete de 1px,
+radio de 3px, sin sombra ni degradado. La franja de color lleva la trama de la
+familia y no se rellena con halos.
 
 | Familia | Franja (§5) | Color |
 |---|---|---|
