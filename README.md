@@ -5,8 +5,8 @@ Versión jugable en el navegador del **LCG** de aventura y misterio **XP (Equipo
 - Se puede jugar solo o en cooperativo con amigos: un solo dispositivo, una mesa, el equipo XP contra el juego.
 - La expedición busca la prueba de que el Megalodón existe: para el mundo es un mito, como el monstruo del lago Ness.
 - Partidas de 10 a 20 minutos.
-- 40 Misterios (una o dos opciones cada uno) + 44 de Equipo (10 Herramientas + 34 Maniobras, 2 de ellas de apoyo), todas editables como archivos Markdown.
-- Arte provisorio: un emoji grande por carta, hasta que lleguen las ilustraciones. El Equipo suma ícono de tipo, cuándo se usan y fichas de efecto para poder jugarlas sin leer.
+- 40 cartas de Misterio (una o dos opciones cada una) + 44 cartas de Equipo (10 Herramientas + 34 Maniobras, 2 de ellas de apoyo), todas editables como archivos Markdown.
+- Arte provisorio: un emoji grande por carta, hasta que lleguen las ilustraciones. Las cartas de Equipo suman ícono de tipo, cuándo se usan y fichas de efecto para poder jugarlas sin leer.
 - Tirada digital desde la app **o** carga manual de lo que salió en los dados de la mesa.
 - Hecho con [Bialet](https://bialet.dev): Wren, SQLite y HTML server-rendered, sin frameworks ni build step.
 
@@ -15,7 +15,7 @@ Versión jugable en el navegador del **LCG** de aventura y misterio **XP (Equipo
 `pdf/xp-proxies-bw.pdf` contiene las **84 cartas** (40 de Misterio + 44 de Equipo,
 incluidas las copias) en blanco y negro, a **60 × 86 mm** —unos milímetros menos
 que una carta TCG estándar—, con **9 cartas por hoja A4** y líneas de corte.
-El Equipo muestra el tipo, cuándo se usan y las fichas de efecto con
+Las cartas de Equipo muestran el tipo, cuándo se usan y las fichas de efecto con
 iconos para poder jugarlas sin leer. Al final agrega **3 cartas de referencia**
 con dibujos: Energía, Pistas y Escudo.
 Imprimilo al **100% / tamaño real**, sin “ajustar a la página”.
@@ -144,8 +144,8 @@ El estado de la partida se guarda en SQLite y se ata a la sesión del navegador.
 ## Cómo se juega en la app
 
 1. Elegís el modo (todos arrancan 6/6: Experto sin apoyos, Normal +1 o Asistido +2) y arranca la expedición. No hay que elegir cantidad de jugadores: se juega solo o en cooperativo con amigos.
-2. La app reparte 3 de Equipo y revela **siempre 3 Misterios**, sin importar cuántos jueguen. La cantidad de jugadores no cambia nada: las decisiones son del equipo.
-3. En cada turno arrancan con 3 de Equipo, pueden jugar 1 antes o después de elegir el Misterio, y resuelven una de sus opciones. Al cerrar el turno descartan toda la mano, roban 1 del Mazo de Misterios y reponen la mano a 3.
+2. La app reparte 3 cartas de Equipo y revela **siempre 3 cartas de Misterio**, sin importar cuántos jueguen. La cantidad de jugadores no cambia nada: las decisiones son del equipo.
+3. En cada turno arrancan con 3 cartas de Equipo, pueden jugar 1 carta antes o después de elegir el Misterio, y resuelven una de sus opciones. Al cerrar el turno descartan toda la mano, roban 1 del Mazo de Misterios y reponen la mano a 3.
 4. La prueba de dados se puede resolver de dos formas:
    - **Tirar en la app**: el servidor genera los D6.
    - **Ya tiré en la mesa**: elegís en pantalla lo que salió en cada dado físico.
@@ -203,8 +203,8 @@ xp/
 │   └── game.wren           Estado de partida, mazos, dados y efectos
 ├── cartas/
 │   ├── LEEME.md            Cómo editar cartas
-│   ├── misterio/01..40.md  40 Misterios
-│   └── equipo/01..19.md    19 de Equipo (44 copias)
+│   ├── misterio/01..40.md  40 cartas de Misterio
+│   └── equipo/01..19.md    19 cartas de Equipo (44 copias)
 ├── css/style.css           Identidad visual del prototipo
 ├── BRANDING.md             Manual de marca de la franquicia XP
 └── _db.sqlite3             Base de datos (se crea sola)
@@ -223,7 +223,7 @@ El mazo se mezcla con `ORDER BY RANDOM()` de SQLite. Las tiradas digitales tambi
 ## Decisiones de este prototipo
 
 - **Solo o en cooperativo.** Podés jugar una sola persona o compartir la mano y las decisiones con amigos. Al cerrar el turno descartás toda la mano y robás 3 cartas nuevas.
-- **La cantidad de jugadores no cambia la mesa.** Siempre 3 Misterios, mano de 3 y siempre 6 Pistas. Se puede jugar solo o en cooperativo con amigos.
+- **La cantidad de jugadores no cambia la mesa.** Siempre 3 cartas de Misterio, mano de 3 y siempre 6 Pistas. Se puede jugar solo o en cooperativo con amigos.
 - **Tres modos.** Todos empiezan con 6 de Energía y 6 de Escudo. Experto no tiene apoyos; Normal suma 1 Maniobra de apoyo; Asistido suma 2.
 - **Maniobras de apoyo.** Kit de emergencia (+1 Energía o +1 Escudo) y Carga de emergencia (+2 Energía o +2 Escudo) son Maniobras: se usan una vez y van al descarte. En Experto se mezclan en el mazo; en Normal el Kit va al área de Apoyo; en Asistido van las dos. Las del área se usan sin gastar la carta del turno. En la app se destacan en rosa con la etiqueta **Apoyo**.
 - **Una sola Herramienta activa por equipo.** Si juegan otra, la anterior va al descarte.

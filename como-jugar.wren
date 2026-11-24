@@ -95,7 +95,7 @@ return Layout.render(<main class="quick">
       <h2>Tu primer turno</h2>
       <p>Estos 4 pasos se repiten en cada turno.</p>
     </div>
-    <p class="quick-note"><strong>Antes de empezar:</strong> 3 de Equipo y 3 Misterios. Todos: 6 de Energía y 6 de Escudo. Diferencia: Experto sin apoyos · Normal +1 · Asistido +2.</p>
+    <p class="quick-note"><strong>Antes de empezar:</strong> 3 cartas de Equipo y 3 de Misterio. Todos: 6 de Energía y 6 de Escudo. Diferencia: Experto sin apoyos · Normal +1 · Asistido +2.</p>
     <ol class="quick-steps">
       <li>
         <span class="quick-step-num">1</span>
@@ -143,7 +143,7 @@ return Layout.render(<main class="quick">
 
   <section class="quick-section">
     <div class="quick-section-head">
-      <h2>Cómo leer el Equipo</h2>
+      <h2>Cómo leer una carta de Equipo</h2>
       <p>Los íconos dicen qué es, cuándo se usa y qué hace. No hace falta leer el texto.</p>
     </div>
     <div class="quick-key">

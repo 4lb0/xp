@@ -58,11 +58,11 @@ return Layout.render(<main>
     <ol class="steps">
       <li>
         <span class="num">1</span>
-        <span><strong>Arrancá con 3 de Equipo</strong>Al cerrar el turno descartás toda la mano y robás 3 de Equipo.</span>
+        <span><strong>Arrancá con 3 cartas de Equipo</strong>Al cerrar el turno descartás toda la mano y robás 3 cartas nuevas.</span>
       </li>
       <li>
         <span class="num">2</span>
-        <span><strong>Jugá 1 de Equipo (opcional)</strong>Antes o después de elegir el Misterio, siempre antes de tirar. Herramienta: queda en la mesa. Maniobra: se usa una vez y va al descarte.</span>
+        <span><strong>Jugá 1 carta (opcional)</strong>Antes o después de elegir el Misterio, siempre antes de tirar. Herramienta: queda en la mesa. Maniobra: se usa una vez y va al descarte.</span>
       </li>
       <li>
         <span class="num">3</span>
@@ -70,7 +70,7 @@ return Layout.render(<main>
       </li>
       <li>
         <span class="num">4</span>
-        <span><strong>Reponé la mesa</strong>Descarten el Misterio resuelto y revelen otro. Al cerrar el turno, descarten toda la mano, roben 1 del Mazo de Misterios y repongan la mano a 3.</span>
+        <span><strong>Reponé la mesa</strong>Descarten la carta resuelta y revelen una nueva. Al cerrar el turno, descarten toda la mano, roben 1 del Mazo de Misterios y repongan la mano a 3.</span>
       </li>
     </ol>
   </section>
@@ -81,7 +81,7 @@ return Layout.render(<main>
         <div class="section-head">
           <h2>Prepará la mesa</h2>
         </div>
-        <p class="muted">Podés jugar solo o en cooperativo con amigos: la mesa es una. Siempre hay 3 Misterios en la mesa y la mano se repone a 3 cada turno.</p>
+        <p class="muted">Podés jugar solo o en cooperativo con amigos: la mesa es una. Siempre hay 3 cartas de Misterio y la mano se repone a 3 cada turno.</p>
         <form method="get" action="/juego" class="panel">
           <label for="modo"><strong>Modo</strong></label>
           <p style="margin: 0.4rem 0 0.9rem">
@@ -104,8 +104,8 @@ return Layout.render(<main>
             <tr><th>Componente</th><th>Cantidad</th></tr>
           </thead>
           <tbody>
-            <tr><td>Misterios</td><td>40</td></tr>
-            <tr><td>Equipo</td><td>44 (10 Herramientas + 34 Maniobras, 2 de apoyo)</td></tr>
+            <tr><td>Cartas de Misterio</td><td>40</td></tr>
+            <tr><td>Cartas de Equipo</td><td>44 (10 Herramientas + 34 Maniobras, 2 de apoyo)</td></tr>
             <tr><td>Dados de estado</td><td>3 D6</td></tr>
             <tr><td>Dados de prueba</td><td>2 a 4 D6</td></tr>
           </tbody>

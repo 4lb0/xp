@@ -139,7 +139,7 @@ if (Request.isPost) {
     var row = `SELECT id FROM game_cards WHERE id = ? AND gameId = ? AND zone = 'mano'`.first(rowId, g.id)
     if (row != null) {
       Game.move(row["id"], "descarteEquipo")
-      Game.log(g.id, "Una de Equipo va al descarte.")
+      Game.log(g.id, "Una carta de Equipo va al descarte.")
     }
   } else if (accion == "elegir") {
     if (g.fase != "listo") {
@@ -421,7 +421,7 @@ if (g == null) {
       <p class="eyebrow">Preparación</p>
       <h1>Prepará la expedición</h1>
       <p class="lead">Podés jugar solo o en cooperativo con amigos. La mesa es una: el equipo XP contra el juego.</p>
-      <p class="hint">Siempre 3 Misterios en la mesa y la mano se repone a 3. No importa cuántos jueguen.</p>
+      <p class="hint">Siempre 3 cartas de Misterio en la mesa y la mano se repone a 3. No importa cuántos jueguen.</p>
       <form method="post" class="panel start-form">
         <input type="hidden" name="accion" value="nueva" />
         <label for="modo"><strong>Modo</strong></label>
@@ -681,7 +681,7 @@ return Layout.render(<main class="game" data-moves="{{ movesJson }}" data-anim="
           </form>} }}
         </div>
       </section> }}
-      {{ g.jugadas > 0 && <p class="hint">Ya jugaron una de Equipo este turno. Tiren cuando quieran.</p> }}
+      {{ g.jugadas > 0 && <p class="hint">Ya jugaron su carta de Equipo este turno. Tiren cuando quieran.</p> }}
       <form method="post" class="roll-form">
         <input type="hidden" name="accion" value="tirar" />
         <button class="btn btn-primary">Tirar en la app</button>
@@ -728,7 +728,7 @@ return Layout.render(<main class="game" data-moves="{{ movesJson }}" data-anim="
 
   {{ g.status == "activa" && g.fase == "listo" && <section id="cartas-activas">
     <div class="section-head">
-      <h2>Misterios en la mesa</h2>
+      <h2>Cartas de Misterio en la mesa</h2>
       <p>Elijan un Misterio y resuelvan su opción. Las emboscadas tienen una sola y cobran únicamente al entrar.</p>
     </div>
     <div class="card-grid">
@@ -761,7 +761,7 @@ return Layout.render(<main class="game" data-moves="{{ movesJson }}" data-anim="
         </ul>
       </article>} }}
     </div>
-    {{ mesa.isEmpty && <p class="muted">No quedan Misterios en la mesa. Repongan al terminar el turno.</p> }}
+    {{ mesa.isEmpty && <p class="muted">No quedan cartas de Misterio en la mesa. Repongan al terminar el turno.</p> }}
   </section> }}
     </div>
     <div class="game-supports">
@@ -866,11 +866,11 @@ return Layout.render(<main class="game" data-moves="{{ movesJson }}" data-anim="
 
   {{ g.status == "activa" && <section id="mano" class="hand-full">
       <div class="section-head">
-        <h2>Mano de Equipo</h2>
-        <p>{{ handCount }} de Equipo · siempre 3 al empezar</p>
+        <h2>Mano del equipo</h2>
+        <p>{{ handCount }} cartas · siempre 3 al empezar</p>
       </div>
       <details class="card-key card-key-inline">
-        <summary>{{ Layout.icon("👀") }} Cómo leer el Equipo</summary>
+        <summary>{{ Layout.icon("👀") }} Cómo leer una carta de Equipo</summary>
         <ul>
           <li>{{ Layout.icon("🔧") }} <strong>Herramienta</strong> · queda en la mesa.</li>
           <li>{{ Layout.icon("🃏") }} <strong>Maniobra</strong> · una vez y al descarte.</li>
@@ -906,7 +906,7 @@ return Layout.render(<main class="game" data-moves="{{ movesJson }}" data-anim="
         </article>} }}
       </div>
       {{ hand.isEmpty && <p class="muted">Sin cartas en mano. Al cerrar el turno se repone la mano a 3.</p> }}
-      <p class="hint">{{ g.jugadas == 0 ? "Todavía pueden jugar 1 de Equipo este turno." : "Ya jugaron una de Equipo este turno." }} Al cerrar el turno, descartá toda la mano y reponé la mano a 3.</p>
+      <p class="hint">{{ g.jugadas == 0 ? "Todavía pueden jugar 1 carta de Equipo este turno." : "Ya jugaron su carta de Equipo este turno." }} Al cerrar el turno, descartá toda la mano y reponé la mano a 3.</p>
   </section> }}
 
   <section class="log-section">

@@ -141,7 +141,7 @@ class Card {
       v["useLabel"] = "Siempre"
       v["useHint"] = "Funciona sola mientras esté en la mesa."
       v["useClass"] = "use-always"
-      v["chips"] = [Card.hchip("👀", "Próximo Misterio", "chip-neutral", "Mirá el próximo Misterio del Mazo")]
+      v["chips"] = [Card.hchip("👀", "Próximo Misterio", "chip-neutral", "Mirá la carta de arriba del Mazo de Misterios")]
     } else if (effect == "reroll_parity") {
       v["useIcon"] = "🎲"
       v["useLabel"] = "Antes de tirar"

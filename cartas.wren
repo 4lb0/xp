@@ -107,7 +107,7 @@ return Layout.render(<main>
 
   <section class="card-key" aria-labelledby="como-leer-equipo">
     <div class="section-head">
-      <h2 id="como-leer-equipo">Cómo leer el Equipo</h2>
+      <h2 id="como-leer-equipo">Cómo leer una carta de Equipo</h2>
       <p>Con el ícono alcanza: no hace falta leer el texto para jugarla.</p>
     </div>
     <ul>

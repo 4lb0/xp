@@ -697,7 +697,7 @@ La app no reemplaza la mesa: **la acompaña**. Toda decisión visual debe poder 
 
 ## 13. Aplicaciones de la marca
 
-La identidad debe funcionar en cajas de juegos, Misterios y Equipo, dorso de cartas, manuales e instructivos, dados y componentes, sitio web, material promocional y futuras expansiones y ediciones. Se prioriza la **reproducibilidad** y la **simplicidad de impresión**.
+La identidad debe funcionar en cajas de juegos, cartas de Misterio y Equipo, dorso de cartas, manuales e instructivos, dados y componentes, sitio web, material promocional y futuras expansiones y ediciones. Se prioriza la **reproducibilidad** y la **simplicidad de impresión**.
 
 | Soporte | Versión | Nota |
 |---|---|---|
