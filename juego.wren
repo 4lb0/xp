@@ -792,6 +792,13 @@ return Layout.render(<main class="game table-board" data-moves="{{ movesJson }}"
         <p class="felt-prompt-text">{{ fasePrompt }}</p>
       </div>
       <p class="turn-plate"><span>Turno</span><b>{{ g.turno }}</b></p>
+      <nav class="felt-nav board-nav" aria-label="Accesos de la expedición">
+        <a href="{{ focoHref }}">{{ Layout.icon("🌊") }} Mesa <b>{{ mesa.count }}</b></a>
+        <a href="#mano">{{ Layout.icon("🖐️") }} Mano <b>{{ handCount }}</b></a>
+        <a href="#herramientas" title="{{ activeTool == null ? "Sin Herramienta activa" : activeTool.name }}">{{ Layout.icon("🔧") }} Herramienta</a>
+        <a href="/reglas">{{ Layout.icon("📖") }} Reglas</a>
+        <a href="/">{{ Layout.icon("🏠") }} Inicio</a>
+      </nav>
     </div>
 
     {{ g.fase == "apoyo" && supportCard != null && <section class="tray support-choice" id="apoyo">
