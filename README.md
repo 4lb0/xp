@@ -95,8 +95,27 @@ Los dos botones de la cabecera, **Animaciones** y **Sonido**, se guardan en
 `prefers-reduced-motion`, las animaciones arrancan apagadas. El sonido es
 sintetizado con Web Audio: no hay archivos de audio.
 
-**Mazos y descartes** abre un modal con las cartas que quedan en cada mazo, las
-que hay en cada descarte y la lista de cartas descartadas, separadas por mazo.
+## La mesa
+
+`/juego` no es una página con secciones: es una mesa. Todo vive sobre una
+superficie con luz desde arriba y zonas de lugar fijo.
+
+- Las cartas tienen **proporción de impresión (63 × 88)** y no cambian de tamaño
+  según el texto. Debajo de 900px pierden la proporción para que el texto se
+  lea, pero siguen siendo objetos, no paneles.
+- El Encuentro siempre muestra **tres lugares**. Si un Misterio se resuelve, su
+  lugar queda a la vista como marco punteado; la grilla no se reacomoda.
+- Los **dos mazos y los dos descartes están a la vista**, como pilas con su
+  dorso y su contador. Cualquiera de las cuatro abre el detalle de mazos y
+  descartes.
+- La emboscada inicial se elige **sobre la misma carta** de la mesa, no en un
+  panel aparte.
+- Mientras se resuelve una prueba, la carta elegida sigue en la mesa, marcada, y
+  la bandeja de la tirada aparece encima.
+- La bitácora queda plegada al pie de la mesa, con la última entrada a la vista.
+
+El robo y el descarte animados salen y entran por la pila real del mazo que
+corresponde, no por un botón de la cabecera.
 
 ## Arrancar
 

@@ -102,7 +102,7 @@ Máximo dos pesos por carta. Sin sombras de texto ni tracking negativo.
 |---|---|
 | `--radius` | 3px — todo: paneles, cartas, botones, fichas |
 | `--radius-sm` | 2px — sellos y etiquetas |
-| Sombra | sólo los dados (`0 5px 12px rgba(0,0,0,.35)`); nada más proyecta sombra |
+| Sombra | fuera de la mesa, sólo los dados. En la mesa, las cartas y las pilas proyectan sombra de contacto (ver §3, Mesa) |
 | Grano | `body::before`, ruido SVG al 5 % sobre el campo plano |
 | Duración de hover | 150ms |
 | Robo de carta | 680ms (dorso → revelado) |
@@ -123,7 +123,9 @@ Máximo dos pesos por carta. Sin sombras de texto ni tracking negativo.
 con `letter-spacing`, sin píldoras: la ruta activa lleva subrayado dorado de 2px,
 `class="active"` **y** `aria-current="page"`.
 
-En `/juego` la cabecera se oculta y la navegación vive en el rail.
+En `/juego` la cabecera del sitio se oculta. La mesa tiene su propia placa
+(`.board-head`) con el nombre de la expedición, el modo, los accesos a Reglas e
+Inicio y los dos toggles. En móvil los accesos viven en el rail inferior.
 
 ### Etiquetas
 
@@ -143,12 +145,49 @@ campo de formulario impreso. Nunca flota como kicker arriba de un título.
 Una sola acción primaria por zona. En táctil, todos los botones, pills y
 toggles miden 44 px de alto mínimo.
 
+### Mesa
+
+La partida **no es una página con secciones: es una mesa con objetos**. Todo lo
+de `/juego` vive dentro de `.felt`, una superficie con luz desde arriba
+(degradados radiales), viñeta y un filete claro en el borde superior. Adentro,
+las zonas tienen lugar fijo y no se reacomodan:
+
+| Zona | Contenido | Regla |
+|---|---|---|
+| `.felt-top` | Contadores, fase y turno | Contadores en escritorio; en móvil pasan al rail inferior |
+| `.zone-encounter` | 3 Misterios + pilas | Siempre 3 lugares, ocupados o no |
+| `.zone-own` | Herramienta y apoyo | Un lugar de Herramienta, siempre visible |
+| `.zone-hand` | Mano | 3 lugares; se repone a 3 |
+
+- **Geometría fija.** Cada carta tiene `aspect-ratio: 63/88` (la proporción de
+  impresión) y no crece con su texto. La única pieza que cede espacio es
+  `.card-text`; nada más se comprime.
+- **Lugares vacíos.** Un Misterio resuelto deja su lugar: `.card-slot` con
+  borde punteado y el rótulo del lugar. Nunca se colapsa la grilla.
+- **Pilas a la vista.** Los dos mazos y los dos descartes se dibujan como
+  objetos (`.pile`, dorso real, canto de varias cartas con `box-shadow` y
+  contador en placa). La pila abre el diálogo de mazos: no hay un botón
+  escondido en la cabecera.
+- **Bandejas.** Los estados de resolución (`.tray`) aparecen sobre la mesa, con
+  el dado a la derecha y las acciones abajo. Las cartas siguen en su lugar
+  mientras se resuelve una prueba; la que está en juego lleva `.is-pending`.
+- **Bitácora plegada.** `.log-box` es un `<details>` de una línea con la última
+  entrada. El registro completo se abre a demanda.
+
 ### Cartas
 
-Estructura: franja de familia → ilustración (emoji provisorio) → familia + ID →
-título → texto → opciones o acciones. La carta es una **ficha**: filete de 1px,
-radio de 3px, sin sombra ni degradado. La franja de color lleva la trama de la
-familia y no se rellena con halos.
+Anatomía, de arriba abajo: franja de familia → ilustración (emoji provisorio)
+→ línea de tipo con familia e ID → título → caja de texto → opciones o acciones.
+
+La carta es un **objeto físico**: radio de 7px, filete de 1px, degradado
+vertical apenas visible, sombra de contacto y una luz interna en el borde
+superior. La ilustración ocupa el 30 % de la altura y lleva la trama de agua. La
+caja de texto tiene fondo propio, filete y una trama de imprenta al 2 %: cuando
+la carta tiene poco texto, el espacio libre se lee como caja y no como hueco.
+
+La franja de color lleva la trama de la familia y no se rellena con halos. En
+pantallas de menos de 900px la carta pierde la proporción fija, se limita a
+470px de ancho y la ilustración pasa a 16:9 para que el texto se lea.
 
 | Familia | Franja (§5) | Color |
 |---|---|---|
@@ -178,28 +217,30 @@ largos van en `.chip-label`, en versalitas y `--muted`.
 Los contadores que pueden pasar de 6 muestran la cifra dibujada dentro de la
 cara (7–12) y la cifra real al lado: el dado nunca miente. El tope es 12.
 
-### Paneles
+### Bandejas de resolución
 
-`.panel` base; `.test-panel` (prueba en curso), `.result-panel` (resultado),
-`.push-panel` (empujón), `.ambush-choice` (emboscada), `.support-choice`
-(apoyo), `.help-zone` (apoyo en mesa), `.quick-*` para la guía.
+`.tray` es la bandeja de estado: prueba, tirada fallida, resultado, apoyo.
+Grilla de dos columnas (contenido + dado) y una fila de acciones a lo ancho; en
+móvil se apila. La emboscada inicial no usa bandeja: se elige sobre la misma
+carta de la mesa, con el botón `.ambush-action` que sólo aparece en esa fase.
 
-Cada panel de estado abre con `.eyebrow` en versalitas y un `h2` que dice qué
-está pasando. El resultado de una prueba es `role="status"` y recibe foco al
-cargar.
+La bandeja no repite el sello de fase: eso vive en `.felt-prompt`, la línea que
+dice qué hay que hacer ahora. El resultado de una prueba es `role="status"` y
+recibe foco al cargar.
 
 ### Bitácora
 
-`.log` con hora corta local (`19:43`), `datetime` completo y el texto en
-segunda persona. Nunca timestamps crudos.
+`.log-box` plegado con la última entrada a la vista. Adentro, `.log` con hora
+corta local (`19:43`), `datetime` completo y el texto en segunda persona. Nunca
+timestamps crudos.
 
 ### Rail de la expedición
 
-- **≥1000px**: columna fija de 190px a la derecha, con los tres contadores, el
-  turno y los accesos.
-- **<1000px**: deja de flotar. Pasa a ser una grilla 3×2 sobre la mesa, con
-  etiquetas cortas (`.rail-label-short`) y targets de 44px. Los contadores se
-  muestran una sola vez, en `.gauges-board`.
+- **≥1000px**: no se muestra. Los contadores están en la mesa y los accesos en
+  la placa de la mesa.
+- **<1000px**: barra fija abajo, con los tres contadores y los accesos, con
+  etiquetas cortas (`.rail-label-short`) y targets de 44px. Los contadores de la
+  mesa se ocultan para no duplicar el dato.
 
 ### Diálogo de mazos
 
@@ -209,9 +250,9 @@ borgoña para el Juego, azul para el Equipo. Las miniaturas son de 168×235
 
 ### Contadores (HUD)
 
-`.gauges-board` es una grilla de tres columnas **también en móvil**: apilados
-empujaban la acción fuera de pantalla. En pantallas de menos de 380px el dado
-se achica y el contador pasa a vertical.
+`.gauges-board` vive en `.felt-top`, como tres dados apoyados en la mesa: dado
+de 2,5rem, rótulo en versalitas y cifra. En móvil no se muestran acá: el dato
+está en el rail inferior.
 
 ---
 
@@ -221,7 +262,10 @@ se achica y el contador pasa a vertical.
 |---|---|
 | Sin partida | Formulario de inicio con modo preseleccionado y enlace a reglas |
 | Mesa vacía | Texto que explica cómo reponerla, nunca un espacio en blanco |
-| Carta bloqueada | `.is-locked` (55 % de opacidad) + texto de por qué |
+| Lugar vacío | `.card-slot` punteado con el ícono y el nombre del lugar |
+| Carta bloqueada | `.is-locked` (62 % de opacidad, desaturada) + texto de por qué |
+| Carta en juego | `.is-pending`: filete y halo dorado, la carta no sale de la mesa |
+| Carta jugable | `.is-actionable`: se levanta 5px al pasar el puntero o al enfocar |
 | Resultado | `role="status"`, foco en el `h2`, dados visibles y fichas del efecto |
 | Victoria | `.ending.victoria`: glow dorado, fuegos suaves detrás del contenido, dados reales del final |
 | Derrota | `.ending.derrota`: glow coral, dados reales del final |

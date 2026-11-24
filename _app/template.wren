@@ -1,6 +1,6 @@
 class Layout {
   // Subir al cambiar css/style.css para romper la caché de Cloudflare.
-  static assetVersion { "2026-11-24-3" }
+  static assetVersion { "2026-11-24-8" }
   static printVersion { "2026-11-23-1" }
   static description { "XP — Equipo eXPedición. LCG cooperativo de aventura y misterio para toda la familia. Mazos fijos, partidas de 10 a 20 minutos." }
 
@@ -332,7 +332,7 @@ class Layout {
               <img src="/img/logo-xp-mark.png" width="28" height="28" alt="" />
               <span><strong>XP</strong> · Equipo eXPedición — Edición 01: <em>En busca del Megalodón</em></span>
             </p>
-            <p class="muted">Hecho con <a href="https://bialet.dev" target="_blank" rel="noopener">Bialet</a></p>
+            <p class="muted">Hecho con <a href="https://iz.ar" target="_blank" rel="noopener">iz.ar</a></p>
           </div>
         </footer>
         <script src="/js/game.js?v={{ Layout.assetVersion }}" defer></script>

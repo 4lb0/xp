@@ -2187,3 +2187,834 @@ section[id] { scroll-margin-top: 5.5rem; }
 .peek h3 { overflow-wrap: anywhere; }
 .peek .test-badge { max-width: 100%; }
 .peek .option-effects { flex-wrap: wrap; }
+
+/* ==========================================================================
+   Mesa de juego
+   La partida no es una página con secciones: es una superficie con objetos.
+   Cartas de proporción fija, pilas visibles, lugares vacíos y una luz que
+   viene de arriba. Todo lo de acá vive dentro de .table-board.
+   ========================================================================== */
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.wrap:has(> .table-board) { width: min(1360px, 100% - 2rem); }
+
+.table-board { padding-right: 0; padding-block: 0 3.5rem; }
+
+/* Cabecera: placa de la mesa, no portada. */
+.table-board .board-head {
+  align-items: center;
+  padding-block: 0.9rem 0.9rem;
+  border-bottom: 1px solid var(--line);
+  margin-bottom: 1rem;
+}
+.table-board .board-title { display: grid; gap: 0.15rem; }
+.table-board .board-head h1 {
+  margin: 0;
+  font-size: clamp(1.35rem, 2.4vw, 1.95rem);
+  font-weight: 900;
+  letter-spacing: -0.015em;
+}
+.table-board .board-meta { align-items: center; }
+.board-nav { display: flex; gap: 0.9rem; padding-inline: 0.4rem; }
+.board-nav a {
+  color: var(--muted);
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  text-decoration: none;
+}
+.board-nav a:hover { color: var(--paper); }
+.board-nav a + a { border-left: 1px solid var(--line); padding-left: 0.9rem; }
+
+@media (min-width: 1000px) {
+  /* En escritorio los contadores están en la mesa y los accesos en la cabecera. */
+  .table-board .game-rail { display: none; }
+}
+
+/* ---------- Superficie ---------- */
+
+.felt {
+  position: relative;
+  padding: 1rem 1.25rem 1.5rem;
+  border-radius: 10px;
+  border: 1px solid rgba(244, 241, 234, 0.16);
+  background:
+    radial-gradient(120% 90% at 50% -20%, rgba(51, 187, 204, 0.13), transparent 62%),
+    radial-gradient(80% 70% at 50% 0%, rgba(20, 84, 127, 0.42), transparent 70%),
+    linear-gradient(180deg, #0a2136 0%, #081c2f 55%, #061525 100%);
+  box-shadow:
+    inset 0 1px 0 rgba(244, 241, 234, 0.09),
+    inset 0 0 120px rgba(0, 0, 0, 0.5),
+    0 30px 60px -40px rgba(0, 0, 0, 1);
+  isolation: isolate;
+}
+/* Luz de mesa: un filo claro arriba y viñeta en los bordes. */
+.felt::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  background:
+    linear-gradient(180deg, rgba(244, 241, 234, 0.06), transparent 14%),
+    radial-gradient(130% 100% at 50% 40%, transparent 55%, rgba(3, 10, 18, 0.55) 100%);
+  z-index: -1;
+}
+
+/* ---------- Estado de la expedición ---------- */
+
+.felt-top {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 1rem;
+  padding-bottom: 0.9rem;
+  border-bottom: 1px solid rgba(244, 241, 234, 0.12);
+}
+
+.table-board .gauges-board {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.45rem;
+  margin: 0;
+}
+.table-board .counter {
+  align-items: center;
+  gap: 0.55rem;
+  padding: 0.35rem 0.6rem;
+  border-radius: 6px;
+  border: 1px solid rgba(244, 241, 234, 0.16);
+  background: rgba(5, 17, 29, 0.55);
+  box-shadow: inset 0 1px 0 rgba(244, 241, 234, 0.05);
+}
+.table-board .counter .die {
+  --size: 2.5rem;
+  box-shadow: 0 6px 10px -4px rgba(0, 0, 0, 0.8), inset 0 1px 0 rgba(255, 255, 255, 0.35);
+}
+.table-board .counter .counter-label {
+  font-size: 0.6rem;
+  letter-spacing: 0.14em;
+}
+.table-board .counter .counter-value { font-size: 0.95rem; }
+
+.felt-prompt { display: grid; gap: 0.15rem; min-width: 0; }
+.felt-prompt .eyebrow {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  color: var(--gold-soft);
+  letter-spacing: 0.18em;
+}
+.felt-prompt-text {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: clamp(0.92rem, 1.2vw, 1.06rem);
+  font-weight: 700;
+  line-height: 1.25;
+  color: var(--paper);
+  text-wrap: balance;
+}
+
+.turn-plate {
+  display: grid;
+  justify-items: center;
+  gap: 0.05rem;
+  margin: 0;
+  padding: 0.3rem 0.8rem;
+  border-radius: 6px;
+  border: 1px solid rgba(242, 179, 61, 0.4);
+  background: rgba(242, 179, 61, 0.08);
+}
+.turn-plate span {
+  color: var(--gold-soft);
+  font-size: 0.56rem;
+  font-weight: 800;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+.turn-plate b {
+  font-family: var(--font-display);
+  font-size: 1.3rem;
+  font-weight: 900;
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+}
+
+/* ---------- Zonas ---------- */
+
+.zone { margin-block: 1.15rem 0; }
+.zone-head {
+  display: flex;
+  align-items: baseline;
+  gap: 0.7rem;
+  margin-bottom: 0.5rem;
+}
+.zone-head h2 {
+  flex: none;
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 0.76rem;
+  font-weight: 800;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--paper-soft);
+}
+.zone-head::after {
+  content: "";
+  order: 2;
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, rgba(244, 241, 234, 0.24), rgba(244, 241, 234, 0.02));
+}
+.zone-count {
+  order: 3;
+  flex: none;
+  color: var(--muted);
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.zone-encounter .zone-body {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 190px;
+  gap: 1.2rem;
+  align-items: start;
+}
+
+.card-row {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.85rem;
+  align-items: start;
+}
+
+/* ---------- La carta como objeto ---------- */
+
+.table-board .card {
+  --card-gap: 0.34rem;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: var(--card-gap);
+  aspect-ratio: 63 / 88;
+  padding: 0.55rem;
+  border-radius: 7px;
+  border: 1px solid rgba(244, 241, 234, 0.14);
+  background:
+    linear-gradient(180deg, rgba(26, 99, 150, 0.3), rgba(7, 26, 46, 0) 42%),
+    linear-gradient(180deg, #0d2941 0%, #081b2d 100%);
+  box-shadow:
+    inset 0 1px 0 rgba(244, 241, 234, 0.08),
+    inset 0 -18px 24px -22px rgba(0, 0, 0, 0.9),
+    0 14px 24px -14px rgba(0, 0, 0, 0.95),
+    0 2px 3px rgba(0, 0, 0, 0.5);
+  overflow: hidden;
+  transition: transform 170ms ease, box-shadow 170ms ease, border-color 170ms ease;
+}
+
+/* El único bloque que cede espacio es el texto: el resto de la carta no se
+   comprime nunca. Sin esto, en pantallas angostas el título desaparece. */
+.table-board .card > * { flex: none; }
+.table-board .card > .card-text { flex: 1 1 auto; }
+
+.table-board .card-art {
+  position: relative;
+  flex: 0 0 30%;
+  height: auto;
+  min-height: 0;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  border-radius: 4px;
+  background:
+    radial-gradient(70% 60% at 50% 34%, rgba(244, 241, 234, 0.1), transparent 62%),
+    radial-gradient(120% 100% at 50% 115%, color-mix(in srgb, var(--family, var(--teal)) 42%, transparent), transparent 68%),
+    linear-gradient(180deg, rgba(3, 12, 21, 0.1), rgba(3, 12, 21, 0.78));
+  border: 1px solid rgba(244, 241, 234, 0.13);
+  box-shadow: inset 0 0 30px rgba(0, 0, 0, 0.55), inset 0 1px 0 rgba(244, 241, 234, 0.06);
+}
+/* La profundidad del agua, dibujada: líneas tenues que se pierden abajo. */
+.table-board .card-art::after {
+  content: "";
+  position: absolute;
+  inset: auto 0 0 0;
+  height: 46%;
+  pointer-events: none;
+  background: repeating-linear-gradient(180deg, rgba(244, 241, 234, 0.055) 0 1px, transparent 1px 7px);
+  -webkit-mask-image: linear-gradient(180deg, transparent, #000);
+  mask-image: linear-gradient(180deg, transparent, #000);
+}
+.table-board .card-emoji {
+  font-size: clamp(2.3rem, 3.4vw, 3.5rem);
+  filter: drop-shadow(0 12px 16px rgba(0, 0, 0, 0.55));
+}
+
+.table-board .card-family {
+  display: flex;
+  align-items: center;
+  gap: 0.28rem;
+  padding-bottom: 0.22rem;
+  border-bottom: 1px solid rgba(244, 241, 234, 0.14);
+  font-size: 0.6rem;
+  letter-spacing: 0.13em;
+  line-height: 1.3;
+}
+
+.table-board .card h3 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: clamp(0.9rem, 1.1vw, 1.04rem);
+  font-weight: 800;
+  line-height: 1.16;
+  letter-spacing: -0.01em;
+}
+
+.table-board .card-text {
+  flex: 1 1 auto;
+  min-height: 0;
+  margin-block: 0;
+  overflow: hidden;
+  padding: 0.38rem 0.42rem;
+  border-radius: 4px;
+  border: 1px solid rgba(244, 241, 234, 0.07);
+  background:
+    radial-gradient(120% 100% at 100% 0%, color-mix(in srgb, var(--family) 9%, transparent), transparent 62%),
+    repeating-linear-gradient(180deg, rgba(244, 241, 234, 0.022) 0 1px, transparent 1px 4px),
+    rgba(3, 12, 21, 0.42);
+  box-shadow: inset 0 1px 0 rgba(0, 0, 0, 0.35);
+  font-size: 0.76rem;
+  line-height: 1.45;
+  color: var(--paper-soft);
+  -webkit-mask-image: linear-gradient(180deg, #000 92%, transparent 100%);
+  mask-image: linear-gradient(180deg, #000 92%, transparent 100%);
+}
+.table-board .card-text p { margin: 0; font-size: inherit; }
+
+.table-board .card-options { margin: 0; gap: 0.25rem; }
+.table-board .option-btn {
+  display: flex;
+  gap: 0.4rem;
+  align-items: flex-start;
+  width: 100%;
+  padding: 0.32rem 0.38rem;
+  border-radius: 4px;
+  border: 1px solid rgba(51, 187, 204, 0.24);
+  background: rgba(51, 187, 204, 0.07);
+  text-align: left;
+  transition: background 130ms ease, border-color 130ms ease, transform 130ms ease;
+}
+.table-board .option-btn:hover:not(:disabled) {
+  border-color: rgba(51, 187, 204, 0.65);
+  background: rgba(51, 187, 204, 0.16);
+}
+.table-board .option-btn:active:not(:disabled) { transform: translateY(1px); }
+.option-key {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 1.05rem;
+  height: 1.05rem;
+  margin-top: 0.05rem;
+  border-radius: 3px;
+  background: var(--gold);
+  color: #3a2a06;
+  font-family: var(--font-display);
+  font-size: 0.6rem;
+  font-weight: 900;
+  line-height: 1;
+}
+.option-body { display: grid; gap: 0.16rem; min-width: 0; }
+.table-board .option-text { font-size: 0.8rem; font-weight: 700; line-height: 1.25; }
+.table-board .option-body .test-badge {
+  margin: 0;
+  padding: 0.1rem 0.32rem;
+  font-size: 0.56rem;
+  letter-spacing: 0.05em;
+}
+.table-board .option-effects { gap: 0.18rem; font-size: 0.56rem; }
+.table-board .option-effects .chip-label { font-size: 0.5rem; letter-spacing: 0.08em; margin: 0; }
+.table-board .option-effects .chip,
+.table-board .effect-chips .chip {
+  padding: 0.08rem 0.3rem;
+  font-size: 0.6rem;
+}
+.table-board .option-effects .chip .ico { width: 0.8em; height: 0.8em; }
+
+.table-board .use-badge { padding: 0.12rem 0.4rem; font-size: 0.56rem; }
+.table-board .effect-chips { gap: 0.2rem; }
+.table-board .entry-badge { padding: 0.14rem 0.4rem; font-size: 0.58rem; gap: 0.2rem; }
+
+.table-board .card-action,
+.table-board .card > form:last-child { margin-top: auto; }
+.table-board .card-action .btn-small {
+  width: 100%;
+  border-color: rgba(242, 179, 61, 0.5);
+  background: rgba(242, 179, 61, 0.1);
+  color: var(--gold-soft);
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+.table-board .card-action .btn-small:hover:not(:disabled) {
+  background: var(--gold);
+  border-color: var(--gold);
+  color: #3a2a06;
+}
+.table-board .card-action .btn-ghost.btn-small {
+  border-color: rgba(51, 187, 204, 0.4);
+  background: rgba(51, 187, 204, 0.08);
+  color: var(--cyan-soft);
+}
+.table-board .card-action .btn-ghost.btn-small:hover:not(:disabled) {
+  background: rgba(51, 187, 204, 0.2);
+  border-color: rgba(51, 187, 204, 0.7);
+  color: var(--paper);
+}
+.table-board .card .hint.card-hint { margin: 0; font-size: 0.6rem; }
+
+/* La carta que se está resolviendo queda en la mesa, marcada. */
+.table-board .card.is-pending {
+  border-color: rgba(242, 179, 61, 0.75);
+  box-shadow:
+    0 0 0 1px rgba(242, 179, 61, 0.55),
+    0 0 34px -6px rgba(242, 179, 61, 0.4),
+    0 20px 30px -16px rgba(0, 0, 0, 0.95);
+}
+.table-board .card.is-locked { opacity: 0.62; filter: saturate(0.7); }
+
+@media (hover: hover) and (pointer: fine) {
+  .table-board .card.is-actionable:hover,
+  .table-board .card:focus-within {
+    transform: translateY(-5px);
+    border-color: rgba(244, 241, 234, 0.42);
+    box-shadow:
+      inset 0 1px 0 rgba(244, 241, 234, 0.1),
+      0 26px 34px -18px rgba(0, 0, 0, 1),
+      0 0 0 1px rgba(51, 187, 204, 0.18);
+    z-index: 3;
+  }
+}
+
+/* Lugares vacíos: el lugar existe aunque la carta no. */
+.table-board .card-slot {
+  display: grid;
+  place-content: center;
+  justify-items: center;
+  gap: 0.4rem;
+  border: 1px dashed rgba(244, 241, 234, 0.14);
+  background: linear-gradient(180deg, rgba(9, 28, 46, 0.35), rgba(4, 14, 24, 0.2));
+  box-shadow: inset 0 0 60px rgba(0, 0, 0, 0.35);
+  color: var(--muted);
+}
+.table-board .card-slot::before { display: none; }
+.slot-mark { opacity: 0.45; }
+.slot-mark .ico { width: 1.8rem; height: 1.8rem; }
+.slot-text {
+  font-size: 0.58rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  opacity: 0.7;
+}
+
+/* ---------- Pilas ---------- */
+
+.pile-rack {
+  display: grid;
+  grid-template-rows: repeat(2, auto);
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(0, 1fr);
+  gap: 0.7rem 0.5rem;
+  align-content: start;
+}
+.pile {
+  display: grid;
+  justify-items: center;
+  gap: 0.3rem;
+  padding: 0.25rem;
+  border: 0;
+  border-radius: 6px;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+}
+.pile-stack {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 100%;
+  aspect-ratio: 63 / 88;
+  border-radius: 5px;
+  transition: transform 150ms ease;
+}
+.pile-stack img {
+  width: 100%;
+  height: 100%;
+  border-radius: 5px;
+  display: block;
+  object-fit: cover;
+  box-shadow:
+    4px 4px 0 -1px #061626,
+    4px 4px 0 0 rgba(244, 241, 234, 0.16),
+    8px 8px 0 -1px #061626,
+    8px 8px 0 0 rgba(244, 241, 234, 0.1),
+    0 12px 18px -10px rgba(0, 0, 0, 0.95);
+}
+.pile-stack.pile-discard {
+  border: 1px dashed rgba(244, 241, 234, 0.26);
+  background: linear-gradient(180deg, rgba(15, 42, 66, 0.9), rgba(6, 22, 38, 0.9));
+  box-shadow: inset 0 0 24px rgba(0, 0, 0, 0.5);
+  transform: rotate(-2deg);
+}
+.pile-face { font-size: 1.9rem; line-height: 1; filter: drop-shadow(0 6px 8px rgba(0, 0, 0, 0.5)); }
+.pile-count {
+  position: absolute;
+  right: -0.35rem;
+  bottom: -0.35rem;
+  min-width: 1.5rem;
+  padding: 0.08rem 0.32rem;
+  border-radius: 999px;
+  border: 1px solid rgba(7, 26, 46, 0.9);
+  background: var(--gold);
+  color: #3a2a06;
+  font-family: var(--font-display);
+  font-size: 0.72rem;
+  font-weight: 900;
+  font-variant-numeric: tabular-nums;
+  line-height: 1.35;
+  text-align: center;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.45);
+}
+.pile-name {
+  margin-top: 0.42rem;
+  color: var(--muted);
+  font-size: 0.54rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+.pile:hover .pile-stack { transform: translateY(-3px); }
+.pile:hover .pile-stack.pile-discard { transform: rotate(-2deg) translateY(-3px); }
+.pile:focus-visible { outline: 2px solid var(--cyan); outline-offset: 2px; }
+
+/* ---------- Su lado de la mesa ---------- */
+
+.zone-own .zone-body {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.4rem;
+  align-items: flex-start;
+}
+.slot-column {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: 0.45rem 0.7rem;
+  max-width: 100%;
+}
+.slot-label {
+  flex: 0 0 100%;
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  margin: 0;
+  color: var(--paper-soft);
+  font-size: 0.62rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+.slot-label span { margin-left: auto; color: var(--muted); letter-spacing: 0.06em; }
+.slot-column .card { width: 232px; flex: none; }
+.slot-column .card-slot-sm { aspect-ratio: 63 / 88; }
+
+.peek-column { width: 300px; max-width: 100%; display: grid; gap: 0.4rem; }
+.peek { aspect-ratio: auto; }
+.table-board .peek { gap: 0.3rem; }
+.table-board .peek h3 { font-size: 0.95rem; }
+.mini-options strong { font-size: 0.72rem; }
+
+/* ---------- Mano ---------- */
+
+.zone-hand {
+  margin-block: 1.8rem 0;
+  padding-top: 1.1rem;
+  border-top: 1px solid rgba(244, 241, 234, 0.18);
+}
+.zone-hand .card-row {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.9rem;
+  max-width: 980px;
+  margin-inline: auto;
+}
+.zone-foot {
+  margin: 0.7rem auto 0;
+  max-width: 980px;
+  color: var(--muted);
+  font-size: 0.7rem;
+  text-align: center;
+}
+
+/* ---------- Bandejas de resolución ---------- */
+
+.tray {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-areas:
+    "main dice"
+    "actions actions";
+  gap: 0.9rem 1.1rem;
+  align-items: start;
+  margin: 0 0 1.25rem;
+  padding: 0.9rem 1.05rem;
+  border-radius: 8px;
+  border: 1px solid rgba(242, 179, 61, 0.34);
+  background:
+    linear-gradient(180deg, rgba(15, 45, 70, 0.97), rgba(8, 26, 44, 0.97));
+  box-shadow:
+    inset 0 1px 0 rgba(244, 241, 234, 0.08),
+    0 22px 34px -22px rgba(0, 0, 0, 1);
+}
+.tray-main { grid-area: main; display: grid; gap: 0.35rem; min-width: 0; }
+.tray .eyebrow { margin: 0; }
+.tray h2 {
+  margin: 0;
+  font-size: clamp(1.1rem, 1.8vw, 1.45rem);
+  line-height: 1.15;
+}
+.tray-main p { margin: 0; }
+.tray .test-action {
+  font-family: var(--font-display);
+  font-size: clamp(1rem, 1.4vw, 1.2rem);
+  font-weight: 800;
+  line-height: 1.25;
+}
+.tray-dice { grid-area: dice; display: grid; justify-items: center; align-content: start; gap: 0.4rem; min-width: 8rem; }
+.tray-dice .dice-row { gap: 0.6rem; }
+.tray-dice .roller-stage { min-width: 11rem; }
+.tray-dice .die-large { --size: 3.6rem; }
+.tray-actions {
+  grid-area: actions;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.55rem 0.7rem;
+  align-items: center;
+  margin-block: 0;
+}
+.tray-actions .maneuvers { margin: 0; }
+.tray-actions .roll-form { display: flex; flex-wrap: wrap; gap: 0.45rem; align-items: center; }
+.tray-actions form { margin: 0; }
+.dice-help { text-align: center; font-size: 0.58rem; }
+.tray .aviso, .tray .hint { margin: 0; }
+.tray .option-chips { margin: 0; }
+.tray > .card-row { grid-column: 1 / -1; }
+.ambush-choice {
+  grid-template-columns: 1fr;
+  grid-template-areas: "main" "cards";
+}
+.ambush-choice .card-row { grid-area: cards; max-width: 1080px; }
+.support-choice {
+  grid-template-columns: minmax(0, 1fr) auto auto;
+  grid-template-areas: "main card actions";
+  align-items: center;
+  border-color: rgba(192, 47, 112, 0.45);
+}
+.support-choice h2 { color: var(--support-soft); }
+.support-choice .action-row { grid-area: actions; margin: 0; }
+.tray-card {
+  grid-area: card;
+  display: grid;
+  justify-items: center;
+  align-content: center;
+  gap: 0.3rem;
+  min-width: 9rem;
+  padding: 0.8rem;
+  border-radius: 6px;
+  border: 1px solid rgba(192, 47, 112, 0.4);
+  background: rgba(192, 47, 112, 0.1);
+}
+.tray-card .card-emoji { font-size: 2.6rem; }
+.tray-card .card-name {
+  font-family: var(--font-display);
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-align: center;
+  color: var(--support-soft);
+}
+.reroll-panel { border-color: rgba(224, 101, 80, 0.45); }
+.reroll-panel h2 { color: var(--coral-soft); }
+.result-panel { border-color: rgba(18, 160, 95, 0.4); }
+.result-panel .dice-row { justify-content: center; }
+
+/* ---------- Bitácora ---------- */
+
+.log-box {
+  margin-top: 1.6rem;
+  border-top: 1px solid var(--line);
+  padding-top: 0.6rem;
+}
+.log-box summary {
+  display: flex;
+  align-items: baseline;
+  gap: 0.7rem;
+  cursor: pointer;
+  list-style: none;
+}
+.log-box summary::-webkit-details-marker { display: none; }
+.log-box summary::marker { content: ""; }
+.log-box-title {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  color: var(--paper-soft);
+  font-size: 0.64rem;
+  font-weight: 800;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+.log-box-last {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--muted);
+  font-size: 0.76rem;
+}
+.log-box-hint {
+  flex: none;
+  color: var(--cyan);
+  font-size: 0.6rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+.log-box[open] .log-box-hint { color: var(--muted); }
+.log-box .log { margin-top: 0.6rem; }
+.log-box .restart-form { margin-top: 0.9rem; }
+
+/* ---------- Adaptación ---------- */
+
+@media (max-width: 1180px) {
+  .zone-encounter .zone-body { grid-template-columns: minmax(0, 1fr); gap: 0.8rem; }
+  .pile-rack {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    grid-template-rows: auto;
+    grid-auto-flow: row;
+    max-width: 420px;
+    margin-left: auto;
+    order: 2;
+  }
+  .pile-stack { width: 78px; margin-inline: auto; }
+}
+
+@media (max-width: 999px) {
+  /* En móvil el estado vive en la barra inferior: la mesa no lo repite. */
+  .table-board .felt-top { grid-template-columns: minmax(0, 1fr) auto; }
+  .table-board .felt-top .gauges-board { display: none; }
+  .table-board .counter .die { --size: 2.2rem; }
+  .table-board .board-nav { display: none; }
+}
+
+@media (max-width: 900px) {
+  .zone-encounter .card-row,
+  .ambush-choice .card-row {
+    grid-template-columns: minmax(0, 1fr);
+    max-width: 470px;
+    margin-inline: auto;
+  }
+  .zone-hand .card-row { grid-template-columns: minmax(0, 1fr); max-width: 460px; }
+  .table-board .card {
+    aspect-ratio: auto;
+    min-height: 22rem;
+    padding: 0.85rem;
+    gap: 0.5rem;
+  }
+  .table-board .card-art { flex: none; height: auto; aspect-ratio: 16 / 9; }
+  .table-board .card-emoji { font-size: 3.2rem; }
+  .table-board .card h3 { font-size: 1.2rem; }
+  .table-board .card-text {
+    font-size: 0.9rem;
+    -webkit-mask-image: none;
+    mask-image: none;
+  }
+  .table-board .card-slot { min-height: 7rem; }
+  .table-board .option-btn { padding: 0.6rem; }
+  .table-board .option-text { font-size: 0.92rem; }
+  .table-board .option-body .test-badge { font-size: 0.68rem; padding: 0.16rem 0.45rem; }
+  .table-board .option-effects { font-size: 0.7rem; }
+  .table-board .option-effects .chip,
+  .table-board .effect-chips .chip { font-size: 0.72rem; padding: 0.14rem 0.45rem; }
+  .table-board .option-effects .chip-label { font-size: 0.6rem; }
+  .table-board .use-badge { font-size: 0.68rem; }
+  .table-board .card .hint.card-hint { font-size: 0.72rem; }
+  .slot-column .card { width: min(360px, 100%); }
+  .peek-column { width: min(360px, 100%); }
+  .zone-own .zone-body { gap: 1rem; }
+  .tray {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas: "main" "dice" "actions";
+  }
+  .ambush-choice { grid-template-areas: "main" "cards"; }
+  .support-choice { grid-template-areas: "main" "card" "actions"; }
+  .tray-dice .die-large { --size: 4rem; }
+  .pile-rack { max-width: 100%; }
+  .pile-stack { width: 84px; }
+}
+
+@media (max-width: 600px) {
+  .wrap:has(> .table-board) { width: min(1360px, 100% - 1rem); }
+  .felt { padding: 0.8rem 0.75rem 1.1rem; border-radius: 8px; }
+  .table-board .board-head { padding-block: 0.7rem; }
+  .felt-top { gap: 0.6rem; }
+  .felt-prompt-text { font-size: 0.9rem; }
+  .turn-plate { padding: 0.25rem 0.55rem; }
+  .turn-plate b { font-size: 1.1rem; }
+  .zone-head h2 { font-size: 0.68rem; letter-spacing: 0.12em; }
+  .zone-count { display: none; }
+  .pile-rack { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 0.4rem; }
+  .pile-stack { width: 100%; max-width: 72px; }
+  .pile-name { font-size: 0.5rem; }
+  .tray { padding: 0.75rem; }
+  .log-box-last { display: none; }
+  .log-box-hint { margin-left: auto; }
+}
+
+/* La emboscada inicial se elige sobre la misma carta de la mesa. El botón
+   vive en el HTML de todas las cartas y sólo aparece en esa fase. */
+.ambush-action { display: none; }
+.zone-encounter.is-ambush .ambush-action { display: block; }
+.zone-encounter.is-ambush .ambush-action.is-hidden { display: none; }
+.zone-encounter.is-ambush .card-options { display: none; }
+
+.zone-encounter.is-ambush .entry-done { display: none; }
+
+.table-board > .ending { max-width: 720px; margin-inline: auto; margin-block: 2rem 1rem; }
+
+.ending .gauges-board { margin-bottom: 1.4rem; }
+.ending form { margin: 0; }
+
+/* En la mano la carta se lee de cerca: la ilustración crece y la caja de
+   texto se ajusta a lo que dice, sin dejar un rectángulo vacío. */
+.zone-hand .card-art { flex: 1 1 30%; }
+.table-board .zone-hand .card > .card-text { flex: 0 0 auto; max-height: 46%; }

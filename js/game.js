@@ -70,10 +70,13 @@
   // ----- Mazos y descartes -----
 
   const dialog = document.getElementById("mazos-dialog");
-  document.getElementById("mazos-btn")?.addEventListener("click", () => {
-    if (!dialog) return;
-    if (typeof dialog.showModal === "function") dialog.showModal();
-    else dialog.setAttribute("open", "");
+  // Cada pila de la mesa abre el estado de mazos: la mesa tiene los objetos.
+  document.querySelectorAll("[data-pile], #mazos-btn").forEach((pile) => {
+    pile.addEventListener("click", () => {
+      if (!dialog) return;
+      if (typeof dialog.showModal === "function") dialog.showModal();
+      else dialog.setAttribute("open", "");
+    });
   });
   dialog?.querySelectorAll("[data-close]").forEach((button) => {
     button.addEventListener("click", () => dialog.close());
@@ -101,7 +104,7 @@
   const plays = moves.filter((move) => move.kind === "play");
 
   const revealed = new Set();
-  if (motionOn() && document.getElementById("mazos-btn")) {
+  if (motionOn() && document.querySelector("[data-pile], #mazos-btn")) {
     prepareReveals(moves);
     showGhosts(moves);
   }
@@ -155,7 +158,7 @@
     // Los acentos del manual: latón, turquesa y coral, siempre con poca opacidad.
     const colors = ["#F2B33D", "#F5DA8C", "#0FA8A2", "#9BD7E1", "#E06550", "#F0BEB4"];
     const particles = [];
-    const bursts = [0, 390, 780, 1200, 1600];
+    const bursts = [0, 340, 680, 1020, 1360, 1700];
     let width = 0;
     let height = 0;
 
@@ -177,13 +180,13 @@
       const x = margin + Math.random() * Math.max(width - margin * 2, 1);
       const y = top + Math.random() * (bottom - top);
       const color = colors[Math.floor(Math.random() * colors.length)];
-      const count = 18 + Math.floor(Math.random() * 8);
-      const speed = 52 + Math.random() * 34;
+      const count = 30 + Math.floor(Math.random() * 10);
+      const speed = 56 + Math.random() * 36;
       const twist = Math.random() * Math.PI * 2;
       for (let i = 0; i < count; i += 1) {
         const angle = twist + (Math.PI * 2 * i) / count;
         const velocity = speed * (0.6 + Math.random() * 0.55);
-        const life = 1.25 + Math.random() * 0.65;
+        const life = 1.45 + Math.random() * 0.75;
         particles.push({
           x,
           y,
@@ -192,7 +195,7 @@
           life,
           maxLife: life,
           color,
-          size: 1.1 + Math.random() * 1.5
+          size: 1.35 + Math.random() * 1.7
         });
       }
     }
@@ -232,8 +235,23 @@
         particle.x += particle.vx * dt;
         particle.y += particle.vy * dt;
         const fade = particle.life / particle.maxLife;
-        context.globalAlpha = Math.min(1, fade * 0.72);
         context.fillStyle = particle.color;
+        // Halo tenue: da el brillo sin llegar a saturar el fondo oscuro.
+        context.globalAlpha = Math.min(1, fade * 0.18);
+        context.beginPath();
+        context.arc(particle.x, particle.y, particle.size * 2.5 * (0.4 + fade * 0.6), 0, Math.PI * 2);
+        context.fill();
+        // Estela corta en el sentido de la velocidad.
+        context.globalAlpha = Math.min(1, fade * 0.34);
+        context.strokeStyle = particle.color;
+        context.lineWidth = particle.size * 0.9;
+        context.lineCap = "round";
+        context.beginPath();
+        context.moveTo(particle.x - particle.vx * 0.085, particle.y - particle.vy * 0.085);
+        context.lineTo(particle.x, particle.y);
+        context.stroke();
+        // Núcleo.
+        context.globalAlpha = Math.min(1, fade * 0.88);
         context.beginPath();
         context.arc(particle.x, particle.y, particle.size * (0.35 + fade * 0.65), 0, Math.PI * 2);
         context.fill();
@@ -315,9 +333,14 @@
     window.setTimeout(() => card.classList.remove("is-new"), 1950);
   }
 
+  function pileNode(kind, deck) {
+    const juego = deck !== "equipo";
+    if (kind === "draw") return document.getElementById(juego ? "pila-misterio" : "pila-equipo");
+    return document.getElementById(juego ? "pila-descarte-juego" : "pila-descarte-equipo");
+  }
+
   function showGhosts(list) {
-    const anchor = document.getElementById("mazos-btn");
-    if (!anchor) return;
+    if (!document.querySelector("[data-pile], #mazos-btn")) return;
     const interesting = list.filter((move) => {
       return move.kind === "draw" || move.kind === "discard" || move.kind === "play";
     }).slice(0, 6);
@@ -325,8 +348,12 @@
     interesting.forEach((move, index) => {
       window.setTimeout(() => {
         if (!motionOn()) return;
-        const start = move.kind === "draw" ? anchor.getBoundingClientRect() : zoneRect(move.from);
-        const end = move.kind === "discard" ? anchor.getBoundingClientRect() : (newCardRect(move) || zoneRect(move.to));
+        // El sobre sale de la pila real y aterriza en la pila real: la mesa
+        // tiene mazos y descartes a la vista, no un modal escondido.
+        const pile = pileNode(move.kind, move.deck);
+        const stack = pile ? pile.querySelector(".pile-stack") || pile : null;
+        const start = move.kind === "draw" ? (stack || pile)?.getBoundingClientRect() : zoneRect(move.from);
+        const end = move.kind === "discard" ? (stack || pile)?.getBoundingClientRect() : (newCardRect(move) || zoneRect(move.to));
         if (!start || !end) return;
         flyCard(move, start, end, () => {
           if (move.kind === "draw") revealCard(move);
