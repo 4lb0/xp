@@ -16,7 +16,7 @@ return Layout.render(<main class="quick">
       <h2>Encontrá al Megalodón con 6 Pistas.</h2>
       <p>
         La <strong>Energía</strong> es el aire. El <strong>Escudo</strong> es el casco.
-        Pueden superar 6, hasta 12. Si al empezar el cierre la Energía o el Escudo están en 0, la expedición termina.
+        Pueden superar 6, hasta 12. Si la Energía o el Escudo llegan a 0 en cualquier momento, la expedición termina.
         Si las Pistas llegan a 6, ganan en ese momento. Es un <strong>LCG</strong>: mazos fijos, sin sobres.
       </p>
     </div>
@@ -88,7 +88,7 @@ return Layout.render(<main class="quick">
       <h2>Tu primer turno</h2>
       <p>Estos 4 pasos se repiten en cada turno.</p>
     </div>
-    <p class="quick-note"><strong>Antes de empezar:</strong> 3 cartas de Equipo y 3 de Misión. Todos: 6 de Energía y 6 de Escudo. Diferencia: Experto sin apoyos · Normal +Kit en la mano · Asistido +Kit y Carga.</p>
+    <p class="quick-note"><strong>Antes de empezar:</strong> 3 cartas de Equipo y 3 de Misión. Todos: 6 de Energía y 6 de Escudo. Diferencia: Experto sin apoyos · Normal +Kit en la mano · Asistido +Carga.</p>
     <ol class="quick-steps">
       <li>
         <span class="quick-step-num">1</span>
@@ -119,7 +119,7 @@ return Layout.render(<main class="quick">
         <svg class="quick-icon" aria-hidden="true"><use href="#ico-deck"/></svg>
         <div>
           <strong>Cerrá el turno</strong>
-          <p>La carta resuelta va al descarte, entra 1 del Mazo de Misiones, el submarino paga ⚡ 1 y robás 1 carta. Si tenés más de 3, descartás hasta quedar con 3.</p>
+          <p>Revelá 1 del Mazo de Misiones pagando ⚡ 1 (obligatorio), robá 1 carta del Mazo de Equipo y descartá hasta tener 3.</p>
         </div>
       </li>
     </ol>
@@ -128,7 +128,7 @@ return Layout.render(<main class="quick">
       <p>
         Tenés 3 cartas. Jugás <strong>Soldadura</strong> (🛡️ +1, va al descarte).
         Elegís <strong>El nido</strong>. Tirás <strong>Cara</strong>: éxito, ⚡ +2.
-        La carta va al descarte y entra la próxima; robás 1 carta, descartás hasta quedar con 3 y el submarino paga <strong>⚡ 1</strong>.
+        La carta va al descarte; pagás <strong>⚡ 1</strong>, entra la próxima, robás 1 carta y descartás hasta tener 3.
       </p>
     </div>
   </section>
@@ -216,7 +216,7 @@ return Layout.render(<main class="quick">
       <span><strong>1</strong> Herramienta activa</span>
       <span><strong>3</strong> al empezar</span>
       <span><strong>Emboscada:</strong> −1 ⚡, 🛡️ o Pista al entrar</span>
-      <span><strong>Modos:</strong> todos 6/6 · Experto sin apoyos · Normal +Kit en mano · Asistido +Kit y Carga</span>
+      <span><strong>Modos:</strong> todos 6/6 · Experto sin apoyos · Normal +Kit en mano · Asistido +Carga</span>
     </div>
   </section>
 
@@ -233,8 +233,8 @@ return Layout.render(<main class="quick">
       <svg aria-hidden="true"><use href="#ico-broken"/></svg>
       <div>
         <p class="eyebrow">Perdés</p>
-        <h2>0 de Energía o 0 de Escudo al cerrar un turno</h2>
-        <p>Se evalúa al principio del cierre, antes del consumo. Basta con que la Energía o el Escudo estén en 0. Si el consumo te deja la Energía en 0, tenés un turno para recuperarla.</p>
+        <h2>0 de Energía o 0 de Escudo en cualquier momento</h2>
+        <p>Al llegar a 0, la expedición termina en ese momento. No hay turno de gracia: si el pago del cierre te deja en 0, perdés. Si el mismo efecto llega a 6 Pistas, primero ganás.</p>
       </div>
     </article>
   </section>

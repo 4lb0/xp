@@ -200,7 +200,7 @@ class Game:
         self.prepared = []
         self.mesa = [self.draw_mission() for _ in range(3)]
         self.hand = []
-        if mode in ("normal", "asistido") and "e17" in self.equip_deck:
+        if mode == "normal" and "e17" in self.equip_deck:
             self.equip_deck.remove("e17")
             self.hand.append("e17")
         if mode == "asistido" and "e18" in self.equip_deck:
@@ -375,14 +375,16 @@ class Game:
             self.flags["ahorro"] = True
 
     def close(self):
-        if self.energia < 1 or self.escudo < 1:
-            return "derrota"
         if not self.flags["ahorro"]:
             self.energia = clamp(self.energia - 1)
+        if self.energia <= 0 or self.escudo <= 0:
+            return "derrota"
         nueva = self.draw_mission()
         if nueva is not None:
             self.mesa.append(nueva)
             self.pay_entry(nueva)
+        if self.energia <= 0 or self.escudo <= 0:
+            return "derrota"
         self.equip_disc.extend(self.prepared)
         self.prepared = []
         self.flags.update({"bonus": 0, "giro": False, "suerte": False, "focos": False,
@@ -439,7 +441,7 @@ class Base:
         real_dp = max(-g.pistas, min(dp, 12 - g.pistas))
         u = wp * real_dp + we * de + ws * ds
         if g.energia + de <= 1:
-            u -= 6.0
+            u -= 20.0
         if g.escudo + ds <= 1:
             u -= 6.0
         return u
@@ -669,11 +671,15 @@ def play_game(strategy, mode, missions, equipment, rng):
                     return ("derrota", turnos, jugadas, elegidas, ofrecidas)
         if g.pistas >= 6:
             return ("victoria", turnos, jugadas, elegidas, ofrecidas)
+        if g.energia <= 0 or g.escudo <= 0:
+            return ("derrota", turnos, jugadas, elegidas, ofrecidas)
         ofrecidas.extend(g.mesa)
         elegidas.append(mid)
         g.resolve(mid, oi)
         if g.pistas >= 6:
             return ("victoria", turnos, jugadas, elegidas, ofrecidas)
+        if g.energia <= 0 or g.escudo <= 0:
+            return ("derrota", turnos, jugadas, elegidas, ofrecidas)
         if g.close() == "derrota":
             return ("derrota", turnos, jugadas, elegidas, ofrecidas)
 
@@ -1001,8 +1007,9 @@ def build_report(results, missions, equipment, games, seed, elapsed):
     <h1>XP · {games} partidas por jugador y modo</h1>
     <p class="lead">Cuatro arquetipos juegan el prototipo con las reglas de la rama
     <strong>{html.escape(branch)}</strong>: la carta se juega antes de elegir la Misión,
-    la mano se mantiene (robás 1 por turno, tope 3), los apoyos arrancan en la mano y la
-    derrota se evalúa al principio del cierre. Las cartas se leen de <code>cartas/</code>,
+    la mano se mantiene (robás 1 por turno, tope 3), los apoyos del modo arrancan en la
+    mano (Normal +1, Asistido +2) y la derrota es inmediata al llegar a 0, con la victoria
+    a 6 Pistas por delante. Las cartas se leen de <code>cartas/</code>,
     la misma fuente que usa la app.</p>
     <div class="meta">
       <span class="pill">{hoy}</span>

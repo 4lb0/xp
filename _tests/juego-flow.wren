@@ -160,18 +160,15 @@ gDerrota = Flow.nuevaPartida()
 Test.post("/juego", {"accion": "terminar"}).status(302)
 Test.assert(Game.find(gDerrota).status == "derrota", "los dos en 0 también terminan la partida")
 
-// --- Cerrar con 1 Energía no derrota: el consumo deja 0 y hay un turno para recuperarla ---
+// --- Cerrar con 1 Energía derrota: pagar el cierre la deja en 0 ---
 
 var gGracia = Flow.nuevaPartida()
 `UPDATE games SET fase = 'resuelto', resultado = 'ganada', energia = 1, escudo = 3 WHERE id = ?`.query(gGracia)
 Test.post("/juego", {"accion": "terminar"}).status(302)
 var gSig = Game.find(gGracia)
-Test.assert(gSig.status == "activa", "cerrar con 1 Energía no termina la partida en ese momento")
+Test.assert(gSig.status == "derrota", "pagar el cierre con 1 Energía termina la partida")
 Test.assert(gSig.energia == 0, "el consumo deja la Energía en 0")
-Test.assert(gSig.turno == 2, "el turno avanza igual")
-`UPDATE games SET fase = 'resuelto', resultado = 'ganada' WHERE id = ?`.query(gGracia)
-Test.post("/juego", {"accion": "terminar"}).status(302)
-Test.assert(Game.find(gGracia).status == "derrota", "el cierre siguiente con 0 Energía termina la partida")
+Test.assert(gSig.turno == 1, "la partida perdida no avanza de turno")
 
 // --- La sexta Pista gana en el momento, sin esperar al cierre ---
 

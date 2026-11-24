@@ -375,12 +375,6 @@ if (Request.isPost) {
   } else if (accion == "terminar") {
     if (g.fase != "resuelto") {
       aviso = "Primero resuelvan una Misión."
-    } else if (g.energia < 1 || g.escudo < 1) {
-      // La derrota se evalúa al principio del cierre, antes del consumo y de
-      // reponer la mesa: con la Energía o el Escudo en 0, la expedición termina.
-      `UPDATE games SET status = 'derrota' WHERE id = ?`.query(g.id)
-      Game.log(g.id, "Al empezar el cierre, la Energía o el Escudo están en 0. La expedición termina.")
-      return Response.redirect("/juego")
     } else {
       // La mano se mantiene entre turnos: no se descarta al cerrar.
       var g2 = Game.find(g.id)
@@ -393,6 +387,15 @@ if (Request.isPost) {
         Game.log(g.id, "El submarino consume 1 Energía.")
       }
 
+      // Pagar el cierre es obligatorio: si no queda Energía (o el Escudo ya
+      // estaba en 0), la expedición termina en ese momento.
+      var gPago = Game.find(g.id)
+      if (gPago.pistas < 6 && (gPago.energia <= 0 || gPago.escudo <= 0)) {
+        `UPDATE games SET status = 'derrota' WHERE id = ?`.query(g.id)
+        Game.log(g.id, "No pueden pagar el cierre: la Energía o el Escudo llegaron a 0. La expedición termina.")
+        return Response.redirect("/juego")
+      }
+
       var nueva = Game.draw(g.id, "misterio", "mesa", 1)
       if (nueva != null) {
         var nc = Card.get(nueva)
@@ -402,10 +405,9 @@ if (Request.isPost) {
           Game.log(g.id, "Emboscada al entrar: " + nc.name + " — " + nc.entryLabel + ".")
         }
       }
-
-      // El consumo puede dejar la Energía en 0: la derrota se evalúa recién al
-      // principio del cierre siguiente, así el equipo tiene un turno para
-      // recuperarse (Batería, apoyos, Generador).
+      if (Game.find(g.id).status != "activa") {
+        return Response.redirect("/juego")
+      }
 
       `UPDATE games SET jugador = 1, turno = turno + 1, fase = 'listo', pruebaCarta = NULL, pruebaOpcion = NULL, dado1 = 0, dado2 = 0, tirado = 0, bonus = 0, cebo = 0, ahorro = 0, blindajeUsado = 0, blindajeM = 0, focosUsado = 0, focosM = 0, jugadas = 0, resueltas = 0, resultado = NULL, giro = 0, suerte = 0, empujado = 0, pistasTurno = 0, maniobraRow = NULL WHERE id = ?`.query(g.id)
       var g3 = Game.find(g.id)
@@ -466,7 +468,7 @@ if (g == null) {
         <select id="modo" name="modo">
           <option value="experto" {{ modoInicial == "experto" ? "selected" : "" }}>Experto — 6 y 6, sin apoyos</option>
           <option value="casual" {{ modoInicial == "casual" ? "selected" : "" }}>Normal — 6 y 6 + Kit en la mano</option>
-          <option value="facil" {{ modoInicial == "facil" ? "selected" : "" }}>Asistido — 6 y 6 + Kit y Carga en la mano</option>
+          <option value="facil" {{ modoInicial == "facil" ? "selected" : "" }}>Asistido — 6 y 6 + Carga en la mano</option>
         </select>
         <button class="btn btn-primary">Iniciar expedición</button>
       </form>
@@ -924,10 +926,8 @@ return Layout.render(<main class="game table-board" data-moves="{{ movesJson }}"
         </div>
       </div>
       <div class="tray-actions">
-        <p class="hint">Al cerrar el turno, el submarino gasta 1 Energía y entra 1 Misión.</p>
-        {{ g.energia < 1 && <p class="hint hint-danger">La Energía está en 0: cerrar el turno termina la expedición.</p> }}
-        {{ g.escudo < 1 && <p class="hint hint-danger">El Escudo está en 0: cerrar el turno termina la expedición.</p> }}
-        {{ g.energia >= 1 && g.escudo >= 1 && g.energia == 1 && <p class="hint hint-danger">El consumo va a dejar la Energía en 0: recuperen al menos 1 antes del próximo cierre.</p> }}
+        <p class="hint">Al cerrar el turno, el submarino paga 1 Energía y entra 1 Misión.</p>
+        {{ g.energia == 1 && <p class="hint hint-danger">Pagar el cierre deja la Energía en 0: la expedición termina.</p> }}
         <form method="post">
           <input type="hidden" name="accion" value="terminar" />
           <button class="btn btn-primary">Terminar turno y reponer la mesa</button>

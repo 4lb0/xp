@@ -135,7 +135,7 @@
     background: #f4f4f4;
   }
   .box p:last-child { margin-bottom: 0; }
-  .win, .lose { display: grid; grid-template-columns: 15mm 1fr; gap: 1.5mm; margin: 0 0 1.4mm; }
+  .win, .lose { display: grid; grid-template-columns: 17mm 1fr; gap: 2mm; margin: 0 0 1.4mm; }
   .win dt, .lose dt { font-family: "Archivo", sans-serif; font-weight: 900; font-size: 8.4pt;
     letter-spacing: .08em; text-transform: uppercase; }
   .win { color: #111; }
@@ -147,14 +147,14 @@
   .cards p { margin: 0; }
   .tag { display: inline-block; padding: 0 .9mm; border: .7pt solid #111; font-family: "Archivo", sans-serif;
     font-size: 7.2pt; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; }
-  .tips { background: #111; color: #fff; padding: 2.4mm 2.8mm; }
-  .tips h2 { border-color: #fff; color: #fff; }
-  .tips h2 span { color: #bbb; }
+  .tips { background: #f2f2f2; color: #111; padding: 2.4mm 2.8mm; border: 1.2pt solid #111; }
+  .tips h2 { border-color: #111; color: #111; }
+  .tips h2 span { color: #555; }
   .tips ol { display: grid; gap: 1.4mm; counter-reset: tip; }
   .tips li { counter-increment: tip; padding-left: 5.6mm; position: relative; }
   .tips li::before { content: counter(tip); position: absolute; left: 0; font-family: "Archivo", sans-serif;
-    font-weight: 900; font-size: 7.8pt; color: #fff; }
-  .tips b { color: #fff; }
+    font-weight: 900; font-size: 7.8pt; color: #111; }
+  .tips b { color: #111; }
   .tips .star { font-family: "Archivo", sans-serif; font-weight: 900; text-transform: uppercase;
     letter-spacing: .06em; }
   footer {
@@ -184,7 +184,7 @@
     <div class="header-right">
       <b>6 Pistas</b> para ganar<br>
       <b>1 página</b> · A4 · B&amp;N<br>
-      rama mano-continua
+      Reglas de la app
     </div>
   </header>
 
@@ -200,12 +200,17 @@
     </section>
 
     <section>
-      <h2>El turno en 4 pasos</h2>
+      <h2>Turno 0 <span>la mesa</span></h2>
+      <p class="lead"><b>6 Energía · 6 Escudo · 0 Pistas.</b> 3 Misiones boca arriba.</p>
+      <p><b>Mano:</b> Experto roba 3. Normal arranca con el Kit (+1/+1) y roba hasta 3. Asistido arranca con la Carga (+2/+2) y roba hasta 3.</p>
+    </section>
+
+    <section>
+      <h2>El turno en 3 pasos</h2>
       <ol class="steps">
-        <li><b>Comienzo.</b> Corren los Generadores (si el recurso está en 4 o menos) y robás <b>1 carta</b>. La primera mano son 3.</li>
-        <li><b>Maniobra.</b> Jugá <b>1 carta</b> o ninguna: Herramienta (queda; una sola activa), Maniobra (se prepara y va al descarte al resolver) o apoyo (Kit <b>+1 ⚡ y +1 🛡️</b>; Carga +2 y +2). La mano no se descarta.</li>
-        <li><b>Misión.</b> Elegí una de las 3, una opción, y tirá. Aplicá éxito o fallo.</li>
-        <li><b>Cierre.</b> Entra una Misión nueva, el submarino gasta <b>1 Energía</b>, robás <b>1 carta</b> y descartás hasta quedar con 3.</li>
+        <li><b>Maniobra.</b> Jugá <b>hasta 1 carta</b> o ninguna: Herramienta (queda; una sola activa), Maniobra (se prepara y va al descarte al resolver) o apoyo (Kit <b>+1 ⚡ y +1 🛡️</b>; Carga +2 y +2). La mano no se descarta.</li>
+        <li><b>Misión.</b> Elegí una de las 3, una opción, y tirá. Aplicá éxito o fallo; la carta de Misión va al descarte.</li>
+        <li><b>Cierre.</b> Revelá una Misión nueva <b>pagando 1 Energía</b> (obligatorio), robá 1 carta y descartá hasta tener 3.</li>
       </ol>
     </section>
 
@@ -232,14 +237,14 @@
 
     <section>
       <h2>Contadores y final</h2>
-      <p class="lead"><b>Energía 6 · Escudo 6 · Pistas 0.</b> Ningún contador baja de 0 ni pasa de 12.</p>
+      <p class="lead"><b>Energía 6 · Escudo 6 · Pistas 0.</b> Ningún contador baja de 0 ni pasa de 12. No podés pagar lo que no tenés.</p>
       <dl class="win">
         <dt>Ganás</dt>
-        <dd>Con <b>6 Pistas</b>, en ese momento, en cualquier parte de la partida.</dd>
+        <dd>Con <b>6 Pistas</b>, en ese momento. Si el mismo efecto llega a 6 Pistas y a 0 Energía o Escudo, <b>primero ganás</b>.</dd>
       </dl>
       <dl class="lose">
         <dt>Perdés</dt>
-        <dd>Si al <b>empezar el cierre</b> la Energía o el Escudo están en 0. Se evalúa antes de pagar el consumo: si el consumo te deja en 0, tenés un turno para recuperarte.</dd>
+        <dd>En cualquier momento que la Energía o el Escudo lleguen a 0, incluso al pagar el cierre. No hay turno de gracia.</dd>
       </dl>
     </section>
 
@@ -250,7 +255,7 @@
         <p><span class="tag">Maniobra</span> Se juega antes de elegir la Misión. Queda a la vista y va al descarte cuando la Misión se resuelve. Si la prueba no es Cara o Seca, Giro y Focos se pierden.</p>
         <p><span class="tag">Apoyo</span> Kit: +1 Energía y +1 Escudo. Carga: +2 y +2. Gasta la carta del turno y cuenta para las 3 de la mano.</p>
       </div>
-      <p style="margin-top:1.6mm"><b>Modos.</b> Experto sin apoyos · Normal con el Kit en la mano · Asistido con el Kit y la Carga.</p>
+      <p style="margin-top:1.6mm"><b>Modos.</b> Experto sin apoyos · Normal con el Kit en la mano · Asistido con la Carga.</p>
     </section>
 
     <section>

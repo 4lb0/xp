@@ -72,9 +72,9 @@ fallo: energia-2, escudo-1
 |---|---|
 | `pistas+1` / `pistas+2` | Suma Pistas (máximo 6). |
 | `energia+1` / `energia+2` | Recupera Energía (máximo 6). |
-| `energia-1` / `energia-2` | Gasta Energía. Llegar a 0 no derrota en ese momento: la derrota se evalúa al empezar el cierre. |
+| `energia-1` / `energia-2` | Gasta Energía. Llegar a 0 derrota en ese momento, salvo que en el mismo efecto lleguen a 6 Pistas. |
 | `escudo+1` / `escudo+2` | Recupera Escudo (máximo 6). |
-| `escudo-1` / `escudo-2` | Daña el Escudo. Llegar a 0 no derrota en ese momento: la derrota se evalúa al empezar el cierre. |
+| `escudo-1` / `escudo-2` | Daña el Escudo. Llegar a 0 derrota en ese momento, salvo que en el mismo efecto lleguen a 6 Pistas. |
 
 Las Pistas se pueden perder (`pistas-1`), pero es raro y fuerte: usalo solo en fallos o entradas muy malas. En las cartas de Misión, la Energía no se toca: los golpes van al Escudo o a las Pistas. Si una carta no debe tener efecto, escribí `nada` o dejá el campo vacío.
 

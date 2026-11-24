@@ -65,7 +65,7 @@ class Game {
     `UPDATE game_cards SET ord = RANDOM() WHERE gameId = ?`.query(id)
     // Las cartas de apoyo arrancan en la mano: cuentan para las 3 y se juegan
     // como una carta más, gastando la del turno.
-    if (modo != "experto") {
+    if (modo == "casual") {
       `UPDATE game_cards SET zone = 'mano' WHERE gameId = ? AND cardId = 'e17'`.query(id)
     }
     if (modo == "facil") {
@@ -305,8 +305,15 @@ class Game {
     if (es < 0) es = 0
     if (pi < 0) pi = 0
     var status = "activa"
-    if (pi >= 6) status = "victoria"
+    if (pi >= 6) {
+      status = "victoria"
+    } else if (en <= 0 || es <= 0) {
+      status = "derrota"
+    }
     `UPDATE games SET energia = ?, escudo = ?, pistas = ?, status = ?, cebo = ?, blindajeUsado = ?, blindajeM = ?, pistasTurno = pistasTurno + ? WHERE id = ?`.query([en, es, pi, status, ceboUsado ? 0 : (g.cebo ? 1 : 0), blindajeAplicado ? 1 : (g.blindajeUsado ? 1 : 0), blindajeAplicado ? 0 : (g.blindajeM ? 1 : 0), dPi > 0 ? dPi : 0, id])
+    if (status == "derrota" && g.status == "activa") {
+      Game.log(id, "La Energía o el Escudo llegaron a 0. La expedición termina.")
+    }
     return {"energia": en, "escudo": es, "pistas": pi, "status": status, "notas": notas}
   }
 

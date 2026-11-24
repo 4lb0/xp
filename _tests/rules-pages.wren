@@ -10,7 +10,7 @@ Test.get("/reglas")
   .textContains("El turno, paso a paso")
   .textContains("antes de elegir la Misión")
   .textContains("Ningún contador baja de 0 ni pasa de 12")
-  .textContains("al empezar el cierre")
+  .textContains("en cualquier momento")
   .textContains("Orden de una tirada")
   .textContains("Mazo de Misiones")
 

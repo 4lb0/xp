@@ -58,8 +58,8 @@ Game.destroy(experto)
 
 var facil = Fixture.fresh("facil")
 Test.assert(Game.count(facil, "mano") == 3, "asistido arranca con 3 cartas en la mano")
-Test.assert(Game.ids(facil, "mano").contains("e17"), "asistido incluye el Kit")
-Test.assert(Game.ids(facil, "mano").contains("e18"), "asistido incluye la Carga")
+Test.assert(!Game.ids(facil, "mano").contains("e17"), "asistido no incluye el Kit")
+Test.assert(Game.ids(facil, "mano").contains("e18"), "asistido incluye la Carga (+2)")
 Test.assert(Game.count(facil, "equipo") == 41, "los apoyos de la mano no quedan en el mazo")
 Game.destroy(facil)
 

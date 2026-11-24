@@ -44,7 +44,7 @@ return Layout.render(<main>
           </div>
         </div>
         <p class="hint" style="margin: 1rem 0 0">
-          Tres dados D6 quedan a la vista de todos. Energía y Escudo pueden superar 6, con tope 12 y piso 0. Si al empezar el cierre del turno la Energía o el Escudo están en 0, la expedición termina. Si las Pistas llegan a 6, en cualquier momento, la expedición gana.
+          Tres dados D6 quedan a la vista de todos. Energía y Escudo pueden superar 6, con tope 12 y piso 0. Si la Energía o el Escudo llegan a 0 en cualquier momento, la expedición termina. Si las Pistas llegan a 6, gana en el momento; si el mismo efecto llega a 6 Pistas, primero gana.
         </p>
       </aside>
     </div>
@@ -53,24 +53,24 @@ return Layout.render(<main>
   <section>
     <div class="section-head">
       <h2>Cómo se juega</h2>
-      <p>Cuatro pasos por turno. Sin tablero.</p>
+      <p>Turno 0 y tres pasos por turno. Sin tablero.</p>
     </div>
     <ol class="steps">
       <li>
         <span class="num">1</span>
-        <span><strong>Arrancá con 3 cartas de Equipo</strong>En Normal y Asistido, los apoyos ya vienen en la mano. La mano se mantiene: al cerrar robás 1 carta y descartás hasta 3.</span>
+        <span><strong>Turno 0: prepará la mesa</strong>Todos 6 de Energía, 6 de Escudo y 0 Pistas. Revelá 3 Misiones. Armá la mano: Experto roba 3; Normal arranca con el Kit (+1/+1); Asistido con la Carga (+2/+2). Siempre 3 cartas.</span>
       </li>
       <li>
         <span class="num">2</span>
-        <span><strong>Jugá 1 carta (opcional)</strong>Antes de elegir la Misión. Herramienta: queda en la mesa. Maniobra: se usa una vez y va al descarte. La mano no se descarta.</span>
+        <span><strong>Jugá hasta 1 carta</strong>Antes de elegir la Misión. Herramienta: queda en la mesa. Maniobra: se prepara y va al descarte al resolver. La mano no se descarta.</span>
       </li>
       <li>
         <span class="num">3</span>
-        <span><strong>Resolvé una Misión</strong>Elegí una de las cartas de la mesa, lean la situación entre todos y elijan una de sus opciones. Después, la prueba de dados.</span>
+        <span><strong>Resolvé una Misión</strong>Elegí una de las 3, una de sus opciones, y tirá. Aplicá éxito o fallo; la Misión va al descarte.</span>
       </li>
       <li>
         <span class="num">4</span>
-        <span><strong>Cerrá el turno</strong>Se revela una nueva Misión. El submarino consume 1 Energía y robás 1 carta; si la mano pasa de 3, descartás hasta quedar con 3.</span>
+        <span><strong>Cerrá el turno</strong>Revelá una Misión nueva pagando 1 Energía (obligatorio), robá 1 carta y descartá hasta tener 3.</span>
       </li>
     </ol>
   </section>
@@ -88,7 +88,7 @@ return Layout.render(<main>
             <select id="modo" name="modo" style="font: inherit; padding: 0.5rem 0.7rem; border-radius: 8px; background: var(--navy); color: inherit; border: 1px solid rgba(51,187,204,.35)">
               <option value="experto" {{ modoInicial == "experto" ? "selected" : "" }}>Experto — 6 y 6, sin apoyos</option>
               <option value="casual" {{ modoInicial == "casual" ? "selected" : "" }}>Normal — 6 y 6 + Kit en la mano</option>
-              <option value="facil" {{ modoInicial == "facil" ? "selected" : "" }}>Asistido — 6 y 6 + Kit y Carga en la mano</option>
+              <option value="facil" {{ modoInicial == "facil" ? "selected" : "" }}>Asistido — 6 y 6 + Carga en la mano</option>
             </select>
           </p>
           <button class="btn btn-primary">Empezar</button>

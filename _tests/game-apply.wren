@@ -46,7 +46,7 @@ Test.assert(res["escudo"] == 0, "el Escudo no baja de 0")
 Test.assert(res["pistas"] == 0, "las Pistas no bajan de 0")
 var g = Game.find(id)
 Test.assert(g.energia == 0 && g.escudo == 0 && g.pistas == 0, "los topes se guardan en la partida")
-Test.assert(g.status == "activa", "llegar a 0 no pierde por sí solo: hay que cerrar el turno")
+Test.assert(g.status == "derrota", "llegar a 0 en Energía o Escudo pierde en el momento")
 Game.destroy(id)
 
 // --- Tope de 12 ---
@@ -144,6 +144,13 @@ id = Fixture.fresh()
 res = Game.apply(id, Game.find(id), Game.parseEffects("pistas+1"), true, [])
 Test.assert(res["pistas"] == 6, "la sexta Pista queda registrada")
 Test.assert(res["status"] == "victoria", "seis Pistas ganan en el momento")
+
+// Si en el mismo efecto llegan a 6 Pistas y a 0 Energía, gana la victoria.
+id = Fixture.fresh()
+`UPDATE games SET pistas = 5, energia = 1 WHERE id = ?`.query(id)
+res = Game.apply(id, Game.find(id), Game.parseEffects("pistas+1, energia-1"), true, [])
+Test.assert(res["energia"] == 0, "la Energía llega a 0 en el mismo efecto")
+Test.assert(res["status"] == "victoria", "la sexta Pista gana antes que la derrota")
 Test.assert(Game.find(id).status == "victoria", "la victoria se guarda")
 Game.destroy(id)
 

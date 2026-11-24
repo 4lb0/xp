@@ -30,7 +30,7 @@ return Layout.render(<main>
         <p class="hint">Es un <strong>LCG</strong>: los mazos son fijos, no hay sobres aleatorios ni cartas coleccionables.</p>
         <ul>
           <li><strong>Ganan</strong> en cuanto reúnen 6 Pistas, en cualquier momento de la partida.</li>
-          <li><strong>Pierden</strong> si al empezar el cierre de un turno la Energía o el Escudo están en 0.</li>
+          <li><strong>Pierden</strong> si la Energía o el Escudo llegan a 0, en cualquier momento. Si el mismo efecto llega a 6 Pistas, primero ganan.</li>
         </ul>
         <p class="hint">En la app, la mano es una sola y las decisiones se comparten. Podés jugar solo o en cooperativo con amigos: la mesa es la misma.</p>
         <p class="hint">Las cartas de Dilema no dan ni quitan Pistas: solo mueven Energía y Escudo.</p>
@@ -42,19 +42,19 @@ return Layout.render(<main>
           <div class="gauge">{{ Layout.die(6, "die-gold") }}<span class="gauge-name">Escudo</span></div>
           <div class="gauge">{{ Layout.die(0, "die-coral") }}<span class="gauge-name">Pistas</span></div>
         </div>
-        <p class="hint" style="margin: 0.9rem 0 0">Arrancan en 6, 6 y 0. Ningún contador baja de 0 ni pasa de 12: la mesa se topea en los dos extremos. Las Pistas llegan a 6 y ganan.</p>
+        <p class="hint" style="margin: 0.9rem 0 0">Arrancan en 6, 6 y 0. Ningún contador baja de 0 ni pasa de 12, y no se puede pagar lo que no se tiene. Las Pistas llegan a 6 y ganan.</p>
       </div>
     </div>
   </section>
 
   <section id="preparacion">
     <div class="section-head">
-      <h2>Preparación</h2>
+      <h2>Turno 0: la mesa</h2>
     </div>
     <ol class="steps">
-      <li><span class="num">1</span><span><strong>Arranquen con 3 cartas de Equipo</strong>La mano es compartida. En Normal y Asistido, las cartas de apoyo ya vienen entre esas 3. Con niños de 5 años conviene leer las opciones en voz alta.</span></li>
-      <li><span class="num">2</span><span><strong>Revelen siempre 3 cartas de Misión</strong>Sin importar cuántos jueguen. La mesa no cambia: cambia a quién le toca tirar.</span></li>
-      <li><span class="num">3</span><span><strong>Pongan los contadores</strong>Todos: 6 de Energía y 6 de Escudo. Pistas 0. Experto: sin apoyos. Normal: el Kit de emergencia en la mano. Asistido: el Kit y la Carga de emergencia en la mano.</span></li>
+      <li><span class="num">1</span><span><strong>Pongan los contadores</strong>Todos: 6 de Energía, 6 de Escudo y 0 Pistas.</span></li>
+      <li><span class="num">2</span><span><strong>Revelen 3 cartas de Misión</strong>Siempre 3, sin importar cuántos jueguen. La mesa no cambia: cambia a quién le toca tirar.</span></li>
+      <li><span class="num">3</span><span><strong>Armen la mano</strong>La mano es compartida y son 3 cartas de Equipo. Experto: robá 3. Normal: arrancá con el <strong>Kit de emergencia</strong> (+1 Energía y +1 Escudo) y robá hasta tener 3. Asistido: arrancá con la <strong>Carga de emergencia</strong> (+2 y +2) y robá hasta tener 3. El apoyo cuenta para las 3.</span></li>
     </ol>
   </section>
 
@@ -64,10 +64,9 @@ return Layout.render(<main>
       <p>Se juega un turno por vez, solo o en cooperativo.</p>
     </div>
     <ol class="steps">
-      <li><span class="num">1</span><span><strong>Comienzo del turno</strong>Se resuelven las acciones que dependen del comienzo de cada Misión (Generador Auxiliar, Generador de Escudo) y roban <strong>1 carta</strong>. En el primer turno la mano ya arranca con 3.</span></li>
-      <li><span class="num">2</span><span><strong>Maniobras</strong>Juegan <strong>1 carta</strong> de la mano, o ninguna: una Herramienta (queda en la mesa, una sola activa), una Maniobra (queda a la vista y va al descarte cuando se resuelve la prueba) o una carta de apoyo (suma Energía y Escudo). La mano <strong>no</strong> se descarta: se mantiene entre turnos.</span></li>
-      <li><span class="num">3</span><span><strong>Elijan una Misión</strong>Elegí una de las cartas de la mesa, lean la situación, debatan y elijan una de sus opciones. Después viene la prueba de dados y se aplica el resultado: suman o restan. Ningún contador baja de 0 ni pasa de 12.</span></li>
-      <li><span class="num">4</span><span><strong>Cierren el turno</strong>La carta resuelta ya está en el descarte: se revela una nueva en su lugar. El submarino consume <strong>1 Energía</strong>, roban <strong>1 carta</strong> y, si la mano pasa de 3, descartan hasta quedar con 3. Después el turno pasa al equipo.</span></li>
+      <li><span class="num">1</span><span><strong>Maniobra</strong>Jugá <strong>hasta 1 carta</strong> de la mano, o ninguna: una Herramienta (queda en la mesa, una sola activa), una Maniobra (queda a la vista y va al descarte cuando la Misión se resuelve) o una carta de apoyo (suma Energía y Escudo y va al descarte). La mano <strong>no</strong> se descarta: se mantiene entre turnos.</span></li>
+      <li><span class="num">2</span><span><strong>Misión</strong>Elegí una de las 3 cartas de la mesa, lean la situación, debatan y elijan una de sus opciones. Después viene la prueba de dados: aplican éxito o fallo. La carta de Misión va al descarte.</span></li>
+      <li><span class="num">3</span><span><strong>Cierre</strong>Revelá una carta nueva del Mazo de Juego y pagá <strong>1 Energía</strong> (obligatorio; Ahorro de Oxígeno lo saltea). Robá <strong>1 carta</strong> del Mazo de Equipo y descartá hasta tener 3 en la mano. El turno pasa al equipo.</span></li>
     </ol>
     <p class="hint">Si se agota un mazo, mezclá su descarte y seguí robando.</p>
   </section>
@@ -151,13 +150,13 @@ return Layout.render(<main>
   <section class="panel support-panel" id="apoyo">
     <h2>Cartas de apoyo</h2>
     <p>Dos Maniobras del equipo: <strong>Kit de emergencia</strong> (<span class="chip chip-energia">{{ Layout.icon("⚡") }} +1</span> y <span class="chip chip-escudo">{{ Layout.icon("🛡️") }} +1</span>) y <strong>Carga de emergencia</strong> (<span class="chip chip-energia">{{ Layout.icon("⚡") }} +2</span> y <span class="chip chip-escudo">{{ Layout.icon("🛡️") }} +2</span>).</p>
-    <p>En <strong>Normal</strong>, el Kit arranca en la mano. En <strong>Asistido</strong>, el Kit y la Carga. Cuentan para las 3 cartas y se juegan como cualquier carta: gastan la del turno y van al descarte. En <strong>Experto</strong> quedan en el mazo.</p>
+    <p>En <strong>Normal</strong> el Kit arranca en la mano. En <strong>Asistido</strong>, la Carga. Cuentan para las 3 cartas y se juegan como cualquier carta: gastan la del turno y van al descarte. En <strong>Experto</strong> quedan en el mazo.</p>
   </section>
 
   <section class="panel" id="reloj">
     <h2>El reloj: consumo de Energía</h2>
-    <p><strong>Consumo:</strong> al cerrar cada turno, el submarino pierde <strong>1 Energía</strong>, hayan ganado o no una Pista. La Energía es el reloj de la partida y no se recupera con las cartas de Misión.</p>
-    <p><strong>Derrota:</strong> se evalúa al principio del cierre. Si la Energía o el Escudo están en 0, la expedición termina antes del consumo y de reponer la mesa. Si el consumo deja la Energía en 0, el equipo juega un turno más para recuperarla: si no lo hace, el cierre siguiente termina la partida.</p>
+    <p><strong>Consumo:</strong> al cerrar cada turno, el submarino pierde <strong>1 Energía</strong>, hayan ganado o no una Pista. Es obligatorio y no se puede pagar si no hay: si el cierre deja la Energía en 0, la expedición termina. Ahorro de Oxígeno es la única carta que lo saltea.</p>
+    <p><strong>Derrota:</strong> en cualquier momento que la Energía o el Escudo lleguen a 0. No hay turno de gracia. Si el mismo efecto hace llegar a 6 Pistas, <strong>primero ganan</strong>. Ningún contador baja de 0 ni pasa de 12.</p>
     <p><strong>Recarga:</strong> solo con Equipo. La Batería de Respaldo devuelve 2 de Energía y hay 6 en el mazo. El Generador Auxiliar recarga 1 al empezar cada Misión si están en 4 o menos. El Generador de Escudo hace lo mismo con el casco. Ahorro de Oxígeno saltea el consumo de un turno.</p>
     <p><strong>Emboscadas:</strong> diez cartas de Misión cuestan <strong>1 Energía</strong>, <strong>1 Escudo</strong> o <strong>1 Pista</strong> apenas entran a la mesa, y tienen una sola opción. Si entran varias a la vez (por ejemplo, en el reparto inicial), el equipo elige cuál sufrir: solo esa se aplica y las demás no cobran. Si todas cuestan lo mismo, no hay nada que elegir: se aplica una al azar. Una emboscada que ya está en la mesa no vuelve a cobrar. Las cartas de Misión nunca te sacan Energía: la Energía la baja el reloj y la recupera el Equipo.</p>
   </section>
@@ -176,8 +175,8 @@ return Layout.render(<main>
     <table>
       <thead><tr><th>Condición</th><th>Qué pasa</th></tr></thead>
       <tbody>
-        <tr><td>Pistas llega a 6</td><td><strong>Victoria.</strong> En ese momento, en cualquier parte de la partida: no hace falta esperar al cierre.</td></tr>
-        <tr><td>Energía o Escudo en 0 al empezar el cierre</td><td><strong>Derrota.</strong> Se evalúa antes del consumo y de reponer la mesa. Con cualquiera de los dos en 0, la expedición termina.</td></tr>
+        <tr><td>Pistas llega a 6</td><td><strong>Victoria.</strong> En ese momento, en cualquier parte de la partida. Si el mismo efecto también deja la Energía o el Escudo en 0, primero ganan.</td></tr>
+        <tr><td>Energía o Escudo llega a 0</td><td><strong>Derrota.</strong> En cualquier momento, incluso al pagar el cierre. No hay turno de gracia.</td></tr>
       </tbody>
     </table>
   </section>
