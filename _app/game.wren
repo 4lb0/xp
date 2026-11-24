@@ -344,6 +344,9 @@ class Game {
     var texto = (ok ? "Prueba superada" : "Prueba fallida") + ": " + c.name + " — " + opt["texto"] + "."
     if (!res["notas"].isEmpty) texto = texto + " " + res["notas"].join(". ") + "."
     `UPDATE games SET fase = 'resuelto', resultado = ?, resueltas = 1, ultimo = ?, dado1 = ?, dado2 = ?, tirado = 0, bonus = 0, giro = 0, suerte = 0, focosM = 0 WHERE id = ?`.query([ok ? "ganada" : "perdida", texto, d1, d2, id])
+    // La Maniobra del turno queda a la vista hasta resolver; recién ahí va al
+    // descarte (en papel se deja arriba para recordar el efecto).
+    for (r in Game.rows(id, "preparada")) Game.move(r["id"], "descarteEquipo")
     Game.log(id, texto)
     if (res["status"] == "victoria") Game.log(id, "¡Seis Pistas! La misión queda resuelta.")
     return {"ok": ok, "error": "", "status": res["status"], "texto": texto}

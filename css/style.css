@@ -2290,7 +2290,9 @@ section[id] { scroll-margin-top: 5.5rem; }
   grid-template-columns: auto minmax(0, 1fr) auto;
   align-items: center;
   gap: 1rem;
-  padding-bottom: 0.9rem;
+  margin-top: 1.3rem;
+  padding-block: 0.9rem;
+  border-top: 1px solid rgba(244, 241, 234, 0.12);
   border-bottom: 1px solid rgba(244, 241, 234, 0.12);
 }
 

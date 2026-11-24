@@ -153,3 +153,17 @@ Test.assert(Game.ids(gid, "descarteEquipo").contains("e17"), "el apoyo va al des
 var bateria2 = `SELECT id FROM game_cards WHERE gameId = ? AND cardId = 'e12' AND zone = 'mano'`.first(gid)
 Test.post("/juego", {"accion": "jugar", "rowId": bateria2["id"].toString}).status(302)
 Test.assert(Game.find(gid).energia == 7, "no se puede jugar una segunda carta en el turno")
+
+// --- La Maniobra del turno queda a la vista hasta resolver ---
+
+gid = Turno.nueva()
+Turno.mano(gid, ["e09", "e12", "e11"])
+var turboFila = `SELECT id FROM game_cards WHERE gameId = ? AND cardId = 'e09' AND zone = 'mano'`.first(gid)
+Test.post("/juego", {"accion": "maniobra", "rowId": turboFila["id"].toString}).status(302)
+Test.assert(Game.ids(gid, "preparada").contains("e09"), "la Maniobra preparada queda a la vista")
+Test.get("/juego").status(200).textContains("Maniobra del turno")
+mision = Turno.misionCara(gid)
+Test.post("/juego", {"accion": "elegir", "rowId": mision.toString, "opt": "A"}).status(302)
+Test.post("/juego", {"accion": "mesa", "d1": "2", "d2": "0"}).status(302)
+Test.assert(Game.ids(gid, "preparada").isEmpty, "al resolver, la Maniobra sale de la mesa")
+Test.assert(Game.ids(gid, "descarteEquipo").contains("e09"), "al resolver, la Maniobra va al descarte")

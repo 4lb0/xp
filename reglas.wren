@@ -65,7 +65,7 @@ return Layout.render(<main>
     </div>
     <ol class="steps">
       <li><span class="num">1</span><span><strong>Comienzo del turno</strong>Se resuelven las acciones que dependen del comienzo de cada Misión (Generador Auxiliar, Generador de Escudo) y roban <strong>1 carta</strong>. En el primer turno la mano ya arranca con 3.</span></li>
-      <li><span class="num">2</span><span><strong>Maniobras</strong>Juegan <strong>1 carta</strong> de la mano, o ninguna: una Herramienta (queda en la mesa, una sola activa), una Maniobra (se resuelve y va al descarte) o una carta de apoyo (elegís Energía o Escudo). La mano <strong>no</strong> se descarta: se mantiene entre turnos.</span></li>
+      <li><span class="num">2</span><span><strong>Maniobras</strong>Juegan <strong>1 carta</strong> de la mano, o ninguna: una Herramienta (queda en la mesa, una sola activa), una Maniobra (queda a la vista y va al descarte cuando se resuelve la prueba) o una carta de apoyo (elegís Energía o Escudo). La mano <strong>no</strong> se descarta: se mantiene entre turnos.</span></li>
       <li><span class="num">3</span><span><strong>Elijan una Misión</strong>Elegí una de las cartas de la mesa, lean la situación, debatan y elijan una de sus opciones. Después viene la prueba de dados y se aplica el resultado: suman o restan. Ningún contador baja de 0 ni pasa de 12.</span></li>
       <li><span class="num">4</span><span><strong>Cierren el turno</strong>La carta resuelta ya está en el descarte: se revela una nueva en su lugar. El submarino consume <strong>1 Energía</strong>, roban <strong>1 carta</strong> y, si la mano pasa de 3, descartan hasta quedar con 3. Después el turno pasa al equipo.</span></li>
     </ol>
@@ -126,7 +126,7 @@ return Layout.render(<main>
       </div>
       <div>
         <div class="section-head"><h2>Maniobras</h2></div>
-        <p class="muted">Se juegan antes de elegir la Misión, una vez, y van al descarte.</p>
+        <p class="muted">Se juegan antes de elegir la Misión y quedan a la vista hasta que se resuelve la prueba; después van al descarte.</p>
         <table>
           <thead><tr><th>Carta</th><th>Efecto</th></tr></thead>
           <tbody>

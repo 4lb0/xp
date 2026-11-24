@@ -370,6 +370,7 @@
     if (zone === "mano") return "mano";
     if (zone === "mesa") return "cartas-activas";
     if (zone === "herramientas") return "herramientas";
+    if (zone === "preparada") return "preparada";
     return null;
   }
 

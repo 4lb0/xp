@@ -98,7 +98,11 @@ sintetizado con Web Audio: no hay archivos de audio.
 ## La mesa
 
 `/juego` no es una página con secciones: es una mesa. Todo vive sobre una
-superficie con luz desde arriba y zonas de lugar fijo.
+superficie con luz desde arriba y zonas de lugar fijo. De arriba abajo: las
+cartas de Misión (son del juego y se comparten), tu Herramienta y la Maniobra
+del turno, tu estado y tu mano. La Maniobra del turno queda a la vista hasta
+que la Misión se resuelve, así el efecto no se pierde de vista; recién ahí va
+al descarte.
 
 - Las cartas tienen **proporción de impresión (63 × 88)** y no cambian de tamaño
   según el texto. Debajo de 900px pierden la proporción para que el texto se

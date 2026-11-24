@@ -46,13 +46,28 @@ return Layout.render(<main class="quick">
     </div>
     <div class="quick-map">
       <article class="quick-zone">
-        <p class="eyebrow">3 Misiones</p>
+        <p class="eyebrow">Cartas de Misión</p>
         <div class="quick-card-row">
           <svg class="quick-card coral" aria-hidden="true"><use href="#ico-card"/></svg>
           <svg class="quick-card green" aria-hidden="true"><use href="#ico-card"/></svg>
           <svg class="quick-card cyan" aria-hidden="true"><use href="#ico-card"/></svg>
         </div>
-        <p>Siempre 3 boca arriba. Elegís una por turno.</p>
+        <p>Arriba de todo y boca arriba. Son del juego: si hay varios equipos, las comparten.</p>
+      </article>
+
+      <article class="quick-zone">
+        <p class="eyebrow">Herramienta y Maniobra</p>
+        <div class="quick-card-row">
+          <svg class="quick-card gold" aria-hidden="true"><use href="#ico-card"/></svg>
+          <svg class="quick-card purple" aria-hidden="true"><use href="#ico-card"/></svg>
+        </div>
+        <p>Arriba, al lado de las Misiones. Quedan a la vista hasta resolver, para recordar el efecto.</p>
+      </article>
+
+      <article class="quick-zone">
+        <p class="eyebrow">Tu estado</p>
+        <p><strong>{{ Layout.icon("⚡") }} 6 · {{ Layout.icon("🛡️") }} 6 · {{ Layout.icon("🔍") }} 0</strong></p>
+        <p>En el medio. En la app se maneja solo.</p>
       </article>
 
       <article class="quick-zone">
@@ -62,32 +77,10 @@ return Layout.render(<main class="quick">
           <svg class="quick-card purple" aria-hidden="true"><use href="#ico-card"/></svg>
           <svg class="quick-card gold" aria-hidden="true"><use href="#ico-card"/></svg>
         </div>
-        <p>Compartida. Arrancás con 3 (con los apoyos del modo). Al cerrar robás 1 y descartás hasta 3.</p>
-      </article>
-
-      <article class="quick-zone">
-        <p class="eyebrow">Herramienta</p>
-        <div class="quick-card-row">
-          <svg class="quick-card gold" aria-hidden="true"><use href="#ico-card"/></svg>
-        </div>
-        <p>Una sola activa. La nueva pisa la anterior.</p>
-      </article>
-
-      <article class="quick-zone">
-        <p class="eyebrow">Mazos</p>
-        <div class="quick-decks">
-          <div class="quick-deck">
-            <svg aria-hidden="true"><use href="#ico-deck"/></svg>
-            <small>Juego</small>
-          </div>
-          <div class="quick-deck">
-            <svg aria-hidden="true"><use href="#ico-deck"/></svg>
-            <small>Equipo</small>
-          </div>
-        </div>
-        <p>Los topes están ocultos. El Sonar revela el del Mazo de Misiones.</p>
+        <p>Abajo. Se mantiene entre turnos: robás 1 y descartás hasta 3.</p>
       </article>
     </div>
+    <p class="quick-note">Los mazos y descartes van a los costados. Los topes están ocultos y el Sonar revela el del Mazo de Misiones.</p>
   </section>
 
   <section class="quick-section quick-first">
