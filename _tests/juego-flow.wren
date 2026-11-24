@@ -104,7 +104,7 @@ Test.assert(Game.count(gid, "mano") == 3, "elegir la Misión no descarta la mano
 
 Test.post("/juego", {"accion": "mesa", "d1": "2", "d2": "0"})
   .status(302)
-  .header("Location", "/juego?anim=dados")
+  .header("Location", "/juego?anim=dados#resultado")
 g = Game.find(gid)
 Test.assert(g.fase == "resuelto", "tirar resuelve la prueba")
 Test.assert(g.resultado == "ganada", "2 en cara supera m01")

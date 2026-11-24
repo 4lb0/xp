@@ -340,10 +340,7 @@ class Game:
             self.equip_disc.append(cid)
         elif eff == "apoyo":
             v = card["valor"]
-            if self.energia <= self.escudo:
-                self.apply({"pistas": 0, "energia": v, "escudo": 0})
-            else:
-                self.apply({"pistas": 0, "energia": 0, "escudo": v})
+            self.apply({"pistas": 0, "energia": v, "escudo": v})
             self.equip_disc.append(cid)
         elif eff == "discard_active":
             victima = self.strategy.choose_señuelo(self, target_mid)
@@ -523,8 +520,7 @@ class Base:
                 self.value(g, {"pistas": 0, "energia": -2, "escudo": 0})
         if eff == "apoyo":
             v = card["valor"]
-            return max(self.value(g, {"pistas": 0, "energia": v, "escudo": 0}),
-                       self.value(g, {"pistas": 0, "energia": 0, "escudo": v}))
+            return self.value(g, {"pistas": 0, "energia": v, "escudo": v})
         return -1
 
     def choose_card(self, g, target):

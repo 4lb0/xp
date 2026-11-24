@@ -152,7 +152,7 @@ return Layout.render(<main>
   </section>
 
   <section class="deck-section" id="apoyos">
-    <div class="section-head"><h2>Maniobras de apoyo</h2><p>Las cartas para encontrar rápido: se usan una vez, van al descarte y eligen Energía o Escudo.</p></div>
+    <div class="section-head"><h2>Maniobras de apoyo</h2><p>Las cartas para encontrar rápido: se usan una vez, van al descarte y suman Energía y Escudo.</p></div>
     <div class="deck-grid">
       {{ apoyos.map{|c| <article class="mini-card" data-family="apoyo">
         <span class="card-ribbon">🎁 Apoyo</span>

@@ -127,7 +127,7 @@ class Card {
     var v = {
       "typeIcon": isMystery ? "🌊" : (isSupport ? "🎁" : (isTool ? "🔧" : "🃏")),
       "typeLabel": isMystery ? "Misión" : (isSupport ? "Maniobra de apoyo · una vez" : (isTool ? "Herramienta · queda" : "Maniobra · una vez")),
-      "typeHint": isMystery ? "" : (isSupport ? "Se usa una vez, va al descarte y elegís Energía o Escudo." : (isTool ? "Queda en la mesa hasta que jueguen otra Herramienta." : "Se usa una vez y va al descarte.")),
+      "typeHint": isMystery ? "" : (isSupport ? "Se usa una vez, va al descarte y suma Energía y Escudo." : (isTool ? "Queda en la mesa hasta que jueguen otra Herramienta." : "Se usa una vez y va al descarte.")),
       "useIcon": "👆",
       "useLabel": "Ahora",
       "useHint": "Se juega y se resuelve en el momento.",
@@ -218,7 +218,7 @@ class Card {
       v["useClass"] = "use-always"
       v["chips"] = [Card.hchip("🛡️", "+1", "chip-escudo", "Si el Escudo está en 4 o menos, sube 1"), Card.hchip("", "4 o menos", "chip-neutral", "Solo si el Escudo está en 4 o menos")]
     } else if (isSupport) {
-      v["chips"] = [Card.hchip("⚡", "+" + value.toString, "chip-energia", "Sumá " + value.toString + " de Energía"), Card.hchip("", "o", "chip-or", "Elegí Energía o Escudo"), Card.hchip("🛡️", "+" + value.toString, "chip-escudo", "Sumá " + value.toString + " de Escudo")]
+      v["chips"] = [Card.hchip("⚡", "+" + value.toString, "chip-energia", "Sumá " + value.toString + " de Energía"), Card.hchip("🛡️", "+" + value.toString, "chip-escudo", "Sumá " + value.toString + " de Escudo")]
     }
     return v
   }

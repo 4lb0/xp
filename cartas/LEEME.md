@@ -113,7 +113,7 @@ Si agregás un `efecto` nuevo, sumá su ayuda visual en `_app/cards.wren` (`Card
 
 ### Cartas de apoyo
 
-`tipo: maniobra` + `subtipo: apoyo` con `valor: 1` o `2`. Al usarlas, el jugador elige **+valor Energía o +valor Escudo**. Actúan como cualquier Maniobra: se usan una vez, gastan la carta del turno y van al descarte. En la app se destacan en rosa con la etiqueta **Apoyo** para encontrarlas rápido. En Experto quedan en el mazo; en Normal el Kit arranca en la mano; en Asistido, el Kit y la Carga.
+`tipo: maniobra` + `subtipo: apoyo` con `valor: 1` o `2`. Al usarlas, suman **+valor de Energía y +valor de Escudo**. Actúan como cualquier Maniobra: se usan una vez, gastan la carta del turno y van al descarte. En la app se destacan en rosa con la etiqueta **Apoyo** para encontrarlas rápido. En Experto quedan en el mazo; en Normal el Kit arranca en la mano; en Asistido, el Kit y la Carga.
 
 ### Efectos que el motor ya implementa
 

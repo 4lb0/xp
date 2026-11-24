@@ -31,6 +31,7 @@ if (Request.isPost) {
 
   var aviso = ""
   var anim = ""
+  var anchor = ""
 
   if (g.status != "activa") {
     return Response.redirect("/juego?aviso=" + Util.urlEncode("La expedición terminó. Empezá una nueva."))
@@ -67,8 +68,11 @@ if (Request.isPost) {
       if (c == null) {
         aviso = "No pudimos leer esa carta."
       } else if (c.isSupport) {
-        `UPDATE games SET fase = 'apoyo', apoyoCarta = ?, apoyoOrigen = 'mano', fasePrevia = ?, jugadas = 1 WHERE id = ?`.query(rowId, g.fase, g.id)
-        Game.log(g.id, "Preparan la maniobra de apoyo: " + c.name + ".")
+        // Las cartas de apoyo suman Energía y Escudo a la vez.
+        Game.apply(g.id, g, {"pistas": 0, "energia": c.value, "escudo": c.value}, true, [])
+        Game.move(rowId, "descarteEquipo")
+        `UPDATE games SET jugadas = 1 WHERE id = ?`.query(g.id)
+        Game.log(g.id, "Maniobra de apoyo " + c.name + ": +" + c.value.toString + " Energía y +" + c.value.toString + " Escudo.")
       } else if (c.isTool) {
         // Solo una Herramienta activa por equipo: la nueva pisa la anterior.
         var anteriores = Game.rows(g.id, "herramientas")
@@ -174,6 +178,7 @@ if (Request.isPost) {
       Game.log(g.id, "Tiran en la app: " + d1.toString + (dados == 2 ? " y " + d2.toString : "") + ".")
       var auto = Game.resolve(g.id)
       if (auto["error"] != "") aviso = auto["error"]
+      anchor = "#resultado"
     }
   } else if (accion == "mesa") {
     var d1 = Num.fromString(Request.post("d1", "0"))
@@ -193,6 +198,7 @@ if (Request.isPost) {
       Game.log(g.id, "Dados de la mesa: " + d1.toString + (dados == 2 ? " y " + d2.toString : "") + ".")
       var auto = Game.resolve(g.id)
       if (auto["error"] != "") aviso = auto["error"]
+      anchor = "#resultado"
     }
   } else if (accion == "tirar_maniobra") {
     // Maniobras que piden un dado (hoy, el Arpón Rastreador). Usan la misma
@@ -335,28 +341,11 @@ if (Request.isPost) {
       `UPDATE games SET fase = 'prueba', suerte = 0, focosM = 0 WHERE id = ?`.query(g.id)
       var res = Game.resolve(g.id)
       if (res["error"] != "") aviso = res["error"]
+      anchor = "#resultado"
     }
   } else if (accion == "resolver") {
     var res = Game.resolve(g.id)
     if (res["error"] != "") aviso = res["error"]
-  } else if (accion == "elegir_apoyo") {
-    var recurso = Request.post("recurso", "energia")
-    var row = g.apoyoCarta == null ? null : `SELECT id, cardId FROM game_cards WHERE id = ? AND gameId = ?`.first(g.apoyoCarta, g.id)
-    var c = row == null ? null : Card.get(row["cardId"])
-    if (c == null) {
-      aviso = "No hay una maniobra de apoyo pendiente."
-    } else {
-      var v = c.value
-      var volver = g.fasePrevia == null ? "listo" : g.fasePrevia
-      if (recurso == "escudo") {
-        `UPDATE games SET escudo = MIN(12, escudo + ?), fase = ?, apoyoCarta = NULL, apoyoOrigen = NULL, fasePrevia = NULL WHERE id = ?`.query(v, volver, g.id)
-        Game.log(g.id, "Maniobra de apoyo " + c.name + ": +" + v.toString + " Escudo.")
-      } else {
-        `UPDATE games SET energia = MIN(12, energia + ?), fase = ?, apoyoCarta = NULL, apoyoOrigen = NULL, fasePrevia = NULL WHERE id = ?`.query(v, volver, g.id)
-        Game.log(g.id, "Maniobra de apoyo " + c.name + ": +" + v.toString + " Energía.")
-      }
-      Game.move(row["id"], "descarteEquipo")
-    }
   } else if (accion == "cancelar") {
     if (g.tirado) {
       aviso = "Ya tiraron: no pueden volver atrás. Resuelvan la prueba."
@@ -444,7 +433,7 @@ if (Request.isPost) {
   var qs = ""
   if (aviso != "") qs = "?aviso=" + Util.urlEncode(aviso)
   if (anim != "") qs = qs + (qs == "" ? "?" : "&") + "anim=" + anim
-  return Response.redirect("/juego" + qs)
+  return Response.redirect("/juego" + qs + anchor)
 }
 
 // Primer ingreso con cantidad de jugadores en la URL
@@ -512,12 +501,6 @@ if (g.maniobraRow != null) {
   if (mrow != null) maniobraCard = Card.get(mrow["cardId"])
 }
 
-var supportCard = null
-if (g.apoyoCarta != null) {
-  var srow = `SELECT cardId FROM game_cards WHERE id = ?`.first(g.apoyoCarta)
-  if (srow != null) supportCard = Card.get(srow["cardId"])
-}
-
 // El total de la prueba se muestra con las sumas ya aplicadas, para que la
 // mesa de dados sea la misma antes y después de tirar.
 var estab = Game.hasEffect(Game.ids(g.id, "herramientas"), "plus_one_sum")
@@ -526,13 +509,15 @@ if (estab && pendingOpt != null && pendingOpt["tipoPrueba"] == "suma") totalPrue
 
 var handCount = hand.count
 var focoHref = "#cartas-activas"
-if (g.fase == "apoyo") focoHref = "#apoyo"
 if (g.fase == "maniobra") focoHref = "#maniobra"
 if (g.fase == "prueba" || g.fase == "reroll") focoHref = "#prueba"
 if (g.fase == "descarte") focoHref = "#mano"
 if (g.fase == "resuelto") focoHref = "#resultado"
 var puedeElegir = g.status == "activa" && g.fase == "listo" && g.resueltas == 0
 var puedeJugar = g.status == "activa" && g.jugadas == 0 && g.fase == "listo"
+// Mientras haya una tirada pendiente, la mesa queda bloqueada y la bandeja de
+// dados se muestra fija arriba.
+var esperaTirada = g.fase == "prueba" || g.fase == "reroll" || g.fase == "maniobra"
 
 var finalTitulo = "La expedición continúa"
 var finalTexto = ""
@@ -553,9 +538,6 @@ var fasePrompt = "Jueguen su carta de Equipo (o no) y elijan una Misión de la m
 if (g.fase == "emboscada") {
   faseEyebrow = "Emboscada"
   fasePrompt = "Entraron varias emboscadas a la vez: elijan cuál cobra."
-} else if (g.fase == "apoyo") {
-  faseEyebrow = "Maniobra de apoyo"
-  fasePrompt = "Elijan el recurso que entrega la carta. Después se descarta."
 } else if (g.fase == "maniobra") {
   faseEyebrow = "Maniobra con dados"
   fasePrompt = "Tiren un dado y apliquen lo que diga la carta."
@@ -801,30 +783,9 @@ return Layout.render(<main class="game table-board" data-moves="{{ movesJson }}"
       </nav>
     </div>
 
-    {{ g.fase == "apoyo" && supportCard != null && <section class="tray support-choice" id="apoyo">
-      <div class="tray-main">
-        <h2>{{ supportCard.name }}</h2>
-        <p>Elegí el recurso. La carta se gasta.</p>
-      </div>
-      <div class="tray-card">
-        <span class="card-emoji" aria-hidden="true">{{ supportCard.emoji }}</span>
-        <span class="card-name">{{ supportCard.name }}</span>
-      </div>
-      <div class="action-row">
-        <form method="post">
-          <input type="hidden" name="accion" value="elegir_apoyo" />
-          <input type="hidden" name="recurso" value="energia" />
-          <button class="btn btn-primary"><span class="chip chip-energia">{{ Layout.icon("⚡") }} +{{ supportCard.value }}</span> Energía</button>
-        </form>
-        <form method="post">
-          <input type="hidden" name="accion" value="elegir_apoyo" />
-          <input type="hidden" name="recurso" value="escudo" />
-          <button class="btn btn-primary"><span class="chip chip-escudo">{{ Layout.icon("🛡️") }} +{{ supportCard.value }}</span> Escudo</button>
-        </form>
-      </div>
-    </section> }}
+    {{ esperaTirada && <div class="roll-gate-backdrop" aria-hidden="true"></div> }}
 
-    {{ g.fase == "maniobra" && maniobraCard != null && <section class="tray test-panel" id="maniobra">
+    {{ g.fase == "maniobra" && maniobraCard != null && <section class="tray test-panel {{ esperaTirada ? "is-gate" : "" }}" id="maniobra">
       <div class="tray-main">
         <h2>{{ maniobraCard.name }}</h2>
         <p class="muted">{{ Layout.icon(maniobraCard.typeIcon) }} {{ maniobraCard.typeLabel }} · {{ maniobraCard.id }}</p>
@@ -854,7 +815,7 @@ return Layout.render(<main class="game table-board" data-moves="{{ movesJson }}"
       </section>
     </section> }}
 
-    {{ (g.fase == "prueba" || g.fase == "reroll") && pendingCard != null && pendingOpt != null && <section class="tray test-panel" id="prueba">
+    {{ (g.fase == "prueba" || g.fase == "reroll") && pendingCard != null && pendingOpt != null && <section class="tray test-panel {{ esperaTirada ? "is-gate" : "" }}" id="prueba">
       <div class="tray-main">
         <h2>{{ pendingCard.name }}</h2>
         <p class="muted">{{ pendingCard.family == "exploracion" ? "Exploración" : (pendingCard.family == "peligro" ? "Peligro" : "Dilema") }} · {{ pendingCard.id }}</p>

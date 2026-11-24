@@ -184,7 +184,7 @@ El estado de la partida se guarda en SQLite y se ata a la sesión del navegador.
 
 1. Elegís el modo (todos arrancan 6/6: Experto sin apoyos, Normal con el Kit en la mano, Asistido con el Kit y la Carga) y arranca la expedición. No hay que elegir cantidad de jugadores: se juega solo o en cooperativo con amigos.
 2. La app reparte 3 cartas de Equipo y revela **siempre 3 cartas de Misión**, sin importar cuántos jueguen. La cantidad de jugadores no cambia nada: las decisiones son del equipo.
-3. En cada turno se resuelven primero las acciones del comienzo (Generadores) y se roba **1 carta** de Equipo (en el primer turno la mano arranca con 3). Después se puede jugar **1 carta**: Herramienta (queda), Maniobra (se resuelve) o carta de apoyo (elegís Energía o Escudo). La carta se juega **antes** de elegir la Misión.
+3. En cada turno se resuelven primero las acciones del comienzo (Generadores) y se roba **1 carta** de Equipo (en el primer turno la mano arranca con 3). Después se puede jugar **1 carta**: Herramienta (queda), Maniobra (se resuelve) o carta de apoyo (suma Energía y Escudo). La carta se juega **antes** de elegir la Misión.
 4. Se elige una Misión de la mesa y una de sus opciones. La mano no se descarta. La prueba de dados se puede resolver de dos formas:
    - **Tirar en la app**: el servidor genera los D6.
    - **Ya tiré en la mesa**: elegís en pantalla lo que salió en cada dado físico.
@@ -266,7 +266,7 @@ El mazo se mezcla con `ORDER BY RANDOM()` de SQLite. Las tiradas digitales tambi
 - **Solo o en cooperativo.** Podés jugar una sola persona o compartir la mano y las decisiones con amigos. La mano se mantiene entre turnos: robás 1 carta por turno y al cerrar descartás hasta quedar con 3.
 - **La cantidad de jugadores no cambia la mesa.** Siempre 3 cartas de Misión, mano de 3 y siempre 6 Pistas. Se puede jugar solo o en cooperativo con amigos.
 - **Tres modos.** Todos empiezan con 6 de Energía y 6 de Escudo. Experto no tiene apoyos; en Normal el Kit arranca en la mano; en Asistido, el Kit y la Carga.
-- **Cartas de apoyo.** Kit de emergencia (+1 Energía o +1 Escudo) y Carga de emergencia (+2 Energía o +2 Escudo) son Maniobras: se usan una vez y van al descarte. En Normal el Kit arranca en la mano; en Asistido, el Kit y la Carga. Cuentan para las 3 cartas y gastan la carta del turno. En Experto quedan en el mazo. En la app se destacan en rosa con la etiqueta **Apoyo**.
+- **Cartas de apoyo.** Kit de emergencia (+1 Energía y +1 Escudo) y Carga de emergencia (+2 Energía y +2 Escudo) son Maniobras: se usan una vez y van al descarte. En Normal el Kit arranca en la mano; en Asistido, el Kit y la Carga. Cuentan para las 3 cartas y gastan la carta del turno. En Experto quedan en el mazo. En la app se destacan en rosa con la etiqueta **Apoyo**.
 - **Una sola Herramienta activa por equipo.** Si juegan otra, la anterior va al descarte.
 - **Una Misión por turno, una carta jugada por turno.** La app lo hace cumplir; si intentás saltearlo, te avisa.
 - **Dados físicos primero.** La app no obliga a tirar: el ingreso manual es de primera clase, no un modo oculto.
