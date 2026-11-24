@@ -62,7 +62,7 @@ return Layout.render(<main class="quick">
           <svg class="quick-card purple" aria-hidden="true"><use href="#ico-card"/></svg>
           <svg class="quick-card gold" aria-hidden="true"><use href="#ico-card"/></svg>
         </div>
-        <p>Compartida. Arrancás con 3; se repone a 3 cada turno.</p>
+        <p>Compartida. Arrancás con 3 (con los apoyos del modo). Al cerrar robás 1 y descartás hasta 3.</p>
       </article>
 
       <article class="quick-zone">
@@ -95,14 +95,14 @@ return Layout.render(<main class="quick">
       <h2>Tu primer turno</h2>
       <p>Estos 4 pasos se repiten en cada turno.</p>
     </div>
-    <p class="quick-note"><strong>Antes de empezar:</strong> 3 cartas de Equipo y 3 de Misión. Todos: 6 de Energía y 6 de Escudo. Diferencia: Experto sin apoyos · Normal +1 · Asistido +2.</p>
+    <p class="quick-note"><strong>Antes de empezar:</strong> 3 cartas de Equipo y 3 de Misión. Todos: 6 de Energía y 6 de Escudo. Diferencia: Experto sin apoyos · Normal +Kit en la mano · Asistido +Kit y Carga.</p>
     <ol class="quick-steps">
       <li>
         <span class="quick-step-num">1</span>
         <svg class="quick-icon" aria-hidden="true"><use href="#ico-play"/></svg>
         <div>
           <strong>Jugá 1 carta (o no)</strong>
-          <p>Arrancás con 3. Se juega antes de elegir la Misión. Herramienta queda; Maniobra se gasta. Al elegir la Misión se descarta lo que quedó en la mano.</p>
+          <p>Arrancás con 3. Se juega antes de elegir la Misión. Herramienta queda; Maniobra se gasta. La mano no se descarta: la conservás para el turno siguiente.</p>
         </div>
       </li>
       <li>
@@ -126,7 +126,7 @@ return Layout.render(<main class="quick">
         <svg class="quick-icon" aria-hidden="true"><use href="#ico-deck"/></svg>
         <div>
           <strong>Cerrá el turno</strong>
-          <p>La carta resuelta va al descarte, entra 1 del Mazo de Misiones y el submarino paga ⚡ 1.</p>
+          <p>La carta resuelta va al descarte, entra 1 del Mazo de Misiones, el submarino paga ⚡ 1 y robás 1 carta. Si tenés más de 3, descartás hasta quedar con 3.</p>
         </div>
       </li>
     </ol>
@@ -135,8 +135,7 @@ return Layout.render(<main class="quick">
       <p>
         Tenés 3 cartas. Jugás <strong>Soldadura</strong> (🛡️ +1, va al descarte).
         Elegís <strong>El nido</strong>. Tirás <strong>Cara</strong>: éxito, ⚡ +2.
-        La carta va al descarte, entra la próxima; descartás toda la mano,
-        entra 1 del Mazo de Misiones y el submarino paga <strong>⚡ 1</strong>.
+        La carta va al descarte y entra la próxima; robás 1 carta, descartás hasta quedar con 3 y el submarino paga <strong>⚡ 1</strong>.
       </p>
     </div>
   </section>
@@ -224,7 +223,7 @@ return Layout.render(<main class="quick">
       <span><strong>1</strong> Herramienta activa</span>
       <span><strong>3</strong> al empezar</span>
       <span><strong>Emboscada:</strong> −1 ⚡, 🛡️ o Pista al entrar</span>
-      <span><strong>Modos:</strong> todos 6/6 · Experto sin apoyos · Normal +1 · Asistido +2</span>
+      <span><strong>Modos:</strong> todos 6/6 · Experto sin apoyos · Normal +Kit en mano · Asistido +Kit y Carga</span>
     </div>
   </section>
 

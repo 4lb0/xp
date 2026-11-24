@@ -58,11 +58,11 @@ return Layout.render(<main>
     <ol class="steps">
       <li>
         <span class="num">1</span>
-        <span><strong>Arrancá con 3 cartas de Equipo</strong>Al cerrar el turno descartás toda la mano y robás 3 cartas nuevas.</span>
+        <span><strong>Arrancá con 3 cartas de Equipo</strong>En Normal y Asistido, los apoyos ya vienen en la mano. La mano se mantiene: al cerrar robás 1 carta y descartás hasta 3.</span>
       </li>
       <li>
         <span class="num">2</span>
-        <span><strong>Jugá 1 carta (opcional)</strong>Antes de elegir la Misión. Herramienta: queda en la mesa. Maniobra: se usa una vez y va al descarte. Al elegir la Misión, el resto de la mano también se descarta.</span>
+        <span><strong>Jugá 1 carta (opcional)</strong>Antes de elegir la Misión. Herramienta: queda en la mesa. Maniobra: se usa una vez y va al descarte. La mano no se descarta.</span>
       </li>
       <li>
         <span class="num">3</span>
@@ -70,7 +70,7 @@ return Layout.render(<main>
       </li>
       <li>
         <span class="num">4</span>
-        <span><strong>Cerrá el turno</strong>Se revela una nueva Misión en el lugar de la resuelta. El submarino consume 1 Energía y el turno pasa. Al empezar el próximo se roba la mano a 3.</span>
+        <span><strong>Cerrá el turno</strong>Se revela una nueva Misión. El submarino consume 1 Energía y robás 1 carta; si la mano pasa de 3, descartás hasta quedar con 3.</span>
       </li>
     </ol>
   </section>
@@ -81,14 +81,14 @@ return Layout.render(<main>
         <div class="section-head">
           <h2>Prepará la mesa</h2>
         </div>
-        <p class="muted">Podés jugar solo o en cooperativo con amigos: la mesa es una. Siempre hay 3 cartas de Misión y la mano se repone a 3 cada turno.</p>
+        <p class="muted">Podés jugar solo o en cooperativo con amigos: la mesa es una. Siempre hay 3 cartas de Misión y la mano se mantiene en 3.</p>
         <form method="get" action="/juego" class="panel">
           <label for="modo"><strong>Modo</strong></label>
           <p style="margin: 0.4rem 0 0.9rem">
             <select id="modo" name="modo" style="font: inherit; padding: 0.5rem 0.7rem; border-radius: 8px; background: var(--navy); color: inherit; border: 1px solid rgba(51,187,204,.35)">
               <option value="experto" {{ modoInicial == "experto" ? "selected" : "" }}>Experto — 6 y 6, sin apoyos</option>
-              <option value="casual" {{ modoInicial == "casual" ? "selected" : "" }}>Normal — 6 y 6 + 1 apoyo</option>
-              <option value="facil" {{ modoInicial == "facil" ? "selected" : "" }}>Asistido — 6 y 6 + 2 apoyos</option>
+              <option value="casual" {{ modoInicial == "casual" ? "selected" : "" }}>Normal — 6 y 6 + Kit en la mano</option>
+              <option value="facil" {{ modoInicial == "facil" ? "selected" : "" }}>Asistido — 6 y 6 + Kit y Carga en la mano</option>
             </select>
           </p>
           <button class="btn btn-primary">Empezar</button>

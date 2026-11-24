@@ -63,14 +63,17 @@ class Game {
       }
     }
     `UPDATE game_cards SET ord = RANDOM() WHERE gameId = ?`.query(id)
+    // Las cartas de apoyo arrancan en la mano: cuentan para las 3 y se juegan
+    // como una carta más, gastando la del turno.
     if (modo != "experto") {
-      `UPDATE game_cards SET zone = 'ayuda' WHERE gameId = ? AND cardId = 'e17'`.query(id)
+      `UPDATE game_cards SET zone = 'mano' WHERE gameId = ? AND cardId = 'e17'`.query(id)
     }
     if (modo == "facil") {
-      `UPDATE game_cards SET zone = 'ayuda' WHERE gameId = ? AND cardId = 'e18'`.query(id)
+      `UPDATE game_cards SET zone = 'mano' WHERE gameId = ? AND cardId = 'e18'`.query(id)
     }
     Game.draw(id, "misterio", "mesa", 3)
-    Game.draw(id, "equipo", "mano", Game.handSize)
+    var faltan = Game.handSize - Game.count(id, "mano")
+    if (faltan > 0) Game.draw(id, "equipo", "mano", faltan)
     `UPDATE games SET ultimo = ? WHERE id = ?`.query("La expedición empieza. El submarino se hunde en la fosa.", id)
     var modoLabel = modo == "facil" ? "Asistido" : (modo == "casual" ? "Normal" : "Experto")
     Game.log(id, "Comienza la expedición en modo " + modoLabel + ".")

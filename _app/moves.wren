@@ -6,7 +6,7 @@ import "/_app/cards" for Card
 
 class Moves {
   static zones() {
-    return ["misterio", "equipo", "mano", "mesa", "herramientas", "ayuda", "descarteJuego", "descarteEquipo"]
+    return ["misterio", "equipo", "mano", "mesa", "herramientas", "descarteJuego", "descarteEquipo"]
   }
 
   // Guarda el estado actual en la sesión y devuelve los movimientos que
@@ -48,7 +48,7 @@ class Moves {
         var kind = "move"
         if (zone == "descarteJuego" || zone == "descarteEquipo") {
           kind = "discard"
-        } else if (zone == "herramientas" || zone == "ayuda") {
+        } else if (zone == "herramientas") {
           kind = "play"
         } else if (from == "misterio" || from == "equipo") {
           kind = "draw"

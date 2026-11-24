@@ -370,7 +370,6 @@
     if (zone === "mano") return "mano";
     if (zone === "mesa") return "cartas-activas";
     if (zone === "herramientas") return "herramientas";
-    if (zone === "ayuda") return "ayuda";
     return null;
   }
 
@@ -567,7 +566,7 @@
     const form = event.target;
     const action = form?.querySelector('[name="accion"]')?.value;
     if (!action || !soundOn()) return;
-    const kind = ["terminar", "jugar", "maniobra", "descartar", "usar_ayuda", "elegir_apoyo"].includes(action)
+    const kind = ["terminar", "jugar", "maniobra", "descartar", "descartar_mano", "elegir_apoyo"].includes(action)
       ? "card"
       : (["tirar", "mesa", "reroll"].includes(action) ? "dice" : (action === "nueva" ? "shuffle" : "click"));
     const play = () => {

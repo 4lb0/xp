@@ -144,11 +144,7 @@ if (Request.isPost) {
         var c = Card.get(row["cardId"])
         var opt = c.option(optLabel)
         var parity = opt != null && (opt["tipoPrueba"] == "cara" || opt["tipoPrueba"] == "seca")
-        // Al cerrar la fase de Maniobras se descarta lo que quedó en la mano:
-        // la carta del turno ya está jugada (o el equipo decidió no jugar).
-        var mano = `SELECT id FROM game_cards WHERE gameId = ? AND zone = 'mano'`.fetch(g.id)
-        for (m in mano) Game.move(m["id"], "descarteEquipo")
-        if (!mano.isEmpty) Game.log(g.id, "Se descartan las cartas que quedaron en la mano.")
+        // La mano se mantiene entre turnos: elegir la Misión no descarta nada.
         // Giro Brusco y Focos Abisales solo sirven en Cara o Seca. Si la
         // opción elegida es de dados, la Maniobra preparada se pierde.
         var pierdeGiro = g.giro && !parity
@@ -343,23 +339,6 @@ if (Request.isPost) {
   } else if (accion == "resolver") {
     var res = Game.resolve(g.id)
     if (res["error"] != "") aviso = res["error"]
-  } else if (accion == "usar_ayuda") {
-    if (g.fase == "apoyo") {
-      aviso = "Primero elegí el recurso de la maniobra de apoyo pendiente."
-    } else if (g.fase == "emboscada") {
-      aviso = "Primero elijan la emboscada inicial."
-    } else if (g.fase != "listo") {
-      aviso = "La Maniobra de apoyo se juega en la fase de Maniobras, antes de elegir la Misión."
-    } else {
-      var row = `SELECT id, cardId FROM game_cards WHERE id = ? AND gameId = ? AND zone = 'ayuda'`.first(rowId, g.id)
-      if (row == null) {
-        aviso = "Esa maniobra de apoyo ya no está en el área."
-      } else {
-        var c = Card.get(row["cardId"])
-        `UPDATE games SET fase = 'apoyo', apoyoCarta = ?, apoyoOrigen = 'ayuda', fasePrevia = ? WHERE id = ?`.query(row["id"], g.fase, g.id)
-        Game.log(g.id, "Usan la maniobra de apoyo: " + c.name + ".")
-      }
-    }
   } else if (accion == "elegir_apoyo") {
     var recurso = Request.post("recurso", "energia")
     var row = g.apoyoCarta == null ? null : `SELECT id, cardId FROM game_cards WHERE id = ? AND gameId = ?`.first(g.apoyoCarta, g.id)
@@ -387,6 +366,23 @@ if (Request.isPost) {
       `UPDATE games SET fase = 'listo', pruebaCarta = NULL, pruebaOpcion = NULL, dado1 = 0, dado2 = 0, tirado = 0 WHERE id = ?`.query(g.id)
       Game.log(g.id, "El equipo vuelve a elegir la Misión.")
     }
+  } else if (accion == "descartar_mano") {
+    if (g.fase != "descarte") {
+      aviso = "No hay cartas de más en la mano."
+    } else {
+      var row = `SELECT id, cardId FROM game_cards WHERE id = ? AND gameId = ? AND zone = 'mano'`.first(rowId, g.id)
+      if (row == null) {
+        aviso = "Esa carta ya no está en la mano."
+      } else {
+        Game.move(row["id"], "descarteEquipo")
+        var c = Card.get(row["cardId"])
+        Game.log(g.id, (c == null ? "Una carta" : c.name) + " va al descarte: la mano queda en 3.")
+        if (Game.count(g.id, "mano") <= Game.handSize) {
+          `UPDATE games SET fase = 'listo' WHERE id = ?`.query(g.id)
+          Game.log(g.id, "La mano está lista para el turno.")
+        }
+      }
+    }
   } else if (accion == "terminar") {
     if (g.fase != "resuelto") {
       aviso = "Primero resuelvan una Misión."
@@ -397,18 +393,7 @@ if (Request.isPost) {
       Game.log(g.id, "Al empezar el cierre, la Energía o el Escudo están en 0. La expedición termina.")
       return Response.redirect("/juego")
     } else {
-      // Al cerrar el turno se descarta toda la mano. No hay azar.
-      var mano = `SELECT id, cardId FROM game_cards WHERE gameId = ? AND zone = 'mano'`.fetch(g.id)
-      if (!mano.isEmpty) {
-        var nombres = []
-        for (m in mano) {
-          var c = Card.get(m["cardId"])
-          if (c != null) nombres.add(c.name)
-          Game.move(m["id"], "descarteEquipo")
-        }
-        Game.log(g.id, "Se descarta toda la mano: " + nombres.join(", ") + ".")
-      }
-
+      // La mano se mantiene entre turnos: no se descarta al cerrar.
       var g2 = Game.find(g.id)
       if (g2.ahorro) {
         Game.log(g.id, "Ahorro de Oxígeno: el consumo del submarino no gasta Energía.")
@@ -444,9 +429,14 @@ if (Request.isPost) {
         `UPDATE games SET escudo = MIN(12, escudo + 1) WHERE id = ?`.query(g.id)
         Game.log(g.id, "Generador de Escudo: +1 Escudo al empezar.")
       }
-      var enMano = Game.count(g.id, "mano")
-      var aRobar = Game.handSize - enMano
-      if (aRobar > 0) Game.draw(g.id, "equipo", "mano", aRobar)
+      // Robás 1 carta por turno. Si la mano queda por encima de 3, elegís
+      // cuál descartar antes de empezar.
+      var robada = Game.draw(g.id, "equipo", "mano", 1)
+      if (robada != null) Game.log(g.id, "Roban 1 carta de Equipo.")
+      if (Game.count(g.id, "mano") > Game.handSize) {
+        `UPDATE games SET fase = 'descarte' WHERE id = ?`.query(g.id)
+        Game.log(g.id, "La mano supera 3 cartas: eligen cuál descartar.")
+      }
       Game.log(g.id, "Turno " + (g.turno + 1).toString + ".")
     }
   }
@@ -480,14 +470,14 @@ if (g == null) {
       <p class="eyebrow">Preparación</p>
       <h1>Prepará la expedición</h1>
       <p class="lead">Podés jugar solo o en cooperativo con amigos. La mesa es una: el equipo XP contra el juego.</p>
-      <p class="hint">Siempre 3 cartas de Misión en la mesa y una mano de 3. No importa cuántos jueguen.</p>
+      <p class="hint">Siempre 3 cartas de Misión en la mesa y una mano de 3 que se mantiene entre turnos. No importa cuántos jueguen.</p>
       <form method="post" class="panel start-form">
         <input type="hidden" name="accion" value="nueva" />
         <label for="modo"><strong>Modo</strong></label>
         <select id="modo" name="modo">
           <option value="experto" {{ modoInicial == "experto" ? "selected" : "" }}>Experto — 6 y 6, sin apoyos</option>
-          <option value="casual" {{ modoInicial == "casual" ? "selected" : "" }}>Normal — 6 y 6 + 1 carta de apoyo</option>
-          <option value="facil" {{ modoInicial == "facil" ? "selected" : "" }}>Asistido — 6 y 6 + 2 cartas de apoyo</option>
+          <option value="casual" {{ modoInicial == "casual" ? "selected" : "" }}>Normal — 6 y 6 + Kit en la mano</option>
+          <option value="facil" {{ modoInicial == "facil" ? "selected" : "" }}>Asistido — 6 y 6 + Kit y Carga en la mano</option>
         </select>
         <button class="btn btn-primary">Iniciar expedición</button>
       </form>
@@ -500,7 +490,6 @@ var mesa = Game.cardsIn(g.id, "mesa")
 var hand = Game.cardsIn(g.id, "mano")
 var tools = Game.cardsIn(g.id, "herramientas")
 var activeTool = tools.isEmpty ? null : tools.first["card"]
-var ayuda = Game.cardsIn(g.id, "ayuda")
 var logs = Game.lastLogs(g.id, 8)
 var mazoJuego = Game.count(g.id, "misterio")
 var mazoEquipo = Game.count(g.id, "equipo")
@@ -538,6 +527,7 @@ var focoHref = "#cartas-activas"
 if (g.fase == "apoyo") focoHref = "#apoyo"
 if (g.fase == "maniobra") focoHref = "#maniobra"
 if (g.fase == "prueba" || g.fase == "reroll") focoHref = "#prueba"
+if (g.fase == "descarte") focoHref = "#mano"
 if (g.fase == "resuelto") focoHref = "#resultado"
 var puedeElegir = g.status == "activa" && g.fase == "listo" && g.resueltas == 0
 var puedeJugar = g.status == "activa" && g.jugadas == 0 && g.fase == "listo"
@@ -573,6 +563,9 @@ if (g.fase == "emboscada") {
 } else if (g.fase == "reroll") {
   faseEyebrow = "Tirada fallida"
   fasePrompt = "Pueden volver a tirar o aceptar el fallo."
+} else if (g.fase == "descarte") {
+  faseEyebrow = "Tope de mano"
+  fasePrompt = "Robaron 1 carta y la mano pasó de 3: elijan cuál descartar."
 } else if (g.fase == "resuelto") {
   faseEyebrow = "Resultado"
   fasePrompt = "Cierren el turno: se repone la mesa y se pasa el turno."
@@ -602,7 +595,6 @@ return Layout.render(<main class="game table-board" data-moves="{{ movesJson }}"
           {{ Layout.icon("🔧") }} <span class="rail-label">Herramienta</span><span class="rail-label-short">Herram.</span>
           <span class="rail-dot {{ activeTool == null ? "" : "on" }}" aria-hidden="true"></span>
         </a>
-        <a href="#ayuda" class="{{ ayuda.isEmpty ? "is-empty" : "" }}" aria-label="Apoyo del equipo">{{ Layout.icon("🎒") }} <span class="rail-label">Apoyo</span><span class="rail-label-short">Apoyo</span> <b>{{ ayuda.count }}</b></a>
         <a href="/reglas" title="Reglas completas" aria-label="Reglas completas">{{ Layout.icon("📖") }} <span class="rail-label">Reglas</span><span class="rail-label-short">Reglas</span></a>
         <a href="/" title="Inicio" aria-label="Inicio">{{ Layout.icon("🏠") }} <span class="rail-label">Inicio</span><span class="rail-label-short">Inicio</span></a>
       </nav>
@@ -911,7 +903,7 @@ return Layout.render(<main class="game table-board" data-moves="{{ movesJson }}"
     <section class="zone zone-own">
       <div class="zone-head">
         <h2>Su lado de la mesa</h2>
-        <span class="zone-count">Herramienta y apoyo</span>
+        <span class="zone-count">Herramienta activa</span>
       </div>
       <div class="zone-body">
         <div class="slot-column" id="herramientas">
@@ -929,30 +921,6 @@ return Layout.render(<main class="game table-board" data-moves="{{ movesJson }}"
           {{ tools.isEmpty && <article class="card card-slot card-slot-sm" aria-hidden="true">
             <span class="slot-mark">{{ Layout.icon("🔧") }}</span>
             <span class="slot-text">Sin Herramienta</span>
-          </article> }}
-        </div>
-
-        <div class="slot-column" id="ayuda">
-          <p class="slot-label">{{ Layout.icon("🎒") }} Apoyo del equipo <span>{{ ayuda.count }}</span></p>
-          {{ ayuda.map{|a| <article class="card card-support" data-family="apoyo" data-row="{{ a["rowId"] }}">
-            <span class="card-ribbon">🎁 Apoyo</span>
-            <span class="card-art"><span class="card-emoji" aria-hidden="true">{{ a["card"].emoji }}</span></span>
-            <span class="card-family">{{ Layout.icon(a["card"].typeIcon) }} {{ a["card"].typeLabel }} · <span class="card-id">{{ a["card"].id }}</span></span>
-            <h3>{{ a["card"].name }}</h3>
-            <span class="use-badge {{ a["card"].useClass }}" title="{{ a["card"].useHint }}">{{ Layout.icon(a["card"].useIcon) }} {{ a["card"].useLabel }}</span>
-            <div class="effect-chips">
-              {{ a["card"].helpChips.map{|h| <span class="chip {{ h["cls"] }}" title="{{ h["title"] }}" aria-label="{{ h["title"] }}">{{ Layout.icon(h["icon"]) }} {{ h["text"] }}</span>} }}
-            </div>
-            <section class="card-text">{{ a["card"].body }}</section>
-            <form method="post">
-              <input type="hidden" name="accion" value="usar_ayuda" />
-              <input type="hidden" name="rowId" value="{{ a["rowId"] }}" />
-              <button class="btn btn-ghost btn-small" {{ g.fase == "listo" ? "" : "disabled" }}>Usar maniobra</button>
-            </form>
-          </article>} }}
-          {{ ayuda.isEmpty && <article class="card card-slot card-slot-sm" aria-hidden="true">
-            <span class="slot-mark">{{ Layout.icon("🎒") }}</span>
-            <span class="slot-text">Sin apoyo</span>
           </article> }}
         </div>
 
@@ -986,10 +954,10 @@ return Layout.render(<main class="game table-board" data-moves="{{ movesJson }}"
     <section class="zone zone-hand" id="mano">
       <div class="zone-head">
         <h2>Mano del equipo</h2>
-        <span class="zone-count">{{ handCount }} cartas · se repone a 3</span>
+        <span class="zone-count">{{ handCount }} cartas · tope 3</span>
       </div>
       <div class="card-row hand-main">
-        {{ hand.map{|h| <article class="card {{ puedeJugar ? "is-actionable" : "is-locked" }}" data-row="{{ h["rowId"] }}" data-family="{{ h["card"].isSupport ? "apoyo" : (h["card"].isTool ? "herramienta" : "maniobra") }}">
+        {{ hand.map{|h| <article class="card {{ (puedeJugar || g.fase == "descarte") ? "is-actionable" : "is-locked" }}" data-row="{{ h["rowId"] }}" data-family="{{ h["card"].isSupport ? "apoyo" : (h["card"].isTool ? "herramienta" : "maniobra") }}">
           {{ h["card"].isSupport && <span class="card-ribbon">🎁 Apoyo</span> }}
           <span class="card-art"><span class="card-emoji" aria-hidden="true">{{ h["card"].emoji }}</span></span>
           <span class="card-family">{{ Layout.icon(h["card"].typeIcon) }} {{ h["card"].typeLabel }} · <span class="card-id">{{ h["card"].id }}</span></span>
@@ -1000,17 +968,22 @@ return Layout.render(<main class="game table-board" data-moves="{{ movesJson }}"
           </div>
           <section class="card-text">{{ h["card"].body }}</section>
           <div class="card-action">
-            {{ h["card"].playNow && <form method="post" class="inline-form">
+            {{ g.fase == "descarte" && <form method="post" class="inline-form">
+              <input type="hidden" name="accion" value="descartar_mano" />
+              <input type="hidden" name="rowId" value="{{ h["rowId"] }}" />
+              <button class="btn btn-ghost btn-small">Descartar</button>
+            </form> }}
+            {{ g.fase != "descarte" && h["card"].playNow && <form method="post" class="inline-form">
               <input type="hidden" name="accion" value="jugar" />
               <input type="hidden" name="rowId" value="{{ h["rowId"] }}" />
               <button class="btn btn-primary btn-small" {{ puedeJugar ? "" : "disabled" }}>Jugar</button>
             </form> }}
-            {{ !h["card"].playNow && h["card"].isPrep && <form method="post" class="inline-form">
+            {{ g.fase != "descarte" && !h["card"].playNow && h["card"].isPrep && <form method="post" class="inline-form">
               <input type="hidden" name="accion" value="maniobra" />
               <input type="hidden" name="rowId" value="{{ h["rowId"] }}" />
               <button class="btn btn-ghost btn-small" {{ puedeJugar ? "" : "disabled" }}>Preparar</button>
             </form> }}
-            {{ !h["card"].playNow && !h["card"].isPrep && <p class="hint card-hint">Esta Maniobra se usa durante la prueba.</p> }}
+            {{ g.fase != "descarte" && !h["card"].playNow && !h["card"].isPrep && <p class="hint card-hint">Esta Maniobra se usa durante la prueba.</p> }}
           </div>
         </article>} }}
         {{ manoFaltan > 0 && (1..manoFaltan).map{|i| <article class="card card-slot card-slot-sm" aria-hidden="true">
@@ -1018,7 +991,7 @@ return Layout.render(<main class="game table-board" data-moves="{{ movesJson }}"
           <span class="slot-text">Lugar libre</span>
         </article>} }}
       </div>
-      <p class="zone-foot">{{ g.fase == "listo" ? "Pueden jugar 1 carta de Equipo antes de elegir la Misión." : (g.jugadas > 0 ? "Ya jugaron su carta de Equipo: al elegir la Misión se descarta el resto de la mano." : "Al elegir la Misión se descarta el resto de la mano.") }} La mano se repone al empezar el próximo turno.</p>
+      <p class="zone-foot">{{ g.fase == "descarte" ? "Eligen qué carta descartar: la mano queda en 3." : (g.fase == "listo" ? (g.jugadas == 0 ? "Pueden jugar 1 carta de Equipo este turno." : "Ya jugaron su carta de Equipo este turno.") : "La mano se mantiene: al cerrar el turno roban 1 y descartan hasta 3.") }}</p>
     </section>
   </section> }}
 
