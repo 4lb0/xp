@@ -541,7 +541,7 @@ if (g.status == "victoria") {
   finalTexto = "Seis Pistas. La última sombra se hunde en la fosa y, por un instante, el Megalodón está ahí. El mundo seguirá creyendo que es un mito, como el monstruo del lago Ness. Ustedes ya saben la verdad."
 } else if (g.status == "derrota") {
   finalTitulo = "La expedición se pierde"
-  finalTexto = "Al cerrar el turno, la Energía y el Escudo estaban en 0. El submarino se queda sin aire y sin casco en la oscuridad."
+  finalTexto = "Al cerrar el turno, la Energía o el Escudo estaba en 0. El submarino se queda sin aire y sin casco en la oscuridad."
 }
 
 // ---------- Mesa ----------
