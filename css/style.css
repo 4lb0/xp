@@ -2234,6 +2234,9 @@ section[id] { scroll-margin-top: 5.5rem; }
 .table-board .board-meta { align-items: center; }
 .board-nav { display: flex; gap: 0.9rem; padding-inline: 0.4rem; }
 .board-nav a {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
   color: var(--muted);
   font-size: 0.68rem;
   font-weight: 800;
@@ -2242,6 +2245,7 @@ section[id] { scroll-margin-top: 5.5rem; }
   text-decoration: none;
 }
 .board-nav a:hover { color: var(--paper); }
+.board-nav .ico { width: 1.15em; height: 1.15em; }
 .board-nav a + a { border-left: 1px solid var(--line); padding-left: 0.9rem; }
 
 @media (min-width: 1000px) {

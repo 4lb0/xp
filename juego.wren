@@ -548,8 +548,8 @@ return Layout.render(<main class="game table-board" data-moves="{{ movesJson }}"
     <div class="board-meta">
       <span class="pill">{{ modoLabel }}</span>
       <nav class="board-nav" aria-label="Accesos de la expedición">
-        <a href="/reglas">Reglas</a>
-        <a href="/">Inicio</a>
+        <a href="/reglas">{{ Layout.icon("📖") }} Reglas</a>
+        <a href="/">{{ Layout.icon("🏠") }} Inicio</a>
       </nav>
       <div class="view-tools" role="group" aria-label="Preferencias de la partida">
         <button class="pref-toggle" id="toggle-motion" type="button" aria-pressed="true">
