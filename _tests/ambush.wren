@@ -24,7 +24,7 @@ class Fixture {
 
 // --- Detección y elección con dos emboscadas ---
 
-Test.post("/juego", {"accion": "nueva", "modo": "casual"}).status(302)
+Test.post("/juego", {"accion": "nueva", "modo": "casual"}).withCsrf().status(302)
 var gid = `SELECT MAX(id) AS id FROM games`.first["id"].toNum
 
 // m20 cobra Escudo −1 y m28 cobra Energía −1: así se ve cuál se aplicó.
@@ -44,7 +44,7 @@ Test.get("/juego")
   .textContains("Sufrir esta emboscada")
 
 var rowM20 = `SELECT id FROM game_cards WHERE gameId = ? AND cardId = 'm20'`.first(gid)
-Test.post("/juego", {"accion": "elegir_emboscada", "rowId": rowM20["id"].toString})
+Test.post("/juego", {"accion": "elegir_emboscada", "rowId": rowM20["id"].toString}).withCsrf()
   .status(302)
 
 g = Game.find(gid)
@@ -91,5 +91,5 @@ Test.get("/juego")
 
 // --- Limpieza: dejar la sesión sin partida para el resto de la suite ---
 
-Test.post("/juego", {"accion": "reiniciar"}).status(302)
+Test.post("/juego", {"accion": "reiniciar"}).withCsrf().status(302)
 Test.assert(Game.find(gid) == null, "reiniciar borra la partida de prueba")

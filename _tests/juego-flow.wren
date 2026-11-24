@@ -30,7 +30,7 @@ class Flow {
   // contadores por sorpresa.
   // Arranca una partida limpia y la deja visible para las pruebas.
   static nuevaPartida() {
-    Test.post("/juego", {"accion": "nueva", "modo": "experto"}).status(302)
+    Test.post("/juego", {"accion": "nueva", "modo": "experto"}).withCsrf().status(302)
     var id = `SELECT MAX(id) AS id FROM games`.first["id"].toNum
     Flow.normalize(id)
     Flow.safeOnTop(id)
@@ -59,7 +59,7 @@ Test.get("/juego")
 
 // --- Crear una partida desde el formulario ---
 
-Test.post("/juego", {"accion": "nueva", "modo": "casual"})
+Test.post("/juego", {"accion": "nueva", "modo": "casual"}).withCsrf()
   .status(302)
   .header("Location", "/juego")
 
@@ -89,7 +89,7 @@ Flow.normalize(gid)
 var rowId = Flow.putM01(gid)
 // Consumir los movimientos que hizo el fixture antes de medir la acción real.
 Test.get("/juego").status(200)
-Test.post("/juego", {"accion": "elegir", "rowId": rowId.toString, "opt": "A"})
+Test.post("/juego", {"accion": "elegir", "rowId": rowId.toString, "opt": "A"}).withCsrf()
   .status(302)
 g = Game.find(gid)
 Test.assert(g.fase == "prueba", "elegir deja la prueba preparada")
@@ -102,7 +102,7 @@ Test.get("/juego")
   .contains('data-moves="[]"')
 Test.assert(Game.count(gid, "mano") == 3, "elegir la Misión no descarta la mano")
 
-Test.post("/juego", {"accion": "mesa", "d1": "2", "d2": "0"})
+Test.post("/juego", {"accion": "mesa", "d1": "2", "d2": "0"}).withCsrf()
   .status(302)
   .header("Location", "/juego?anim=dados#resultado")
 g = Game.find(gid)
@@ -122,7 +122,7 @@ Test.get("/juego")
 
 Flow.safeOnTop(gid)
 var pistasAntes = g.pistas
-Test.post("/juego", {"accion": "terminar"})
+Test.post("/juego", {"accion": "terminar"}).withCsrf()
   .status(302)
 g = Game.find(gid)
 Test.assert(g.turno == 2, "cerrar el turno avanza el contador")
@@ -135,7 +135,7 @@ Test.assert(Game.count(gid, "mano") == 4, "roban 1 y la mano pasa a 4")
 Test.assert(g.fase == "descarte", "con 4 cartas hay que descartar antes de empezar")
 Test.assert(Game.count(gid, "descarteJuego") == 1, "la carta resuelta va al descarte del Juego")
 var sobra = Game.cardsIn(gid, "mano")[0]
-Test.post("/juego", {"accion": "descartar_mano", "rowId": sobra["rowId"].toString}).status(302)
+Test.post("/juego", {"accion": "descartar_mano", "rowId": sobra["rowId"].toString}).withCsrf().status(302)
 g = Game.find(gid)
 Test.assert(Game.count(gid, "mano") == 3, "descartar deja la mano en 3")
 Test.assert(g.fase == "listo", "con 3 cartas el turno arranca")
@@ -145,26 +145,26 @@ Test.assert(Game.count(gid, "descarteEquipo") == 1, "la carta descartada va al d
 
 var gDerrota = Flow.nuevaPartida()
 `UPDATE games SET fase = 'resuelto', resultado = 'ganada', energia = 0, escudo = 3 WHERE id = ?`.query(gDerrota)
-Test.post("/juego", {"accion": "terminar"}).status(302)
+Test.post("/juego", {"accion": "terminar"}).withCsrf().status(302)
 var gCero = Game.find(gDerrota)
 Test.assert(gCero.status == "derrota", "cero Energía al cerrar el turno termina la partida")
 Test.assert(gCero.turno == 1, "la partida perdida no avanza de turno")
 
 gDerrota = Flow.nuevaPartida()
 `UPDATE games SET fase = 'resuelto', resultado = 'ganada', energia = 3, escudo = 0 WHERE id = ?`.query(gDerrota)
-Test.post("/juego", {"accion": "terminar"}).status(302)
+Test.post("/juego", {"accion": "terminar"}).withCsrf().status(302)
 Test.assert(Game.find(gDerrota).status == "derrota", "cero Escudo al cerrar el turno termina la partida")
 
 gDerrota = Flow.nuevaPartida()
 `UPDATE games SET fase = 'resuelto', resultado = 'ganada', energia = 0, escudo = 0 WHERE id = ?`.query(gDerrota)
-Test.post("/juego", {"accion": "terminar"}).status(302)
+Test.post("/juego", {"accion": "terminar"}).withCsrf().status(302)
 Test.assert(Game.find(gDerrota).status == "derrota", "los dos en 0 también terminan la partida")
 
 // --- Cerrar con 1 Energía derrota: pagar el cierre la deja en 0 ---
 
 var gGracia = Flow.nuevaPartida()
 `UPDATE games SET fase = 'resuelto', resultado = 'ganada', energia = 1, escudo = 3 WHERE id = ?`.query(gGracia)
-Test.post("/juego", {"accion": "terminar"}).status(302)
+Test.post("/juego", {"accion": "terminar"}).withCsrf().status(302)
 var gSig = Game.find(gGracia)
 Test.assert(gSig.status == "derrota", "pagar el cierre con 1 Energía termina la partida")
 Test.assert(gSig.energia == 0, "el consumo deja la Energía en 0")
@@ -175,13 +175,13 @@ Test.assert(gSig.turno == 1, "la partida perdida no avanza de turno")
 var gVictoria = Flow.nuevaPartida()
 `UPDATE games SET pistas = 5 WHERE id = ?`.query(gVictoria)
 var misionVictoria = Flow.putM01(gVictoria)
-Test.post("/juego", {"accion": "elegir", "rowId": misionVictoria.toString, "opt": "A"}).status(302)
-Test.post("/juego", {"accion": "mesa", "d1": "2", "d2": "0"}).status(302)
+Test.post("/juego", {"accion": "elegir", "rowId": misionVictoria.toString, "opt": "A"}).withCsrf().status(302)
+Test.post("/juego", {"accion": "mesa", "d1": "2", "d2": "0"}).withCsrf().status(302)
 Test.assert(Game.find(gVictoria).status == "victoria", "la sexta Pista gana al resolver, en cualquier momento")
 
 // --- Modo inválido: el servidor cae en Normal ---
 
-Test.post("/juego", {"accion": "nueva", "modo": "inventado"})
+Test.post("/juego", {"accion": "nueva", "modo": "inventado"}).withCsrf()
   .status(302)
 var nuevo = `SELECT MAX(id) AS id FROM games`.first["id"].toNum
 Test.assert(nuevo != gid, "una nueva partida reemplaza a la anterior")
@@ -190,7 +190,7 @@ Test.assert(Game.find(nuevo).modo == "casual", "un modo inválido cae en Normal"
 
 // --- Reiniciar deja la sesión sin partida ---
 
-Test.post("/juego", {"accion": "reiniciar"})
+Test.post("/juego", {"accion": "reiniciar"}).withCsrf()
   .status(302)
 Test.assert(Game.find(nuevo) == null, "reiniciar destruye la partida")
 Test.get("/juego")

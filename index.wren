@@ -1,4 +1,5 @@
 import "_app/template" for Layout
+import "_app/views" for Views
 
 var session = Session.new()
 var modoGuardado = session.get("modo")
@@ -82,13 +83,13 @@ return Layout.render(<main>
           <h2>Prepará la mesa</h2>
         </div>
         <p class="muted">Podés jugar solo o en cooperativo con amigos: la mesa es una. Siempre hay 3 cartas de Misión y la mano se mantiene en 3.</p>
-        <form method="get" action="/juego" class="panel">
+        <form method="post" action="/juego" class="panel">
+          {{ session.csrf }}
+          <input type="hidden" name="accion" value="nueva" />
           <label for="modo"><strong>Modo</strong></label>
           <p style="margin: 0.4rem 0 0.9rem">
             <select id="modo" name="modo" style="font: inherit; padding: 0.5rem 0.7rem; border-radius: 8px; background: var(--navy); color: inherit; border: 1px solid rgba(51,187,204,.35)">
-              <option value="experto" {{ modoInicial == "experto" ? "selected" : "" }}>Experto — 6 y 6, sin apoyos</option>
-              <option value="casual" {{ modoInicial == "casual" ? "selected" : "" }}>Normal — 6 y 6 + Kit en la mano</option>
-              <option value="facil" {{ modoInicial == "facil" ? "selected" : "" }}>Asistido — 6 y 6 + Carga en la mano</option>
+              {{ Views.modeOptions(modoInicial) }}
             </select>
           </p>
           <button class="btn btn-primary">Empezar</button>
