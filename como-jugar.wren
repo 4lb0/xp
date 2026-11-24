@@ -242,7 +242,7 @@ return Layout.render(<main class="quick">
       <div>
         <p class="eyebrow">Perdés</p>
         <h2>0 Energía y 0 Escudo al cerrar un turno</h2>
-        <p>No es inmediato: si al terminar el turno siguen ambos en 0, la expedición termina.</p>
+        <p>No es inmediato: si al terminar el turno siguen ambos en 0, la expedición termina. Con uno solo en 0, siguen jugando.</p>
       </div>
     </article>
   </section>

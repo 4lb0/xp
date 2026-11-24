@@ -375,6 +375,9 @@ if (Request.isPost) {
       }
 
       `UPDATE games SET jugador = 1, turno = turno + 1, fase = 'listo', pruebaCarta = NULL, pruebaOpcion = NULL, dado1 = 0, dado2 = 0, tirado = 0, bonus = 0, cebo = 0, ahorro = 0, blindajeUsado = 0, blindajeM = 0, focosUsado = 0, focosM = 0, jugadas = 0, resueltas = 0, resultado = NULL, giro = 0, suerte = 0, empujado = 0, pistasTurno = 0 WHERE id = ?`.query(g.id)
+      if (gFin != null && (gFin.energia == 0 || gFin.escudo == 0)) {
+        Game.log(g.id, "Cierran con un contador en 0. La expedición sigue: la derrota llega sólo si Energía y Escudo están en 0 a la vez.")
+      }
       var g3 = Game.find(g.id)
       if (g3 != null && Game.hasTool(g.id, "energy_start") && g3.energia <= 4) {
         `UPDATE games SET energia = MIN(12, energia + 1) WHERE id = ?`.query(g.id)
@@ -736,7 +739,10 @@ return Layout.render(<main class="game table-board" data-moves="{{ movesJson }}"
         </div>
       </div>
       <div class="tray-actions">
-        <p class="hint">Al cerrar el turno se descarta toda la mano, se roba 1 del Mazo de Misterios y se repone la mano a 3.</p>
+        <p class="hint">Al cerrar el turno se descarta toda la mano, el submarino gasta 1 Energía y entra 1 Misterio. Si Energía y Escudo quedan en 0 a la vez, la expedición termina.</p>
+        {{ g.energia == 1 && g.escudo == 0 && <p class="hint hint-danger">El consumo deja la Energía en 0: con el Escudo ya en 0, este cierre termina la expedición.</p> }}
+        {{ g.energia == 0 && g.escudo == 0 && <p class="hint hint-danger">Cerrar el turno con Energía y Escudo en 0 termina la expedición.</p> }}
+        {{ (g.energia == 0 || g.escudo == 0) && !(g.energia == 0 && g.escudo == 0) && !(g.energia == 1 && g.escudo == 0) && <p class="hint">Un contador en 0 no termina la partida: la derrota necesita Energía y Escudo en 0 a la vez.</p> }}
         <form method="post">
           <input type="hidden" name="accion" value="terminar" />
           <button class="btn btn-primary">Terminar turno y reponer la mesa</button>

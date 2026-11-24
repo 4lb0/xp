@@ -335,6 +335,13 @@ section { margin-block: 2.5rem; }
 }
 .card.is-locked { opacity: 0.55; }
 
+/* Aviso de riesgo en la bandeja de cierre. */
+.hint-danger { color: var(--coral-soft); border-left-color: var(--coral); }
+
+/* El título del resultado recibe foco programático para que el lector de
+   pantalla lo anuncie; no es un control, así que no lleva anillo. */
+.result-panel h2:focus { outline: none; }
+
 /* Panel de la portada: los 3 contadores */
 .console {
   border: 1px solid var(--line-strong);

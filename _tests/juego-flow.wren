@@ -125,6 +125,29 @@ Test.assert(Game.count(gid, "mano") == 3, "la mano se repone a 3")
 Test.assert(Game.count(gid, "descarteJuego") == 1, "la carta resuelta va al descarte del Juego")
 Test.assert(Game.count(gid, "descarteEquipo") == 3, "la mano vieja va al descarte de Equipo")
 
+// --- La derrota exige Energía y Escudo en 0 a la vez ---
+
+Test.post("/juego", {"accion": "nueva", "modo": "experto"})
+  .status(302)
+gid = `SELECT MAX(id) AS id FROM games`.first["id"].toNum
+Flow.normalize(gid)
+Flow.safeOnTop(gid)
+
+`UPDATE games SET fase = 'resuelto', resultado = 'ganada', energia = 0, escudo = 3 WHERE id = ?`.query(gid)
+Test.post("/juego", {"accion": "terminar"}).status(302)
+var gCero = Game.find(gid)
+Test.assert(gCero.status == "activa", "cero Energía solo no termina la partida")
+Test.assert(gCero.turno == 2, "el turno avanza con la Energía en 0")
+
+`UPDATE games SET fase = 'resuelto', resultado = 'ganada', energia = 3, escudo = 0 WHERE id = ?`.query(gid)
+Test.post("/juego", {"accion": "terminar"}).status(302)
+gCero = Game.find(gid)
+Test.assert(gCero.status == "activa", "cero Escudo solo no termina la partida")
+
+`UPDATE games SET fase = 'resuelto', resultado = 'ganada', energia = 0, escudo = 0 WHERE id = ?`.query(gid)
+Test.post("/juego", {"accion": "terminar"}).status(302)
+Test.assert(Game.find(gid).status == "derrota", "con Energía y Escudo en 0 la partida termina")
+
 // --- Modo inválido: el servidor cae en Normal ---
 
 Test.post("/juego", {"accion": "nueva", "modo": "inventado"})
