@@ -46,13 +46,13 @@ return Layout.render(<main class="quick">
     </div>
     <div class="quick-map">
       <article class="quick-zone">
-        <p class="eyebrow">3 Misterios</p>
+        <p class="eyebrow">3 Misiones</p>
         <div class="quick-card-row">
           <svg class="quick-card coral" aria-hidden="true"><use href="#ico-card"/></svg>
           <svg class="quick-card green" aria-hidden="true"><use href="#ico-card"/></svg>
           <svg class="quick-card cyan" aria-hidden="true"><use href="#ico-card"/></svg>
         </div>
-        <p>Siempre 3 boca arriba. Elegís uno por turno.</p>
+        <p>Siempre 3 boca arriba. Elegís una por turno.</p>
       </article>
 
       <article class="quick-zone">
@@ -85,7 +85,7 @@ return Layout.render(<main class="quick">
             <small>Equipo</small>
           </div>
         </div>
-        <p>Los topes están ocultos. El Sonar revela el del Mazo de Misterios.</p>
+        <p>Los topes están ocultos. El Sonar revela el del Mazo de Misiones.</p>
       </article>
     </div>
   </section>
@@ -95,21 +95,21 @@ return Layout.render(<main class="quick">
       <h2>Tu primer turno</h2>
       <p>Estos 4 pasos se repiten en cada turno.</p>
     </div>
-    <p class="quick-note"><strong>Antes de empezar:</strong> 3 cartas de Equipo y 3 de Misterio. Todos: 6 de Energía y 6 de Escudo. Diferencia: Experto sin apoyos · Normal +1 · Asistido +2.</p>
+    <p class="quick-note"><strong>Antes de empezar:</strong> 3 cartas de Equipo y 3 de Misión. Todos: 6 de Energía y 6 de Escudo. Diferencia: Experto sin apoyos · Normal +1 · Asistido +2.</p>
     <ol class="quick-steps">
       <li>
         <span class="quick-step-num">1</span>
         <svg class="quick-icon" aria-hidden="true"><use href="#ico-play"/></svg>
         <div>
           <strong>Jugá 1 carta (o no)</strong>
-          <p>Arrancás con 3. Podés jugarla antes o después de elegir el Misterio, siempre antes de tirar. Herramienta queda; Maniobra se gasta.</p>
+          <p>Arrancás con 3. Se juega antes de elegir la Misión. Herramienta queda; Maniobra se gasta. Al elegir la Misión se descarta lo que quedó en la mano.</p>
         </div>
       </li>
       <li>
         <span class="quick-step-num">2</span>
         <svg class="quick-icon" aria-hidden="true"><use href="#ico-mystery"/></svg>
         <div>
-          <strong>Elegí un Misterio</strong>
+          <strong>Elegí una Misión</strong>
           <p>Hay 3 boca arriba. Lean la carta y elijan una de sus opciones.</p>
         </div>
       </li>
@@ -126,7 +126,7 @@ return Layout.render(<main class="quick">
         <svg class="quick-icon" aria-hidden="true"><use href="#ico-deck"/></svg>
         <div>
           <strong>Cerrá el turno</strong>
-          <p>Descartá toda la mano, robá 1 del Mazo de Misterios, reponé la mano a 3 y pagá ⚡ 1.</p>
+          <p>La carta resuelta va al descarte, entra 1 del Mazo de Misiones y el submarino paga ⚡ 1.</p>
         </div>
       </li>
     </ol>
@@ -136,7 +136,7 @@ return Layout.render(<main class="quick">
         Tenés 3 cartas. Jugás <strong>Soldadura</strong> (🛡️ +1, va al descarte).
         Elegís <strong>El nido</strong>. Tirás <strong>Cara</strong>: éxito, ⚡ +2.
         La carta va al descarte, entra la próxima; descartás toda la mano,
-        robás 1 del Mazo de Misterios, reponés la mano a 3 y el submarino paga <strong>⚡ 1</strong>.
+        entra 1 del Mazo de Misiones y el submarino paga <strong>⚡ 1</strong>.
       </p>
     </div>
   </section>

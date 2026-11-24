@@ -5,7 +5,7 @@ import "/_app/cards" for Card
 // --- Lectura de los archivos ---
 
 var m01 = Card.get("m01")
-Test.assert(m01 != null, "m01 debería leerse desde cartas/misterio/01.md")
+Test.assert(m01 != null, "m01 debería leerse desde cartas/misiones/01.md")
 Test.assert(m01.id == "m01", "m01 conserva su id")
 Test.assert(m01.name == "Señales en la oscuridad", "m01 conserva su nombre")
 Test.assert(m01.family == "exploracion", "m01 conserva su familia")
@@ -51,13 +51,14 @@ Test.assert(Card.get("e14").playNow, "Señuelo (discard_active) se juega desde l
 Test.assert(Card.get("e06").playNow, "Arpón se juega desde la mano")
 
 Test.assert(!Card.get("e09").playNow, "Turbo no se juega desde la mano")
-Test.assert(Card.get("e09").isPrep, "Turbo se prepara antes de tirar")
-Test.assert(Card.get("e10").isPrep, "Suerte se prepara antes de tirar")
-Test.assert(Card.get("e15").isPrep, "Cebo se prepara antes de tirar")
-Test.assert(Card.get("e16").isPrep, "Ahorro se prepara antes de tirar")
-Test.assert(Card.get("e04").isPrep, "Blindaje se prepara antes de tirar")
-Test.assert(!Card.get("e02").isPrep, "Focos depende de una prueba Cara o Seca, no es prep genérica")
-Test.assert(!Card.get("e08").isPrep, "Giro depende de una prueba Cara o Seca, no es prep genérica")
+Test.assert(Card.get("e09").isPrep, "Turbo se prepara antes de elegir la Misión")
+Test.assert(Card.get("e10").isPrep, "Suerte se prepara antes de elegir la Misión")
+Test.assert(Card.get("e15").isPrep, "Cebo se prepara antes de elegir la Misión")
+Test.assert(Card.get("e16").isPrep, "Ahorro se prepara antes de elegir la Misión")
+Test.assert(Card.get("e04").isPrep, "Blindaje se prepara antes de elegir la Misión")
+Test.assert(Card.get("e02").isPrep, "Focos se prepara antes de elegir la Misión")
+Test.assert(Card.get("e08").isPrep, "Giro se prepara antes de elegir la Misión")
+Test.assert(Card.get("e09").useLabel == "Antes de elegir", "la carta avisa que se juega antes de elegir")
 
 // --- Etiquetas de las opciones ---
 
@@ -138,18 +139,18 @@ Test.assert(raro[0]["cls"] == "chip-foo", "un efecto desconocido conserva su cla
 
 // --- Ayuda visual ---
 
-var misterio = Card.visualFor({"id": "m01"})
-Test.assert(misterio["typeIcon"] == "🌊", "un Misterio usa el ícono de ola")
-Test.assert(misterio["typeLabel"] == "Misterio", "un Misterio se rotula Misterio")
+var mision = Card.visualFor({"id": "m01"})
+Test.assert(mision["typeIcon"] == "🌊", "una Misión usa el ícono de ola")
+Test.assert(mision["typeLabel"] == "Misión", "una Misión se rotula Misión")
 
 var peek = Card.visualFor({"id": "e01", "tipo": "herramienta", "efecto": "peek"})
 Test.assert(peek["typeIcon"] == "🔧", "una Herramienta usa la llave")
 Test.assert(peek["useClass"] == "use-always", "peek es Siempre")
 Test.assert(peek["useLabel"] == "Siempre", "peek se rotula Siempre")
-Test.assert(peek["chips"][0]["text"] == "Próximo Misterio", "peek muestra el próximo Misterio")
+Test.assert(peek["chips"][0]["text"] == "Próxima Misión", "peek muestra la próxima Misión")
 
 var turbo = Card.visualFor({"id": "e09", "tipo": "maniobra", "efecto": "plus_two"})
-Test.assert(turbo["useClass"] == "use-before", "Turbo se prepara antes de tirar")
+Test.assert(turbo["useClass"] == "use-before", "Turbo se prepara antes de elegir la Misión")
 Test.assert(turbo["chips"][0]["text"] == "+2", "Turbo muestra +2")
 
 var bateria = Card.visualFor({"id": "e12", "tipo": "maniobra", "efecto": "heal_energy"})

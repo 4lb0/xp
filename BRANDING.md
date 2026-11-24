@@ -311,13 +311,13 @@ Los dos mazos comparten estructura y acento; cambia el campo. Cada dorso usa **t
 | Dorso | Campo | Claro | Acento |
 |---|---|---|---|
 | **Mazo de Equipo** | Azul de dorso `#0B2239` | Hueso `#F4F1EA` | Petróleo `#1B6B72` |
-| **Mazo de Misterios** | Borgoña de dorso `#4A1B24` | Hueso `#F4F1EA` | Petróleo `#1B6B72` |
+| **Mazo de Misiones** | Borgoña de dorso `#4A1B24` | Hueso `#F4F1EA` | Petróleo `#1B6B72` |
 
 - Máximo **3 tintas planas por dorso**, sin degradados, sombras, metalizados ni texturas.
 - Los dorsos son **invertidos**: campo oscuro con monograma y detalles en hueso. El borde exterior de 4 mm queda claro para disimular el desgaste del corte.
 - Si se imprime sobre cartulina hueso, el borde es el papel y el campo oscuro es **1 tinta**; el hueso del XP/estrella y el petróleo son las otras dos.
 - En cartulina oscura se puede invertir el planteo: **2 tintas** (hueso + petróleo) sin flood de fondo.
-- No se intercambian los campos: el Mazo de Misterios siempre borgoña; el de Equipo, siempre azul.
+- No se intercambian los campos: el Mazo de Misiones siempre borgoña; el de Equipo, siempre azul.
 - La estructura y el límite de tintas no se negocian. Las variantes descartadas de la iteración quedan en `assets/card-backs/opciones/` como referencia.
 
 ---
@@ -585,7 +585,7 @@ El dorso es una pieza de marca, no una lámina ilustrada. Debe reconocerse como 
 - **Centro:** sello de líneas petróleo (círculo + órbita) y estrella en hueso. Sin rellenos grandes.
 - **Sin** degradados, sombras, biseles, foil, barniz sectorial ni texturas.
 - **Líneas:** mínimo 0,5 pt para cartón sin estucar; nada de tramas menores a 0,3 mm.
-- **Archivos:** `assets/card-backs/dorso-equipo.svg` y `assets/card-backs/dorso-misterio.svg` (fuentes); `img/dorso-equipo.png` y `img/dorso-misterio.png` (web); los `-print.png` a 300 dpi.
+- **Archivos:** `assets/card-backs/dorso-equipo.svg` y `assets/card-backs/dorso-mision.svg` (fuentes); `img/dorso-equipo.png` y `img/dorso-mision.png` (web); los `-print.png` a 300 dpi.
 
 ### Fondo del frente
 
@@ -697,7 +697,7 @@ La app no reemplaza la mesa: **la acompaña**. Toda decisión visual debe poder 
 
 ## 13. Aplicaciones de la marca
 
-La identidad debe funcionar en cajas de juegos, cartas de Misterio y Equipo, dorso de cartas, manuales e instructivos, dados y componentes, sitio web, material promocional y futuras expansiones y ediciones. Se prioriza la **reproducibilidad** y la **simplicidad de impresión**.
+La identidad debe funcionar en cajas de juegos, cartas de Misión y Equipo, dorso de cartas, manuales e instructivos, dados y componentes, sitio web, material promocional y futuras expansiones y ediciones. Se prioriza la **reproducibilidad** y la **simplicidad de impresión**.
 
 | Soporte | Versión | Nota |
 |---|---|---|

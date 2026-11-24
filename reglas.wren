@@ -42,7 +42,7 @@ return Layout.render(<main>
           <div class="gauge">{{ Layout.die(6, "die-gold") }}<span class="gauge-name">Escudo</span></div>
           <div class="gauge">{{ Layout.die(0, "die-coral") }}<span class="gauge-name">Pistas</span></div>
         </div>
-        <p class="hint" style="margin: 0.9rem 0 0">Arrancan en 6, 6 y 0. Energía y Escudo pueden superar 6, pero ningún contador pasa de 12. Las Pistas llegan a 6 y ganan.</p>
+        <p class="hint" style="margin: 0.9rem 0 0">Arrancan en 6, 6 y 0. Ningún contador baja de 0 ni pasa de 12: la mesa se topea en los dos extremos. Las Pistas llegan a 6 y ganan.</p>
       </div>
     </div>
   </section>
@@ -53,7 +53,7 @@ return Layout.render(<main>
     </div>
     <ol class="steps">
       <li><span class="num">1</span><span><strong>Arranquen con 3 cartas de Equipo</strong>La mano es compartida. Con niños de 5 años conviene leer las opciones en voz alta.</span></li>
-      <li><span class="num">2</span><span><strong>Revelen siempre 3 cartas de Misterio</strong>Sin importar cuántos jueguen. La mesa no cambia: cambia a quién le toca tirar.</span></li>
+      <li><span class="num">2</span><span><strong>Revelen siempre 3 cartas de Misión</strong>Sin importar cuántos jueguen. La mesa no cambia: cambia a quién le toca tirar.</span></li>
       <li><span class="num">3</span><span><strong>Pongan los contadores</strong>Todos: 6 de Energía y 6 de Escudo. Pistas 0. Experto: sin apoyos. Normal: +1 Maniobra de apoyo en el área. Asistido: +2 Maniobras de apoyo.</span></li>
     </ol>
   </section>
@@ -64,12 +64,12 @@ return Layout.render(<main>
       <p>Se juega un turno por vez, solo o en cooperativo.</p>
     </div>
     <ol class="steps">
-      <li><span class="num">1</span><span><strong>Arrancá con 3 cartas de Equipo</strong>La mano es compartida. Al cerrar cada turno descartás toda la mano y robás 3 cartas nuevas.</span></li>
-      <li><span class="num">2</span><span><strong>Jugá 1 carta (opcional)</strong>Podés jugarla antes o después de elegir el Misterio, siempre antes de tirar. Herramienta: queda en la mesa. Una sola activa; la nueva reemplaza a la anterior. Maniobra: se resuelve y va al descarte.</span></li>
-      <li><span class="num">3</span><span><strong>Resolvé un Misterio</strong>Elegí una carta activa, lean la situación, debatan y elijan una de sus opciones. Después viene la prueba de dados.</span></li>
-      <li><span class="num">4</span><span><strong>Reponé la mesa y pasá el turno</strong>La carta resuelta va al descarte y se revela una nueva. Descartá toda la mano, robá 1 del Mazo de Misterios y reponé tu mano a 3.</span></li>
+      <li><span class="num">1</span><span><strong>Comienzo del turno</strong>Se resuelven las acciones que dependen del comienzo de cada Misión (Generador Auxiliar, Generador de Escudo) y roban la mano: 3 cartas de Equipo.</span></li>
+      <li><span class="num">2</span><span><strong>Maniobras</strong>Juegan <strong>1 carta</strong> de la mano, o ninguna: una Herramienta (queda en la mesa, una sola activa), una Maniobra (se resuelve y va al descarte) o una Maniobra de apoyo del área (no gasta la carta del turno). Al cerrar esta fase, las cartas que quedaron en la mano van al descarte.</span></li>
+      <li><span class="num">3</span><span><strong>Elijan una Misión</strong>Elegí una de las cartas de la mesa, lean la situación, debatan y elijan una de sus opciones. Después viene la prueba de dados y se aplica el resultado: suman o restan. Ningún contador baja de 0 ni pasa de 12.</span></li>
+      <li><span class="num">4</span><span><strong>Cierren el turno</strong>La carta resuelta ya está en el descarte: se revela una nueva en su lugar. El submarino consume <strong>1 Energía</strong> y el turno pasa al equipo. Al empezar el próximo turno vuelven a correr los Generadores y se roba la mano.</span></li>
     </ol>
-    <p class="hint">Si se agota un mazo, mezclá su descarte y seguí robando. Energía y Escudo pueden superar 6, hasta 12.</p>
+    <p class="hint">Si se agota un mazo, mezclá su descarte y seguí robando.</p>
   </section>
 
   <section class="panel legend">
@@ -81,8 +81,16 @@ return Layout.render(<main>
   <section id="pruebas">
     <div class="section-head">
       <h2>Pruebas de dados</h2>
-      <p>Todas las cartas de Misterio se resuelven con un D6 o dos.</p>
+      <p>Cara o Seca siempre se tira con un solo dado. Todas las Misiones se resuelven con un D6 o dos.</p>
     </div>
+    <p><strong>Orden de una tirada:</strong></p>
+    <ol class="steps">
+      <li><span class="num">1</span><span><strong>Tiren</strong>En la app o con los dados de la mesa.</span></li>
+      <li><span class="num">2</span><span><strong>Apliquen las sumas</strong>Turbo de Emergencia (+2 al total) y Estabilizadores (+1 en pruebas de 2 dados) se suman al resultado.</span></li>
+      <li><span class="num">3</span><span><strong>Apliquen las re-tiradas</strong>Si la prueba falla, Suerte del Principiante vuelve a tirar todos los dados y Focos Abisales relanza un dado.</span></li>
+      <li><span class="num">4</span><span><strong>Elijan qué dado repetir</strong>Si el efecto es de un solo dado, se quedan con uno y relanzan el otro.</span></li>
+      <li><span class="num">5</span><span><strong>Vuelvan a aplicar las sumas</strong>Cada tirada nueva pasa otra vez por los efectos de sumar. Se repite hasta que no queden efectos de volver a tirar.</span></li>
+    </ol>
     <table>
       <caption>Tipos de prueba que aparecen en las cartas</caption>
       <thead>
@@ -97,7 +105,7 @@ return Layout.render(<main>
         <tr><td><strong>Sin 1 ni 6</strong></td><td>Ninguno de los dos dados muestra 1 ni 6.</td><td>2 y 5 sirven; 1 y 3 no.</td></tr>
       </tbody>
     </table>
-    <p class="hint">Las Maniobras se juegan antes de tirar: pueden cambiar un dado, sumar al total o repetir la tirada si falla.</p>
+    <p class="hint">Giro Brusco invierte el dado de Cara o Seca antes de las sumas. Las Maniobras de prueba se preparan antes de elegir la Misión: si la opción que eligen no es de Cara o Seca, el Giro y los Focos se pierden.</p>
   </section>
 
   <section id="equipo">
@@ -108,9 +116,9 @@ return Layout.render(<main>
         <table>
           <thead><tr><th>Carta</th><th>Efecto</th></tr></thead>
           <tbody>
-            <tr><td>Sonar de Alta Frecuencia</td><td>Una vez por misterio, mirá la carta de arriba del Mazo de Misterios con todo su contenido.</td></tr>
-                        <tr><td>Generador Auxiliar</td><td>Si la Energía está en 4 o menos al empezar cada misterio, sube 1.</td></tr>
-            <tr><td>Generador de Escudo</td><td>Si el Escudo está en 4 o menos al empezar cada misterio, sube 1.</td></tr>
+            <tr><td>Sonar de Alta Frecuencia</td><td>Una vez por Misión, mirá la carta de arriba del Mazo de Misiones con todo su contenido.</td></tr>
+                        <tr><td>Generador Auxiliar</td><td>Si la Energía está en 4 o menos al empezar cada Misión, sube 1.</td></tr>
+            <tr><td>Generador de Escudo</td><td>Si el Escudo está en 4 o menos al empezar cada Misión, sube 1.</td></tr>
                         <tr><td>Brazo Robótico</td><td>Si ganás Pistas y algún dado muestra 6, ganás 1 Pista más.</td></tr>
                         <tr><td>Estabilizadores</td><td>Sumá 1 al total en todas las pruebas de 2 dados.</td></tr>
           </tbody>
@@ -118,7 +126,7 @@ return Layout.render(<main>
       </div>
       <div>
         <div class="section-head"><h2>Maniobras</h2></div>
-        <p class="muted">Se juegan antes de tirar, una vez, y van al descarte.</p>
+        <p class="muted">Se juegan antes de elegir la Misión, una vez, y van al descarte.</p>
         <table>
           <thead><tr><th>Carta</th><th>Efecto</th></tr></thead>
           <tbody>
@@ -132,8 +140,8 @@ return Layout.render(<main>
             <tr><td>Batería de Respaldo</td><td>Recuperá 2 de Energía. Hay 6 en el mazo.</td></tr>
             <tr><td>Análisis Rápido</td><td>Gastá 1 de Energía y ganá 1 Pista directa.</td></tr>
             <tr><td>Señuelo Luminoso</td><td>Cambiá una carta activa por otra sin resolverla.</td></tr>
-            <tr><td>Lanzar Cebo</td><td>Cancelá una pérdida de Escudo en este misterio.</td></tr>
-            <tr><td>Ahorro de Oxígeno</td><td>En este misterio no pierden Energía: ni por consumo, ni por cartas.</td></tr>
+            <tr><td>Lanzar Cebo</td><td>Cancelá una pérdida de Escudo en esta Misión.</td></tr>
+            <tr><td>Ahorro de Oxígeno</td><td>En esta Misión no pierden Energía: ni por consumo, ni por cartas.</td></tr>
           </tbody>
         </table>
       </div>
@@ -143,20 +151,20 @@ return Layout.render(<main>
   <section class="panel support-panel" id="apoyo">
     <h2>Maniobras de apoyo</h2>
     <p>Dos Maniobras del equipo: <strong>Kit de emergencia</strong> (<span class="chip chip-energia">{{ Layout.icon("⚡") }} +1</span> o <span class="chip chip-escudo">{{ Layout.icon("🛡️") }} +1</span>) y <strong>Carga de emergencia</strong> (<span class="chip chip-energia">{{ Layout.icon("⚡") }} +2</span> o <span class="chip chip-escudo">{{ Layout.icon("🛡️") }} +2</span>).</p>
-    <p>En <strong>Experto</strong> se mezclan en el mazo. En <strong>Normal</strong>, el Kit se busca y queda en el área de Apoyo. En <strong>Asistido</strong>, las dos quedan en el área. Se usan una vez, van al descarte como cualquier Maniobra y, si están en el área de Apoyo, no gastan la carta del turno.</p>
+    <p>En <strong>Experto</strong> se mezclan en el mazo. En <strong>Normal</strong>, el Kit se busca y queda en el área de Apoyo. En <strong>Asistido</strong>, las dos quedan en el área. Se juegan en la fase de Maniobras, una vez, y van al descarte. Si están en el área de Apoyo no gastan la carta del turno: se pueden jugar además de la carta de la mano.</p>
   </section>
 
   <section class="panel" id="reloj">
     <h2>El reloj: consumo de Energía</h2>
-    <p><strong>Consumo:</strong> al terminar cada turno, el submarino pierde <strong>1 Energía</strong>, hayan ganado o no una Pista. La Energía es el reloj de la partida y no se recupera con las cartas de Misterio.</p>
-    <p><strong>Recarga:</strong> solo con Equipo. La Batería de Respaldo devuelve 2 de Energía y hay 6 en el mazo. El Generador Auxiliar recarga 1 al empezar cada misterio si están en 4 o menos. El Generador de Escudo hace lo mismo con el casco. Ahorro de Oxígeno saltea el consumo de un turno.</p>
-    <p><strong>Emboscadas:</strong> diez cartas de Misterio cuestan <strong>1 Energía</strong>, <strong>1 Escudo</strong> o <strong>1 Pista</strong> apenas entran a la mesa, y tienen una sola opción. Si entran varias a la vez (por ejemplo, en el reparto inicial), el equipo elige cuál sufrir: solo esa se aplica y las demás no cobran. Si todas cuestan lo mismo, no hay nada que elegir: se aplica una al azar. Una emboscada que ya está en la mesa no vuelve a cobrar. Las cartas de Misterio nunca te sacan Energía: la Energía la baja el reloj y la recupera el Equipo.</p>
+    <p><strong>Consumo:</strong> al cerrar cada turno, el submarino pierde <strong>1 Energía</strong>, hayan ganado o no una Pista. La Energía es el reloj de la partida y no se recupera con las cartas de Misión.</p>
+    <p><strong>Recarga:</strong> solo con Equipo. La Batería de Respaldo devuelve 2 de Energía y hay 6 en el mazo. El Generador Auxiliar recarga 1 al empezar cada Misión si están en 4 o menos. El Generador de Escudo hace lo mismo con el casco. Ahorro de Oxígeno saltea el consumo de un turno.</p>
+    <p><strong>Emboscadas:</strong> diez cartas de Misión cuestan <strong>1 Energía</strong>, <strong>1 Escudo</strong> o <strong>1 Pista</strong> apenas entran a la mesa, y tienen una sola opción. Si entran varias a la vez (por ejemplo, en el reparto inicial), el equipo elige cuál sufrir: solo esa se aplica y las demás no cobran. Si todas cuestan lo mismo, no hay nada que elegir: se aplica una al azar. Una emboscada que ya está en la mesa no vuelve a cobrar. Las cartas de Misión nunca te sacan Energía: la Energía la baja el reloj y la recupera el Equipo.</p>
   </section>
 
   <section class="panel" id="dados">
     <h2>Dados de la app y dados de la mesa</h2>
     <p>La app puede tirar los dados por ustedes: es cómodo cuando no hay lugar en la mesa. Pero el juego está pensado para tirar dados de verdad.</p>
-    <p>Por eso, en cada prueba pueden elegir <strong>“Ya tiré en la mesa”</strong> e ingresar lo que salió en cada dado. La app aplica el resultado igual, con las mismas reglas y los mismos efectos.</p>
+    <p>Por eso, en cada tirada pueden elegir <strong>“Ya tiré en la mesa”</strong> e ingresar lo que salió en cada dado. La misma mesa de dados sirve para la prueba, para las re-tiradas y para las Maniobras que piden un dado. La app aplica el resultado igual, con las mismas reglas y los mismos efectos.</p>
     <p class="muted">Trampa permitida: nadie va a revisar el dado. No es un juego competitivo: la única persona a la que le pueden hacer trampa es al equipo.</p>
   </section>
 
@@ -167,7 +175,7 @@ return Layout.render(<main>
     <table>
       <thead><tr><th>Condición</th><th>Qué pasa</th></tr></thead>
       <tbody>
-        <tr><td>Pistas llega a 6</td><td><strong>Victoria.</strong> Resuelven el misterio en ese momento.</td></tr>
+        <tr><td>Pistas llega a 6</td><td><strong>Victoria.</strong> Resuelven la Misión en ese momento.</td></tr>
         <tr><td>Energía o Escudo en 0 al cerrar un turno</td><td><strong>Derrota.</strong> No es inmediata: se evalúa al cerrar el turno, con cualquiera de los dos en 0.</td></tr>
       </tbody>
     </table>

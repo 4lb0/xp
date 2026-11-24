@@ -155,14 +155,14 @@ las zonas tienen lugar fijo y no se reacomodan:
 | Zona | Contenido | Regla |
 |---|---|---|
 | `.felt-top` | Contadores, fase y turno | Contadores en escritorio; en móvil pasan al rail inferior |
-| `.zone-encounter` | 3 Misterios + pilas | Siempre 3 lugares, ocupados o no |
+| `.zone-encounter` | 3 Misiones + pilas | Siempre 3 lugares, ocupados o no |
 | `.zone-own` | Herramienta y apoyo | Un lugar de Herramienta, siempre visible |
 | `.zone-hand` | Mano | 3 lugares; se repone a 3 |
 
 - **Geometría fija.** Cada carta tiene `aspect-ratio: 63/88` (la proporción de
   impresión) y no crece con su texto. La única pieza que cede espacio es
   `.card-text`; nada más se comprime.
-- **Lugares vacíos.** Un Misterio resuelto deja su lugar: `.card-slot` con
+- **Lugares vacíos.** Una Misión resuelta deja su lugar: `.card-slot` con
   borde punteado y el rótulo del lugar. Nunca se colapsa la grilla.
 - **Pilas a la vista.** Los dos mazos y los dos descartes se dibujan como
   objetos (`.pile`, dorso real, canto de varias cartas con `box-shadow` y
@@ -295,7 +295,7 @@ Todo estado vacío se escribe. No hay placeholders del tipo "Sin datos".
 | Monograma | `img/logo-xp-mark.png` | Placa negra, cabecera y pie |
 | Favicon / app | `img/favicon-16.png`, `favicon-32.png`, `favicon-48.png`, `favicon.ico` | **Versión simplificada**: placa negra + XP, sin órbita ni estrellas |
 | Íconos de app | `img/apple-touch-icon.png`, `icon-192.png`, `icon-512.png` | Mismo ícono simplificado |
-| Dorsos | `img/dorso-equipo.png`, `dorso-misterio.png` | 900×1260 para cualquier uso grande |
+| Dorsos | `img/dorso-equipo.png`, `dorso-mision.png` | 900×1260 para cualquier uso grande |
 | Miniaturas | `img/dorso-*-thumb.png` | 168×235, para diálogo y animación |
 | Fuentes | `css/fonts/*.woff2` | Archivo y Source Sans 3 variables |
 

@@ -36,6 +36,7 @@ class Game {
   resueltas { _row["resueltas"].toNum }
   resultado { _row["resultado"] }
   ultimo { _row["ultimo"] }
+  maniobraRow { _row["maniobraRow"] == null ? null : _row["maniobraRow"].toNum }
 
   static find(id) {
     if (id == null) return null
@@ -69,7 +70,7 @@ class Game {
       `UPDATE game_cards SET zone = 'ayuda' WHERE gameId = ? AND cardId = 'e18'`.query(id)
     }
     Game.draw(id, "misterio", "mesa", 3)
-    Game.draw(id, "equipo", "mano", 3)
+    Game.draw(id, "equipo", "mano", Game.handSize)
     `UPDATE games SET ultimo = ? WHERE id = ?`.query("La expedición empieza. El submarino se hunde en la fosa.", id)
     var modoLabel = modo == "facil" ? "Asistido" : (modo == "casual" ? "Normal" : "Experto")
     Game.log(id, "Comienza la expedición en modo " + modoLabel + ".")
@@ -125,6 +126,10 @@ class Game {
   // La mesa no pasa de 12: es dos veces la cara del dado.
   static maxContador { 12 }
 
+  // La mano se roba entera al empezar el turno y se descarta al cerrar la
+  // fase de Maniobras, cuando el equipo elige la Misión.
+  static handSize { 3 }
+
   static cap(v) {
     if (v > Game.maxContador) return Game.maxContador
     return v
@@ -139,7 +144,7 @@ class Game {
     return rows
   }
 
-  // Cada mazo tiene su propia pila de descarte: las cartas de Misterio no se
+  // Cada mazo tiene su propia pila de descarte: las cartas de Misión no se
   // mezclan con las de Equipo. La zona se elige por el mazo de origen.
   static discardZone(from) {
     return from == "misterio" ? "descarteJuego" : "descarteEquipo"
@@ -152,7 +157,7 @@ class Game {
     for (r in rows) {
       `UPDATE game_cards SET zone = ?, ord = RANDOM() WHERE id = ?`.query(from, r["id"])
     }
-    Game.log(id, from == "misterio" ? "Se mezcla el descarte del Mazo de Misterios." : "Se mezcla el descarte del Mazo de Equipo.")
+    Game.log(id, from == "misterio" ? "Se mezcla el descarte del Mazo de Misiones." : "Se mezcla el descarte del Mazo de Equipo.")
     return true
   }
 
@@ -337,7 +342,7 @@ class Game {
     if (!res["notas"].isEmpty) texto = texto + " " + res["notas"].join(". ") + "."
     `UPDATE games SET fase = 'resuelto', resultado = ?, resueltas = 1, ultimo = ?, dado1 = ?, dado2 = ?, tirado = 0, bonus = 0, giro = 0, suerte = 0, focosM = 0 WHERE id = ?`.query([ok ? "ganada" : "perdida", texto, d1, d2, id])
     Game.log(id, texto)
-    if (res["status"] == "victoria") Game.log(id, "¡Seis Pistas! El misterio queda resuelto.")
+    if (res["status"] == "victoria") Game.log(id, "¡Seis Pistas! La misión queda resuelta.")
     return {"ok": ok, "error": "", "status": res["status"], "texto": texto}
   }
 }

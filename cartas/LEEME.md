@@ -4,13 +4,13 @@ Cada carta es un archivo Markdown. No hay base de datos de cartas ni paso de com
 
 ```
 cartas/
-  misterio/   01.md … 40.md   (Mazo del Juego)
+  misiones/   01.md … 40.md   (Mazo del Juego)
   equipo/     01.md … 19.md   (Mazo de los Jugadores)
 ```
 
-El número del archivo es el identificador de la carta: `cartas/misterio/07.md` es la carta `m07`. Se pueden agregar cartas nuevas hasta `60.md` (misterio) y `30.md` (equipo) sin tocar código: el motor recorre esos números y saltea los que no existen.
+El número del archivo es el identificador de la carta: `cartas/misiones/07.md` es la carta `m07`. Se pueden agregar cartas nuevas hasta `60.md` (misión) y `30.md` (equipo) sin tocar código: el motor recorre esos números y saltea los que no existen.
 
-## Anatomía de una carta de Misterio
+## Anatomía de una carta de Misión
 
 Primero va el bloque de mecánicas:
 
@@ -76,7 +76,7 @@ fallo: energia-2, escudo-1
 | `escudo+1` / `escudo+2` | Recupera Escudo (máximo 6). |
 | `escudo-1` / `escudo-2` | Daña el Escudo. Llegar a 0 no derrota por sí solo. |
 
-Las Pistas se pueden perder (`pistas-1`), pero es raro y fuerte: usalo solo en fallos o entradas muy malas. En las cartas de Misterio, la Energía no se toca: los golpes van al Escudo o a las Pistas. Si una carta no debe tener efecto, escribí `nada` o dejá el campo vacío.
+Las Pistas se pueden perder (`pistas-1`), pero es raro y fuerte: usalo solo en fallos o entradas muy malas. En las cartas de Misión, la Energía no se toca: los golpes van al Escudo o a las Pistas. Si una carta no debe tener efecto, escribí `nada` o dejá el campo vacío.
 
 ## Anatomía de una carta de Equipo
 
@@ -95,7 +95,7 @@ Debajo, el texto de la carta (Markdown normal):
 Una vez por turno, mirá la carta de arriba del Mazo del Juego antes de elegir.
 ```
 
-- `emoji`: arte provisorio, igual que en las cartas de Misterio.
+- `emoji`: arte provisorio, igual que en las cartas de Misión.
 - `tipo`: `herramienta` (queda en la mesa) o `maniobra` (se descarta).
 - `copias`: cuántas veces entra esta carta en el mazo. La suma de todas las `copias` tiene que dar 44.
 - `efecto`: el identificador que usa el motor.

@@ -380,7 +380,7 @@
     ghost.className = "card-ghost";
     ghost.setAttribute("aria-hidden", "true");
     if (isDraw) {
-      ghost.style.backgroundImage = `url("/img/dorso-${move.deck === "juego" ? "misterio" : "equipo"}-thumb.png")`;
+      ghost.style.backgroundImage = `url("/img/dorso-${move.deck === "juego" ? "mision" : "equipo"}-thumb.png")`;
     } else {
       ghost.classList.add("card-ghost-front");
       ghost.textContent = move.emoji || "🃏";

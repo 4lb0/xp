@@ -1,10 +1,10 @@
 import "_app/template" for Layout
 import "_app/cards" for Card
 
-var misterio = []
+var misiones = []
 for (i in 1..60) {
   var c = Card.get("m" + Util.lpad(i.toString, 2, "0"))
-  if (c != null) misterio.add(c)
+  if (c != null) misiones.add(c)
 }
 
 var equipo = []
@@ -13,9 +13,9 @@ for (i in 1..30) {
   if (c != null) equipo.add(c)
 }
 
-var exploracion = misterio.where { |c| c.family == "exploracion" }.toList
-var peligro = misterio.where { |c| c.family == "peligro" }.toList
-var dilema = misterio.where { |c| c.family == "dilema" }.toList
+var exploracion = misiones.where { |c| c.family == "exploracion" }.toList
+var peligro = misiones.where { |c| c.family == "peligro" }.toList
+var dilema = misiones.where { |c| c.family == "dilema" }.toList
 var herramientas = equipo.where { |c| c.type == "herramienta" }.toList
 var maniobras = equipo.where { |c| c.type == "maniobra" && !c.isSupport }.toList
 var apoyos = equipo.where { |c| c.isSupport }.toList
@@ -26,7 +26,7 @@ return Layout.render(<main>
       <p class="eyebrow">Mazo completo</p>
       <h1>El mazo completo</h1>
     </div>
-    <p class="pill">{{ misterio.count }} de Misterio · {{ equipo.count }} de Equipo</p>
+    <p class="pill">{{ misiones.count }} Misiones · {{ equipo.count }} de Equipo</p>
   </header>
 
   <nav class="toc" aria-label="Secciones del mazo">

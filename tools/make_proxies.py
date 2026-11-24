@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Genera un PDF de proxies B&N para XP.
 
-Lee las cartas Markdown de cartas/misterio y cartas/equipo, repite las copias
+Lee las cartas Markdown de cartas/misiones y cartas/equipo, repite las copias
 del mazo de Equipo y arma hojas A4 con 9 cartas de 60 x 86 mm (unos mm menos
 que una carta TCG estándar de 63 x 88 mm), con líneas de corte. Al final agrega
 3 cartas de referencia (Energía, Pistas y Escudo) con dibujos.
@@ -230,7 +230,7 @@ def team_help(card: dict) -> dict:
     elif effect == "clue_for_energy":
         help["chips"] = [("⚡", "-1"), ("🔍", "+1")]
     elif effect == "discard_active":
-        help["chips"] = [("🔀", "Misterio nuevo")]
+        help["chips"] = [("🔀", "Misión nueva")]
     elif effect == "cancel_shield_loss":
         before()
         help["chips"] = [("🛡️", "no pierdas")]
@@ -591,7 +591,7 @@ def draw_reference_card(c: canvas.Canvas, card: dict, x: float, y: float) -> Non
 
 
 def build() -> None:
-    misterio = [parse_card(p) for p in sorted((ROOT / "cartas" / "misterio").glob("*.md"))]
+    misiones = [parse_card(p) for p in sorted((ROOT / "cartas" / "misiones").glob("*.md"))]
     equipo_unique = [parse_card(p) for p in sorted((ROOT / "cartas" / "equipo").glob("*.md"))]
     equipo = []
     for card in equipo_unique:
@@ -599,7 +599,7 @@ def build() -> None:
         for _ in range(copies):
             equipo.append(card)
 
-    cards = misterio + equipo
+    cards = misiones + equipo
     refs = reference_cards()
     per_page = COLS * ROWS
     chunks = [cards[i : i + per_page] for i in range(0, len(cards), per_page)]
