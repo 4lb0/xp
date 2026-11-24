@@ -499,7 +499,7 @@ return Layout.render(<main class="game" data-moves="{{ movesJson }}" data-anim="
       </div>
       <p class="rail-meta">Turno {{ g.turno }}</p>
       <nav class="rail-nav">
-        <a href="{{ focoHref }}" aria-label="Ir a la acción actual">{{ Layout.icon("🃏") }} <span class="rail-label">Cartas activas</span><span class="rail-label-short">Cartas</span> <b>{{ mesa.count }}</b></a>
+        <a href="{{ focoHref }}" aria-label="Ir a la acción actual">{{ Layout.icon("🌊") }} <span class="rail-label">Mesa</span><span class="rail-label-short">Mesa</span> <b>{{ mesa.count }}</b></a>
         <a href="#mano" aria-label="Ver la mano">{{ Layout.icon("🖐️") }} <span class="rail-label">Mano</span><span class="rail-label-short">Mano</span> <b>{{ handCount }}</b></a>
         <a href="#herramientas" class="{{ activeTool == null ? "is-empty" : "" }}" data-tool="{{ activeTool == null ? "Sin Herramienta activa" : activeTool.name }}" title="{{ activeTool == null ? "Sin Herramienta activa" : activeTool.name }}" aria-label="Herramienta: {{ activeTool == null ? "ninguna activa" : activeTool.name }}">
           {{ Layout.icon("🔧") }} <span class="rail-label">Herramienta</span><span class="rail-label-short">Herram.</span>
@@ -681,7 +681,7 @@ return Layout.render(<main class="game" data-moves="{{ movesJson }}" data-anim="
           </form>} }}
         </div>
       </section> }}
-      {{ g.jugadas > 0 && <p class="hint">Ya jugaron su carta de este turno. Tiren cuando quieran.</p> }}
+      {{ g.jugadas > 0 && <p class="hint">Ya jugaron su carta de Equipo este turno. Tiren cuando quieran.</p> }}
       <form method="post" class="roll-form">
         <input type="hidden" name="accion" value="tirar" />
         <button class="btn btn-primary">Tirar en la app</button>
@@ -728,8 +728,8 @@ return Layout.render(<main class="game" data-moves="{{ movesJson }}" data-anim="
 
   {{ g.status == "activa" && g.fase == "listo" && <section id="cartas-activas">
     <div class="section-head">
-      <h2>Cartas activas en la mesa</h2>
-      <p>Elijan una carta y resuelvan su opción. Las emboscadas tienen una sola y cobran únicamente al entrar.</p>
+      <h2>Misterios en la mesa</h2>
+      <p>Elijan un Misterio y resuelvan su opción. Las emboscadas tienen una sola y cobran únicamente al entrar.</p>
     </div>
     <div class="card-grid">
       {{ mesa.map{|item| <article class="card" data-family="{{ item["card"].family }}" data-row="{{ item["rowId"] }}">
@@ -761,7 +761,7 @@ return Layout.render(<main class="game" data-moves="{{ movesJson }}" data-anim="
         </ul>
       </article>} }}
     </div>
-    {{ mesa.isEmpty && <p class="muted">No quedan cartas activas. Repongan la mesa al terminar el turno.</p> }}
+    {{ mesa.isEmpty && <p class="muted">No quedan Misterios en la mesa. Repongan al terminar el turno.</p> }}
   </section> }}
     </div>
     <div class="game-supports">
@@ -807,7 +807,7 @@ return Layout.render(<main class="game" data-moves="{{ movesJson }}" data-anim="
       {{ tools.isEmpty && <p class="muted">Todavía no jugaron ninguna Herramienta.</p> }}
 
       {{ peekCard != null && <section class="panel peek">
-        <p class="eyebrow">Sonar de Alta Frecuencia · próxima carta</p>
+        <p class="eyebrow">Sonar de Alta Frecuencia · próximo Misterio</p>
         <h3><span aria-hidden="true">{{ peekCard.emoji }} {{ peekCard.name }}</h3>
         {{ peekCard.entry != "" && <p class="entry-badge">Al entrar
           {{ peekCard.entryChips.map{|c| <span class="chip {{ c["cls"] }}" title="{{ c["title"] }}">{{ Layout.icon(c["icon"]) }} {{ c["text"] }}</span>} }}
@@ -866,11 +866,11 @@ return Layout.render(<main class="game" data-moves="{{ movesJson }}" data-anim="
 
   {{ g.status == "activa" && <section id="mano" class="hand-full">
       <div class="section-head">
-        <h2>Mano del equipo</h2>
-        <p>{{ handCount }} cartas · siempre 3 al empezar</p>
+        <h2>Mano de Equipo</h2>
+        <p>{{ handCount }} de Equipo · siempre 3 al empezar</p>
       </div>
       <details class="card-key card-key-inline">
-        <summary>👀 Cómo leer las cartas de Equipo</summary>
+        <summary>{{ Layout.icon("👀") }} Cómo leer el Equipo</summary>
         <ul>
           <li>{{ Layout.icon("🔧") }} <strong>Herramienta</strong> · queda en la mesa.</li>
           <li>{{ Layout.icon("🃏") }} <strong>Maniobra</strong> · una vez y al descarte.</li>
@@ -906,7 +906,7 @@ return Layout.render(<main class="game" data-moves="{{ movesJson }}" data-anim="
         </article>} }}
       </div>
       {{ hand.isEmpty && <p class="muted">Sin cartas en mano. Al cerrar el turno se repone la mano a 3.</p> }}
-      <p class="hint">{{ g.jugadas == 0 ? "Todavía pueden jugar 1 carta este turno." : "Ya jugaron su carta de este turno." }} Al cerrar el turno, descartá toda la mano y reponé la mano a 3.</p>
+      <p class="hint">{{ g.jugadas == 0 ? "Todavía pueden jugar 1 de Equipo este turno." : "Ya jugaron su carta de Equipo este turno." }} Al cerrar el turno, descartá toda la mano y reponé la mano a 3.</p>
   </section> }}
 
   <section class="log-section">
@@ -936,12 +936,12 @@ return Layout.render(<main class="game" data-moves="{{ movesJson }}" data-anim="
         <div class="mazos-pile-head">
           <img src="/img/dorso-misterio-thumb.png" width="42" height="59" alt="" />
           <div>
-            <h3>Mazo del Juego</h3>
+            <h3>Mazo de Misterios</h3>
             <p><strong>{{ mazoJuego }}</strong> en el mazo · <strong>{{ descarteJuego }}</strong> en descarte</p>
           </div>
         </div>
-        <h4>Cartas descartadas</h4>
-        {{ descarteJuegoCards.isEmpty && <p class="muted">Todavía no hay cartas del Juego en el descarte.</p> }}
+        <h4>Descartadas</h4>
+        {{ descarteJuegoCards.isEmpty && <p class="muted">Todavía no hay Misterios en el descarte.</p> }}
         {{ !descarteJuegoCards.isEmpty && <ul class="discard-list">
           {{ descarteJuegoCards.map{|d| <li>
             <span class="discard-emoji" aria-hidden="true">{{ d["card"].emoji }}</span>
@@ -957,8 +957,8 @@ return Layout.render(<main class="game" data-moves="{{ movesJson }}" data-anim="
             <p><strong>{{ mazoEquipo }}</strong> en el mazo · <strong>{{ descarteEquipo }}</strong> en descarte</p>
           </div>
         </div>
-        <h4>Cartas descartadas</h4>
-        {{ descarteEquipoCards.isEmpty && <p class="muted">Todavía no hay cartas de Equipo en el descarte.</p> }}
+        <h4>Descartadas</h4>
+        {{ descarteEquipoCards.isEmpty && <p class="muted">Todavía no hay Equipo en el descarte.</p> }}
         {{ !descarteEquipoCards.isEmpty && <ul class="discard-list">
           {{ descarteEquipoCards.map{|d| <li>
             <span class="discard-emoji" aria-hidden="true">{{ d["card"].emoji }}</span>
