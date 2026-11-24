@@ -29,6 +29,17 @@ python3 tools/make_proxies.py
 
 Los iconos usan **Noto Emoji** (OFL) en `tools/fonts/`.
 
+`pdf/xp-cheatsheet-bw.pdf` es la ayuda de **una página** para la mesa: el turno
+en 4 pasos, la prueba de dados, los contadores y el final, en blanco y negro
+para imprimir al 100% en A4. Sale de `pdf/cheatsheet.html` con Chrome:
+
+```bash
+"/Applications/Google Chrome.app/Contents/MacOS/Google Chrome" \
+  --headless --disable-gpu --no-pdf-header-footer \
+  --print-to-pdf=pdf/xp-cheatsheet-bw.pdf \
+  "file://$PWD/pdf/cheatsheet.html"
+```
+
 ## Marca
 
 El manual completo está en [`BRANDING.md`](BRANDING.md). El sistema de diseño de
