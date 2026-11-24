@@ -17,7 +17,7 @@ return Layout.render(<main>
     <a class="pill" href="#preparacion">Preparación</a>
     <a class="pill" href="#turno">El turno</a>
     <a class="pill" href="#pruebas">Pruebas</a>
-    <a class="pill" href="#equipo">Cartas</a>
+    <a class="pill" href="#equipo">Equipo</a>
     <a class="pill" href="#reloj">Energía</a>
     <a class="pill" href="#final">Final</a>
   </nav>
