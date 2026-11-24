@@ -173,9 +173,9 @@ El estado de la partida se guarda en SQLite y se ata a la sesión del navegador.
 5. **Orden de la tirada:** tirás, aplicás las sumas (Turbo +2, Estabilizadores +1 en 2 dados) y, si la prueba falla, aplicás las re-tiradas (Suerte vuelve a tirar todo, Focos relanza un dado y elegís cuál). Cada tirada nueva vuelve a pasar por las sumas, hasta que no queden re-tiradas.
 6. Todas las Maniobras se juegan **antes de elegir la Misión** (Turbo, Giro, Focos, Suerte, Cebo, Ahorro, Blindaje): se comprometen a ciegas. Si la Misión elegida no es de Cara o Seca, el Giro y los Focos se pierden.
 7. Al resolver, la app aplica los efectos de la opción y controla victoria/derrota. La prueba da exactamente lo que dice la carta: no hay tirada extra.
-8. Al cerrar el turno el submarino consume **1 Energía**, siempre. La Energía es el reloj: cada turno hay que decidir entre buscar Pistas o recargar.
+8. Al principio del cierre, si la Energía o el Escudo están en 0, la expedición termina. Si no, el submarino consume **1 Energía** y se repone la mesa. Si el consumo deja la Energía en 0, hay un turno para recuperarla.
 
-Los contadores son los tres dados del juego: **Energía** y **Escudo** arrancan en 6, pueden superar 6 hasta un tope de 12 y no se pierde por separado. **Pistas** arranca en 0 y con 6 se gana en el momento. La derrota llega si un turno termina con la Energía o el Escudo en 0.
+Los contadores son los tres dados del juego: **Energía** y **Escudo** arrancan en 6, pueden superar 6 hasta un tope de 12 y no se pierde por separado. **Pistas** arranca en 0 y con 6 se gana en el momento, en cualquier parte de la partida. La derrota llega si al empezar el cierre la Energía o el Escudo están en 0; el consumo de ese cierre todavía no se cobra.
 
 **El reloj:** cada turno cuesta 1 Energía. Las Baterías de Respaldo (+2, seis en el mazo), el Generador Auxiliar y Ahorro de Oxígeno son la forma de sostenerlo. Si el equipo se queda quieto, pierde; si solo recarga, la expedición no avanza.
 

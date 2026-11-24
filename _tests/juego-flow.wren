@@ -160,6 +160,28 @@ gDerrota = Flow.nuevaPartida()
 Test.post("/juego", {"accion": "terminar"}).status(302)
 Test.assert(Game.find(gDerrota).status == "derrota", "los dos en 0 también terminan la partida")
 
+// --- Cerrar con 1 Energía no derrota: el consumo deja 0 y hay un turno para recuperarla ---
+
+var gGracia = Flow.nuevaPartida()
+`UPDATE games SET fase = 'resuelto', resultado = 'ganada', energia = 1, escudo = 3 WHERE id = ?`.query(gGracia)
+Test.post("/juego", {"accion": "terminar"}).status(302)
+var gSig = Game.find(gGracia)
+Test.assert(gSig.status == "activa", "cerrar con 1 Energía no termina la partida en ese momento")
+Test.assert(gSig.energia == 0, "el consumo deja la Energía en 0")
+Test.assert(gSig.turno == 2, "el turno avanza igual")
+`UPDATE games SET fase = 'resuelto', resultado = 'ganada' WHERE id = ?`.query(gGracia)
+Test.post("/juego", {"accion": "terminar"}).status(302)
+Test.assert(Game.find(gGracia).status == "derrota", "el cierre siguiente con 0 Energía termina la partida")
+
+// --- La sexta Pista gana en el momento, sin esperar al cierre ---
+
+var gVictoria = Flow.nuevaPartida()
+`UPDATE games SET pistas = 5 WHERE id = ?`.query(gVictoria)
+var misionVictoria = Flow.putM01(gVictoria)
+Test.post("/juego", {"accion": "elegir", "rowId": misionVictoria.toString, "opt": "A"}).status(302)
+Test.post("/juego", {"accion": "mesa", "d1": "2", "d2": "0"}).status(302)
+Test.assert(Game.find(gVictoria).status == "victoria", "la sexta Pista gana al resolver, en cualquier momento")
+
 // --- Modo inválido: el servidor cae en Normal ---
 
 Test.post("/juego", {"accion": "nueva", "modo": "inventado"})

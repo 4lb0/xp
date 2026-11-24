@@ -29,8 +29,8 @@ return Layout.render(<main>
         <p>Podés jugar solo o en cooperativo con amigos. El submarino baja hacia una fosa sin cartografiar en busca de seis Pistas que confirmen que el Megalodón existe. Para el resto del mundo es una leyenda, como el monstruo del lago Ness.</p>
         <p class="hint">Es un <strong>LCG</strong>: los mazos son fijos, no hay sobres aleatorios ni cartas coleccionables.</p>
         <ul>
-          <li><strong>Ganan</strong> si reúnen 6 Pistas.</li>
-          <li><strong>Pierden</strong> si al terminar un turno completo la Energía o el Escudo quedan en 0.</li>
+          <li><strong>Ganan</strong> en cuanto reúnen 6 Pistas, en cualquier momento de la partida.</li>
+          <li><strong>Pierden</strong> si al empezar el cierre de un turno la Energía o el Escudo están en 0.</li>
         </ul>
         <p class="hint">En la app, la mano es una sola y las decisiones se comparten. Podés jugar solo o en cooperativo con amigos: la mesa es la misma.</p>
         <p class="hint">Las cartas de Dilema no dan ni quitan Pistas: solo mueven Energía y Escudo.</p>
@@ -157,6 +157,7 @@ return Layout.render(<main>
   <section class="panel" id="reloj">
     <h2>El reloj: consumo de Energía</h2>
     <p><strong>Consumo:</strong> al cerrar cada turno, el submarino pierde <strong>1 Energía</strong>, hayan ganado o no una Pista. La Energía es el reloj de la partida y no se recupera con las cartas de Misión.</p>
+    <p><strong>Derrota:</strong> se evalúa al principio del cierre. Si la Energía o el Escudo están en 0, la expedición termina antes del consumo y de reponer la mesa. Si el consumo deja la Energía en 0, el equipo juega un turno más para recuperarla: si no lo hace, el cierre siguiente termina la partida.</p>
     <p><strong>Recarga:</strong> solo con Equipo. La Batería de Respaldo devuelve 2 de Energía y hay 6 en el mazo. El Generador Auxiliar recarga 1 al empezar cada Misión si están en 4 o menos. El Generador de Escudo hace lo mismo con el casco. Ahorro de Oxígeno saltea el consumo de un turno.</p>
     <p><strong>Emboscadas:</strong> diez cartas de Misión cuestan <strong>1 Energía</strong>, <strong>1 Escudo</strong> o <strong>1 Pista</strong> apenas entran a la mesa, y tienen una sola opción. Si entran varias a la vez (por ejemplo, en el reparto inicial), el equipo elige cuál sufrir: solo esa se aplica y las demás no cobran. Si todas cuestan lo mismo, no hay nada que elegir: se aplica una al azar. Una emboscada que ya está en la mesa no vuelve a cobrar. Las cartas de Misión nunca te sacan Energía: la Energía la baja el reloj y la recupera el Equipo.</p>
   </section>
@@ -175,8 +176,8 @@ return Layout.render(<main>
     <table>
       <thead><tr><th>Condición</th><th>Qué pasa</th></tr></thead>
       <tbody>
-        <tr><td>Pistas llega a 6</td><td><strong>Victoria.</strong> Resuelven la Misión en ese momento.</td></tr>
-        <tr><td>Energía o Escudo en 0 al cerrar un turno</td><td><strong>Derrota.</strong> No es inmediata: se evalúa al cerrar el turno, con cualquiera de los dos en 0.</td></tr>
+        <tr><td>Pistas llega a 6</td><td><strong>Victoria.</strong> En ese momento, en cualquier parte de la partida: no hace falta esperar al cierre.</td></tr>
+        <tr><td>Energía o Escudo en 0 al empezar el cierre</td><td><strong>Derrota.</strong> Se evalúa antes del consumo y de reponer la mesa. Con cualquiera de los dos en 0, la expedición termina.</td></tr>
       </tbody>
     </table>
   </section>

@@ -16,7 +16,7 @@ return Layout.render(<main class="quick">
       <h2>Encontrá al Megalodón con 6 Pistas.</h2>
       <p>
         La <strong>Energía</strong> es el aire. El <strong>Escudo</strong> es el casco.
-        Pueden superar 6, hasta 12. Si al cerrar un turno la Energía o el Escudo quedan en 0, la expedición termina.
+        Pueden superar 6, hasta 12. Si al empezar el cierre la Energía o el Escudo están en 0, la expedición termina.
         Si las Pistas llegan a 6, ganan en ese momento. Es un <strong>LCG</strong>: mazos fijos, sin sobres.
       </p>
     </div>
@@ -242,7 +242,7 @@ return Layout.render(<main class="quick">
       <div>
         <p class="eyebrow">Perdés</p>
         <h2>0 de Energía o 0 de Escudo al cerrar un turno</h2>
-        <p>No es inmediato: se evalúa al cerrar el turno. Basta con que la Energía o el Escudo lleguen a 0.</p>
+        <p>Se evalúa al principio del cierre, antes del consumo. Basta con que la Energía o el Escudo estén en 0. Si el consumo te deja la Energía en 0, tenés un turno para recuperarla.</p>
       </div>
     </article>
   </section>

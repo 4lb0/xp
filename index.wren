@@ -44,7 +44,7 @@ return Layout.render(<main>
           </div>
         </div>
         <p class="hint" style="margin: 1rem 0 0">
-          Tres dados D6 quedan a la vista de todos. Energía y Escudo pueden superar 6, con tope 12. Si al cerrar un turno la Energía o el Escudo quedan en 0, la expedición termina. Si Pistas llega a 6, la expedición gana.
+          Tres dados D6 quedan a la vista de todos. Energía y Escudo pueden superar 6, con tope 12 y piso 0. Si al empezar el cierre del turno la Energía o el Escudo están en 0, la expedición termina. Si las Pistas llegan a 6, en cualquier momento, la expedición gana.
         </p>
       </aside>
     </div>
