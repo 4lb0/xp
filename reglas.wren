@@ -74,7 +74,7 @@ return Layout.render(<main>
 
   <section class="panel legend">
     <p class="eyebrow">Fichas de efectos</p>
-    <p><span class="chip chip-energia">⚡ +1</span> Energía · <span class="chip chip-escudo">🛡️ +2</span> Escudo · <span class="chip chip-pista">🔍 +1</span> Pistas</p>
+    <p><span class="chip chip-energia">{{ Layout.icon("⚡") }} +1</span> Energía · <span class="chip chip-escudo">{{ Layout.icon("🛡️") }} +2</span> Escudo · <span class="chip chip-pista">{{ Layout.icon("🔍") }} +1</span> Pistas</p>
     <p class="hint">El ícono dice qué recurso cambia y el número, cuánto. La ficha con borde rojo es una pérdida.</p>
   </section>
 
@@ -142,7 +142,7 @@ return Layout.render(<main>
 
   <section class="panel support-panel" id="apoyo">
     <h2>Maniobras de apoyo</h2>
-    <p>Dos Maniobras del equipo: <strong>Kit de emergencia</strong> (<span class="chip chip-energia">⚡ +1</span> o <span class="chip chip-escudo">🛡️ +1</span>) y <strong>Carga de emergencia</strong> (<span class="chip chip-energia">⚡ +2</span> o <span class="chip chip-escudo">🛡️ +2</span>).</p>
+    <p>Dos Maniobras del equipo: <strong>Kit de emergencia</strong> (<span class="chip chip-energia">{{ Layout.icon("⚡") }} +1</span> o <span class="chip chip-escudo">{{ Layout.icon("🛡️") }} +1</span>) y <strong>Carga de emergencia</strong> (<span class="chip chip-energia">{{ Layout.icon("⚡") }} +2</span> o <span class="chip chip-escudo">{{ Layout.icon("🛡️") }} +2</span>).</p>
     <p>En <strong>Experto</strong> se mezclan en el mazo. En <strong>Normal</strong>, el Kit se busca y queda en el área de Apoyo. En <strong>Asistido</strong>, las dos quedan en el área. Se usan una vez, van al descarte como cualquier Maniobra y, si están en el área de Apoyo, no gastan la carta del turno.</p>
   </section>
 

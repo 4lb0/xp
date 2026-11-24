@@ -53,9 +53,9 @@ return Layout.render(<main>
         <ul>
           {{ c.options.map{|o| <li>{{ o["texto"] }} — <span class="test-badge test-{{ o["tipoPrueba"] }}">{{ o["pruebaLabel"] }}</span><br/><span class="option-effects">
   <span class="chip-label">Éxito</span>
-  {{ o["exitoChips"].map{|c| <span class="chip {{ c["cls"] }}" title="{{ c["title"] }}" aria-label="{{ c["title"] }}">{{ c["icon"] }} {{ c["text"] }}</span>} }}
+  {{ o["exitoChips"].map{|c| <span class="chip {{ c["cls"] }}" title="{{ c["title"] }}" aria-label="{{ c["title"] }}">{{ Layout.icon(c["icon"]) }} {{ c["text"] }}</span>} }}
   <span class="chip-label">Fallo</span>
-  {{ o["falloChips"].map{|c| <span class="chip {{ c["cls"] }}" title="{{ c["title"] }}" aria-label="{{ c["title"] }}">{{ c["icon"] }} {{ c["text"] }}</span>} }}
+  {{ o["falloChips"].map{|c| <span class="chip {{ c["cls"] }}" title="{{ c["title"] }}" aria-label="{{ c["title"] }}">{{ Layout.icon(c["icon"]) }} {{ c["text"] }}</span>} }}
 </span></li>} }}
         </ul>
       </article>} }}
@@ -70,15 +70,15 @@ return Layout.render(<main>
         <span class="card-family">Peligro{{ c.entry != "" ? " · Emboscada" : "" }} · <span class="card-id">{{ c.id }}</span></span>
         <h3>{{ c.name }}</h3>
         {{ c.entry != "" && <p class="entry-badge">Al entrar
-          {{ c.entryChips.map{|c| <span class="chip {{ c["cls"] }}" title="{{ c["title"] }}" aria-label="{{ c["title"] }}">{{ c["icon"] }} {{ c["text"] }}</span>} }}
+          {{ c.entryChips.map{|c| <span class="chip {{ c["cls"] }}" title="{{ c["title"] }}" aria-label="{{ c["title"] }}">{{ Layout.icon(c["icon"]) }} {{ c["text"] }}</span>} }}
         </p> }}
         <section class="card-text">{{ c.body }}</section>
         <ul>
           {{ c.options.map{|o| <li>{{ o["texto"] }} — <span class="test-badge test-{{ o["tipoPrueba"] }}">{{ o["pruebaLabel"] }}</span><br/><span class="option-effects">
   <span class="chip-label">Éxito</span>
-  {{ o["exitoChips"].map{|c| <span class="chip {{ c["cls"] }}" title="{{ c["title"] }}" aria-label="{{ c["title"] }}">{{ c["icon"] }} {{ c["text"] }}</span>} }}
+  {{ o["exitoChips"].map{|c| <span class="chip {{ c["cls"] }}" title="{{ c["title"] }}" aria-label="{{ c["title"] }}">{{ Layout.icon(c["icon"]) }} {{ c["text"] }}</span>} }}
   <span class="chip-label">Fallo</span>
-  {{ o["falloChips"].map{|c| <span class="chip {{ c["cls"] }}" title="{{ c["title"] }}" aria-label="{{ c["title"] }}">{{ c["icon"] }} {{ c["text"] }}</span>} }}
+  {{ o["falloChips"].map{|c| <span class="chip {{ c["cls"] }}" title="{{ c["title"] }}" aria-label="{{ c["title"] }}">{{ Layout.icon(c["icon"]) }} {{ c["text"] }}</span>} }}
 </span></li>} }}
         </ul>
       </article>} }}
@@ -96,9 +96,9 @@ return Layout.render(<main>
         <ul>
           {{ c.options.map{|o| <li>{{ o["texto"] }} — <span class="test-badge test-{{ o["tipoPrueba"] }}">{{ o["pruebaLabel"] }}</span><br/><span class="option-effects">
   <span class="chip-label">Éxito</span>
-  {{ o["exitoChips"].map{|c| <span class="chip {{ c["cls"] }}" title="{{ c["title"] }}" aria-label="{{ c["title"] }}">{{ c["icon"] }} {{ c["text"] }}</span>} }}
+  {{ o["exitoChips"].map{|c| <span class="chip {{ c["cls"] }}" title="{{ c["title"] }}" aria-label="{{ c["title"] }}">{{ Layout.icon(c["icon"]) }} {{ c["text"] }}</span>} }}
   <span class="chip-label">Fallo</span>
-  {{ o["falloChips"].map{|c| <span class="chip {{ c["cls"] }}" title="{{ c["title"] }}" aria-label="{{ c["title"] }}">{{ c["icon"] }} {{ c["text"] }}</span>} }}
+  {{ o["falloChips"].map{|c| <span class="chip {{ c["cls"] }}" title="{{ c["title"] }}" aria-label="{{ c["title"] }}">{{ Layout.icon(c["icon"]) }} {{ c["text"] }}</span>} }}
 </span></li>} }}
         </ul>
       </article>} }}
@@ -111,11 +111,11 @@ return Layout.render(<main>
       <p>Con el ícono alcanza: no hace falta leer el texto para jugarla.</p>
     </div>
     <ul>
-      <li><span aria-hidden="true">🔧</span> <strong>Herramienta</strong> · queda en la mesa.</li>
-      <li><span aria-hidden="true">🃏</span> <strong>Maniobra</strong> · se usa una vez y va al descarte.</li>
-      <li><span aria-hidden="true">👆</span> <strong>Ahora</strong> · se juega y se resuelve enseguida.</li>
-      <li><span aria-hidden="true">🎲</span> <strong>Antes de tirar</strong> · se prepara antes de la prueba.</li>
-      <li><span aria-hidden="true">♾️</span> <strong>Siempre</strong> · funciona sola mientras está en la mesa.</li>
+      <li>{{ Layout.icon("🔧") }} <strong>Herramienta</strong> · queda en la mesa.</li>
+      <li>{{ Layout.icon("🃏") }} <strong>Maniobra</strong> · se usa una vez y va al descarte.</li>
+      <li>{{ Layout.icon("👆") }} <strong>Ahora</strong> · se juega y se resuelve enseguida.</li>
+      <li>{{ Layout.icon("🎲") }} <strong>Antes de tirar</strong> · se prepara antes de la prueba.</li>
+      <li>{{ Layout.icon("♾️") }} <strong>Siempre</strong> · funciona sola mientras está en la mesa.</li>
     </ul>
   </section>
 
@@ -124,11 +124,11 @@ return Layout.render(<main>
     <div class="deck-grid">
       {{ herramientas.map{|c| <article class="mini-card" data-family="herramienta">
         <span class="card-art"><span class="card-emoji" aria-hidden="true">{{ c.emoji }}</span></span>
-        <span class="card-family"><span aria-hidden="true">{{ c.typeIcon }}</span> {{ c.typeLabel }} · x{{ c.copies }} · <span class="card-id">{{ c.id }}</span></span>
+        <span class="card-family">{{ Layout.icon(c.typeIcon) }} {{ c.typeLabel }} · x{{ c.copies }} · <span class="card-id">{{ c.id }}</span></span>
         <h3>{{ c.name }}</h3>
-        <span class="use-badge {{ c.useClass }}" title="{{ c.useHint }}"><span aria-hidden="true">{{ c.useIcon }}</span> {{ c.useLabel }}</span>
+        <span class="use-badge {{ c.useClass }}" title="{{ c.useHint }}">{{ Layout.icon(c.useIcon) }} {{ c.useLabel }}</span>
         <div class="effect-chips">
-          {{ c.helpChips.map{|h| <span class="chip {{ h["cls"] }}" title="{{ h["title"] }}" aria-label="{{ h["title"] }}"><span aria-hidden="true">{{ h["icon"] }}</span> {{ h["text"] }}</span>} }}
+          {{ c.helpChips.map{|h| <span class="chip {{ h["cls"] }}" title="{{ h["title"] }}" aria-label="{{ h["title"] }}">{{ Layout.icon(h["icon"]) }} {{ h["text"] }}</span>} }}
         </div>
         <section class="card-text">{{ c.body }}</section>
       </article>} }}
@@ -140,11 +140,11 @@ return Layout.render(<main>
     <div class="deck-grid">
       {{ maniobras.map{|c| <article class="mini-card" data-family="maniobra">
         <span class="card-art"><span class="card-emoji" aria-hidden="true">{{ c.emoji }}</span></span>
-        <span class="card-family"><span aria-hidden="true">{{ c.typeIcon }}</span> {{ c.typeLabel }} · x{{ c.copies }} · <span class="card-id">{{ c.id }}</span></span>
+        <span class="card-family">{{ Layout.icon(c.typeIcon) }} {{ c.typeLabel }} · x{{ c.copies }} · <span class="card-id">{{ c.id }}</span></span>
         <h3>{{ c.name }}</h3>
-        <span class="use-badge {{ c.useClass }}" title="{{ c.useHint }}"><span aria-hidden="true">{{ c.useIcon }}</span> {{ c.useLabel }}</span>
+        <span class="use-badge {{ c.useClass }}" title="{{ c.useHint }}">{{ Layout.icon(c.useIcon) }} {{ c.useLabel }}</span>
         <div class="effect-chips">
-          {{ c.helpChips.map{|h| <span class="chip {{ h["cls"] }}" title="{{ h["title"] }}" aria-label="{{ h["title"] }}"><span aria-hidden="true">{{ h["icon"] }}</span> {{ h["text"] }}</span>} }}
+          {{ c.helpChips.map{|h| <span class="chip {{ h["cls"] }}" title="{{ h["title"] }}" aria-label="{{ h["title"] }}">{{ Layout.icon(h["icon"]) }} {{ h["text"] }}</span>} }}
         </div>
         <section class="card-text">{{ c.body }}</section>
       </article>} }}
@@ -157,11 +157,11 @@ return Layout.render(<main>
       {{ apoyos.map{|c| <article class="mini-card" data-family="apoyo">
         <span class="card-ribbon">🎁 Apoyo</span>
         <span class="card-art"><span class="card-emoji" aria-hidden="true">{{ c.emoji }}</span></span>
-        <span class="card-family"><span aria-hidden="true">{{ c.typeIcon }}</span> {{ c.typeLabel }} · x{{ c.copies }} · <span class="card-id">{{ c.id }}</span></span>
+        <span class="card-family">{{ Layout.icon(c.typeIcon) }} {{ c.typeLabel }} · x{{ c.copies }} · <span class="card-id">{{ c.id }}</span></span>
         <h3>{{ c.name }}</h3>
-        <span class="use-badge {{ c.useClass }}" title="{{ c.useHint }}"><span aria-hidden="true">{{ c.useIcon }}</span> {{ c.useLabel }}</span>
+        <span class="use-badge {{ c.useClass }}" title="{{ c.useHint }}">{{ Layout.icon(c.useIcon) }} {{ c.useLabel }}</span>
         <div class="effect-chips">
-          {{ c.helpChips.map{|h| <span class="chip {{ h["cls"] }}" title="{{ h["title"] }}" aria-label="{{ h["title"] }}"><span aria-hidden="true">{{ h["icon"] }}</span> {{ h["text"] }}</span>} }}
+          {{ c.helpChips.map{|h| <span class="chip {{ h["cls"] }}" title="{{ h["title"] }}" aria-label="{{ h["title"] }}">{{ Layout.icon(h["icon"]) }} {{ h["text"] }}</span>} }}
         </div>
         <section class="card-text">{{ c.body }}</section>
       </article>} }}

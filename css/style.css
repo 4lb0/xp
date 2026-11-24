@@ -127,6 +127,23 @@ body::before {
 }
 .skip-link:focus { left: 1rem; }
 
+/* ---------- Iconos de línea ---------- */
+/* Un solo lenguaje: los símbolos viven en el sprite de _app/template.wren. */
+.ico {
+  width: 1em;
+  height: 1em;
+  display: inline-block;
+  vertical-align: -0.12em;
+  flex: none;
+}
+.chip .ico,
+.use-badge .ico,
+.test-badge .ico,
+.entry-badge .ico { width: 0.95em; height: 0.95em; }
+.rail-nav .ico { width: 1.1rem; height: 1.1rem; }
+.card-family .ico { width: 0.95em; height: 0.95em; opacity: 0.9; }
+.eyebrow .ico { width: 0.95em; height: 0.95em; }
+
 /* ---------- Header ---------- */
 
 .site-header {
@@ -1783,6 +1800,9 @@ section[id] { scroll-margin-top: 5.5rem; }
   }
   .rail-dot { display: none; }
 
+  /* El aviso de movimientos no tapa la barra. */
+  .move-toast { bottom: calc(84px + env(safe-area-inset-bottom)); }
+
   /* El detalle grande ya está en la barra; no se repite en el flujo. */
   .game-top .gauges-board { display: none; }
 }
@@ -2135,3 +2155,13 @@ section[id] { scroll-margin-top: 5.5rem; }
 [data-motion="off"] .ending,
 [data-motion="off"] .ending::before { animation: none !important; }
 [data-motion="off"] .ending::before { opacity: 0; }
+
+/* La próxima carta (Sonar) se lee en una columna angosta: nada puede
+   empujar el ancho del panel. */
+.peek,
+.peek h3,
+.peek .mini-options li,
+.peek .card-text { min-width: 0; }
+.peek h3 { overflow-wrap: anywhere; }
+.peek .test-badge { max-width: 100%; }
+.peek .option-effects { flex-wrap: wrap; }
