@@ -29,6 +29,17 @@ python3 tools/make_proxies.py
 
 Los iconos usan **Noto Emoji** (OFL) en `tools/fonts/`.
 
+`pdf/xp-cheatsheet-bw.pdf` es la ayuda de **una página** para la mesa: el turno
+en 4 pasos, la prueba de dados, los contadores y el final, en blanco y negro
+para imprimir al 100% en A4. Sale de `pdf/cheatsheet.html` con Chrome:
+
+```bash
+"/Applications/Google Chrome.app/Contents/MacOS/Google Chrome" \
+  --headless --disable-gpu --no-pdf-header-footer \
+  --print-to-pdf=pdf/xp-cheatsheet-bw.pdf \
+  "file://$PWD/pdf/cheatsheet.html"
+```
+
 ## Marca
 
 El manual completo está en [`BRANDING.md`](BRANDING.md). El sistema de diseño de
@@ -73,7 +84,7 @@ Las acciones siguen recargando la página. Al volver a `/juego`, el servidor
 compara las zonas con el estado anterior y deja en el HTML solo los movimientos
 nuevos; un módulo de JavaScript liviano (`js/game.js`) los usa para:
 
-- resaltar las cartas que acaban de entrar en mano, mesa, herramientas o apoyo;
+- resaltar las cartas que acaban de entrar en mano, mesa o herramientas;
 - en los robos, ocultar la carta destino, hacer volar el **dorso** desde el
   mazo hasta su lugar y recién ahí revelar la carta con un pequeño pop;
 - en los descartes, hacer volar la carta desde la mesa/mano hasta el descarte;
@@ -98,7 +109,11 @@ sintetizado con Web Audio: no hay archivos de audio.
 ## La mesa
 
 `/juego` no es una página con secciones: es una mesa. Todo vive sobre una
-superficie con luz desde arriba y zonas de lugar fijo.
+superficie con luz desde arriba y zonas de lugar fijo. De arriba abajo: las
+cartas de Misión (son del juego y se comparten), tu Herramienta y la Maniobra
+del turno, tu estado y tu mano. La Maniobra del turno queda a la vista hasta
+que la Misión se resuelve, así el efecto no se pierde de vista; recién ahí va
+al descarte.
 
 - Las cartas tienen **proporción de impresión (63 × 88)** y no cambian de tamaño
   según el texto. Debajo de 900px pierden la proporción para que el texto se
@@ -149,6 +164,21 @@ Cebo, Blindaje, Brazo Robótico), el robo y reciclado de mazos, la resolución d
 una Misión y el flujo HTTP completo de `/juego` (crear, elegir, tirar,
 resolver y cerrar turno).
 
+## Simulación de balance
+
+`tools/simular.py` juega miles de partidas con las cartas de `cartas/` —la misma
+fuente que usa la app— y cuatro arquetipos de jugador (Azar, Cauto, Buscador,
+Equilibrado) en los tres modos. Genera `reporte.html` con victorias, turnos,
+maniobras jugadas y Misiones elegidas.
+
+```bash
+python3 tools/simular.py --games 5000 --seed 20261124
+```
+
+Es una aproximación: bots con reglas fijas, sin charla de mesa ni información
+imperfecta. Sirve para detectar cartas muertas y medir el reloj de Energía, no
+para predecir una mesa real.
+
 ## Rutas
 
 | Ruta | Qué hace |
@@ -163,17 +193,17 @@ El estado de la partida se guarda en SQLite y se ata a la sesión del navegador.
 
 ## Cómo se juega en la app
 
-1. Elegís el modo (todos arrancan 6/6: Experto sin apoyos, Normal +1 o Asistido +2) y arranca la expedición. No hay que elegir cantidad de jugadores: se juega solo o en cooperativo con amigos.
+1. Elegís el modo (todos arrancan 6/6: Experto sin apoyos, Normal con el Kit en la mano, Asistido con el Kit y la Carga) y arranca la expedición. No hay que elegir cantidad de jugadores: se juega solo o en cooperativo con amigos.
 2. La app reparte 3 cartas de Equipo y revela **siempre 3 cartas de Misión**, sin importar cuántos jueguen. La cantidad de jugadores no cambia nada: las decisiones son del equipo.
-3. En cada turno se resuelven primero las acciones del comienzo (Generadores) y se roba la mano de 3 cartas de Equipo. Después se puede jugar **1 carta**: Herramienta (queda), Maniobra (se resuelve) o Maniobra de apoyo del área. La carta se juega **antes** de elegir la Misión.
-4. Se elige una Misión de la mesa y una de sus opciones. Al elegirla se descarta el resto de la mano. La prueba de dados se puede resolver de dos formas:
+3. En cada turno se resuelven primero las acciones del comienzo (Generadores) y se roba **1 carta** de Equipo (en el primer turno la mano arranca con 3). Después se puede jugar **1 carta**: Herramienta (queda), Maniobra (se resuelve) o carta de apoyo (suma Energía y Escudo). La carta se juega **antes** de elegir la Misión.
+4. Se elige una Misión de la mesa y una de sus opciones. La mano no se descarta. La prueba de dados se puede resolver de dos formas:
    - **Tirar en la app**: el servidor genera los D6.
    - **Ya tiré en la mesa**: elegís en pantalla lo que salió en cada dado físico.
    La misma mesa de dados sirve para la prueba, para las re-tiradas y para las Maniobras que piden un dado.
 5. **Orden de la tirada:** tirás, aplicás las sumas (Turbo +2, Estabilizadores +1 en 2 dados) y, si la prueba falla, aplicás las re-tiradas (Suerte vuelve a tirar todo, Focos relanza un dado y elegís cuál). Cada tirada nueva vuelve a pasar por las sumas, hasta que no queden re-tiradas.
 6. Todas las Maniobras se juegan **antes de elegir la Misión** (Turbo, Giro, Focos, Suerte, Cebo, Ahorro, Blindaje): se comprometen a ciegas. Si la Misión elegida no es de Cara o Seca, el Giro y los Focos se pierden.
 7. Al resolver, la app aplica los efectos de la opción y controla victoria/derrota. La prueba da exactamente lo que dice la carta: no hay tirada extra.
-8. Al principio del cierre, si la Energía o el Escudo están en 0, la expedición termina. Si no, el submarino consume **1 Energía** y se repone la mesa. Si el consumo deja la Energía en 0, hay un turno para recuperarla.
+8. Al principio del cierre, si la Energía o el Escudo están en 0, la expedición termina. Si no, el submarino consume **1 Energía** y se repone la mesa. Después robás **1 carta**; si la mano pasa de 3, descartás hasta quedar con 3. Si el consumo deja la Energía en 0, hay un turno para recuperarla.
 
 Los contadores son los tres dados del juego: **Energía** y **Escudo** arrancan en 6, pueden superar 6 hasta un tope de 12 y no se pierde por separado. **Pistas** arranca en 0 y con 6 se gana en el momento, en cualquier parte de la partida. La derrota llega si al empezar el cierre la Energía o el Escudo están en 0; el consumo de ese cierre todavía no se cobra.
 
@@ -237,17 +267,17 @@ xp/
 | Tabla | Qué guarda |
 |---|---|
 | `games` | Una fila por partida: contadores, turno, fase, prueba pendiente, banderas de maniobras. |
-| `game_cards` | Cada copia física del mazo con su zona: `misterio`, `equipo`, `mesa`, `mano`, `herramientas`, `ayuda`, `descarteJuego`, `descarteEquipo`. |
+| `game_cards` | Cada copia física del mazo con su zona: `misterio`, `equipo`, `mesa`, `mano`, `herramientas`, `descarteJuego`, `descarteEquipo`. |
 | `game_log` | Bitácora narrativa de la partida. |
 
 El mazo se mezcla con `ORDER BY RANDOM()` de SQLite. Las tiradas digitales también salen de SQLite (`ABS(RANDOM()) % 6 + 1`), así que no hace falta ningún generador extra.
 
 ## Decisiones de este prototipo
 
-- **Solo o en cooperativo.** Podés jugar una sola persona o compartir la mano y las decisiones con amigos. Al elegir la Misión descartás el resto de la mano; al empezar el próximo turno robás 3 cartas nuevas.
+- **Solo o en cooperativo.** Podés jugar una sola persona o compartir la mano y las decisiones con amigos. La mano se mantiene entre turnos: robás 1 carta por turno y al cerrar descartás hasta quedar con 3.
 - **La cantidad de jugadores no cambia la mesa.** Siempre 3 cartas de Misión, mano de 3 y siempre 6 Pistas. Se puede jugar solo o en cooperativo con amigos.
-- **Tres modos.** Todos empiezan con 6 de Energía y 6 de Escudo. Experto no tiene apoyos; Normal suma 1 Maniobra de apoyo; Asistido suma 2.
-- **Maniobras de apoyo.** Kit de emergencia (+1 Energía o +1 Escudo) y Carga de emergencia (+2 Energía o +2 Escudo) son Maniobras: se usan una vez y van al descarte. En Experto se mezclan en el mazo; en Normal el Kit va al área de Apoyo; en Asistido van las dos. Las del área se usan sin gastar la carta del turno. En la app se destacan en rosa con la etiqueta **Apoyo**.
+- **Tres modos.** Todos empiezan con 6 de Energía y 6 de Escudo. Experto no tiene apoyos; en Normal el Kit arranca en la mano; en Asistido, el Kit y la Carga.
+- **Cartas de apoyo.** Kit de emergencia (+1 Energía y +1 Escudo) y Carga de emergencia (+2 Energía y +2 Escudo) son Maniobras: se usan una vez y van al descarte. En Normal el Kit arranca en la mano; en Asistido, el Kit y la Carga. Cuentan para las 3 cartas y gastan la carta del turno. En Experto quedan en el mazo. En la app se destacan en rosa con la etiqueta **Apoyo**.
 - **Una sola Herramienta activa por equipo.** Si juegan otra, la anterior va al descarte.
 - **Una Misión por turno, una carta jugada por turno.** La app lo hace cumplir; si intentás saltearlo, te avisa.
 - **Dados físicos primero.** La app no obliga a tirar: el ingreso manual es de primera clase, no un modo oculto.

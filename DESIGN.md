@@ -154,10 +154,17 @@ las zonas tienen lugar fijo y no se reacomodan:
 
 | Zona | Contenido | Regla |
 |---|---|---|
-| `.felt-top` | Contadores, fase y turno | Contadores en escritorio; en móvil pasan al rail inferior |
-| `.zone-encounter` | 3 Misiones + pilas | Siempre 3 lugares, ocupados o no |
-| `.zone-own` | Herramienta y apoyo | Un lugar de Herramienta, siempre visible |
-| `.zone-hand` | Mano | 3 lugares; se repone a 3 |
+| `.zone-encounter` | 3 Misiones + pilas | Arriba de todo; siempre 3 lugares, ocupados o no |
+| `.zone-own` | Herramienta y Maniobra del turno | Arriba, junto a las Misiones; la Maniobra queda hasta resolver |
+| `.felt-top` | Contadores, fase y turno | En el medio, como banda; en móvil los contadores pasan al rail |
+| `.zone-hand` | Mano | Abajo; se mantiene entre turnos: robás 1 y descartás hasta 3 |
+
+**Orden de la mesa.** De arriba abajo: las cartas de Misión (son del juego, se
+comparten), tu Herramienta y la Maniobra del turno, tu estado, la bandeja de
+resolución y tu mano. La Maniobra del turno se queda a la vista hasta que la
+Misión se resuelve, para no perder de vista el efecto; recién ahí va al
+descarte. El estado va en el medio porque en papel es el centro de la mesa; en
+pantalla se maneja solo y en móvil vive en el rail.
 
 - **Geometría fija.** Cada carta tiene `aspect-ratio: 63/88` (la proporción de
   impresión) y no crece con su texto. La única pieza que cede espacio es

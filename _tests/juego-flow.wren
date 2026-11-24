@@ -96,20 +96,15 @@ Test.assert(g.fase == "prueba", "elegir deja la prueba preparada")
 Test.assert(g.pruebaCarta == "m01", "elegir guarda la carta")
 Test.assert(g.pruebaOpcion == "A", "elegir guarda la opción")
 
-// Al elegir la Misión se descarta lo que quedó en la mano.
-Test.get("/juego")
-  .status(200)
-  .contains("&quot;kind&quot;:&quot;discard&quot;")
-  .contains("&quot;to&quot;:&quot;descarteEquipo&quot;")
-Test.assert(Game.count(gid, "mano") == 0, "elegir la Misión descarta la mano")
-
+// La mano se mantiene: elegir la Misión no descarta nada.
 Test.get("/juego")
   .status(200)
   .contains('data-moves="[]"')
+Test.assert(Game.count(gid, "mano") == 3, "elegir la Misión no descarta la mano")
 
 Test.post("/juego", {"accion": "mesa", "d1": "2", "d2": "0"})
   .status(302)
-  .header("Location", "/juego?anim=dados")
+  .header("Location", "/juego?anim=dados#resultado")
 g = Game.find(gid)
 Test.assert(g.fase == "resuelto", "tirar resuelve la prueba")
 Test.assert(g.resultado == "ganada", "2 en cara supera m01")
@@ -133,13 +128,18 @@ g = Game.find(gid)
 Test.assert(g.turno == 2, "cerrar el turno avanza el contador")
 Test.assert(g.energia == 5, "cerrar el turno consume 1 Energía")
 Test.assert(g.pistas == pistasAntes, "cerrar el turno no toca las Pistas")
-Test.assert(g.fase == "listo", "el turno nuevo arranca listo")
 Test.assert(g.resueltas == 0, "el turno nuevo no arrastra una Misión resuelta")
 Test.assert(!g.tirado, "el turno nuevo arranca sin tirada")
 Test.assert(Game.count(gid, "mesa") == 3, "la mesa vuelve a 3 Misiones")
-Test.assert(Game.count(gid, "mano") == 3, "la mano se repone a 3")
+Test.assert(Game.count(gid, "mano") == 4, "roban 1 y la mano pasa a 4")
+Test.assert(g.fase == "descarte", "con 4 cartas hay que descartar antes de empezar")
 Test.assert(Game.count(gid, "descarteJuego") == 1, "la carta resuelta va al descarte del Juego")
-Test.assert(Game.count(gid, "descarteEquipo") == 3, "la mano vieja va al descarte de Equipo")
+var sobra = Game.cardsIn(gid, "mano")[0]
+Test.post("/juego", {"accion": "descartar_mano", "rowId": sobra["rowId"].toString}).status(302)
+g = Game.find(gid)
+Test.assert(Game.count(gid, "mano") == 3, "descartar deja la mano en 3")
+Test.assert(g.fase == "listo", "con 3 cartas el turno arranca")
+Test.assert(Game.count(gid, "descarteEquipo") == 1, "la carta descartada va al descarte de Equipo")
 
 // --- La derrota llega con cualquiera de los dos contadores en 0 ---
 

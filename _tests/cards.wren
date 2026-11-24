@@ -167,7 +167,8 @@ Test.assert(estabilizadores["chips"][0]["cls"] == "chip-dado", "Estabilizadores 
 var apoyo = Card.visualFor({"id": "e18", "tipo": "maniobra", "subtipo": "apoyo", "efecto": "apoyo", "valor": "2"})
 Test.assert(apoyo["typeIcon"] == "🎁", "un apoyo usa el regalo")
 Test.assert(apoyo["typeLabel"].contains("apoyo"), "un apoyo se rotula como apoyo")
-Test.assert(apoyo["chips"].count == 3, "un apoyo ofrece Energía o Escudo")
+Test.assert(apoyo["chips"].count == 2, "un apoyo suma Energía y Escudo")
+Test.assert(apoyo["chips"][1]["text"] == "+2", "el segundo chip también usa el valor 2")
 Test.assert(apoyo["chips"][0]["text"] == "+2", "el apoyo usa su valor 2")
 
 var desconocido = Card.visualFor({"id": "e99", "tipo": "maniobra", "efecto": "desconocido"})

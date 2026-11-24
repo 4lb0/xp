@@ -21,9 +21,18 @@ class Turno {
     return id
   }
 
-  // Deja una carta concreta en la mano y devuelve la fila.
+  // Deja exactamente esas cartas en la mano (una copia de cada una).
+  static mano(id, cardIds) {
+    `UPDATE game_cards SET zone = 'equipo' WHERE gameId = ? AND zone = 'mano'`.query(id)
+    for (cid in cardIds) {
+      var row = `SELECT id FROM game_cards WHERE gameId = ? AND cardId = ? ORDER BY id`.first(id, cid)
+      if (row != null) `UPDATE game_cards SET zone = 'mano' WHERE id = ?`.query(row["id"])
+    }
+  }
+
+  // Deja una copia concreta en la mano y devuelve la fila.
   static aLaMano(id, cardId) {
-    var row = `SELECT id FROM game_cards WHERE gameId = ? AND cardId = ?`.first(id, cardId)
+    var row = `SELECT id FROM game_cards WHERE gameId = ? AND cardId = ? ORDER BY id`.first(id, cardId)
     `UPDATE game_cards SET zone = 'mano' WHERE id = ?`.query(row["id"])
     return row["id"]
   }
@@ -66,7 +75,7 @@ Test.post("/juego", {"accion": "jugar", "rowId": arpon.toString}).status(302)
 Test.post("/juego", {"accion": "tirar_maniobra", "origen": "mesa", "d1": "3"}).status(302)
 Test.assert(Game.find(gid).pistas == 0, "un 3 en el Arpón es Seca: sin Pista")
 
-// --- Al elegir la Misión se descarta la mano ---
+// --- Elegir la Misión no descarta la mano ---
 
 gid = Turno.nueva()
 Test.assert(Game.count(gid, "mano") == 3, "la partida arranca con 3 en la mano")
@@ -74,15 +83,13 @@ var mision = Turno.misionCara(gid)
 Test.post("/juego", {"accion": "elegir", "rowId": mision.toString, "opt": "A"}).status(302)
 g = Game.find(gid)
 Test.assert(g.fase == "prueba", "elegir deja la prueba preparada")
-Test.assert(Game.count(gid, "mano") == 0, "elegir la Misión descarta la mano")
-Test.assert(Game.count(gid, "descarteEquipo") == 3, "las 3 cartas de la mano van al descarte")
-Test.assert(Game.lastLogs(gid, 2).map{|l| l["text"]}.join(" ").contains("mano"), "la bitácora avisa el descarte de la mano")
+Test.assert(Game.count(gid, "mano") == 3, "elegir la Misión no descarta la mano")
 
-// Volver a elegir no devuelve la carta ni la mano.
+// Volver a elegir tampoco toca la mano.
 Test.post("/juego", {"accion": "cancelar"}).status(302)
 g = Game.find(gid)
 Test.assert(g.fase == "listo", "cancelar vuelve a la fase de Maniobras")
-Test.assert(Game.count(gid, "mano") == 0, "cancelar no repone la mano")
+Test.assert(Game.count(gid, "mano") == 3, "cancelar no toca la mano")
 
 // --- Una Maniobra no se puede jugar con la prueba ya elegida ---
 
@@ -93,7 +100,23 @@ Test.post("/juego", {"accion": "elegir", "rowId": mision.toString, "opt": "A"}).
 Test.post("/juego", {"accion": "maniobra", "rowId": turbo.toString}).status(302)
 g = Game.find(gid)
 Test.assert(g.bonus == 0, "la Maniobra jugada después de elegir no se aplica")
-Test.assert(Game.ids(gid, "mano").isEmpty, "la carta tampoco vuelve a la mano")
+Test.assert(Game.ids(gid, "mano").contains("e09"), "la carta sigue en la mano")
+
+// --- Cerrar con una carta jugada: roban 1 y la mano queda en 3 ---
+
+gid = Turno.nueva()
+Turno.mano(gid, ["e12", "e11", "e01"])
+var bateria = `SELECT id FROM game_cards WHERE gameId = ? AND cardId = 'e12' AND zone = 'mano'`.first(gid)
+Test.post("/juego", {"accion": "jugar", "rowId": bateria["id"].toString}).status(302)
+Test.assert(Game.count(gid, "mano") == 2, "jugar una carta deja 2 en la mano")
+mision = Turno.misionCara(gid)
+Test.post("/juego", {"accion": "elegir", "rowId": mision.toString, "opt": "A"}).status(302)
+Test.post("/juego", {"accion": "mesa", "d1": "2", "d2": "0"}).status(302)
+Test.post("/juego", {"accion": "terminar"}).status(302)
+g = Game.find(gid)
+Test.assert(g.turno == 2, "el turno avanza")
+Test.assert(Game.count(gid, "mano") == 3, "roban 1 y la mano vuelve a 3 sin descartar")
+Test.assert(g.fase == "listo", "con 3 cartas el turno arranca directo")
 
 // --- Tirada con suma y re-tirada: las sumas se vuelven a aplicar ---
 
@@ -112,3 +135,33 @@ g = Game.find(gid)
 Test.assert(g.fase == "resuelto", "la segunda tirada resuelve la prueba")
 Test.assert(g.resultado == "ganada", "un 4 es Cara: la prueba se gana")
 Test.assert(g.bonus == 0, "las sumas se limpian al cerrar la prueba")
+
+// --- Una carta de apoyo se juega desde la mano y gasta la carta del turno ---
+
+gid = Turno.nueva()
+Turno.mano(gid, ["e17", "e12", "e11"])
+var kit = `SELECT id FROM game_cards WHERE gameId = ? AND cardId = 'e17' AND zone = 'mano'`.first(gid)
+Test.post("/juego", {"accion": "jugar", "rowId": kit["id"].toString}).status(302)
+g = Game.find(gid)
+Test.assert(g.energia == 7, "el Kit da +1 Energía")
+Test.assert(g.escudo == 7, "el Kit también da +1 Escudo")
+Test.assert(g.jugadas == 1, "el apoyo consume la carta del turno")
+Test.assert(g.fase == "listo", "el apoyo se resuelve en el momento")
+Test.assert(Game.ids(gid, "descarteEquipo").contains("e17"), "el apoyo va al descarte")
+var bateria2 = `SELECT id FROM game_cards WHERE gameId = ? AND cardId = 'e12' AND zone = 'mano'`.first(gid)
+Test.post("/juego", {"accion": "jugar", "rowId": bateria2["id"].toString}).status(302)
+Test.assert(Game.find(gid).energia == 7, "no se puede jugar una segunda carta en el turno")
+
+// --- La Maniobra del turno queda a la vista hasta resolver ---
+
+gid = Turno.nueva()
+Turno.mano(gid, ["e09", "e12", "e11"])
+var turboFila = `SELECT id FROM game_cards WHERE gameId = ? AND cardId = 'e09' AND zone = 'mano'`.first(gid)
+Test.post("/juego", {"accion": "maniobra", "rowId": turboFila["id"].toString}).status(302)
+Test.assert(Game.ids(gid, "preparada").contains("e09"), "la Maniobra preparada queda a la vista")
+Test.get("/juego").status(200).textContains("Maniobra del turno")
+mision = Turno.misionCara(gid)
+Test.post("/juego", {"accion": "elegir", "rowId": mision.toString, "opt": "A"}).status(302)
+Test.post("/juego", {"accion": "mesa", "d1": "2", "d2": "0"}).status(302)
+Test.assert(Game.ids(gid, "preparada").isEmpty, "al resolver, la Maniobra sale de la mesa")
+Test.assert(Game.ids(gid, "descarteEquipo").contains("e09"), "al resolver, la Maniobra va al descarte")

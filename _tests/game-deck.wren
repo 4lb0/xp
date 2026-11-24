@@ -33,15 +33,15 @@ Test.assert(g.fase == "listo", "la partida arranca lista para elegir")
 Test.assert(Game.count(id, "mesa") == 3, "hay 3 Misiones en la mesa")
 Test.assert(Game.count(id, "mano") == 3, "la mano arranca con 3 cartas")
 Test.assert(Game.count(id, "misterio") == 37, "quedan 37 Misiones en el mazo")
-Test.assert(Game.count(id, "equipo") == 40, "quedan 40 cartas de Equipo en el mazo")
-Test.assert(Game.count(id, "ayuda") == 1, "el modo normal suma 1 apoyo")
-Test.assert(Game.ids(id, "ayuda").contains("e17"), "el apoyo del modo normal es el Kit")
+Test.assert(Game.count(id, "equipo") == 41, "quedan 41 cartas de Equipo en el mazo")
+Test.assert(Game.count(id, "ayuda") == 0, "el área de Apoyo ya no se usa")
+Test.assert(Game.ids(id, "mano").contains("e17"), "el apoyo del modo normal arranca en la mano")
 Test.assert(Game.count(id, "herramientas") == 0, "no hay Herramienta activa al empezar")
 
 // Las 40 cartas de Misión y las 44 copias de Equipo están siempre.
 var totalMisiones = Game.count(id, "misterio") + Game.count(id, "mesa") + Game.count(id, "descarteJuego")
 Test.assert(totalMisiones == 40, "el Mazo del Juego tiene 40 cartas en total")
-var totalEquipo = Game.count(id, "equipo") + Game.count(id, "mano") + Game.count(id, "ayuda") + Game.count(id, "descarteEquipo") + Game.count(id, "herramientas")
+var totalEquipo = Game.count(id, "equipo") + Game.count(id, "mano") + Game.count(id, "descarteEquipo") + Game.count(id, "herramientas")
 Test.assert(totalEquipo == 44, "el Mazo del Equipo tiene 44 copias en total")
 
 // Cada partida tiene su propio mazo.
@@ -52,13 +52,15 @@ Game.destroy(otra)
 
 var experto = Fixture.fresh("experto")
 Test.assert(Game.count(experto, "ayuda") == 0, "el modo experto no tiene apoyos")
-Test.assert(Game.count(experto, "equipo") == 41, "en experto los apoyos quedan en el mazo")
+Test.assert(Game.count(experto, "mano") == 3, "en experto la mano son 3 cartas robadas")
+Test.assert(!Game.ids(experto, "mano").contains("e17"), "en experto no hay apoyos en la mano")
 Game.destroy(experto)
 
 var facil = Fixture.fresh("facil")
-Test.assert(Game.count(facil, "ayuda") == 2, "el modo asistido suma 2 apoyos")
-Test.assert(Game.ids(facil, "ayuda").contains("e17"), "asistido incluye el Kit")
-Test.assert(Game.ids(facil, "ayuda").contains("e18"), "asistido incluye la Carga")
+Test.assert(Game.count(facil, "mano") == 3, "asistido arranca con 3 cartas en la mano")
+Test.assert(Game.ids(facil, "mano").contains("e17"), "asistido incluye el Kit")
+Test.assert(Game.ids(facil, "mano").contains("e18"), "asistido incluye la Carga")
+Test.assert(Game.count(facil, "equipo") == 41, "los apoyos de la mano no quedan en el mazo")
 Game.destroy(facil)
 
 // --- find ---

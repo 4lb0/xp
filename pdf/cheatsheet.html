@@ -1,0 +1,279 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>XP · Cheatsheet de turno</title>
+<style>
+  @font-face {
+    font-family: "Archivo";
+    src: url("../css/fonts/archivo-latin.woff2") format("woff2");
+    font-weight: 100 900;
+    font-stretch: 62% 125%;
+  }
+  @font-face {
+    font-family: "Source Sans 3";
+    src: url("../css/fonts/source-sans-3-latin.woff2") format("woff2");
+    font-weight: 200 900;
+  }
+  @page { size: A4; margin: 10mm 10mm 9mm; }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    font-family: "Source Sans 3", "Helvetica Neue", Arial, sans-serif;
+    font-size: 10.25pt;
+    line-height: 1.38;
+    color: #111;
+    background: #fff;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+  .sheet { width: 190mm; margin: 0 auto; }
+  header {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 6mm;
+    padding-bottom: 2.5mm;
+    margin-bottom: 3.5mm;
+    border-bottom: 2.4pt solid #111;
+  }
+  .kicker {
+    margin: 0;
+    font-family: "Archivo", sans-serif;
+    font-size: 7pt;
+    font-weight: 800;
+    letter-spacing: .22em;
+    text-transform: uppercase;
+    color: #555;
+  }
+  h1 {
+    margin: .4mm 0 0;
+    font-family: "Archivo", sans-serif;
+    font-size: 24pt;
+    font-weight: 900;
+    letter-spacing: -.02em;
+    line-height: .98;
+    text-transform: uppercase;
+  }
+  .header-right {
+    text-align: right;
+    font-size: 8pt;
+    line-height: 1.35;
+    color: #444;
+    white-space: nowrap;
+  }
+  .header-right b { color: #111; font-family: "Archivo", sans-serif; font-weight: 800; }
+  .cols { column-count: 2; column-gap: 7mm; }
+  section {
+    break-inside: avoid;
+    margin: 0 0 3.6mm;
+  }
+  h2 {
+    display: flex;
+    align-items: baseline;
+    gap: 2mm;
+    margin: 0 0 1.6mm;
+    padding-bottom: .9mm;
+    border-bottom: 1pt solid #111;
+    font-family: "Archivo", sans-serif;
+    font-size: 10.6pt;
+    font-weight: 900;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+  }
+  h2 span { font-size: 8.2pt; font-weight: 600; letter-spacing: .04em; color: #666; text-transform: none; }
+  p { margin: 0 0 1.4mm; }
+  b, strong { font-weight: 700; }
+  .lead { font-size: 9.4pt; }
+  .lead b { font-family: "Archivo", sans-serif; font-weight: 800; }
+  ol, ul { margin: 0; padding: 0; list-style: none; }
+  .steps { counter-reset: paso; display: grid; gap: 1.8mm; }
+  .steps li {
+    counter-increment: paso;
+    position: relative;
+    padding-left: 7mm;
+    break-inside: avoid;
+  }
+  .steps li::before {
+    content: counter(paso);
+    position: absolute;
+    left: 0;
+    top: .2mm;
+    width: 4.8mm;
+    height: 4.8mm;
+    border-radius: 50%;
+    background: #111;
+    color: #fff;
+    font-family: "Archivo", sans-serif;
+    font-size: 7.2pt;
+    font-weight: 900;
+    text-align: center;
+    line-height: 4.8mm;
+  }
+  .steps b { font-family: "Archivo", sans-serif; font-weight: 800; text-transform: uppercase;
+    font-size: 8.8pt; letter-spacing: .06em; }
+  .dice { counter-reset: tiro; display: grid; gap: 1.2mm; margin: 0 0 2mm; }
+  .dice li { counter-increment: tiro; padding-left: 5.5mm; position: relative; }
+  .dice li::before {
+    content: counter(tiro);
+    position: absolute; left: 0; top: 0;
+    font-family: "Archivo", sans-serif; font-weight: 900; font-size: 7.4pt;
+    width: 3.8mm; height: 3.8mm; border: 1pt solid #111; border-radius: 50%;
+    text-align: center; line-height: 3.6mm;
+  }
+  table { width: 100%; border-collapse: collapse; font-size: 9pt; }
+  th, td { padding: 1.1mm 1.6mm; text-align: left; border-bottom: .6pt solid #bbb; vertical-align: top; }
+  thead th { background: #ededed; border-bottom: 1pt solid #111; font-family: "Archivo", sans-serif;
+    font-size: 7pt; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; }
+  tbody tr:last-child td { border-bottom: 0; }
+  .mesa th { width: 23mm; font-family: "Archivo", sans-serif; font-size: 7.9pt; font-weight: 800;
+    letter-spacing: .08em; text-transform: uppercase; color: #333; }
+  .box {
+    border: 1pt solid #111;
+    padding: 2mm 2.4mm;
+    margin: 0 0 2mm;
+    background: #f4f4f4;
+  }
+  .box p:last-child { margin-bottom: 0; }
+  .win, .lose { display: grid; grid-template-columns: 15mm 1fr; gap: 1.5mm; margin: 0 0 1.4mm; }
+  .win dt, .lose dt { font-family: "Archivo", sans-serif; font-weight: 900; font-size: 8.4pt;
+    letter-spacing: .08em; text-transform: uppercase; }
+  .win { color: #111; }
+  .lose { color: #111; }
+  .win dt { border-left: 2.4pt solid #111; padding-left: 1.6mm; }
+  .lose dt { border-left: 2.4pt dashed #111; padding-left: 1.6mm; }
+  .win dd, .lose dd { margin: 0; }
+  .cards { display: grid; gap: 1.5mm; }
+  .cards p { margin: 0; }
+  .tag { display: inline-block; padding: 0 .9mm; border: .7pt solid #111; font-family: "Archivo", sans-serif;
+    font-size: 7.2pt; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; }
+  .tips { background: #111; color: #fff; padding: 2.4mm 2.8mm; }
+  .tips h2 { border-color: #fff; color: #fff; }
+  .tips h2 span { color: #bbb; }
+  .tips ol { display: grid; gap: 1.4mm; counter-reset: tip; }
+  .tips li { counter-increment: tip; padding-left: 5.6mm; position: relative; }
+  .tips li::before { content: counter(tip); position: absolute; left: 0; font-family: "Archivo", sans-serif;
+    font-weight: 900; font-size: 7.8pt; color: #fff; }
+  .tips b { color: #fff; }
+  .tips .star { font-family: "Archivo", sans-serif; font-weight: 900; text-transform: uppercase;
+    letter-spacing: .06em; }
+  footer {
+    margin-top: 3mm;
+    padding-top: 1.6mm;
+    border-top: 1pt solid #111;
+    display: flex;
+    justify-content: space-between;
+    gap: 4mm;
+    font-size: 6.8pt;
+    letter-spacing: .04em;
+    color: #555;
+  }
+  @media screen {
+    body { background: #e6e6e6; padding: 8mm 0; }
+    .sheet { background: #fff; width: 210mm; padding: 10mm; box-shadow: 0 4px 24px rgba(0,0,0,.25); }
+  }
+</style>
+</head>
+<body>
+<div class="sheet">
+  <header>
+    <div>
+      <p class="kicker">XP · Equipo eXPedición · Cheatsheet</p>
+      <h1>Un turno, de un vistazo</h1>
+    </div>
+    <div class="header-right">
+      <b>6 Pistas</b> para ganar<br>
+      <b>1 página</b> · A4 · B&amp;N<br>
+      rama mano-continua
+    </div>
+  </header>
+
+  <div class="cols">
+    <section>
+      <h2>La mesa <span>de arriba abajo</span></h2>
+      <table class="mesa">
+        <tr><th>Misiones</th><td><b>3 cartas boca arriba.</b> Son del juego: si hay varios equipos, se comparten.</td></tr>
+        <tr><th>Tu lado</th><td>Herramienta activa y la <b>Maniobra del turno</b>, a la vista hasta resolver.</td></tr>
+        <tr><th>Estado</th><td>Energía, Escudo y Pistas. En la app se maneja solo.</td></tr>
+        <tr><th>Mano</th><td><b>3 cartas</b> de Equipo. Se mantiene entre turnos.</td></tr>
+      </table>
+    </section>
+
+    <section>
+      <h2>El turno en 4 pasos</h2>
+      <ol class="steps">
+        <li><b>Comienzo.</b> Corren los Generadores (si el recurso está en 4 o menos) y robás <b>1 carta</b>. La primera mano son 3.</li>
+        <li><b>Maniobra.</b> Jugá <b>1 carta</b> o ninguna: Herramienta (queda; una sola activa), Maniobra (se prepara y va al descarte al resolver) o apoyo (Kit <b>+1 ⚡ y +1 🛡️</b>; Carga +2 y +2). La mano no se descarta.</li>
+        <li><b>Misión.</b> Elegí una de las 3, una opción, y tirá. Aplicá éxito o fallo.</li>
+        <li><b>Cierre.</b> Entra una Misión nueva, el submarino gasta <b>1 Energía</b>, robás <b>1 carta</b> y descartás hasta quedar con 3.</li>
+      </ol>
+    </section>
+
+    <section>
+      <h2>Prueba de dados</h2>
+      <ol class="dice">
+        <li><b>Tirá.</b> Cara o Seca siempre con un dado.</li>
+        <li><b>Sumá.</b> Turbo +2; Estabilizadores +1 en pruebas de 2 dados.</li>
+        <li><b>Si falla, re-tirá.</b> Suerte tira todo; Focos relanza 1 dado.</li>
+        <li><b>Repetí.</b> Cada tirada nueva vuelve a sumar, hasta agotar las re-tiradas.</li>
+      </ol>
+      <table>
+        <thead><tr><th>Prueba</th><th>Sale</th></tr></thead>
+        <tbody>
+          <tr><td><b>CARA</b></td><td>par: 2, 4 o 6</td></tr>
+          <tr><td><b>SECA</b></td><td>impar: 1, 3 o 5</td></tr>
+          <tr><td><b>1 dado, 4+</b></td><td>el dado alcanza el número</td></tr>
+          <tr><td><b>2 dados, 8+</b></td><td>la suma alcanza el número</td></tr>
+          <tr><td><b>Dobles</b></td><td>los dos dados iguales</td></tr>
+          <tr><td><b>Sin 1 ni 6</b></td><td>ningún dado muestra 1 ni 6</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section>
+      <h2>Contadores y final</h2>
+      <p class="lead"><b>Energía 6 · Escudo 6 · Pistas 0.</b> Ningún contador baja de 0 ni pasa de 12.</p>
+      <dl class="win">
+        <dt>Ganás</dt>
+        <dd>Con <b>6 Pistas</b>, en ese momento, en cualquier parte de la partida.</dd>
+      </dl>
+      <dl class="lose">
+        <dt>Perdés</dt>
+        <dd>Si al <b>empezar el cierre</b> la Energía o el Escudo están en 0. Se evalúa antes de pagar el consumo: si el consumo te deja en 0, tenés un turno para recuperarte.</dd>
+      </dl>
+    </section>
+
+    <section>
+      <h2>Cartas de Equipo</h2>
+      <div class="cards">
+        <p><span class="tag">Herramienta</span> Queda en la mesa. Una sola activa: la nueva pisa la anterior.</p>
+        <p><span class="tag">Maniobra</span> Se juega antes de elegir la Misión. Queda a la vista y va al descarte cuando la Misión se resuelve. Si la prueba no es Cara o Seca, Giro y Focos se pierden.</p>
+        <p><span class="tag">Apoyo</span> Kit: +1 Energía y +1 Escudo. Carga: +2 y +2. Gasta la carta del turno y cuenta para las 3 de la mano.</p>
+      </div>
+      <p style="margin-top:1.6mm"><b>Modos.</b> Experto sin apoyos · Normal con el Kit en la mano · Asistido con el Kit y la Carga.</p>
+    </section>
+
+    <section>
+      <h2>Emboscadas y mazos</h2>
+      <p>Al entrar a la mesa, una emboscada cobra <b>⚡, 🛡️ o 🔍 una sola vez</b>. Si entran varias en el reparto inicial, eligen cuál sufrir; las demás no cobran.</p>
+      <p>Si un mazo se agota, mezclá su descarte y seguí robando.</p>
+    </section>
+
+    <section class="tips">
+      <h2>Consejos <span>para la mesa</span></h2>
+      <ol>
+        <li><b class="star">Jugá una Maniobra o Herramienta por turno.</b> Si no jugás, la robada y el tope de 3 se comen la carta: perdés el turno.</li>
+        <li>Leé las tres Misiones <b>antes</b> de elegir la carta del turno.</li>
+        <li>Curá antes de que la Energía o el Escudo lleguen a 0: el cierre no perdona.</li>
+        <li>La mano es del equipo: leé las cartas en voz alta y decidan juntos.</li>
+      </ol>
+    </section>
+  </div>
+
+  <footer>
+    <span>XP · Equipo eXPedición · Cheatsheet de turno</span>
+    <span>Imprimí al 100% en A4 · 1 página</span>
+  </footer>
+</div>
+</body>
+</html>

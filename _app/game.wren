@@ -63,14 +63,17 @@ class Game {
       }
     }
     `UPDATE game_cards SET ord = RANDOM() WHERE gameId = ?`.query(id)
+    // Las cartas de apoyo arrancan en la mano: cuentan para las 3 y se juegan
+    // como una carta más, gastando la del turno.
     if (modo != "experto") {
-      `UPDATE game_cards SET zone = 'ayuda' WHERE gameId = ? AND cardId = 'e17'`.query(id)
+      `UPDATE game_cards SET zone = 'mano' WHERE gameId = ? AND cardId = 'e17'`.query(id)
     }
     if (modo == "facil") {
-      `UPDATE game_cards SET zone = 'ayuda' WHERE gameId = ? AND cardId = 'e18'`.query(id)
+      `UPDATE game_cards SET zone = 'mano' WHERE gameId = ? AND cardId = 'e18'`.query(id)
     }
     Game.draw(id, "misterio", "mesa", 3)
-    Game.draw(id, "equipo", "mano", Game.handSize)
+    var faltan = Game.handSize - Game.count(id, "mano")
+    if (faltan > 0) Game.draw(id, "equipo", "mano", faltan)
     `UPDATE games SET ultimo = ? WHERE id = ?`.query("La expedición empieza. El submarino se hunde en la fosa.", id)
     var modoLabel = modo == "facil" ? "Asistido" : (modo == "casual" ? "Normal" : "Experto")
     Game.log(id, "Comienza la expedición en modo " + modoLabel + ".")
@@ -341,6 +344,9 @@ class Game {
     var texto = (ok ? "Prueba superada" : "Prueba fallida") + ": " + c.name + " — " + opt["texto"] + "."
     if (!res["notas"].isEmpty) texto = texto + " " + res["notas"].join(". ") + "."
     `UPDATE games SET fase = 'resuelto', resultado = ?, resueltas = 1, ultimo = ?, dado1 = ?, dado2 = ?, tirado = 0, bonus = 0, giro = 0, suerte = 0, focosM = 0 WHERE id = ?`.query([ok ? "ganada" : "perdida", texto, d1, d2, id])
+    // La Maniobra del turno queda a la vista hasta resolver; recién ahí va al
+    // descarte (en papel se deja arriba para recordar el efecto).
+    for (r in Game.rows(id, "preparada")) Game.move(r["id"], "descarteEquipo")
     Game.log(id, texto)
     if (res["status"] == "victoria") Game.log(id, "¡Seis Pistas! La misión queda resuelta.")
     return {"ok": ok, "error": "", "status": res["status"], "texto": texto}

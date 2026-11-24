@@ -38,3 +38,7 @@ Db.migrate("xp-maniobra-row", "ALTER TABLE games ADD COLUMN maniobraRow INTEGER"
 // partidas viejas tenían una sola zona 'descarte'; se reparte por el prefijo
 // de la carta. Las partidas nuevas ya nacen con las dos zonas.
 Db.migrate("xp-descartes", "UPDATE game_cards SET zone = CASE WHEN cardId LIKE 'm%' THEN 'descarteJuego' ELSE 'descarteEquipo' END WHERE zone = 'descarte'")
+
+// El área de Apoyo desaparece: las cartas de apoyo arrancan en la mano y se
+// juegan como una carta más. Las partidas viejas las recuperan en la mano.
+Db.migrate("xp-apoyo-a-mano", "UPDATE game_cards SET zone = 'mano' WHERE zone = 'ayuda'")

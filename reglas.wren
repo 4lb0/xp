@@ -52,9 +52,9 @@ return Layout.render(<main>
       <h2>Preparación</h2>
     </div>
     <ol class="steps">
-      <li><span class="num">1</span><span><strong>Arranquen con 3 cartas de Equipo</strong>La mano es compartida. Con niños de 5 años conviene leer las opciones en voz alta.</span></li>
+      <li><span class="num">1</span><span><strong>Arranquen con 3 cartas de Equipo</strong>La mano es compartida. En Normal y Asistido, las cartas de apoyo ya vienen entre esas 3. Con niños de 5 años conviene leer las opciones en voz alta.</span></li>
       <li><span class="num">2</span><span><strong>Revelen siempre 3 cartas de Misión</strong>Sin importar cuántos jueguen. La mesa no cambia: cambia a quién le toca tirar.</span></li>
-      <li><span class="num">3</span><span><strong>Pongan los contadores</strong>Todos: 6 de Energía y 6 de Escudo. Pistas 0. Experto: sin apoyos. Normal: +1 Maniobra de apoyo en el área. Asistido: +2 Maniobras de apoyo.</span></li>
+      <li><span class="num">3</span><span><strong>Pongan los contadores</strong>Todos: 6 de Energía y 6 de Escudo. Pistas 0. Experto: sin apoyos. Normal: el Kit de emergencia en la mano. Asistido: el Kit y la Carga de emergencia en la mano.</span></li>
     </ol>
   </section>
 
@@ -64,10 +64,10 @@ return Layout.render(<main>
       <p>Se juega un turno por vez, solo o en cooperativo.</p>
     </div>
     <ol class="steps">
-      <li><span class="num">1</span><span><strong>Comienzo del turno</strong>Se resuelven las acciones que dependen del comienzo de cada Misión (Generador Auxiliar, Generador de Escudo) y roban la mano: 3 cartas de Equipo.</span></li>
-      <li><span class="num">2</span><span><strong>Maniobras</strong>Juegan <strong>1 carta</strong> de la mano, o ninguna: una Herramienta (queda en la mesa, una sola activa), una Maniobra (se resuelve y va al descarte) o una Maniobra de apoyo del área (no gasta la carta del turno). Al cerrar esta fase, las cartas que quedaron en la mano van al descarte.</span></li>
+      <li><span class="num">1</span><span><strong>Comienzo del turno</strong>Se resuelven las acciones que dependen del comienzo de cada Misión (Generador Auxiliar, Generador de Escudo) y roban <strong>1 carta</strong>. En el primer turno la mano ya arranca con 3.</span></li>
+      <li><span class="num">2</span><span><strong>Maniobras</strong>Juegan <strong>1 carta</strong> de la mano, o ninguna: una Herramienta (queda en la mesa, una sola activa), una Maniobra (queda a la vista y va al descarte cuando se resuelve la prueba) o una carta de apoyo (suma Energía y Escudo). La mano <strong>no</strong> se descarta: se mantiene entre turnos.</span></li>
       <li><span class="num">3</span><span><strong>Elijan una Misión</strong>Elegí una de las cartas de la mesa, lean la situación, debatan y elijan una de sus opciones. Después viene la prueba de dados y se aplica el resultado: suman o restan. Ningún contador baja de 0 ni pasa de 12.</span></li>
-      <li><span class="num">4</span><span><strong>Cierren el turno</strong>La carta resuelta ya está en el descarte: se revela una nueva en su lugar. El submarino consume <strong>1 Energía</strong> y el turno pasa al equipo. Al empezar el próximo turno vuelven a correr los Generadores y se roba la mano.</span></li>
+      <li><span class="num">4</span><span><strong>Cierren el turno</strong>La carta resuelta ya está en el descarte: se revela una nueva en su lugar. El submarino consume <strong>1 Energía</strong>, roban <strong>1 carta</strong> y, si la mano pasa de 3, descartan hasta quedar con 3. Después el turno pasa al equipo.</span></li>
     </ol>
     <p class="hint">Si se agota un mazo, mezclá su descarte y seguí robando.</p>
   </section>
@@ -126,7 +126,7 @@ return Layout.render(<main>
       </div>
       <div>
         <div class="section-head"><h2>Maniobras</h2></div>
-        <p class="muted">Se juegan antes de elegir la Misión, una vez, y van al descarte.</p>
+        <p class="muted">Se juegan antes de elegir la Misión y quedan a la vista hasta que se resuelve la prueba; después van al descarte.</p>
         <table>
           <thead><tr><th>Carta</th><th>Efecto</th></tr></thead>
           <tbody>
@@ -149,9 +149,9 @@ return Layout.render(<main>
   </section>
 
   <section class="panel support-panel" id="apoyo">
-    <h2>Maniobras de apoyo</h2>
-    <p>Dos Maniobras del equipo: <strong>Kit de emergencia</strong> (<span class="chip chip-energia">{{ Layout.icon("⚡") }} +1</span> o <span class="chip chip-escudo">{{ Layout.icon("🛡️") }} +1</span>) y <strong>Carga de emergencia</strong> (<span class="chip chip-energia">{{ Layout.icon("⚡") }} +2</span> o <span class="chip chip-escudo">{{ Layout.icon("🛡️") }} +2</span>).</p>
-    <p>En <strong>Experto</strong> se mezclan en el mazo. En <strong>Normal</strong>, el Kit se busca y queda en el área de Apoyo. En <strong>Asistido</strong>, las dos quedan en el área. Se juegan en la fase de Maniobras, una vez, y van al descarte. Si están en el área de Apoyo no gastan la carta del turno: se pueden jugar además de la carta de la mano.</p>
+    <h2>Cartas de apoyo</h2>
+    <p>Dos Maniobras del equipo: <strong>Kit de emergencia</strong> (<span class="chip chip-energia">{{ Layout.icon("⚡") }} +1</span> y <span class="chip chip-escudo">{{ Layout.icon("🛡️") }} +1</span>) y <strong>Carga de emergencia</strong> (<span class="chip chip-energia">{{ Layout.icon("⚡") }} +2</span> y <span class="chip chip-escudo">{{ Layout.icon("🛡️") }} +2</span>).</p>
+    <p>En <strong>Normal</strong>, el Kit arranca en la mano. En <strong>Asistido</strong>, el Kit y la Carga. Cuentan para las 3 cartas y se juegan como cualquier carta: gastan la del turno y van al descarte. En <strong>Experto</strong> quedan en el mazo.</p>
   </section>
 
   <section class="panel" id="reloj">
