@@ -1,7 +1,7 @@
 // Estado de la partida y mazos: creación, modos, robo, reciclado y consultas.
 import "/_app/game" for Game
 
-class Fixture {
+class DeckFixture {
   // Crea una partida y neutraliza la emboscada inicial (aleatoria) para que
   // las aserciones no dependan de las cartas que salieron en la mesa.
   static fresh(modo) {
@@ -19,7 +19,7 @@ class Fixture {
 
 // --- Creación y modos ---
 
-var id = Fixture.fresh("casual")
+var id = DeckFixture.fresh("casual")
 var g = Game.find(id)
 Test.assert(g != null, "Game.create deja una partida encontrable")
 Test.assert(g.id == id, "find() devuelve la misma partida")
@@ -45,18 +45,18 @@ var totalEquipo = Game.count(id, "equipo") + Game.count(id, "mano") + Game.count
 Test.assert(totalEquipo == 44, "el Mazo del Equipo tiene 44 copias en total")
 
 // Cada partida tiene su propio mazo.
-var otra = Fixture.fresh("casual")
+var otra = DeckFixture.fresh("casual")
 Test.assert(otra != id, "dos partidas tienen ids distintos")
 Test.assert(Game.count(id, "mesa") == 3 && Game.count(otra, "mesa") == 3, "cada partida reparte su propia mesa")
 Game.destroy(otra)
 
-var experto = Fixture.fresh("experto")
+var experto = DeckFixture.fresh("experto")
 Test.assert(Game.count(experto, "ayuda") == 0, "el modo experto no tiene apoyos")
 Test.assert(Game.count(experto, "mano") == 3, "en experto la mano son 3 cartas robadas")
 Test.assert(!Game.ids(experto, "mano").contains("e17"), "en experto no hay apoyos en la mano")
 Game.destroy(experto)
 
-var facil = Fixture.fresh("facil")
+var facil = DeckFixture.fresh("facil")
 Test.assert(Game.count(facil, "mano") == 3, "asistido arranca con 3 cartas en la mano")
 Test.assert(!Game.ids(facil, "mano").contains("e17"), "asistido no incluye el Kit")
 Test.assert(Game.ids(facil, "mano").contains("e18"), "asistido incluye la Carga (+2)")
@@ -70,7 +70,7 @@ Test.assert(Game.find(999999) == null, "find() de una partida inexistente devuel
 
 // --- Robo y reciclado ---
 
-var deck = Fixture.fresh("experto")
+var deck = DeckFixture.fresh("experto")
 var top = Game.topCard(deck)
 Test.assert(top != null, "topCard() muestra la próxima carta del Mazo del Juego")
 var mesaAntes = Game.count(deck, "mesa")
@@ -81,7 +81,7 @@ Test.assert(Game.count(deck, "misterio") == 36, "draw() resta una carta al mazo"
 Game.destroy(deck)
 
 // Si el mazo de Equipo se agota, el descarte se mezcla y se sigue robando.
-deck = Fixture.fresh("experto")
+deck = DeckFixture.fresh("experto")
 `UPDATE game_cards SET zone = 'descarteEquipo' WHERE gameId = ? AND cardId LIKE 'e%'`.query(deck)
 Test.assert(Game.count(deck, "equipo") == 0, "vaciamos el mazo de Equipo")
 var robada = Game.draw(deck, "equipo", "mano", 3)
@@ -93,7 +93,7 @@ Test.assert(Game.lastLogs(deck, 5).map { |l| l["text"] }.join(" ").contains("Se 
 Game.destroy(deck)
 
 // Un mazo vacío sin descarte no roba nada.
-deck = Fixture.fresh("experto")
+deck = DeckFixture.fresh("experto")
 Test.assert(Game.recycleDiscard(deck, "misterio") == false, "sin descarte no hay nada que reciclar")
 Test.assert(Game.draw(deck, "misterio", "mesa", 1) != null, "el mazo lleno sigue robando")
 `UPDATE game_cards SET zone = 'descarteJuego' WHERE gameId = ? AND cardId LIKE 'm%'`.query(deck)
@@ -102,7 +102,7 @@ Test.assert(Game.draw(deck, "misterio", "mesa", 1) != null, "robar de un mazo va
 Game.destroy(deck)
 
 // Reciclar un mazo no toca el descarte del otro.
-deck = Fixture.fresh("experto")
+deck = DeckFixture.fresh("experto")
 `UPDATE game_cards SET zone = 'descarteJuego' WHERE gameId = ? AND cardId LIKE 'm%'`.query(deck)
 var unaEquipo = `SELECT id FROM game_cards WHERE gameId = ? AND cardId LIKE 'e%'`.first(deck)
 Game.move(unaEquipo["id"], "descarteEquipo")
@@ -115,7 +115,7 @@ Game.destroy(deck)
 
 // --- Consultas de cartas ---
 
-deck = Fixture.fresh("casual")
+deck = DeckFixture.fresh("casual")
 Test.assert(Game.rows(deck, "mesa").count == 3, "rows() devuelve una fila por carta")
 Test.assert(Game.ids(deck, "mesa").count == 3, "ids() devuelve los cardId de la zona")
 var inMesa = Game.cardsIn(deck, "mesa")

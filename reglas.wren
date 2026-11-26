@@ -80,7 +80,7 @@ return Layout.render(<main>
   <section id="pruebas">
     <div class="section-head">
       <h2>Pruebas de dados</h2>
-      <p>Cara o Seca siempre se tira con un solo dado. Todas las Misiones se resuelven con un D6 o dos.</p>
+      <p>Par o Impar siempre se tira con un solo dado. Todas las Misiones se resuelven con un D6 o dos.</p>
     </div>
     <p><strong>Orden de una tirada:</strong></p>
     <ol class="steps">
@@ -96,15 +96,15 @@ return Layout.render(<main>
         <tr><th>Prueba</th><th>Cómo se lee</th><th>Ejemplo</th></tr>
       </thead>
       <tbody>
-        <tr><td><strong>CARA</strong></td><td>Sale par: 2, 4 o 6.</td><td>Igual que en Pokémon TCG: cara es par, seca es impar.</td></tr>
-        <tr><td><strong>SECA</strong></td><td>Sale impar: 1, 3 o 5.</td><td>El dado muestra un número impar.</td></tr>
+        <tr><td><strong>PAR</strong></td><td>Sale 2, 4 o 6.</td><td>El dado muestra un número par.</td></tr>
+        <tr><td><strong>IMPAR</strong></td><td>Sale 1, 3 o 5.</td><td>El dado muestra un número impar.</td></tr>
         <tr><td><strong>1 dado, 4+</strong></td><td>El dado alcanza el número o más.</td><td>Sale 4, 5 o 6.</td></tr>
         <tr><td><strong>2 dados, 8+</strong></td><td>La suma de los dos dados alcanza el número.</td><td>5 + 3, 6 + 4.</td></tr>
         <tr><td><strong>Dobles</strong></td><td>Los dos dados muestran lo mismo.</td><td>3 y 3.</td></tr>
         <tr><td><strong>Sin 1 ni 6</strong></td><td>Ninguno de los dos dados muestra 1 ni 6.</td><td>2 y 5 sirven; 1 y 3 no.</td></tr>
       </tbody>
     </table>
-    <p class="hint">Giro Brusco invierte el dado de Cara o Seca antes de las sumas. Las Maniobras de prueba se preparan antes de elegir la Misión: si la opción que eligen no es de Cara o Seca, el Giro y los Focos se pierden.</p>
+    <p class="hint">Giro Brusco invierte el dado de Par o Impar antes de las sumas. Las Maniobras de prueba se preparan antes de elegir la Misión: si la opción que eligen no es de Par o Impar, el Giro y los Focos se pierden.</p>
   </section>
 
   <section id="equipo">
@@ -129,10 +129,10 @@ return Layout.render(<main>
         <table>
           <thead><tr><th>Carta</th><th>Efecto</th></tr></thead>
           <tbody>
-            <tr><td>Giro Brusco</td><td>Antes de tirar: invertí el dado de Cara o Seca (Cara ↔ Seca).</td></tr>
-            <tr><td>Focos Abisales</td><td>Antes de tirar: si la prueba de Cara o Seca falla, relanzá el dado una vez.</td></tr>
+            <tr><td>Giro Brusco</td><td>Antes de tirar: invertí el dado de Par o Impar (Par ↔ Impar).</td></tr>
+            <tr><td>Focos Abisales</td><td>Antes de tirar: si la prueba de Par o Impar falla, relanzá el dado una vez.</td></tr>
             <tr><td>Blindaje de Titanio</td><td>Antes de resolver: reducí 1 el daño al Escudo.</td></tr>
-            <tr><td>Arpón Rastreador</td><td>Gastá 2 de Energía y tirá un dado. Si sale Cara, +1 Pista.</td></tr>
+            <tr><td>Arpón Rastreador</td><td>Gastá 2 de Energía y tirá un dado. Si sale par, +1 Pista.</td></tr>
             <tr><td>Turbo de Emergencia</td><td>Antes de tirar: sumá 2 al total de la prueba.</td></tr>
             <tr><td>Suerte del Principiante</td><td>Antes de tirar: si la prueba falla, se vuelve a tirar una vez.</td></tr>
             <tr><td>Soldadura Submarina</td><td>Recuperá 1 de Escudo. Hay 4 en el mazo.</td></tr>

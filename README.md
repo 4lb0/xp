@@ -201,7 +201,7 @@ El estado de la partida se guarda en SQLite y se ata a la sesión del navegador.
    - **Ya tiré en la mesa**: elegís en pantalla lo que salió en cada dado físico.
    La misma mesa de dados sirve para la prueba, para las re-tiradas y para las Maniobras que piden un dado.
 5. **Orden de la tirada:** tirás, aplicás las sumas (Turbo +2, Estabilizadores +1 en 2 dados) y, si la prueba falla, aplicás las re-tiradas (Suerte vuelve a tirar todo, Focos relanza un dado y elegís cuál). Cada tirada nueva vuelve a pasar por las sumas, hasta que no queden re-tiradas.
-6. Todas las Maniobras se juegan **antes de elegir la Misión** (Turbo, Giro, Focos, Suerte, Cebo, Ahorro, Blindaje): se comprometen a ciegas. Si la Misión elegida no es de Cara o Seca, el Giro y los Focos se pierden.
+6. Todas las Maniobras se juegan **antes de elegir la Misión** (Turbo, Giro, Focos, Suerte, Cebo, Ahorro, Blindaje): se comprometen a ciegas. Si la Misión elegida no es de Par o Impar, el Giro y los Focos se pierden.
 7. Al resolver, la app aplica los efectos de la opción y controla victoria/derrota en el momento. La prueba da exactamente lo que dice la carta: no hay tirada extra.
 8. **Cierre:** revelás una Misión nueva del Mazo de Juego pagando **1 Energía** (obligatorio; Ahorro de Oxígeno lo saltea), robás **1 carta** de Equipo y descartás hasta quedar con 3 en la mano.
 
@@ -221,7 +221,7 @@ familia: exploracion
 emoji: 📡
 [A]
 texto: Encender el sonar
-prueba: cara
+prueba: par
 exito: pistas+1
 fallo: escudo-1
 ```

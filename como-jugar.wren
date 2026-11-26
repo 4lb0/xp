@@ -127,7 +127,7 @@ return Layout.render(<main class="quick">
       <span class="eyebrow">Primer turno, en concreto</span>
       <p>
         Tenés 3 cartas. Jugás <strong>Soldadura</strong> (🛡️ +1, va al descarte).
-        Elegís <strong>El nido</strong>. Tirás <strong>Cara</strong>: éxito, ⚡ +2.
+        Elegís <strong>El nido</strong>. Tirás <strong>Par</strong>: éxito, ⚡ +2.
         La carta va al descarte; pagás <strong>⚡ 1</strong>, entra la próxima, robás 1 carta y descartás hasta tener 3.
       </p>
     </div>
@@ -181,11 +181,11 @@ return Layout.render(<main class="quick">
     <div class="quick-dice">
       <div>
         <svg class="quick-die" aria-hidden="true"><use href="#die2"/></svg>
-        <strong>CARA</strong><span>sale par</span>
+        <strong>PAR</strong><span>2, 4 o 6</span>
       </div>
       <div>
         <svg class="quick-die" aria-hidden="true"><use href="#die3"/></svg>
-        <strong>SECA</strong><span>sale impar</span>
+        <strong>IMPAR</strong><span>1, 3 o 5</span>
       </div>
       <div>
         <svg class="quick-die" aria-hidden="true"><use href="#die5"/></svg>

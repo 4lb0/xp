@@ -21,7 +21,7 @@ familia: exploracion
 emoji: 📡
 [A]
 texto: Encender el sonar
-prueba: cara
+prueba: par
 exito: pistas+1
 fallo: energia-1
 [B]
@@ -50,8 +50,8 @@ El pulso llega cada nueve segundos. Ustedes lo escuchan dos veces más antes de 
 
 | Escribí | Significa |
 |---|---|
-| `cara` | 1 dado. Gana si sale par (2, 4, 6). |
-| `seca` | 1 dado. Gana si sale impar (1, 3, 5). |
+| `par` | 1 dado. Gana si sale 2, 4 o 6. |
+| `impar` | 1 dado. Gana si sale 1, 3 o 5. |
 | `1 dado, 4+` | 1 dado. Gana con 4 o más. |
 | `2 dados, 8+` | 2 dados. Gana si la suma llega a 8. |
 | `dobles` | 2 dados. Gana si salen iguales. |
@@ -120,19 +120,19 @@ Si agregás un `efecto` nuevo, sumá su ayuda visual en `_app/cards.wren` (`Card
 | `efecto` | Qué hace |
 |---|---|
 | `peek` | Con la Herramienta en la mesa, muestra la carta de arriba del Mazo del Juego con su contenido. |
-| `reroll_parity` | Antes de tirar en una prueba de Cara o Seca: si falla, relanza el dado una vez (1 vez por turno). |
+| `reroll_parity` | Antes de tirar en una prueba de Par o Impar: si falla, relanza el dado una vez (1 vez por turno). |
 | `energy_start` | Al empezar el turno, si la Energía está en 4 o menos, sube 1. |
 | `shield_start` | Al empezar el turno, si el Escudo está en 4 o menos, sube 1. |
 | `reduce_damage` | Antes de tirar: reduce 1 el daño al Escudo (1 vez por turno). |
 | `extra_clue_six` | Si ganan Pistas y un dado muestra 6, suma 1 Pista extra. |
-| `harpoon` | Habilita el botón del Arpón: 2 Energía, tira 1 dado, con Cara gana 1 Pista y se descarta. |
+| `harpoon` | Habilita el botón del Arpón: 2 Energía, tira 1 dado, con par gana 1 Pista y se descarta. |
 | `plus_one_sum` | Suma 1 al total de las pruebas de 2 dados. |
 | `heal_shield` | Maniobra instantánea: +1 Escudo. |
 | `heal_energy` | Maniobra instantánea: +2 Energía. |
 | `clue_for_energy` | Maniobra instantánea: −1 Energía, +1 Pista. |
 | `discard_active` | Maniobra instantánea: cambia una carta activa por otra. |
 | `plus_two` | Antes de tirar: suma +2 al total. |
-| `flip_parity` | Antes de tirar: invierte el dado de una prueba de Cara o Seca. |
+| `flip_parity` | Antes de tirar: invierte el dado de una prueba de Par o Impar. |
 | `reroll_all` | Antes de tirar: si falla, vuelve a tirar todos los dados. |
 | `cancel_shield_loss` | Cancela una pérdida de Escudo en el turno. |
 | `no_energy_cost` | Evita el gasto de Energía en el turno. |

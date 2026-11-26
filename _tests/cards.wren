@@ -62,15 +62,15 @@ Test.assert(Card.get("e09").useLabel == "Antes de elegir", "la carta avisa que s
 
 // --- Etiquetas de las opciones ---
 
-Test.assert(m01.options[0]["tipoPrueba"] == "cara", "cara se decora como tipo cara")
-Test.assert(m01.options[0]["dados"] == 1, "cara usa un dado")
-Test.assert(m01.options[0]["pruebaLabel"] == "CARA · sale par", "etiqueta de cara")
+Test.assert(m01.options[0]["tipoPrueba"] == "par", "par se decora como tipo par")
+Test.assert(m01.options[0]["dados"] == 1, "par usa un dado")
+Test.assert(m01.options[0]["pruebaLabel"] == "PAR · 2, 4 o 6", "etiqueta de par")
 Test.assert(m01.options[0]["exitoChips"][0]["text"] == "+1", "el éxito de m01 muestra +1")
 
-var seca = {"prueba": "seca", "exito": "pistas+1", "fallo": "escudo-1"}
-Card.decorate(seca)
-Test.assert(seca["tipoPrueba"] == "seca", "seca se decora como tipo seca")
-Test.assert(seca["pruebaLabel"] == "SECA · sale impar", "etiqueta de seca")
+var impar = {"prueba": "impar", "exito": "pistas+1", "fallo": "escudo-1"}
+Card.decorate(impar)
+Test.assert(impar["tipoPrueba"] == "impar", "impar se decora como tipo impar")
+Test.assert(impar["pruebaLabel"] == "IMPAR · 1, 3 o 5", "etiqueta de impar")
 
 var dobles = {"prueba": "dobles", "exito": "pistas+2", "fallo": "escudo-1"}
 Card.decorate(dobles)
@@ -99,7 +99,7 @@ Test.assert(dado["pruebaLabel"] == "1 dado · 6+", "etiqueta de dado")
 
 var sinPrueba = {"exito": "pistas+1", "fallo": "escudo-1"}
 Card.decorate(sinPrueba)
-Test.assert(sinPrueba["tipoPrueba"] == "cara", "sin prueba se asume cara")
+Test.assert(sinPrueba["tipoPrueba"] == "par", "sin prueba se asume par")
 
 // --- targetOf ---
 

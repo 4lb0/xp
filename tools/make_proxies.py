@@ -116,10 +116,10 @@ def test_text(raw: str) -> str:
     if not raw:
         return ""
     raw = raw.strip().lower()
-    if raw == "cara":
-        return "CARA · SALE PAR"
-    if raw == "seca":
-        return "SECA · SALE IMPAR"
+    if raw == "par":
+        return "PAR · 2, 4 O 6"
+    if raw == "impar":
+        return "IMPAR · 1, 3 O 5"
     if raw == "dobles":
         return "2 DADOS · DOBLES"
     if raw.startswith("sin 1"):
@@ -210,13 +210,13 @@ def team_help(card: dict) -> dict:
         always()
         help["chips"] = [("🔍", "+1"), ("🎲", "sale 6")]
     elif effect == "harpoon":
-        help["chips"] = [("⚡", "-2"), ("🎲", "Cara"), ("🔍", "+1")]
+        help["chips"] = [("⚡", "-2"), ("🎲", "Par"), ("🔍", "+1")]
     elif effect == "plus_one_sum":
         always()
         help["chips"] = [("🎲", "+1"), ("", "2 dados")]
     elif effect == "flip_parity":
         before()
-        help["chips"] = [("🔄", "Cara / Seca")]
+        help["chips"] = [("🔄", "Par / Impar")]
     elif effect == "plus_two":
         before()
         help["chips"] = [("🎲", "+2")]

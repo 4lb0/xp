@@ -37,8 +37,8 @@ class Turno {
     return row["id"]
   }
 
-  // Deja una Misión de Cara en la mesa y devuelve su fila.
-  static misionCara(id) {
+  // Deja una Misión de Par en la mesa y devuelve su fila.
+  static misionPar(id) {
     var row = `SELECT id FROM game_cards WHERE gameId = ? AND cardId = 'm01'`.first(id)
     `UPDATE game_cards SET zone = 'misterio' WHERE gameId = ? AND zone = 'mesa'`.query(id)
     `UPDATE game_cards SET zone = 'mesa' WHERE id = ?`.query(row["id"])
@@ -62,24 +62,24 @@ Test.get("/juego").status(200).textContains("Tirá un dado")
 Test.post("/juego", {"accion": "tirar_maniobra", "origen": "mesa", "d1": "2"}).withCsrf().status(302)
 g = Game.find(gid)
 Test.assert(g.energia == 4, "la tirada no vuelve a cobrar Energía")
-Test.assert(g.pistas == 1, "un 2 en el Arpón es Cara: +1 Pista")
+Test.assert(g.pistas == 1, "un 2 en el Arpón es Par: +1 Pista")
 Test.assert(g.fase == "listo", "la Maniobra vuelve a la fase de Maniobras")
 Test.assert(g.maniobraRow == null, "la Maniobra pendiente se limpia")
 Test.assert(Game.ids(gid, "descarteEquipo").contains("e06"), "el Arpón va al descarte")
-Test.assert(Game.lastLogs(gid, 1)[0]["text"].contains("CARA"), "la bitácora registra el dado")
+Test.assert(Game.lastLogs(gid, 1)[0]["text"].contains("PAR"), "la bitácora registra el dado")
 
-// Con Seca no hay Pista.
+// Con Impar no hay Pista.
 gid = Turno.nueva()
 arpon = Turno.aLaMano(gid, "e06")
 Test.post("/juego", {"accion": "jugar", "rowId": arpon.toString}).withCsrf().status(302)
 Test.post("/juego", {"accion": "tirar_maniobra", "origen": "mesa", "d1": "3"}).withCsrf().status(302)
-Test.assert(Game.find(gid).pistas == 0, "un 3 en el Arpón es Seca: sin Pista")
+Test.assert(Game.find(gid).pistas == 0, "un 3 en el Arpón es Impar: sin Pista")
 
 // --- Elegir la Misión no descarta la mano ---
 
 gid = Turno.nueva()
 Test.assert(Game.count(gid, "mano") == 3, "la partida arranca con 3 en la mano")
-var mision = Turno.misionCara(gid)
+var mision = Turno.misionPar(gid)
 Test.post("/juego", {"accion": "elegir", "rowId": mision.toString, "opt": "A"}).withCsrf().status(302)
 g = Game.find(gid)
 Test.assert(g.fase == "prueba", "elegir deja la prueba preparada")
@@ -94,7 +94,7 @@ Test.assert(Game.count(gid, "mano") == 3, "cancelar no toca la mano")
 // --- Una Maniobra no se puede jugar con la prueba ya elegida ---
 
 gid = Turno.nueva()
-mision = Turno.misionCara(gid)
+mision = Turno.misionPar(gid)
 var turbo = Turno.aLaMano(gid, "e09")
 Test.post("/juego", {"accion": "elegir", "rowId": mision.toString, "opt": "A"}).withCsrf().status(302)
 Test.post("/juego", {"accion": "maniobra", "rowId": turbo.toString}).withCsrf().status(302)
@@ -109,7 +109,7 @@ Turno.mano(gid, ["e12", "e11", "e01"])
 var bateria = `SELECT id FROM game_cards WHERE gameId = ? AND cardId = 'e12' AND zone = 'mano'`.first(gid)
 Test.post("/juego", {"accion": "jugar", "rowId": bateria["id"].toString}).withCsrf().status(302)
 Test.assert(Game.count(gid, "mano") == 2, "jugar una carta deja 2 en la mano")
-mision = Turno.misionCara(gid)
+mision = Turno.misionPar(gid)
 Test.post("/juego", {"accion": "elegir", "rowId": mision.toString, "opt": "A"}).withCsrf().status(302)
 Test.post("/juego", {"accion": "mesa", "d1": "2", "d2": "0"}).withCsrf().status(302)
 Test.post("/juego", {"accion": "terminar"}).withCsrf().status(302)
@@ -121,10 +121,10 @@ Test.assert(g.fase == "listo", "con 3 cartas el turno arranca directo")
 // --- Tirada con suma y re-tirada: las sumas se vuelven a aplicar ---
 
 gid = Turno.nueva()
-mision = Turno.misionCara(gid)
+mision = Turno.misionPar(gid)
 Test.post("/juego", {"accion": "elegir", "rowId": mision.toString, "opt": "A"}).withCsrf().status(302)
 `UPDATE games SET bonus = 2, suerte = 1 WHERE id = ?`.query(gid)
-// Cara con 1 falla; con la Suma no cambia la paridad, pero Suerte pide repetir.
+// Par con 1 falla; con la Suma no cambia la paridad, pero Suerte pide repetir.
 Test.post("/juego", {"accion": "mesa", "d1": "1", "d2": "0"}).withCsrf().status(302)
 g = Game.find(gid)
 Test.assert(g.fase == "reroll", "la Suerte frena la resolución")
@@ -133,7 +133,7 @@ Test.get("/juego").status(200).textContains("La prueba falló")
 Test.post("/juego", {"accion": "reroll", "origen": "mesa", "d1": "4"}).withCsrf().status(302)
 g = Game.find(gid)
 Test.assert(g.fase == "resuelto", "la segunda tirada resuelve la prueba")
-Test.assert(g.resultado == "ganada", "un 4 es Cara: la prueba se gana")
+Test.assert(g.resultado == "ganada", "un 4 es Par: la prueba se gana")
 Test.assert(g.bonus == 0, "las sumas se limpian al cerrar la prueba")
 
 // --- Una carta de apoyo se juega desde la mano y gasta la carta del turno ---
@@ -160,7 +160,7 @@ var turboFila = `SELECT id FROM game_cards WHERE gameId = ? AND cardId = 'e09' A
 Test.post("/juego", {"accion": "maniobra", "rowId": turboFila["id"].toString}).withCsrf().status(302)
 Test.assert(Game.ids(gid, "preparada").contains("e09"), "la Maniobra preparada queda a la vista")
 Test.get("/juego").status(200).textContains("Maniobra del turno")
-mision = Turno.misionCara(gid)
+mision = Turno.misionPar(gid)
 Test.post("/juego", {"accion": "elegir", "rowId": mision.toString, "opt": "A"}).withCsrf().status(302)
 Test.post("/juego", {"accion": "mesa", "d1": "2", "d2": "0"}).withCsrf().status(302)
 Test.assert(Game.ids(gid, "preparada").isEmpty, "al resolver, la Maniobra sale de la mesa")

@@ -151,9 +151,9 @@ if (Request.isPost) {
       } else {
         var c = Card.get(row["cardId"])
         var opt = c.option(optLabel)
-        var parity = opt != null && (opt["tipoPrueba"] == "cara" || opt["tipoPrueba"] == "seca")
+        var parity = opt != null && (opt["tipoPrueba"] == "par" || opt["tipoPrueba"] == "impar")
         // La mano se mantiene entre turnos: elegir la Misión no descarta nada.
-        // Giro Brusco y Focos Abisales solo sirven en Cara o Seca. Si la
+        // Giro Brusco y Focos Abisales solo sirven en Par o Impar. Si la
         // opción elegida es de dados, la Maniobra preparada se pierde.
         var pierdeGiro = g.giro && !parity
         var pierdeFocos = g.focosM && !parity
@@ -161,8 +161,8 @@ if (Request.isPost) {
         var focosVal = pierdeFocos ? 0 : (g.focosM ? 1 : 0)
         `UPDATE games SET fase = 'prueba', pruebaCarta = ?, pruebaOpcion = ?, dado1 = 0, dado2 = 0, tirado = 0, giro = ?, focosM = ? WHERE id = ?`.query([row["cardId"], optLabel, giroVal, focosVal, g.id])
         Game.log(g.id, "Eligen " + c.name + ".")
-        if (pierdeGiro) Game.log(g.id, "Giro Brusco no sirve fuera de Cara o Seca: se pierde.")
-        if (pierdeFocos) Game.log(g.id, "Focos Abisales no sirven fuera de Cara o Seca: se pierden.")
+        if (pierdeGiro) Game.log(g.id, "Giro Brusco no sirve fuera de Par o Impar: se pierde.")
+        if (pierdeFocos) Game.log(g.id, "Focos Abisales no sirven fuera de Par o Impar: se pierden.")
       }
     }
   } else if (accion == "tirar") {
@@ -175,7 +175,7 @@ if (Request.isPost) {
       var dice = Game.roll(dados)
       var d1 = dice[0]
       var d2 = dados == 2 ? dice[1] : 0
-      var parity = opt["tipoPrueba"] == "cara" || opt["tipoPrueba"] == "seca"
+      var parity = opt["tipoPrueba"] == "par" || opt["tipoPrueba"] == "impar"
       if (parity && g.giro) d1 = 7 - d1
       `UPDATE games SET dado1 = ?, dado2 = ?, tirado = 1, giro = 0 WHERE id = ?`.query(d1, d2, g.id)
       anim = "dados"
@@ -195,7 +195,7 @@ if (Request.isPost) {
     } else if (d1 < 1 || d1 > 6 || (dados == 2 && (d2 < 1 || d2 > 6))) {
       aviso = "Elegí valores de 1 a 6 para cada dado."
     } else {
-      var parity = opt["tipoPrueba"] == "cara" || opt["tipoPrueba"] == "seca"
+      var parity = opt["tipoPrueba"] == "par" || opt["tipoPrueba"] == "impar"
       if (parity && g.giro) d1 = 7 - d1
       `UPDATE games SET dado1 = ?, dado2 = ?, tirado = 1, giro = 0 WHERE id = ?`.query(d1, dados == 2 ? d2 : 0, g.id)
       anim = "dados"
@@ -223,16 +223,16 @@ if (Request.isPost) {
         aviso = "Elegí un valor de 1 a 6."
       } else {
         var fila = g.maniobraRow
-        var cara = d % 2 == 0
+        var par = d % 2 == 0
         `UPDATE games SET dado1 = ?, fase = 'listo', maniobraRow = NULL WHERE id = ?`.query(d, g.id)
         Game.move(fila, "descarteEquipo")
-        if (cara) {
+        if (par) {
           // El Arpón no es una prueba: la tirada no recibe Maniobras ni activa
           // el Brazo Robótico. Solo se guarda el dado para mostrarlo.
           Game.apply(g.id, g, {"pistas": 1, "energia": 0, "escudo": 0}, true, [])
-          aviso = "Arpón Rastreador: sale " + d.toString + " (CARA). +1 Pista."
+          aviso = "Arpón Rastreador: sale " + d.toString + " (PAR). +1 Pista."
         } else {
-          aviso = "Arpón Rastreador: sale " + d.toString + " (SECA). Sin pista."
+          aviso = "Arpón Rastreador: sale " + d.toString + " (IMPAR). Sin pista."
         }
         Game.log(g.id, aviso)
       }
@@ -757,12 +757,12 @@ return Layout.render(<main class="game table-board" data-moves="{{ movesJson }}"
       <div class="tray-main">
         <h2>{{ maniobraCard.name }}</h2>
         <p class="muted">{{ Layout.icon(maniobraCard.typeIcon) }} {{ maniobraCard.typeLabel }} · {{ maniobraCard.id }}</p>
-        <p class="test-action">Tirá un dado. Si sale Cara, ganan 1 Pista.</p>
-        <p><span class="test-badge test-cara">CARA · sale par</span></p>
+        <p class="test-action">Tirá un dado. Si sale par, ganan 1 Pista.</p>
+        <p><span class="test-badge test-par">PAR · 2, 4 o 6</span></p>
       </div>
       <div class="tray-dice">
         <div class="dice-row roller-stage">{{ Layout.die(0, "die-large dice-roll") }}</div>
-        <p class="hint dice-help">CARA = par (2, 4, 6). SECA = impar (1, 3, 5).</p>
+        <p class="hint dice-help">PAR = 2, 4 o 6. IMPAR = 1, 3 o 5.</p>
       </div>
       <section class="roll-controls tray-actions">
         <form method="post" class="roll-form">
@@ -809,7 +809,7 @@ return Layout.render(<main class="game table-board" data-moves="{{ movesJson }}"
         {{ g.tirado && (pendingOpt["tipoPrueba"] == "suma" || pendingOpt["tipoPrueba"] == "dado") && <p class="hint dice-total">
           Total <strong>{{ totalPrueba }}</strong> de <strong>{{ pendingOpt["objetivo"] }}</strong>{{ g.bonus > 0 ? " · incluye +" + g.bonus.toString + " de las Maniobras" : "" }}
         </p> }}
-        <p class="hint dice-help">CARA = par (2, 4, 6). SECA = impar (1, 3, 5).</p>
+        <p class="hint dice-help">PAR = 2, 4 o 6. IMPAR = 1, 3 o 5.</p>
       </div>
 
       {{ g.fase == "prueba" && !g.tirado && <section class="roll-controls tray-actions">

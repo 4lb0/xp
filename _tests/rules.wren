@@ -36,17 +36,17 @@ Test.assert(p["pistas"] == 0 && p["energia"] == 0 && p["escudo"] == 0, "un signo
 
 // --- evalTest ---
 
-Test.assert(Game.evalTest("cara", 0, 2, 0, 0, false), "cara pasa con 2")
-Test.assert(Game.evalTest("cara", 0, 4, 0, 0, false), "cara pasa con 4")
-Test.assert(Game.evalTest("cara", 0, 6, 0, 0, false), "cara pasa con 6")
-Test.assert(!Game.evalTest("cara", 0, 1, 0, 0, false), "cara falla con 1")
-Test.assert(!Game.evalTest("cara", 0, 5, 0, 0, false), "cara falla con 5")
-Test.assert(Game.evalTest("cara", 0, 2, 1, 0, false), "cara solo mira el primer dado")
+Test.assert(Game.evalTest("par", 0, 2, 0, 0, false), "par pasa con 2")
+Test.assert(Game.evalTest("par", 0, 4, 0, 0, false), "par pasa con 4")
+Test.assert(Game.evalTest("par", 0, 6, 0, 0, false), "par pasa con 6")
+Test.assert(!Game.evalTest("par", 0, 1, 0, 0, false), "par falla con 1")
+Test.assert(!Game.evalTest("par", 0, 5, 0, 0, false), "par falla con 5")
+Test.assert(Game.evalTest("par", 0, 2, 1, 0, false), "par solo mira el primer dado")
 
-Test.assert(Game.evalTest("seca", 0, 1, 0, 0, false), "seca pasa con 1")
-Test.assert(Game.evalTest("seca", 0, 5, 0, 0, false), "seca pasa con 5")
-Test.assert(!Game.evalTest("seca", 0, 2, 0, 0, false), "seca falla con 2")
-Test.assert(!Game.evalTest("seca", 0, 6, 0, 0, false), "seca falla con 6")
+Test.assert(Game.evalTest("impar", 0, 1, 0, 0, false), "impar pasa con 1")
+Test.assert(Game.evalTest("impar", 0, 5, 0, 0, false), "impar pasa con 5")
+Test.assert(!Game.evalTest("impar", 0, 2, 0, 0, false), "impar falla con 2")
+Test.assert(!Game.evalTest("impar", 0, 6, 0, 0, false), "impar falla con 6")
 
 Test.assert(Game.evalTest("dobles", 0, 3, 3, 0, false), "dobles pasa con 3 y 3")
 Test.assert(Game.evalTest("dobles", 0, 6, 6, 0, false), "dobles pasa con 6 y 6")

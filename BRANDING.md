@@ -612,7 +612,7 @@ Trazo geométrico uniforme, **grosor constante de 2 pt a tamaño carta**, remate
 | **Escudo** | Casco con tres remaches | Integridad del submarino |
 | **Pistas** | Lupa sobre onda de sonar | Progreso hacia la victoria |
 | **Dado** | Cuadrado con puntos, un punto resaltado | Prueba genérica |
-| **Cara / Seca** | Sol vs. luna, o cara sonriente vs. línea | Equivalente a par / impar |
+| **Par / Impar** | Sol vs. luna, o cara sonriente vs. línea | Se lee directo en el número del dado |
 | **Herramienta** | Llave combinada | Carta permanente |
 | **Maniobra** | Rayo en movimiento | Carta descartable |
 | **Turno** | Flecha circular | Quién juega |
@@ -657,7 +657,7 @@ Español neutro rioplatense. Frases cortas. Presente. Segunda persona plural: **
 - **Daltonismo:** ninguna familia de carta se distingue solo por color. Cada una lleva ícono propio, patrón de franja distinto y palabra escrita. La paleta naranja/rojo de Peligro y el verde de Dilema se separan además por luminosidad.
 - **Baja visión:** texto mínimo 9 pt impreso, contraste alto, placa opaca detrás del texto de efecto, sin texto sobre ilustración sin protección.
 - **Edad 5:** se puede jugar sin leer. Ilustración + ícono + cifra alcanzan para resolver la carta.
-- **Dados con lecturas alternativas:** toda prueba tiene su equivalente PAR/IMPAR (CARA = par, SECA = impar), de modo que quien no quiera sumar pueda resolver con una lectura binaria. Nunca hay una tirada que exija aritmética para un nene de 5.
+- **Dados con lecturas alternativas:** toda prueba binaria se lee en PAR/IMPAR, de modo que quien no quiera sumar pueda resolver con una lectura binaria. Nunca hay una tirada que exija aritmética para un nene de 5.
 - **App web como apoyo:** tamaño de texto ajustable, alto contraste, lectura en voz alta de la carta, y registro de contadores sin depender del color.
 - **Sin dependencia de un solo sentido:** ni el color, ni el sonido, ni el texto son el único canal para jugar.
 
@@ -684,7 +684,7 @@ La app no reemplaza la mesa: **la acompaña**. Toda decisión visual debe poder 
 ### Panel de tirada
 
 - Modo **física**: el panel solo registra el resultado que el equipo tipea o toca.
-- Modo **digital**: el dado se anima en 3D plano con la paleta de la marca, resultado legible en cifra y en CARA/SECA.
+- Modo **digital**: el dado se anima en 3D plano con la paleta de la marca, resultado legible en cifra y en PAR/IMPAR.
 - Siempre muestra la equivalencia: "Salió 4 — PAR".
 
 ### Modo "mesa compartida"

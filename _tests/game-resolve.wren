@@ -1,7 +1,7 @@
 // Resolución de una prueba: éxito, fallo, re-tiradas, victoria y protección.
 import "/_app/game" for Game
 
-class Fixture {
+class ResolveFixture {
   static fresh() {
     var id = Game.create(1, "experto")
     `UPDATE games SET energia = 6, escudo = 6, pistas = 0, pistasTurno = 0,
@@ -36,21 +36,21 @@ class Fixture {
 // --- Errores de flujo ---
 
 Test.assert(Game.resolve(999999)["error"].contains("No hay una partida"), "resolver sin partida avisa")
-var id = Fixture.fresh()
+var id = ResolveFixture.fresh()
 Test.assert(Game.resolve(id)["error"].contains("No hay una prueba"), "resolver sin prueba pendiente avisa")
 Game.destroy(id)
 
-id = Fixture.fresh()
-Fixture.pending(id, "m01", "A", 0, 0, 0)
+id = ResolveFixture.fresh()
+ResolveFixture.pending(id, "m01", "A", 0, 0, 0)
 Test.assert(Game.resolve(id)["error"].contains("tirar los dados"), "resolver sin tirar avisa")
 Game.destroy(id)
 
 // --- Éxito ---
 
-id = Fixture.fresh()
-Fixture.pending(id, "m01", "A", 2, 0, 1)
+id = ResolveFixture.fresh()
+ResolveFixture.pending(id, "m01", "A", 2, 0, 1)
 var res = Game.resolve(id)
-Test.assert(res["ok"] == true, "cara con 2 supera la prueba")
+Test.assert(res["ok"] == true, "par con 2 supera la prueba")
 Test.assert(res["error"] == "", "una resolución válida no devuelve error")
 Test.assert(res["status"] == "activa", "con 1 Pista la partida sigue activa")
 Test.assert(res["texto"].contains("Prueba superada"), "el texto avisa que se superó")
@@ -70,10 +70,10 @@ Game.destroy(id)
 
 // --- Fallo ---
 
-id = Fixture.fresh()
-Fixture.pending(id, "m01", "A", 1, 0, 1)
+id = ResolveFixture.fresh()
+ResolveFixture.pending(id, "m01", "A", 1, 0, 1)
 res = Game.resolve(id)
-Test.assert(res["ok"] == false, "cara con 1 falla la prueba")
+Test.assert(res["ok"] == false, "par con 1 falla la prueba")
 Test.assert(res["texto"].contains("Prueba fallida"), "el texto avisa que falló")
 g = Game.find(id)
 Test.assert(g.escudo == 5, "el fallo aplica escudo-1")
@@ -84,8 +84,8 @@ Game.destroy(id)
 
 // --- Suerte del Principiante: re-tirada ---
 
-id = Fixture.fresh()
-Fixture.pending(id, "m01", "A", 1, 0, 1)
+id = ResolveFixture.fresh()
+ResolveFixture.pending(id, "m01", "A", 1, 0, 1)
 `UPDATE games SET suerte = 1 WHERE id = ?`.query(id)
 res = Game.resolve(id)
 Test.assert(res["reroll"] == true, "Suerte frena la resolución y pide re-tirar")
@@ -108,8 +108,8 @@ Game.destroy(id)
 
 // --- Focos Abisales: relanza un dado ---
 
-id = Fixture.fresh()
-Fixture.pending(id, "m01", "A", 1, 0, 1)
+id = ResolveFixture.fresh()
+ResolveFixture.pending(id, "m01", "A", 1, 0, 1)
 `UPDATE games SET focosM = 1 WHERE id = ?`.query(id)
 res = Game.resolve(id)
 Test.assert(res["reroll"] == true, "Focos también frena la resolución")
@@ -119,9 +119,9 @@ Game.destroy(id)
 
 // --- Victoria ---
 
-id = Fixture.fresh()
+id = ResolveFixture.fresh()
 `UPDATE games SET pistas = 5 WHERE id = ?`.query(id)
-Fixture.pending(id, "m01", "A", 2, 0, 1)
+ResolveFixture.pending(id, "m01", "A", 2, 0, 1)
 res = Game.resolve(id)
 Test.assert(res["ok"] == true, "la prueba que da la sexta Pista se resuelve")
 Test.assert(res["status"] == "victoria", "seis Pistas devuelven victoria")
@@ -133,20 +133,20 @@ Game.destroy(id)
 
 // --- Brazo Robótico ve el dado real ---
 
-id = Fixture.fresh()
-Fixture.equip(id, "e05")
-Fixture.pending(id, "m01", "A", 6, 0, 1)
+id = ResolveFixture.fresh()
+ResolveFixture.equip(id, "e05")
+ResolveFixture.pending(id, "m01", "A", 6, 0, 1)
 res = Game.resolve(id)
-Test.assert(res["ok"] == true, "un 6 en cara supera la prueba")
+Test.assert(res["ok"] == true, "un 6 en par supera la prueba")
 Test.assert(Game.find(id).pistas == 2, "Brazo suma la Pista extra al resolver")
 Test.assert(res["texto"].contains("Brazo Robótico"), "el texto incluye la nota del Brazo")
 Game.destroy(id)
 
 // --- Ahorro de Oxígeno durante la resolución ---
 
-id = Fixture.fresh()
+id = ResolveFixture.fresh()
 `UPDATE games SET ahorro = 1 WHERE id = ?`.query(id)
-Fixture.pending(id, "m04", "B", 1, 0, 1)
+ResolveFixture.pending(id, "m04", "B", 1, 0, 1)
 res = Game.resolve(id)
 Test.assert(res["ok"] == false, "1 no llega al 4+ de m04")
 Test.assert(Game.find(id).energia == 6, "Ahorro evita el energia-1 del fallo")
@@ -154,24 +154,24 @@ Test.assert(res["texto"].contains("Ahorro"), "el texto menciona el Ahorro")
 Game.destroy(id)
 
 // Sin Ahorro, el mismo fallo cuesta Energía.
-id = Fixture.fresh()
-Fixture.pending(id, "m04", "B", 1, 0, 1)
+id = ResolveFixture.fresh()
+ResolveFixture.pending(id, "m04", "B", 1, 0, 1)
 Game.resolve(id)
 Test.assert(Game.find(id).energia == 5, "sin Ahorro el fallo cuesta 1 Energía")
 Game.destroy(id)
 
 // --- Cebo y Blindaje durante la resolución ---
 
-id = Fixture.fresh()
+id = ResolveFixture.fresh()
 `UPDATE games SET cebo = 1 WHERE id = ?`.query(id)
-Fixture.pending(id, "m01", "A", 1, 0, 1)
+ResolveFixture.pending(id, "m01", "A", 1, 0, 1)
 Game.resolve(id)
 Test.assert(Game.find(id).escudo == 6, "Cebo cancela el escudo-1 del fallo")
 Game.destroy(id)
 
-id = Fixture.fresh()
+id = ResolveFixture.fresh()
 `UPDATE games SET blindajeM = 1 WHERE id = ?`.query(id)
-Fixture.pending(id, "m01", "A", 1, 0, 1)
+ResolveFixture.pending(id, "m01", "A", 1, 0, 1)
 Game.resolve(id)
 g = Game.find(id)
 Test.assert(g.escudo == 6, "Blindaje absorbe el golpe de 1: 6 - 1 + 1")

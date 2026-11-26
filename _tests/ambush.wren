@@ -2,7 +2,7 @@
 // solo esa cobra. Una emboscada ya en la mesa no vuelve a cobrar.
 import "/_app/game" for Game
 
-class Fixture {
+class AmbushFixture {
   static reset(id) {
     `UPDATE games SET energia = 6, escudo = 6, pistas = 0, pistasTurno = 0,
        fase = 'listo', status = 'activa', turno = 1, jugador = 1,
@@ -28,8 +28,8 @@ Test.post("/juego", {"accion": "nueva", "modo": "casual"}).withCsrf().status(302
 var gid = `SELECT MAX(id) AS id FROM games`.first["id"].toNum
 
 // m20 cobra Escudo −1 y m28 cobra Energía −1: así se ve cuál se aplicó.
-Fixture.mesa(gid, ["m20", "m28", "m01"])
-Fixture.reset(gid)
+AmbushFixture.mesa(gid, ["m20", "m28", "m01"])
+AmbushFixture.reset(gid)
 Game.enterInitial(gid)
 
 var g = Game.find(gid)
@@ -60,8 +60,8 @@ Test.get("/juego")
 
 // --- Una sola emboscada: cobra automáticamente ---
 
-Fixture.mesa(gid, ["m20", "m01", "m02"])
-Fixture.reset(gid)
+AmbushFixture.mesa(gid, ["m20", "m01", "m02"])
+AmbushFixture.reset(gid)
 Game.enterInitial(gid)
 
 g = Game.find(gid)
@@ -74,8 +74,8 @@ Test.assert(Game.find(gid).escudo == 5, "una emboscada ya en la mesa no vuelve a
 
 // --- Varias emboscadas con el mismo costo: se aplica una al azar ---
 
-Fixture.mesa(gid, ["m25", "m27", "m01"])
-Fixture.reset(gid)
+AmbushFixture.mesa(gid, ["m25", "m27", "m01"])
+AmbushFixture.reset(gid)
 Game.enterInitial(gid)
 
 g = Game.find(gid)

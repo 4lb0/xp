@@ -1,7 +1,7 @@
 class Layout {
   // Subir al cambiar css/style.css para romper la caché de Cloudflare.
-  static assetVersion { "2026-11-24-11" }
-  static printVersion { "2026-11-23-1" }
+  static assetVersion { "2026-11-25-1" }
+  static printVersion { "2026-11-25-1" }
   static description { "XP — Equipo eXPedición. LCG cooperativo de aventura y misterio para toda la familia. Mazos fijos, partidas de 10 a 20 minutos." }
 
   static render(content) { Layout.render(content, "XP · Equipo eXPedición", false) }

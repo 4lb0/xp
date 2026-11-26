@@ -257,8 +257,8 @@ class Game {
   }
 
   static evalTest(kind, target, d1, d2, bonus, estabilizadores) {
-    if (kind == "cara") return d1 % 2 == 0
-    if (kind == "seca") return d1 % 2 == 1
+    if (kind == "par") return d1 % 2 == 0
+    if (kind == "impar") return d1 % 2 == 1
     if (kind == "dobles") return d1 == d2
     if (kind == "sin1") return d1 != 1 && d1 != 6 && d2 != 1 && d2 != 6
     if (kind == "suma") return d1 + d2 + bonus + (estabilizadores ? 1 : 0) >= target

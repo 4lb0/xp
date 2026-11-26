@@ -144,7 +144,7 @@ class Card {
     } else if (effect == "reroll_parity") {
       v["useIcon"] = "🎲"
       v["useLabel"] = "Antes de elegir"
-      v["useHint"] = "Se prepara antes de la prueba, en Cara o Seca."
+      v["useHint"] = "Se prepara antes de la prueba, en Par o Impar."
       v["useClass"] = "use-before"
       v["chips"] = [Card.hchip("🔁", "1 dado", "chip-dado", "Si la prueba falla, relanzá 1 dado")]
     } else if (effect == "energy_start") {
@@ -166,7 +166,7 @@ class Card {
       v["useClass"] = "use-always"
       v["chips"] = [Card.hchip("🔍", "+1", "chip-pista", "Ganás 1 Pista extra si un dado muestra 6"), Card.hchip("🎲", "sale 6", "chip-dado", "Solo si un dado muestra 6")]
     } else if (effect == "harpoon") {
-      v["chips"] = [Card.hchip("⚡", "−2", "chip-energia chip-loss", "Gastá 2 de Energía"), Card.hchip("🎲", "Cara", "chip-dado", "Tirá 1 dado: gana si sale Cara"), Card.hchip("🔍", "+1", "chip-pista", "Si sale Cara, ganás 1 Pista")]
+      v["chips"] = [Card.hchip("⚡", "−2", "chip-energia chip-loss", "Gastá 2 de Energía"), Card.hchip("🎲", "Par", "chip-dado", "Tirá 1 dado: gana si sale par"), Card.hchip("🔍", "+1", "chip-pista", "Si sale par, ganás 1 Pista")]
     } else if (effect == "plus_one_sum") {
       v["useIcon"] = "♾️"
       v["useLabel"] = "Siempre"
@@ -176,9 +176,9 @@ class Card {
     } else if (effect == "flip_parity") {
       v["useIcon"] = "🎲"
       v["useLabel"] = "Antes de elegir"
-      v["useHint"] = "Se prepara antes de una prueba de Cara o Seca."
+      v["useHint"] = "Se prepara antes de una prueba de Par o Impar."
       v["useClass"] = "use-before"
-      v["chips"] = [Card.hchip("🔄", "Cara ↔ Seca", "chip-dado", "El dado se invierte: Cara pasa a Seca y Seca a Cara")]
+      v["chips"] = [Card.hchip("🔄", "Par ↔ Impar", "chip-dado", "El dado se invierte: Par pasa a Impar y viceversa")]
     } else if (effect == "plus_two") {
       v["useIcon"] = "🎲"
       v["useLabel"] = "Antes de elegir"
@@ -262,13 +262,13 @@ class Card {
   }
 
   static decorate(o) {
-    var p = (o["prueba"] || "cara").trim
-    var kind = "cara"
+    var p = (o["prueba"] || "par").trim
+    var kind = "par"
     var target = 0
-    if (p == "cara") {
-      kind = "cara"
-    } else if (p == "seca") {
-      kind = "seca"
+    if (p == "par") {
+      kind = "par"
+    } else if (p == "impar") {
+      kind = "impar"
     } else if (p == "dobles") {
       kind = "dobles"
     } else if (p.startsWith("sin 1")) {
@@ -284,10 +284,10 @@ class Card {
     o["objetivo"] = target
     o["dados"] = (kind == "suma" || kind == "dobles" || kind == "sin1") ? 2 : 1
     var label = ""
-    if (kind == "cara") {
-      label = "CARA · sale par"
-    } else if (kind == "seca") {
-      label = "SECA · sale impar"
+    if (kind == "par") {
+      label = "PAR · 2, 4 o 6"
+    } else if (kind == "impar") {
+      label = "IMPAR · 1, 3 o 5"
     } else if (kind == "dobles") {
       label = "2 dados · dobles"
     } else if (kind == "sin1") {

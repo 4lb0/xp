@@ -617,8 +617,8 @@ section { margin-block: 2.5rem; }
   color: var(--abyss);
   background: var(--turquoise);
 }
-.test-badge.test-cara { background: var(--gold); }
-.test-badge.test-seca { background: var(--cyan-soft); }
+.test-badge.test-par { background: var(--gold); }
+.test-badge.test-impar { background: var(--cyan-soft); }
 
 .card-meta { font-size: 0.74rem; color: var(--muted); }
 

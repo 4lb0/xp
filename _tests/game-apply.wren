@@ -1,7 +1,7 @@
 // Aplicación de efectos sobre los contadores: topes, maniobras y victoria.
 import "/_app/game" for Game
 
-class Fixture {
+class ApplyFixture {
   static fresh() {
     var id = Game.create(1, "experto")
     `UPDATE games SET energia = 6, escudo = 6, pistas = 0, pistasTurno = 0,
@@ -22,7 +22,7 @@ class Fixture {
 
 // --- Sumas y restas normales ---
 
-var id = Fixture.fresh()
+var id = ApplyFixture.fresh()
 var res = Game.apply(id, Game.find(id), Game.parseEffects("pistas+2"), true, [])
 Test.assert(res["pistas"] == 2, "apply suma 2 Pistas")
 Test.assert(Game.find(id).pistas == 2, "las Pistas quedan guardadas")
@@ -38,7 +38,7 @@ Game.destroy(id)
 
 // --- Topes en cero ---
 
-id = Fixture.fresh()
+id = ApplyFixture.fresh()
 `UPDATE games SET energia = 1, escudo = 1, pistas = 0 WHERE id = ?`.query(id)
 res = Game.apply(id, Game.find(id), Game.parseEffects("energia-3, escudo-3, pistas-2"), true, [])
 Test.assert(res["energia"] == 0, "la Energía no baja de 0")
@@ -51,7 +51,7 @@ Game.destroy(id)
 
 // --- Tope de 12 ---
 
-id = Fixture.fresh()
+id = ApplyFixture.fresh()
 `UPDATE games SET energia = 11, escudo = 11, pistas = 4 WHERE id = ?`.query(id)
 res = Game.apply(id, Game.find(id), Game.parseEffects("energia+3, escudo+3, pistas+1"), true, [])
 Test.assert(res["energia"] == 12, "la Energía no pasa de 12")
@@ -64,7 +64,7 @@ Game.destroy(id)
 
 // --- Ahorro de Oxígeno ---
 
-id = Fixture.fresh()
+id = ApplyFixture.fresh()
 `UPDATE games SET ahorro = 1 WHERE id = ?`.query(id)
 res = Game.apply(id, Game.find(id), Game.parseEffects("energia-2"), true, [])
 Test.assert(res["energia"] == 6, "Ahorro evita el gasto de Energía")
@@ -74,7 +74,7 @@ Game.destroy(id)
 
 // --- Lanzar Cebo ---
 
-id = Fixture.fresh()
+id = ApplyFixture.fresh()
 `UPDATE games SET cebo = 1 WHERE id = ?`.query(id)
 res = Game.apply(id, Game.find(id), Game.parseEffects("escudo-2"), true, [])
 Test.assert(res["escudo"] == 6, "Cebo cancela todo el daño al Escudo")
@@ -84,7 +84,7 @@ Game.destroy(id)
 
 // --- Blindaje de Titanio (Maniobra) ---
 
-id = Fixture.fresh()
+id = ApplyFixture.fresh()
 `UPDATE games SET blindajeM = 1 WHERE id = ?`.query(id)
 res = Game.apply(id, Game.find(id), Game.parseEffects("escudo-2"), true, [])
 Test.assert(res["escudo"] == 5, "Blindaje reduce 1 el daño: 6 - 2 + 1")
@@ -98,23 +98,23 @@ Game.destroy(id)
 
 // --- Blindaje de Titanio (Herramienta activa) ---
 
-id = Fixture.fresh()
-Fixture.equip(id, "e04")
+id = ApplyFixture.fresh()
+ApplyFixture.equip(id, "e04")
 res = Game.apply(id, Game.find(id), Game.parseEffects("escudo-2"), true, Game.ids(id, "herramientas"))
 Test.assert(res["escudo"] == 5, "el Blindaje equipado reduce 1 el daño")
 Test.assert(Game.find(id).blindajeUsado, "el Blindaje equipado también se marca usado")
 // Sin la carta equipada no hay reducción.
 Game.destroy(id)
 
-id = Fixture.fresh()
+id = ApplyFixture.fresh()
 res = Game.apply(id, Game.find(id), Game.parseEffects("escudo-2"), true, [])
 Test.assert(res["escudo"] == 4, "sin Blindaje el Escudo pierde 2")
 Game.destroy(id)
 
 // --- Brazo Robótico: Pista extra con un 6 ---
 
-id = Fixture.fresh()
-Fixture.equip(id, "e05")
+id = ApplyFixture.fresh()
+ApplyFixture.equip(id, "e05")
 `UPDATE games SET dado1 = 6, dado2 = 2 WHERE id = ?`.query(id)
 res = Game.apply(id, Game.find(id), Game.parseEffects("pistas+1"), true, Game.ids(id, "herramientas"))
 Test.assert(res["pistas"] == 2, "Brazo Robótico suma 1 Pista si sale un 6")
@@ -122,16 +122,16 @@ Test.assert(res["notas"].count == 1 && res["notas"][0].contains("Brazo"), "Brazo
 Game.destroy(id)
 
 // Con un 6 pero prueba fallida no suma.
-id = Fixture.fresh()
-Fixture.equip(id, "e05")
+id = ApplyFixture.fresh()
+ApplyFixture.equip(id, "e05")
 `UPDATE games SET dado1 = 6, dado2 = 2 WHERE id = ?`.query(id)
 res = Game.apply(id, Game.find(id), Game.parseEffects("pistas+1"), false, Game.ids(id, "herramientas"))
 Test.assert(res["pistas"] == 1, "Brazo no suma si la prueba falla")
 Game.destroy(id)
 
 // Sin ningún 6 no suma.
-id = Fixture.fresh()
-Fixture.equip(id, "e05")
+id = ApplyFixture.fresh()
+ApplyFixture.equip(id, "e05")
 `UPDATE games SET dado1 = 3, dado2 = 2 WHERE id = ?`.query(id)
 res = Game.apply(id, Game.find(id), Game.parseEffects("pistas+1"), true, Game.ids(id, "herramientas"))
 Test.assert(res["pistas"] == 1, "Brazo solo suma cuando un dado muestra 6")
@@ -139,14 +139,14 @@ Game.destroy(id)
 
 // --- Victoria y Pistas del turno ---
 
-id = Fixture.fresh()
+id = ApplyFixture.fresh()
 `UPDATE games SET pistas = 5 WHERE id = ?`.query(id)
 res = Game.apply(id, Game.find(id), Game.parseEffects("pistas+1"), true, [])
 Test.assert(res["pistas"] == 6, "la sexta Pista queda registrada")
 Test.assert(res["status"] == "victoria", "seis Pistas ganan en el momento")
 
 // Si en el mismo efecto llegan a 6 Pistas y a 0 Energía, gana la victoria.
-id = Fixture.fresh()
+id = ApplyFixture.fresh()
 `UPDATE games SET pistas = 5, energia = 1 WHERE id = ?`.query(id)
 res = Game.apply(id, Game.find(id), Game.parseEffects("pistas+1, energia-1"), true, [])
 Test.assert(res["energia"] == 0, "la Energía llega a 0 en el mismo efecto")
@@ -154,7 +154,7 @@ Test.assert(res["status"] == "victoria", "la sexta Pista gana antes que la derro
 Test.assert(Game.find(id).status == "victoria", "la victoria se guarda")
 Game.destroy(id)
 
-id = Fixture.fresh()
+id = ApplyFixture.fresh()
 Game.apply(id, Game.find(id), Game.parseEffects("pistas+2"), true, [])
 res = Game.apply(id, Game.find(id), Game.parseEffects("pistas-1"), true, [])
 Test.assert(res["pistas"] == 1, "una pérdida de Pista resta")

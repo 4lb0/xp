@@ -51,11 +51,11 @@ def parse_effects(text):
 
 
 def parse_test(text):
-    p = (text or "cara").strip().lower()
-    if p == "cara":
-        return "cara", 0, 1
-    if p == "seca":
-        return "seca", 0, 1
+    p = (text or "par").strip().lower()
+    if p == "par":
+        return "par", 0, 1
+    if p == "impar":
+        return "impar", 0, 1
     if p == "dobles":
         return "dobles", 0, 2
     if p.startswith("sin 1"):
@@ -97,7 +97,7 @@ def load_cards():
             continue
         options = []
         for o in opts:
-            kind, target, dice = parse_test(o.get("prueba", "cara"))
+            kind, target, dice = parse_test(o.get("prueba", "par"))
             options.append({
                 "label": o.get("label", "A"),
                 "kind": kind,
@@ -137,7 +137,7 @@ def load_cards():
 @lru_cache(maxsize=None)
 def chance(kind, target, bonus=0, estab=False):
     b = bonus + (1 if estab else 0)
-    if kind in ("cara", "seca"):
+    if kind in ("par", "impar"):
         return 0.5
     if kind == "dobles":
         return 6 / 36
@@ -273,9 +273,9 @@ class Game:
         kind, target = opt["kind"], opt["target"]
         bonus = self.flags["bonus"]
         estab = self.tool == "e07"
-        if kind == "cara":
+        if kind == "par":
             return d1 % 2 == 0
-        if kind == "seca":
+        if kind == "impar":
             return d1 % 2 == 1
         if kind == "dobles":
             return d1 == d2
@@ -290,7 +290,7 @@ class Game:
         dice = self.roll(opt["dice"])
         d1 = dice[0]
         d2 = dice[1] if len(dice) > 1 else 0
-        if opt["kind"] in ("cara", "seca") and self.flags["giro"]:
+        if opt["kind"] in ("par", "impar") and self.flags["giro"]:
             d1 = 7 - d1
             self.flags["giro"] = False
         ok = self.test_ok(opt, d1, d2)
@@ -302,7 +302,7 @@ class Game:
                 self.flags["suerte"] = False
                 ok = self.test_ok(opt, d1, d2)
             else:
-                if opt["kind"] in ("cara", "seca"):
+                if opt["kind"] in ("par", "impar"):
                     d1 = self.roll(1)[0]
                     ok = self.test_ok(opt, d1, d2)
                 self.flags["focos"] = False
@@ -497,7 +497,7 @@ class Base:
             return self.option_ev(g, opt, reroll=True) - base
         if eff == "reroll_parity":
             return self.option_ev(g, opt, reroll=True) - base \
-                if opt["kind"] in ("cara", "seca") else -1
+                if opt["kind"] in ("par", "impar") else -1
         if eff == "flip_parity":
             return -1  # no cambia la probabilidad
         if eff == "reduce_damage":
