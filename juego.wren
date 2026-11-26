@@ -6,6 +6,25 @@ import "_app/views" for Views
 
 var session = Session.new()
 var g = Game.find(session.get("gameId"))
+var cookieToken = Cookie.get("xpGame")
+if (g == null && cookieToken != null && cookieToken != "") {
+  g = Game.findByToken(cookieToken)
+  if (g != null) {
+    session.set("gameId", g.id.toString)
+    // La sesión es nueva: marcamos las zonas como vistas para no animar el
+    // reparto completo al reenganchar la partida.
+    Moves.take(g.id, session)
+  }
+}
+if (g != null) {
+  var token = Game.ensureToken(g.id)
+  if (token != null && token != cookieToken) {
+    Cookie.set("xpGame", token, {"Max-Age": "7776000"})
+  }
+} else if (cookieToken != null && cookieToken != "") {
+  // La cookie apunta a una partida que ya no existe.
+  Cookie.delete("xpGame")
+}
 
 // ---------- Acciones ----------
 
@@ -22,6 +41,7 @@ if (Request.isPost) {
     session.set("modo", modo)
     var id = Game.create(1, modo)
     session.set("gameId", id.toString)
+    Cookie.set("xpGame", Game.ensureToken(id), {"Max-Age": "7776000"})
     return Response.redirect("/juego")
   }
 
@@ -30,6 +50,7 @@ if (Request.isPost) {
   if (accion == "reiniciar") {
     Game.destroy(g.id)
     session.set("gameId", "")
+    Cookie.delete("xpGame")
     return Response.redirect("/juego")
   }
 

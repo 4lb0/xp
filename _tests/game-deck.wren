@@ -48,6 +48,17 @@ Test.assert(totalEquipo == 44, "el Mazo del Equipo tiene 44 copias en total")
 var otra = DeckFixture.fresh("casual")
 Test.assert(otra != id, "dos partidas tienen ids distintos")
 Test.assert(Game.count(id, "mesa") == 3 && Game.count(otra, "mesa") == 3, "cada partida reparte su propia mesa")
+
+// --- Token de recuperación (cookie persistente) ---
+
+var token = Game.ensureToken(id)
+Test.assert(token != null && token.count == 40, "ensureToken genera un token de 40 caracteres")
+Test.assert(Game.ensureToken(id) == token, "ensureToken devuelve siempre el mismo token")
+var porToken = Game.findByToken(token)
+Test.assert(porToken != null && porToken.id == id, "findByToken recupera la partida")
+Test.assert(Game.ensureToken(otra) != token, "cada partida tiene su propio token")
+Test.assert(Game.findByToken("0000000000000000000000000000000000000000") == null, "findByToken ignora tokens desconocidos")
+Test.assert(Game.findByToken(null) == null, "findByToken tolera un token nulo")
 Game.destroy(otra)
 
 var experto = DeckFixture.fresh("experto")

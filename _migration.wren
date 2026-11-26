@@ -34,6 +34,10 @@ Db.migrate("xp-focos-m", "ALTER TABLE games ADD COLUMN focosM INTEGER NOT NULL D
 // Rastreador). Guarda la fila de game_cards mientras la tirada está pendiente.
 Db.migrate("xp-maniobra-row", "ALTER TABLE games ADD COLUMN maniobraRow INTEGER")
 
+// Token estable de la partida para la cookie persistente: si el navegador
+// pierde la cookie de sesión, la partida se recupera con este token.
+Db.migrate("xp-recover-token", "ALTER TABLE games ADD COLUMN recoverToken TEXT")
+
 // Los descartes de Misión y de Equipo ahora son pilas separadas. Las
 // partidas viejas tenían una sola zona 'descarte'; se reparte por el prefijo
 // de la carta. Las partidas nuevas ya nacen con las dos zonas.

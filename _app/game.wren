@@ -44,6 +44,26 @@ class Game {
     return row == null ? null : row.to(Game)
   }
 
+  // La partida viaja en la cookie de sesión, que es una cookie de sesión (sin
+  // Max-Age). En el celular, Android puede descartar el navegador y con él la
+  // cookie, y la partida queda huérfana aunque siga en SQLite. Este token
+  // estable permite reengancharla desde una cookie persistente.
+  static findByToken(token) {
+    if (token == null || token == "") return null
+    var row = `SELECT * FROM games WHERE recoverToken = ?`.first(token)
+    return row == null ? null : row.to(Game)
+  }
+
+  static ensureToken(id) {
+    var row = `SELECT recoverToken FROM games WHERE id = ?`.first(id)
+    if (row == null) return null
+    var token = row["recoverToken"]
+    if (token != null && token != "") return token
+    token = Util.randomString(40)
+    `UPDATE games SET recoverToken = ? WHERE id = ?`.query(token, id)
+    return token
+  }
+
   static create(players, modo) {
     var en = 6
     var es = 6
